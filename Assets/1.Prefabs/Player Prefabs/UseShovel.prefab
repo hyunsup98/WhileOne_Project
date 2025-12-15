@@ -1981,6 +1981,8 @@ GameObject:
   - component: {fileID: 9078672956431459521}
   - component: {fileID: 7596173420657926355}
   - component: {fileID: 2245997602353833970}
+  - component: {fileID: 7303214889216701703}
+  - component: {fileID: 6090921389041934258}
   - component: {fileID: 6475511304828831566}
   m_Layer: 5
   m_Name: UseShovel
@@ -5102,6 +5104,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f59f148c961591c4998d7cdb0e7bc2bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+--- !u!114 &7303214889216701703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4329574107018779310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7021466798dd22a4cb21856d0bc8fa51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player
+  _hp: 100
+  _stamina: 100
+  _moveSpeed: 3
+  _attack: 5
+  _attackSpeed: 4
+--- !u!114 &6090921389041934258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4329574107018779310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7021466798dd22a4cb21856d0bc8fa51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player
+  _hp: 100
+  _stamina: 100
+  _moveSpeed: 3
+  _attack: 5
+  _attackSpeed: 4
 --- !u!114 &6475511304828831566
 MonoBehaviour:
   m_ObjectHideFlags: 0

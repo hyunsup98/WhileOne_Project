@@ -18,6 +18,9 @@ public class PlayerMovement : MonoBehaviour
     Vector2 _dir;
     Vector3 _move;
 
+    //마우스 좌표를 기억하는 변수
+    Vector3 _mousePosition;
+
     //기획자분들 수치 조정하기 편하게 직렬화하기
     [Header("플레이어관련 수치 조정")]
 
@@ -34,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
         _player = GetComponent<Player>();
         _playerInput = GetComponent<PlayerInput>();
         //playerRigid = GetComponent<Rigidbody>();
-        
+
     }
     void Start()
     {
@@ -45,6 +48,7 @@ public class PlayerMovement : MonoBehaviour
         _moveAction.performed += OnMove; //입력키 눌렀을 때 이동
 
         _moveAction.canceled += OnStopped;
+       
     }
 
     void OnMove(InputAction.CallbackContext ctx)
@@ -59,19 +63,26 @@ public class PlayerMovement : MonoBehaviour
     }
     void FixedUpdate()
     {
-        //이동시 방향 전환 버그있음
+        //마우스 좌표값을 월드 좌표값으로 변환
+        _mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        Debug.Log(_mousePosition);
 
-        //if (_move.x < 0)
-        //{
-        //    transform.localEulerAngles = new Vector3(0, 0);
-        //    Debug.Log($"{_dir} 방향");
-        //}
-        //if (_move.x > 0)
-        //{
-        //    transform.localEulerAngles = new Vector3(0, 180);
-        //    Debug.Log($"{_dir} 방향");
-        //}
-        transform.Translate(_move * Time.deltaTime * _player.MoveSpeed);
+        //플레이어와 마우스 사이 좌표 거리 계산
+        Vector3 angle = _mousePosition - transform.position;
+        //좌표 거리값을 바탕으로 각도(aTan) 계산 
+        float angleZ = Mathf.Atan2(angle.y, angle.x) * Mathf.Rad2Deg; //라디안을 도(°)로 단위 변환
+
+        if (angleZ > 90 || angleZ<-90)
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+        }
+        //캐릭터를 기준으로 마우스가 오른쪽으로 넘어가면 캐릭터 방향 변경
+        else
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+
+            transform.Translate(_move * Time.deltaTime * _player.MoveSpeed);
     }
 
 }
