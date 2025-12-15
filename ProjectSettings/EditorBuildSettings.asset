@@ -6,8 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 8c9cfa26abfee488c85f1582747f6a02
+    path: Assets/2.Scenes/TestScene/SHS/SHS_Title.unity
+    guid: f686ea2b82af6da4290c008890ad96c1
+  - enabled: 1
+    path: Assets/2.Scenes/TestScene/SHS/SHS_InGame_FirstFloor.unity
+    guid: 9f2d04cda35ab8a4ca6734be8858b35c
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
