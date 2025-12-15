@@ -56,21 +56,20 @@ public class PlayerMovement : MonoBehaviour
     private void OnStopped(InputAction.CallbackContext ctx)
     {
         _move = Vector3.zero;
-        Debug.Log("멈춤호출");
     }
     void FixedUpdate()
     {
         //이동시 방향 전환 버그있음
-        
-        //if (dir.x < 0)
+
+        //if (_move.x < 0)
         //{
-        //    transform.localEulerAngles = new Vector3(0, 0, 0);
-        //    Debug.Log($"{dir} 방향");
+        //    transform.localEulerAngles = new Vector3(0, 0);
+        //    Debug.Log($"{_dir} 방향");
         //}
-        //if (dir.x > 0)
+        //if (_move.x > 0)
         //{
-        //    transform.localEulerAngles = new Vector3(0, 180, 0);
-        //    Debug.Log($"{dir} 방향");
+        //    transform.localEulerAngles = new Vector3(0, 180);
+        //    Debug.Log($"{_dir} 방향");
         //}
         transform.Translate(_move * Time.deltaTime * _player.MoveSpeed);
     }
