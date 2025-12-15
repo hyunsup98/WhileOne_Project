@@ -3,6 +3,14 @@ using UnityEngine;
 
 public class Monster : MonoBehaviour
 {
+    [field: SerializeField] public string Hp {  get; private set; }
+    [field: SerializeField] public float Att {  get; private set; }
+    [field: SerializeField] public float Vision { get; private set; }
+    [field: SerializeField] public float Speed {  get; private set; }
+    [field: SerializeField] public int Tier {  get; private set; }
+    [field: SerializeField] public List<Transform> PatrolPoint { get; private set; }
+
+
     private Dictionary<MonsterState, IMonsterState> _monsterState;
     private IMonsterState _currentState;
 
@@ -15,7 +23,17 @@ public class Monster : MonoBehaviour
         _monsterState.Add(MonsterState.Search, new Search(this));
         _currentState = _monsterState[MonsterState.Patrol];
     }
+    private void Update()
+    {
+        _currentState.Update();
+    }
 
+    public void SetState(MonsterState state)
+    {
+        _currentState?.Exit();
+        _currentState = _monsterState[state];
+        _currentState.Enter();
+    }
 
 }
 
