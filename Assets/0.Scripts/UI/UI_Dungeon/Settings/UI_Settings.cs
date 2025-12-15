@@ -1,11 +1,16 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class UI_Settings : MonoBehaviour
 {
     [SerializeField] private GameObject _settings;          //설정창 오브젝트
     [SerializeField] private GameObject _warningWindow;     //경고 화면 창(게임 종료 버튼 클릭 시 확인창)
     [SerializeField] private GameObject _manualPage;        //조작설명 창
+
+    [SerializeField] private Slider _totalAudioSlider;
+    [SerializeField] private Slider _bgmAudioSlider;
+    [SerializeField] private Slider _sfxAudioSlider;
 
     private void Awake()
     {
@@ -23,7 +28,10 @@ public class UI_Settings : MonoBehaviour
             if(_settings != null && !_warningWindow.activeSelf && !_manualPage.activeSelf)
             {
                 //현재 설정창의 on/off 여부 반대로 실행
-                _settings.SetActive(!_settings.activeSelf);
+                if (_settings.activeSelf)
+                    OnClick_DisableSettings();
+                else
+                    OnClick_EnableSettings();
 
                 //설정창의 on/off 여부에 따라서 게임 상태 변경
                 GameManager.Instance.SetGameState(_settings.activeSelf ? GameState.Pause : GameState.InGame);
@@ -31,6 +39,25 @@ public class UI_Settings : MonoBehaviour
         };
     }
     #endregion
+
+    #region 버튼 클릭 메서드
+    //설정창 키기
+    public void OnClick_EnableSettings()
+    {
+        if(_settings != null && !_settings.activeSelf)
+        {
+            _settings.SetActive(true);
+        }
+    }
+
+    //설정창 끄기
+    public void OnClick_DisableSettings()
+    {
+        if(_settings != null && _settings.activeSelf)
+        {
+            _settings.SetActive(false);
+        }
+    }
 
     //조작설명 버튼 클릭
     public void OnClick_Manual()
@@ -63,4 +90,12 @@ public class UI_Settings : MonoBehaviour
             _warningWindow.SetActive(true);
         }
     }
+    #endregion
+
+    //슬라이더 
+    public void OnValueChanged_VolumeSlider()
+    {
+
+    }
+
 }

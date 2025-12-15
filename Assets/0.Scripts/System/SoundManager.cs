@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 public enum SoundType
 {
     BGM,            //배경음
-    SoundEffect     //효과음
+    SFX,            //효과음
 }
 
 //todo
@@ -24,11 +24,6 @@ public class SoundManager : Singleton<SoundManager>
         base.Awake();
     }
 
-    private void Start()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
     #region 사운드 재생
     public void PlayBGM(AudioClip clip)
     {
@@ -46,6 +41,21 @@ public class SoundManager : Singleton<SoundManager>
     }
     #endregion
 
+    //오디오소스 볼륨 설정
+    public void SetSoundVolume(SoundType type, float volume)
+    {
+        switch(type)
+        {
+            case SoundType.BGM:
+                _bgmAudioSource.volume = volume;
+                break;
+            case SoundType.SFX:
+                _sfxAudioSource.volume = volume;
+                break;
+        }
+    }
+
+    //오디오소스 재생 정지
     private void StopAudio(AudioSource source)
     {
         if(source != null && source.isPlaying)
@@ -60,6 +70,11 @@ public class SoundManager : Singleton<SoundManager>
         //브금이나 효과음이 재생 중이라면 재생 중지
         StopAudio(_bgmAudioSource);
         StopAudio(_sfxAudioSource);
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDestroy()

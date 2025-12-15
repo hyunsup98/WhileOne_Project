@@ -7,7 +7,10 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class UI_Title : MonoBehaviour
 {
+    [Header("게임시작 버튼 클릭 시 이동할 씬 이름")]
     [SerializeField] private string _gameSceneName;         //게임 시작 버튼을 눌렀을 때 이동할 씬 이름
+
+    [Header("버튼 클릭시 재생할 오디오 클립")]
     [SerializeField] private AudioClip _buttonClickClip;    //버튼을 클릭했을 때 재생할 효과음
 
     private void Awake()
