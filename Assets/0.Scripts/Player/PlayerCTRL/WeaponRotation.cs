@@ -41,14 +41,20 @@ public class WeaponRotation : MonoBehaviour
 
         // 트랜스폼 회전 값을 최대, 최소 값을 둬서 제한을 넘어가지 못하게 만들어 줌
 
-        if (transform.rotation.eulerAngles.z >= max && transform.rotation.eulerAngles.z <= 119)
+        if (transform.rotation.eulerAngles.z >= max && transform.rotation.eulerAngles.z <= 255)
         {
-            transform.rotation = Quaternion.Euler(0, 0, max);
+            //if(transform.rotation.eulerAngles.z >= 180)
+            //{
+            //    transform.rotation = Quaternion.Euler(0, 0, max-180);
+            //}
+            //else
+                transform.rotation = Quaternion.Euler(0, 0, max);
+            
+
         }
-        else if (transform.rotation.eulerAngles.z <= min && transform.rotation.eulerAngles.z >= -50)
+        else if (transform.rotation.eulerAngles.z <= min && transform.rotation.eulerAngles.z > 255)
         {
             transform.rotation = Quaternion.Euler(0, 0, min);
-
         }
         //if(transform.rotation.eulerAngles.z < 180+min && transform.rotation.eulerAngles.z>180)
         //{
