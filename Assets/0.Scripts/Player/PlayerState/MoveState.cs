@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class MoveState : IPlayerState
 {
+    PlayerMovement _playerMovement;
 
 
 
-
-    public MoveState(PlayerEntity player)
+    public MoveState(Player player)
     {
 
     }
@@ -23,6 +23,9 @@ public class MoveState : IPlayerState
 
     public void OnUpdate()
     {
-        
+        if (_playerMovement.Move == Vector3.zero)
+        {
+
+        }
     }
 }
