@@ -1320,8 +1320,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf90aac4b6471564db1a4d869be14750, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
-  _bgmAudioSource: {fileID: 0}
-  _sfxAudioSource: {fileID: 0}
+  _bgmAudioSource: {fileID: 1613980264}
+  _sfxAudioSource: {fileID: 1732031883}
 --- !u!1 &1732031881
 GameObject:
   m_ObjectHideFlags: 0

@@ -41,19 +41,29 @@ public class SoundManager : Singleton<SoundManager>
     }
     #endregion
 
-    //오디오소스 볼륨 설정
+    #region 오디오 볼륨 조절
+    //실질적인 오디오소스 볼륨 설정
     public void SetSoundVolume(SoundType type, float volume)
     {
         switch(type)
         {
             case SoundType.BGM:
-                _bgmAudioSource.volume = volume;
+                SetVolume(_bgmAudioSource, volume);
                 break;
             case SoundType.SFX:
-                _sfxAudioSource.volume = volume;
+                SetVolume(_sfxAudioSource, volume);
                 break;
         }
     }
+
+    //오디오소스 볼륨 설정 뼈대
+    private void SetVolume(AudioSource source, float volume)
+    {
+        if (source == null) return;
+
+        source.volume = volume;
+    }
+    #endregion
 
     //오디오소스 재생 정지
     private void StopAudio(AudioSource source)

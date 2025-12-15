@@ -92,10 +92,21 @@ public class UI_Settings : MonoBehaviour
     }
     #endregion
 
+    #region 슬라이더 볼륨 조절
     //슬라이더 
-    public void OnValueChanged_VolumeSlider()
+    public void OnValueChanged_TotalVolume()
     {
-
+        //todo: 기획자분과 검토 후 구현 예정
     }
 
+    public void OnValueChanged_BGMVolume()
+    {
+        SoundManager.Instance.SetSoundVolume(SoundType.BGM, _bgmAudioSlider.value);
+    }
+
+    public void OnValueChanged_SFXVolume()
+    {
+        SoundManager.Instance.SetSoundVolume(SoundType.SFX, _sfxAudioSlider.value);
+    }
+    #endregion
 }
