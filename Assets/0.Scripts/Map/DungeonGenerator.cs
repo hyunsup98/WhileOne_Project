@@ -308,8 +308,6 @@ public class DungeonGenerator : MonoBehaviour
     
     // 이벤트 방 로직은 현재 사용하지 않음 (1층 구성: 일반 7, 함정 1, 출구 1)
 
-    // 이벤트 방 로직은 현재 사용하지 않음 (1층 구성: 일반 7, 함정 1, 출구 1)
-    
     /// <summary>
     /// 방 오브젝트를 생성합니다.
     /// </summary>
@@ -362,51 +360,6 @@ public class DungeonGenerator : MonoBehaviour
                 CreateRoomTypeLabel(roomObj, room.roomType, worldPosition);
             }
         }
-    }
-    
-    /// <summary>
-    /// UI Text용 World Space Canvas를 설정합니다.
-    /// </summary>
-    private void SetupWorldSpaceCanvas()
-    {
-        if (worldSpaceCanvas != null) return;
-        
-        // Canvas 찾기 또는 생성
-        worldSpaceCanvas = FindFirstObjectByType<Canvas>();
-        if (worldSpaceCanvas != null && worldSpaceCanvas.renderMode == RenderMode.WorldSpace)
-        {
-            // 기존 World Space Canvas 사용
-            return;
-        }
-        
-        // 새 World Space Canvas 생성
-        GameObject canvasObj = new GameObject("WorldSpaceCanvas");
-        canvasObj.transform.SetParent(gridParent != null ? gridParent : transform);
-        worldSpaceCanvas = canvasObj.AddComponent<Canvas>();
-        
-        // World Space 설정
-        worldSpaceCanvas.renderMode = RenderMode.WorldSpace;
-        worldSpaceCanvas.worldCamera = Camera.main;
-        
-        // Canvas Scaler 추가 (선택사항)
-        CanvasScaler scaler = canvasObj.AddComponent<CanvasScaler>();
-        scaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
-        scaler.scaleFactor = 1f;
-        
-        // GraphicRaycaster 추가 (선택사항)
-        canvasObj.AddComponent<GraphicRaycaster>();
-        
-        // Canvas 크기 설정 (월드 단위)
-        RectTransform canvasRect = canvasObj.GetComponent<RectTransform>();
-        canvasRect.sizeDelta = new Vector2(1000f, 1000f); // 충분히 큰 크기
-        
-        // World Space Canvas는 스케일을 조정하여 텍스트 크기 조절
-        // UI Text는 픽셀 단위이므로, 월드 스케일을 작게 설정
-        float cellSize = ResolveCellSize();
-        float scaleFactor = cellSize / 100f; // 셀 크기에 맞춰 스케일 조정
-        canvasRect.localScale = new Vector3(scaleFactor, scaleFactor, 1f);
-        
-        Debug.Log($"World Space Canvas 생성됨 (스케일: {scaleFactor:F4})");
     }
     
     /// <summary>

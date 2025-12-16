@@ -266,9 +266,12 @@ MonoBehaviour:
   startRoomPrefab: {fileID: 3670151386598274992, guid: 01a1d2d5142ff704ea5aadc3d251d553, type: 3}
   exitRoomPrefab: {fileID: 3670151386598274992, guid: 01a1d2d5142ff704ea5aadc3d251d553, type: 3}
   eventRoomPrefab: {fileID: 3670151386598274992, guid: 01a1d2d5142ff704ea5aadc3d251d553, type: 3}
-  corridorPrefabHorizontal: {fileID: 7904964642178353908, guid: c8c8dd9a95fd3434591acddb6b638dcc, type: 3}
-  corridorPrefabVertical: {fileID: 5949910297765756553, guid: 5c83add385740f144b0054755f1f4732, type: 3}
+  useTilemapForCorridors: 0
+  corridorPrefabHorizontal: {fileID: 2870543962171593631, guid: 870e601f6684dee4f81ecf6679960311, type: 3}
+  corridorPrefabVertical: {fileID: 2870543962171593631, guid: 5c83add385740f144b0054755f1f4732, type: 3}
   corridorLength: 3
+  corridorFloorTile: {fileID: 0}
+  corridorWallTile: {fileID: 0}
   roomSpacing: 9
   autoCalculateSpacing: 0
   generateOnStart: 1
@@ -276,6 +279,11 @@ MonoBehaviour:
   minTileSpacing: 3
   exitPrefab: {fileID: 3168379323661421141, guid: 42aea149e07116342948f03bff4adb52, type: 3}
   playerObject: {fileID: 65964935}
+  showRoomTypeLabels: 1
+  roomLabelOffsetY: 0.5
+  showCorridorLabels: 0
+  corridorLabelOffsetY: 0.2
+  roomLabelFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &220972929
 Transform:
   m_ObjectHideFlags: 0
@@ -330,6 +338,61 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &716950663
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 716950665}
+  - component: {fileID: 716950664}
+  m_Layer: 0
+  m_Name: TrapRoomMazeGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &716950664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 716950663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71ac4e3f62dc63e4c8d6ee29b90aa3cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrapRoomMazeGenerator
+  mazeWidth: 15
+  mazeHeight: 15
+  trapPrefab: {fileID: 0}
+  trapAttackInterval: 2
+  maxTrapRatio: 0.3
+  safeZoneRadius: 2
+  leverPrefab: {fileID: 0}
+  treasureChestPrefab: {fileID: 0}
+  treasureChance: 0.1
+  floorTilePrefab: {fileID: 0}
+  wallTilePrefab: {fileID: 0}
+--- !u!4 &716950665
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 716950663}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -16.90777, y: 24.25223, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -494,5 +557,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 1821698059}
   - {fileID: 220972929}
+  - {fileID: 716950665}
   - {fileID: 65964938}
   - {fileID: 286935984}
