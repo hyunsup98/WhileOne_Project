@@ -1,73 +1,62 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static UnityEditor.PlayerSettings;
 
-public class Astar : MonoBehaviour
+public class Astar
 {
+    private Tilemap _wallTilemap;
+    private NodeManager _nodeManager;
+    private List<Node> _openList;
+    private List<Vector2Int> _closedList;
 
-    public Transform Target;
-
-
-    [SerializeField] private Tilemap _wallTilemap;
-
-    private TilemapGrid _map;
-
-    // 좌표에 따른 노드들을 기억해 놓는 Dictionary
-    private Dictionary<Vector2Int, Node> nodeMap = new();
-
-    private List<Node> _openList = new();
-    private List<Vector2Int> _closedList = new();
-    private Node current;
-
-    private void Awake()
+    public Astar(Tilemap wallTilemap)
     {
-        _map = new TilemapGrid(_wallTilemap);
-    }
-
-    private void Start()
-    {
-        Vector2Int start = (Vector2Int)_wallTilemap.WorldToCell(transform.position);
-        Vector2Int target = (Vector2Int)_wallTilemap.WorldToCell(Target.transform.position);
-        Debug.Log("시작: " + start);
-        Debug.Log("목표: " + target);
-        
-        Pathfinder(start, target);
+        _wallTilemap = wallTilemap;
+        _nodeManager = new NodeManager(wallTilemap);
+        _openList = new List<Node>();
+        _closedList = new List<Vector2Int>();
     }
 
 
-
-    public List<Vector2Int> Pathfinder(Vector2Int start, Vector2Int target)
+    // 경로 탐색 알고리즘
+    public List<Vector2Int> Pathfinder(Vector3 start, Vector3 target)
     {
-        //currentPos = (Vector2Int)tilemap.WorldToCell((Vector3Int)start);
+        Vector2Int startCellPos = (Vector2Int)_wallTilemap.WorldToCell(start);
+        Vector2Int targetCellPos = (Vector2Int)_wallTilemap.WorldToCell(target);
 
-        Node current = GetNode(start, 0, Heuristic(start, target));
+
+        Node current = _nodeManager.GetNode(startCellPos, 0, Heuristic(startCellPos, targetCellPos));
             
         _openList.Add(current);
+
 
         while (_openList.Count > 0)
         {
             current = GetLowestFNode(_openList);
 
-            if (current.Pos == target)
+            // 타겟에 도달시, BuildPath로 경로 출력
+            if (current.Pos == targetCellPos)
                 return BuildPath(current);
 
             _openList.Remove(current);
             _closedList.Add(current.Pos);
 
-
-            foreach (var neighborPos in _map.GetNeighbors(current.Pos))
+            // 갈 수 있는 이웃 셀좌표를 GetNeighbors로 생성 후 순회하며 이웃 노드 추가
+            foreach (var neighborPos in _nodeManager.GetNeighbors(current.Pos))
             {
+                // 방문 기록이 있다면 다음 이웃 노드 확인
                 if (_closedList.Contains(neighborPos))
                     continue;
 
-                int sumG = current.G + _map.GetMoveCost(current.Pos);
+                int sumG = current.G + _nodeManager.GetMoveCost(current.Pos);
 
-                Node neighborNode = GetNode
+                // 이웃 노드 생성
+                Node neighborNode = _nodeManager.GetNode
                     (
                     neighborPos, 
                     sumG, 
-                    Heuristic(neighborPos, target), 
+                    Heuristic(neighborPos, targetCellPos), 
                     current
                     );
 
@@ -77,15 +66,15 @@ public class Astar : MonoBehaviour
                 }
             }
 
-            _map.Init();
         }
 
+        Init();
         Debug.Log("경로 탐색 실패");
         return null;
         
     }
 
-
+    // 최종 최적경로 출력 메서드
     List<Vector2Int> BuildPath(Node targetNode)
     {
         List<Vector2Int> path = new List<Vector2Int>();
@@ -103,20 +92,8 @@ public class Astar : MonoBehaviour
         foreach (var a in path)
             Debug.Log("최적 경로 노드: " + a);
 
+        Init();
         return path;
-    }
-
-
-    // 셀 좌표에 해당하는 노드 생성 메서드
-    private Node GetNode(Vector2Int cellPos, int g, int h, Node parent = null)
-    {
-        if (!nodeMap.TryGetValue(cellPos, out var node))
-        {
-            // 셀좌표에 해당하는 노드가 없다면 새로 생성
-            node = new Node(cellPos, g, h, parent);
-            nodeMap[cellPos] = node;
-        }
-        return node;
     }
 
     // 오픈리스트에서 F 비용이 가장 적은 노드를 반환
@@ -136,10 +113,32 @@ public class Astar : MonoBehaviour
         return best;
     }
 
+    // 휴리스틱 예측치 계산
     private int Heuristic(Vector2Int current, Vector2Int target) =>
         (Mathf.Abs(target.x - current.x) + Mathf.Abs(target.y - current.y)) * 10;
 
 
+    // 타일의 중앙으로 벡터값을 변경하는 오버로딩
+    public Vector2 GetCellPos(Vector3 pos) => CellPos(pos);
 
+    public Vector2 GetCellPos(Vector2 pos) => CellPos(pos);
+
+    public Vector2 GetCellPos(Vector2Int pos) => CellPos(pos);
+
+    private Vector2 CellPos(Vector2 pos)
+    {
+        Vector2 change = (Vector2Int)_wallTilemap.WorldToCell(pos);
+        change.x += 0.5f;
+        change.y += 0.5f;
+
+        return change;
+    }
+
+    private void Init()
+    {
+        _openList.Clear();
+        _closedList.Clear();
+        _nodeManager.Init();
+    }
 
 }
