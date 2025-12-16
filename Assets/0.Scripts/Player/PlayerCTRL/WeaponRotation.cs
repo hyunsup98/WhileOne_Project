@@ -43,11 +43,11 @@ public class WeaponRotation : MonoBehaviour
 
         if (transform.rotation.eulerAngles.z >= max && transform.rotation.eulerAngles.z <= 255)
         {
-            //if(transform.rotation.eulerAngles.z >= 180)
-            //{
-            //    transform.rotation = Quaternion.Euler(0, 0, max-180);
-            //}
-            //else
+            if (transform.rotation.eulerAngles.z >= 180)
+            {
+                transform.rotation = Quaternion.Euler(0, 0, max - 180);
+            }
+            else
                 transform.rotation = Quaternion.Euler(0, 0, max);
             
 
