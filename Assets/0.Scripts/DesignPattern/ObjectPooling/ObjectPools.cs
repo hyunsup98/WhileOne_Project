@@ -3,13 +3,12 @@ using UnityEngine;
 
 /// <summary>
 /// 데이터를 오브젝트 풀로 관리하는 클래스
-/// 오브젝트 풀로 관리할 데이터가 하나의 종류만 있을 경우 사용
+/// 오브젝트 풀로 관리할 데이터가 여러 종류일 경우 사용
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class ObjectPool<T> : Singleton<ObjectPool<T>> where T : MonoBehaviour
+public class ObjectPools<T> : Singleton<ObjectPools<T>> where T : MonoBehaviour
 {
-    //T타입 데이터를 담을 큐
-    protected Queue<T> pool = new Queue<T>();
+    protected Dictionary<string, Queue<T>> pool = new Dictionary<string, Queue<T>>();
 
     protected override void Awake()
     {
@@ -24,18 +23,22 @@ public class ObjectPool<T> : Singleton<ObjectPool<T>> where T : MonoBehaviour
     /// <returns> pool에서 꺼내온 T 타입의 데이터 </returns>
     public T GetObject(T type, Transform trans)
     {
+        string name = type.name;
         T data;
 
-        if(pool.Count == 0)
+        if(!pool.ContainsKey(name))
         {
-            //큐에 아무 데이터가 없을 때 직접 생성
+            pool.Add(name, new Queue<T>());
+        }
+
+        if (pool[name].Count == 0)
+        {
             data = Instantiate(type, trans);
-            data.name = type.name;
+            data.name = name;
         }
         else
         {
-            //큐에 데이터가 있으면 꺼내오기
-            data = pool.Dequeue();
+            data = pool[name].Dequeue();
             data.gameObject.SetActive(true);
         }
 
@@ -50,7 +53,14 @@ public class ObjectPool<T> : Singleton<ObjectPool<T>> where T : MonoBehaviour
     {
         if (data == null) return;
 
+        string name = data.name;
+
+        if(!pool.ContainsKey(name))
+        {
+            pool.Add(name, new Queue<T>());
+        }
+
         data.gameObject.SetActive(false);
-        pool.Enqueue(data);
+        pool[name].Enqueue(data);
     }
 }
