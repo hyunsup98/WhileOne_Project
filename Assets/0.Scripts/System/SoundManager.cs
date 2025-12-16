@@ -19,6 +19,21 @@ public class SoundManager : Singleton<SoundManager>
     [SerializeField] private AudioSource _bgmAudioSource;
     [SerializeField] private AudioSource _sfxAudioSource;
 
+    private float _masterVolume = 1f;
+    public float MasterVolume
+    {
+        get { return _masterVolume; }
+        set
+        {
+            if (value < 0f)
+                value = 0f;
+            else if (value > 1f)
+                value = 1f;
+
+            _masterVolume = value;
+        }
+    }
+
     protected override void Awake()
     {
         base.Awake();
@@ -61,7 +76,7 @@ public class SoundManager : Singleton<SoundManager>
     {
         if (source == null) return;
 
-        source.volume = volume;
+        source.volume = MasterVolume * volume;
     }
     #endregion
 

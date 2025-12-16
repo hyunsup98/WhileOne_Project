@@ -8,7 +8,7 @@ public class UI_Settings : MonoBehaviour
     [SerializeField] private GameObject _warningWindow;     //경고 화면 창(게임 종료 버튼 클릭 시 확인창)
     [SerializeField] private GameObject _manualPage;        //조작설명 창
 
-    [SerializeField] private Slider _totalAudioSlider;
+    [SerializeField] private Slider _masterAudioSlider;
     [SerializeField] private Slider _bgmAudioSlider;
     [SerializeField] private Slider _sfxAudioSlider;
 
@@ -93,17 +93,21 @@ public class UI_Settings : MonoBehaviour
     #endregion
 
     #region 슬라이더 볼륨 조절
-    //슬라이더 
-    public void OnValueChanged_TotalVolume()
+    //마스터 볼륨 조절 → 전체 볼륨에 관여
+    public void OnValueChanged_MasterVolume()
     {
-        //todo: 기획자분과 검토 후 구현 예정
+        SoundManager.Instance.MasterVolume = _masterAudioSlider.value;
+        SoundManager.Instance.SetSoundVolume(SoundType.BGM, _bgmAudioSlider.value);
+        SoundManager.Instance.SetSoundVolume(SoundType.SFX, _sfxAudioSlider.value);
     }
 
+    //BGM 볼륨 조절
     public void OnValueChanged_BGMVolume()
     {
         SoundManager.Instance.SetSoundVolume(SoundType.BGM, _bgmAudioSlider.value);
     }
 
+    //효과음 볼륨 조절
     public void OnValueChanged_SFXVolume()
     {
         SoundManager.Instance.SetSoundVolume(SoundType.SFX, _sfxAudioSlider.value);
