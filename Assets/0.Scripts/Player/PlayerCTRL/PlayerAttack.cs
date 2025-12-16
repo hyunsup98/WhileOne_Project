@@ -10,17 +10,18 @@ public class PlayerAttack : MonoBehaviour
     private InputActionMap _actionMap;
     private InputAction _attackAtion;
 
-
-    //플레이어 공격관련 (프로퍼티로 받아 올것들)
-    private int _attack;
-    private int _attackSpeed;
-
-    //
-
+    //게임오브젝트 이펙트 관련
+    GameObject _effect1;
+    GameObject _effect2;
     private void Awake()
     {
         _player = GetComponent<Player>();
-        _input = GetComponent<PlayerInput>();
+
+        _input = transform.root.GetComponent<PlayerInput>();  //최상위 부모의 플레이어 인풋 컴포넌트
+
+        _effect1 = transform.GetChild(0).gameObject; //자식 이펙트
+
+        _effect2 = transform.GetChild(1).gameObject; //자식 이펙트
     }
 
     void Start()
@@ -39,11 +40,20 @@ public class PlayerAttack : MonoBehaviour
     }
     void OnAttack(InputAction.CallbackContext context)
     {
-        Debug.Log("Attack");
+        bool isEffect1 = true;
 
-    }
-    void Update()
-    {
+        if (isEffect1)
+        {
+            _effect1.SetActive(true);
+            isEffect1 = false;
+            Debug.Log("1");
+        }
+        else
+        {
+            _effect1.SetActive(true);
+            isEffect1 = true;
+            Debug.Log("2");
+        }
 
     }
 }
