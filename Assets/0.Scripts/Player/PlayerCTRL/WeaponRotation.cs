@@ -23,7 +23,7 @@ public class WeaponRotation : MonoBehaviour
     {
         //마우스 좌표값을 월드 좌표값으로 변환
         _mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        Debug.Log(_mousePosition);
+        //Debug.Log(_mousePosition);
 
         //플레이어와 마우스 사이 좌표 거리 계산
         Vector3 angle = _mousePosition - transform.position;
@@ -36,7 +36,7 @@ public class WeaponRotation : MonoBehaviour
 
         transform.rotation = Quaternion.Euler(0, 0, currentAngle - 90); //위의 값을 바탕으로 무기 회전
 
-        Debug.Log(transform.rotation.eulerAngles.z);
+        //Debug.Log(transform.rotation.eulerAngles.z);
 
 
         // 트랜스폼 회전 값을 최대, 최소 값을 둬서 제한을 넘어가지 못하게 만들어 줌

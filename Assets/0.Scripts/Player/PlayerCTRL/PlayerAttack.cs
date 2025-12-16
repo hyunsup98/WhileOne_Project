@@ -16,8 +16,9 @@ public class PlayerAttack : MonoBehaviour
     private GameObject _effect2;
 
     WaitForSeconds _delay;
-    bool isEffect1 = true; //그냥 토글용 변수
-    float attSpeed;
+    bool _isEffect1 = true; //그냥 토글용 변수
+    bool _timer = false;
+    float _attSpeed;
 
     private void Awake()
     {
@@ -32,48 +33,46 @@ public class PlayerAttack : MonoBehaviour
 
     void Start()
     {
-        _delay = new WaitForSeconds(attSpeed);
+        _attSpeed = 10f / _player.AttackSpeed; //공격 속도 세팅 (공격속도는 10/n값) 필요하다면 조절가능
 
         _actionMap = _input.actions.FindActionMap("Player");
 
         _attackAtion = _actionMap.FindAction("Attack");
 
-        Debug.Log(_delay);
-
-        _attackAtion.performed += ctx =>
+        _attackAtion.performed += ctx => //입력 받을 때
         {
-            if (isEffect1)
+            if (_timer) //딜레이 중이면 리턴
             {
-                //_effect1.SetActive(true);
-                isEffect1 = false;
+                return;
+            }
+
+            StartCoroutine(AttackSpeed()); //공격속도 딜레이
+            
+            if (_isEffect1) //첫번째 이펙트 위에서 아래로 쓸기
+            {
+                _effect1.SetActive(true);
+                _isEffect1 = false;
                 Debug.Log("1이펙트");
-                StartCoroutine(AttackSpeed());
+                _timer = true;
             }
-            else
+            else //두번째 이펙트 아래에서 위로 쓸기
             {
-                //_effect2.SetActive(true);
-                isEffect1 = true;
+                _effect2.SetActive(true);
+                _isEffect1 = true;
                 Debug.Log("2이펙트");
-                StartCoroutine(AttackSpeed());
+                _timer = true;
             }
-            StopCoroutine(AttackSpeed());
         };
-        //_attackAtion.canceled += ctx => StartCoroutine(AttackSpeed());
-
     }
-    //void OnAttack(InputAction.CallbackContext context)
-    //{
-    //    StartCoroutine(AttackSpeed());
-    //}
-    IEnumerator AttackSpeed()
+    
+    IEnumerator AttackSpeed() //공격 속도 딜레이 코루틴
     {
-        Debug.Log($"{attSpeed}초만큼 딜레이");
-        yield return _delay;
+        Debug.Log($"{_attSpeed}초만큼 딜레이");
+        yield return new WaitForSeconds(_attSpeed);
+        _timer = false;
     }
-
-
     private void Update()
     {
-        attSpeed = 10f / _player.AttackSpeed;
+        _attSpeed = 10f / _player.AttackSpeed; //공격 속도 실시간 세팅
     }
 }
