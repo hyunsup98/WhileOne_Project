@@ -32,12 +32,18 @@ public class BaseRoom : MonoBehaviour
     [SerializeField] protected Transform wallContainer;
     [SerializeField] protected Transform doorContainer;
     
+    [Header("Trap Room Settings")]
+    [SerializeField] private GameObject trapRoomMazeGeneratorPrefab; // 함정방 미로 생성기 프리펩
+    
     protected Room roomData;
     protected Dictionary<Vector2Int, GameObject> doorObjects;
     
     // DoorSpace와 NoDoor 오브젝트 캐시
     private Dictionary<Vector2Int, GameObject> doorSpaces;
     private Dictionary<Vector2Int, GameObject> noDoors;
+    
+    // 함정방 미로 생성기
+    private TrapRoomMazeGenerator mazeGenerator;
     
     /// <summary>
     /// 방을 초기화합니다.
@@ -73,6 +79,12 @@ public class BaseRoom : MonoBehaviour
         UpdateDoorSpaces();
         
         CreateDoors();
+        
+        // 함정방인 경우 미로 생성
+        if (room.roomType == RoomType.Trap)
+        {
+            GenerateTrapRoomMaze();
+        }
     }
 
     /// <summary>
@@ -661,6 +673,47 @@ public class BaseRoom : MonoBehaviour
             return true;
         
         return false;
+    }
+    
+    /// <summary>
+    /// 함정방 미로를 생성합니다.
+    /// </summary>
+    private void GenerateTrapRoomMaze()
+    {
+        if (trapRoomMazeGeneratorPrefab == null)
+        {
+            Debug.LogWarning($"[{name}] 함정방 미로 생성기 프리펩이 설정되지 않았습니다.");
+            return;
+        }
+        
+        // 미로 생성기 인스턴스 생성
+        GameObject generatorObj = Instantiate(trapRoomMazeGeneratorPrefab, transform);
+        mazeGenerator = generatorObj.GetComponent<TrapRoomMazeGenerator>();
+        
+        if (mazeGenerator == null)
+        {
+            Debug.LogError($"[{name}] TrapRoomMazeGenerator 컴포넌트가 없습니다.");
+            Destroy(generatorObj);
+            return;
+        }
+        
+        // 입구 방향 찾기 (연결된 문이 있는 방향)
+        Vector2Int entryDirection = Direction.Up;
+        Vector2Int[] directions = { Direction.Up, Direction.Down, Direction.Left, Direction.Right };
+        
+        foreach (var dir in directions)
+        {
+            if (roomData.IsDoorConnected(dir))
+            {
+                entryDirection = dir;
+                break;
+            }
+        }
+        
+        // 미로 생성
+        mazeGenerator.GenerateMaze(roomSize, tileSize, entryDirection, transform);
+        
+        Debug.Log($"[{name}] 함정방 미로 생성 완료");
     }
 }
 
