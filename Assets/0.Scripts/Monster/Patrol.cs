@@ -1,40 +1,62 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class Patrol : IMonsterState
 {
     private Monster _monster;
-    private Transform _target;
-    private int _targetIndex;
+    private float _speed;
+    private List<Vector2> _patrolPoint;
+    private Astar _astar;
+    private int _patrolIndex;
+    private bool _isRise = true;
 
     public Patrol(Monster monster)
     {
         _monster = monster;
-        _target = monster.PatrolPoint[0];
-        _targetIndex = 0;
+        _speed = monster.Speed;
+        _patrolPoint = monster.PatrolPoint;
+        _astar = monster.MobAstar;
+        
     }
 
 
-    public void Enter()
-    {
+    public void Enter() { }
 
-    }
-
-    public void Exit()
-    {
-
-    }
+    public void Exit() { }
 
     public void Update()
     {
-        Vector2 dir = (_target.position - _monster.transform.position).normalized;
-        _monster.transform.Translate(dir * Time.deltaTime * _monster.Speed);
+        OnPatrol();
+    }
 
-        if(_target.position == _monster.transform.position)
+    public void OnPatrol()
+    {
+        Vector2 target = _patrolPoint[_patrolIndex];
+
+        Move(target);
+
+
+        if ((Vector2)_monster.transform.position == target)
         {
-            _targetIndex++;
-            int index =  _targetIndex % _monster.PatrolPoint.Count;
-            _target = _monster.PatrolPoint[index];
+            if (_isRise)
+                _patrolIndex++;
+            if (!_isRise)
+                _patrolIndex--;
         }
 
+        if (_patrolIndex == 0)
+            _isRise = true;
+        if(_patrolIndex == _patrolPoint.Count - 1)
+            _isRise = false;
+    }
+
+    private void Move(Vector2 target)
+    {
+        _monster.transform.position = Vector2.MoveTowards
+            (
+            _monster.transform.position,
+            target,
+            _speed * Time.deltaTime
+            );
     }
 }

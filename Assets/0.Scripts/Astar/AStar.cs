@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using static UnityEditor.PlayerSettings;
 
 public class Astar
 {
@@ -20,11 +19,10 @@ public class Astar
 
 
     // 경로 탐색 알고리즘
-    public List<Vector2Int> Pathfinder(Vector3 start, Vector3 target)
+    public List<Vector2> Pathfinder(Vector3 start, Vector3 target)
     {
         Vector2Int startCellPos = (Vector2Int)_wallTilemap.WorldToCell(start);
         Vector2Int targetCellPos = (Vector2Int)_wallTilemap.WorldToCell(target);
-
 
         Node current = _nodeManager.GetNode(startCellPos, 0, Heuristic(startCellPos, targetCellPos));
             
@@ -71,19 +69,22 @@ public class Astar
         Init();
         Debug.Log("경로 탐색 실패");
         return null;
-        
     }
 
+
     // 최종 최적경로 출력 메서드
-    List<Vector2Int> BuildPath(Node targetNode)
+    List<Vector2> BuildPath(Node targetNode)
     {
-        List<Vector2Int> path = new List<Vector2Int>();
+        List<Vector2> path = new List<Vector2>();
 
         Node current = targetNode;
 
         while (current != null)
         {
-            path.Add(current.Pos);
+            // 타일 중앙 좌표로 변환
+            Vector2 currentCellPos = GetCellPos(current.Pos);
+
+            path.Add(currentCellPos);
             current = current.Parent;
         }
 
@@ -120,11 +121,8 @@ public class Astar
 
     // 타일의 중앙으로 벡터값을 변경하는 오버로딩
     public Vector2 GetCellPos(Vector3 pos) => CellPos(pos);
-
     public Vector2 GetCellPos(Vector2 pos) => CellPos(pos);
-
     public Vector2 GetCellPos(Vector2Int pos) => CellPos(pos);
-
     private Vector2 CellPos(Vector2 pos)
     {
         Vector2 change = (Vector2Int)_wallTilemap.WorldToCell(pos);

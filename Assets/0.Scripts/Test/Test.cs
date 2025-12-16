@@ -8,7 +8,7 @@ public class Test : MonoBehaviour
     public Tilemap _wallTilemap;
     public Transform target;
 
-    private List<Vector2Int> list;
+    private List<Vector2> list;
     private Astar astar;
     private int index;
 
@@ -28,8 +28,6 @@ public class Test : MonoBehaviour
 
         Move(tempTarget);
 
-        Debug.Log("목표:" + tempTarget);
-        Debug.Log("거리"+ Vector2.Distance(transform.position, tempTarget));
         if (Vector2.Distance(transform.position, tempTarget) <= 0.3f)
             index++;
     }
