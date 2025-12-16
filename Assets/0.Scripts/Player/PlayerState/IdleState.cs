@@ -8,9 +8,6 @@ public class IdleState : IPlayerState
     {
         _player = player;
     }
-
-
-
     public void OnEnter()
     {
        

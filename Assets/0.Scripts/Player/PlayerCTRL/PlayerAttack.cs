@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,11 +12,16 @@ public class PlayerAttack : MonoBehaviour
     private InputAction _attackAtion;
 
     //게임오브젝트 이펙트 관련
-    GameObject _effect1;
-    GameObject _effect2;
+    private GameObject _effect1;
+    private GameObject _effect2;
+
+    WaitForSeconds _delay;
+    bool isEffect1 = true; //그냥 토글용 변수
+    float attSpeed;
+
     private void Awake()
     {
-        _player = GetComponent<Player>();
+        _player = transform.root.GetComponent<Player>();
 
         _input = transform.root.GetComponent<PlayerInput>();  //최상위 부모의 플레이어 인풋 컴포넌트
 
@@ -26,34 +32,48 @@ public class PlayerAttack : MonoBehaviour
 
     void Start()
     {
+        _delay = new WaitForSeconds(attSpeed);
 
         _actionMap = _input.actions.FindActionMap("Player");
 
         _attackAtion = _actionMap.FindAction("Attack");
 
-        _attackAtion.performed += OnAttack;
+        Debug.Log(_delay);
 
-        _attackAtion.canceled += ctx =>
+        _attackAtion.performed += ctx =>
         {
-            Debug.Log("Attack end");
+            if (isEffect1)
+            {
+                //_effect1.SetActive(true);
+                isEffect1 = false;
+                Debug.Log("1이펙트");
+                StartCoroutine(AttackSpeed());
+            }
+            else
+            {
+                //_effect2.SetActive(true);
+                isEffect1 = true;
+                Debug.Log("2이펙트");
+                StartCoroutine(AttackSpeed());
+            }
+            StopCoroutine(AttackSpeed());
         };
+        //_attackAtion.canceled += ctx => StartCoroutine(AttackSpeed());
+
     }
-    void OnAttack(InputAction.CallbackContext context)
+    //void OnAttack(InputAction.CallbackContext context)
+    //{
+    //    StartCoroutine(AttackSpeed());
+    //}
+    IEnumerator AttackSpeed()
     {
-        bool isEffect1 = true;
+        Debug.Log($"{attSpeed}초만큼 딜레이");
+        yield return _delay;
+    }
 
-        if (isEffect1)
-        {
-            _effect1.SetActive(true);
-            isEffect1 = false;
-            Debug.Log("1");
-        }
-        else
-        {
-            _effect1.SetActive(true);
-            isEffect1 = true;
-            Debug.Log("2");
-        }
 
+    private void Update()
+    {
+        attSpeed = 10f / _player.AttackSpeed;
     }
 }
