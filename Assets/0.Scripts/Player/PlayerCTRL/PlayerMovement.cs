@@ -21,12 +21,7 @@ public class PlayerMovement : MonoBehaviour
     //마우스 좌표를 기억하는 변수
     Vector3 _mousePosition;
 
-    //기획자분들 수치 조정하기 편하게 직렬화하기
-    [Header("플레이어관련 수치 조정")]
-
-
     //외부에서 접근 가능하게 만들 프로퍼티
-    
     public Vector3 Move => _move;
 
 
