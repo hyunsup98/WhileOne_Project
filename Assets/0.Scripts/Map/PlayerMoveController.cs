@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 /// WASD 입력으로 8방향 자유 이동합니다.
 /// 스프라이트 기반 충돌 체크를 사용합니다.
 /// </summary>
-public class PlayerMovement : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f; // 이동 속도
