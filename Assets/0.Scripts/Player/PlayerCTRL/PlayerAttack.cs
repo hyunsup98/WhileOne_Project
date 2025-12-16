@@ -52,14 +52,12 @@ public class PlayerAttack : MonoBehaviour
             {
                 _effect1.SetActive(true);
                 _isEffect1 = false;
-                Debug.Log("1이펙트");
                 _timer = true;
             }
             else //두번째 이펙트 아래에서 위로 쓸기
             {
                 _effect2.SetActive(true);
                 _isEffect1 = true;
-                Debug.Log("2이펙트");
                 _timer = true;
             }
         };
