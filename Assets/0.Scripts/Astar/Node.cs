@@ -11,13 +11,9 @@ public class Node
     public int F => G + H;   // 총 비용
     public Node Parent;      // 경로 추적용 부모 노드
 
-    public Node(Vector2Int pos)
+    public Node(Vector2Int pos, int g, int h, Node parent = null)
     {
         Pos = pos;
-    }
-
-    public void SetNode(int g, int h, Node parent)
-    {
         G = g;
         H = h;
         Parent = parent;
