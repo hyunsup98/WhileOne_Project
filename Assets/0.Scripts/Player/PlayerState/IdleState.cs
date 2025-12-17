@@ -25,6 +25,8 @@ public class IdleState : IPlayerState
         {
             _player.SetState(new MoveState(_player));
         }
+
+        
     }
 
     

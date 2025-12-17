@@ -22,6 +22,10 @@ public class PlayerAttack : MonoBehaviour
 
     private void Awake()
     {
+        inIt();
+    }
+    void inIt()
+    {
         _player = transform.root.GetComponent<Player>();
 
         _input = transform.root.GetComponent<PlayerInput>();  //최상위 부모의 플레이어 인풋 컴포넌트
@@ -30,7 +34,6 @@ public class PlayerAttack : MonoBehaviour
 
         //_effect2 = transform.GetChild(1).gameObject; //자식 이펙트
     }
-
     void Start()
     {
         _attSpeed = 10f / _player.AttackSpeed; //공격 속도 세팅 (공격속도는 10/n값) 필요하다면 조절가능

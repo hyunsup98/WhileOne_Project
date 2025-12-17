@@ -1,16 +1,28 @@
+using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;
 
-public class DigState : MonoBehaviour
+public class DigState : IPlayerState
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    Player _player;
+    PlayerDig _dig;
+    public DigState(Player player)
     {
-        
+         _player = player;
+    }
+    public void OnEnter()
+    {
+        _player.MoveSpeed /= 2;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnExit()
     {
-        
+        _player.MoveSpeed *= 2;
     }
+
+    public void OnUpdate()
+    {
+       
+    }
+
+    
 }

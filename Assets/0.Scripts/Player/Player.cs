@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
     //외부에서 사용할 프로퍼티
     public int Hp => _hp;
     public int Stamina => _stamina;
-    public int MoveSpeed => _moveSpeed;
+    public int MoveSpeed { get; set; }
     public int Attack => _attack;
     public int AttackSpeed => _attackSpeed;
 

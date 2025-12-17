@@ -58,7 +58,6 @@ public class PlayerMovement : MonoBehaviour
     {
         //마우스 좌표값을 월드 좌표값으로 변환
         _mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        //Debug.Log(_mousePosition);
 
         //플레이어와 마우스 사이 좌표 거리 계산
         Vector3 angle = _mousePosition - transform.position;
