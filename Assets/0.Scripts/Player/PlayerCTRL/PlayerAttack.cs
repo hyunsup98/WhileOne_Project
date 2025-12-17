@@ -12,8 +12,8 @@ public class PlayerAttack : MonoBehaviour
     private InputAction _attackAtion;
 
     //게임오브젝트 이펙트 관련
-    private GameObject _effect1;
-    private GameObject _effect2;
+    [SerializeField] private GameObject _effect1;
+    [SerializeField] private GameObject _effect2;
 
     WaitForSeconds _delay;
     bool _isEffect1 = true; //그냥 토글용 변수
@@ -26,9 +26,9 @@ public class PlayerAttack : MonoBehaviour
 
         _input = transform.root.GetComponent<PlayerInput>();  //최상위 부모의 플레이어 인풋 컴포넌트
 
-        _effect1 = transform.GetChild(0).gameObject; //자식 이펙트
+        //_effect1 = transform.GetChild(0).gameObject; //자식 이펙트
 
-        _effect2 = transform.GetChild(1).gameObject; //자식 이펙트
+        //_effect2 = transform.GetChild(1).gameObject; //자식 이펙트
     }
 
     void Start()

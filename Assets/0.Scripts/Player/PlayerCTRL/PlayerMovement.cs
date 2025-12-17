@@ -43,7 +43,6 @@ public class PlayerMovement : MonoBehaviour
         _moveAction.performed += OnMove; //입력키 눌렀을 때 이동
 
         _moveAction.canceled += OnStopped;
-       
     }
 
     void OnMove(InputAction.CallbackContext ctx)

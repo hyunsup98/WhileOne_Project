@@ -12,11 +12,7 @@ public class WeaponRotation : MonoBehaviour
 
     //회전값을 저장
     private float currentAngle;
-
-    void Start()
-    {
-
-    }
+   
 
     // Update is called once per frame
     void Update()
