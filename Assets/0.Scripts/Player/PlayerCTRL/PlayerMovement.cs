@@ -49,6 +49,7 @@ public class PlayerMovement : MonoBehaviour
     {
             _dir = ctx.ReadValue<Vector2>();
             _move = new Vector3(_dir.x, _dir.y, 0).normalized;
+        Debug.Log(_move);
     }
     private void OnStopped(InputAction.CallbackContext ctx)
     {

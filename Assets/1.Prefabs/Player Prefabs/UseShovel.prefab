@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8034917253205404317}
   - component: {fileID: 8030194416348933233}
   - component: {fileID: 8888813578194253905}
-  - component: {fileID: 1677750071058643590}
   m_Layer: 0
   m_Name: R_Weapon
   m_TagString: Untagged
@@ -106,20 +105,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
   _effect1: {fileID: 0}
   _effect2: {fileID: 0}
---- !u!114 &1677750071058643590
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 37547363429480286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 658cd69416b36da47929d3fd0695c828, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerDig
-  test: {fileID: 0}
-  offSet: 0
 --- !u!1 &249447194809812547
 GameObject:
   m_ObjectHideFlags: 0
@@ -2013,6 +1998,7 @@ GameObject:
   - component: {fileID: 2245997602353833970}
   - component: {fileID: 6090921389041934258}
   - component: {fileID: 6475511304828831566}
+  - component: {fileID: 4875647573395373011}
   m_Layer: 5
   m_Name: UseShovel
   m_TagString: Untagged
@@ -5180,6 +5166,20 @@ MonoBehaviour:
   m_DefaultActionMap: 
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &4875647573395373011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4329574107018779310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 658cd69416b36da47929d3fd0695c828, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDig
+  test: {fileID: 0}
+  offSet: 0.5
 --- !u!1 &4350439502986678144
 GameObject:
   m_ObjectHideFlags: 0
