@@ -9,16 +9,22 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
-    [SerializeField] private float moveSpeed = 5f; // 이동 속도
+    [SerializeField] [Tooltip("플레이어의 이동 속도 (단위/초)")]
+    private float moveSpeed = 5f; // 이동 속도
     
     [Header("Collision Check")]
-    [SerializeField] private float collisionCheckRadius = 0.3f; // 충돌 체크 반경
-    [SerializeField] private LayerMask obstacleLayer; // 장애물 레이어 (벽 포함)
-    [SerializeField] private string wallTag = "Wall"; // 벽 태그 (선택사항)
+    [SerializeField] [Tooltip("충돌 체크를 수행할 반경 (Unity 단위)")]
+    private float collisionCheckRadius = 0.3f; // 충돌 체크 반경
+    [SerializeField] [Tooltip("충돌 체크할 장애물 레이어 (벽 등 포함)")]
+    private LayerMask obstacleLayer; // 장애물 레이어 (벽 포함)
+    [SerializeField] [Tooltip("벽으로 인식할 태그 이름 (선택사항, 빈 문자열이면 사용 안 함)")]
+    private string wallTag = "Wall"; // 벽 태그 (선택사항)
     
     [Header("Interaction")]
-    [SerializeField] private Key interactKey = Key.E; // 상호작용 키
-    [SerializeField] private float interactRange = 1.5f; // 상호작용 범위
+    [SerializeField] [Tooltip("상호작용에 사용할 키 (Input System Key 타입)")]
+    private Key interactKey = Key.E; // 상호작용 키
+    [SerializeField] [Tooltip("상호작용 가능한 오브젝트를 탐지할 범위 (Unity 단위)")]
+    private float interactRange = 1.5f; // 상호작용 범위
     
     private Rigidbody2D rb;
     private Vector2 moveInput;

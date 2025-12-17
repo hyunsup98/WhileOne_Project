@@ -8,9 +8,12 @@ using System.Collections.Generic;
 public class BaseRoom : MonoBehaviour
 {
     [Header("Room Settings")]
-    [SerializeField] protected float roomSize = 4f;
-    [SerializeField] protected float tileSize = 1f;
-    [SerializeField] protected bool usePrefabAsIs = false; // 프리펩을 그대로 사용 (재생성 안 함)
+    [SerializeField] [Tooltip("방의 크기 (단위: Unity 단위)")]
+    protected float roomSize = 4f;
+    [SerializeField] [Tooltip("타일 하나의 크기 (단위: Unity 단위)")]
+    protected float tileSize = 1f;
+    [SerializeField] [Tooltip("프리펩을 그대로 사용할지 여부. true면 방을 재생성하지 않고 프리펩 상태 그대로 사용합니다.")]
+    protected bool usePrefabAsIs = false; // 프리펩을 그대로 사용 (재생성 안 함)
     
     /// <summary>
     /// 방의 크기를 반환합니다. (외부 접근용)
@@ -23,17 +26,24 @@ public class BaseRoom : MonoBehaviour
     public float TileSize => tileSize;
     
     [Header("Sprites")]
-    [SerializeField] protected Sprite floorSprite;
-    [SerializeField] protected Sprite wallSprite;
-    [SerializeField] protected Sprite doorSprite;
+    [SerializeField] [Tooltip("바닥 타일에 사용할 스프라이트")]
+    protected Sprite floorSprite;
+    [SerializeField] [Tooltip("벽 타일에 사용할 스프라이트")]
+    protected Sprite wallSprite;
+    [SerializeField] [Tooltip("문 타일에 사용할 스프라이트")]
+    protected Sprite doorSprite;
     
     [Header("Containers")]
-    [SerializeField] protected Transform floorContainer;
-    [SerializeField] protected Transform wallContainer;
-    [SerializeField] protected Transform doorContainer;
+    [SerializeField] [Tooltip("바닥 타일들이 생성될 부모 Transform 컨테이너")]
+    protected Transform floorContainer;
+    [SerializeField] [Tooltip("벽 타일들이 생성될 부모 Transform 컨테이너")]
+    protected Transform wallContainer;
+    [SerializeField] [Tooltip("문 오브젝트들이 생성될 부모 Transform 컨테이너")]
+    protected Transform doorContainer;
     
     [Header("Trap Room Settings")]
-    [SerializeField] private GameObject trapRoomMazeGeneratorPrefab; // 함정방 미로 생성기 프리펩
+    [SerializeField] [Tooltip("함정방 미로를 생성할 때 사용할 TrapRoomMazeGenerator 프리팹")]
+    private GameObject trapRoomMazeGeneratorPrefab; // 함정방 미로 생성기 프리펩
     
     protected Room roomData;
     protected Dictionary<Vector2Int, GameObject> doorObjects;
@@ -72,7 +82,7 @@ public class BaseRoom : MonoBehaviour
         {
             // 프리펩이 완성되어 있으면 크기만 계산
             CalculateRoomSizeFromPrefab();
-            SetupContainers();
+            // SetupContainers();
         }
         
         // DoorSpace와 NoDoor 활성화/비활성화
@@ -680,38 +690,73 @@ public class BaseRoom : MonoBehaviour
     /// </summary>
     private void GenerateTrapRoomMaze()
     {
-        if (trapRoomMazeGeneratorPrefab == null)
+        GameObject prefabToUse = trapRoomMazeGeneratorPrefab;
+        
+        // 프리팹이 설정되지 않았으면 자동으로 찾기
+        if (prefabToUse == null)
         {
-            Debug.LogWarning($"[{name}] 함정방 미로 생성기 프리펩이 설정되지 않았습니다.");
-            return;
+            Debug.LogWarning($"[{name}] 함정방 미로 생성기 프리펩이 설정되지 않았습니다. 자동으로 찾는 중...");
+            
+            // Resources 폴더에서 찾기
+            prefabToUse = Resources.Load<GameObject>("TrapRoomMazeGenerator");
+            
+            // Resources에서 못 찾으면 씬에서 찾기
+            if (prefabToUse == null)
+            {
+                TrapRoomMazeGenerator foundGenerator = FindFirstObjectByType<TrapRoomMazeGenerator>();
+                if (foundGenerator != null)
+                {
+                    prefabToUse = foundGenerator.gameObject;
+                    Debug.Log($"[{name}] 씬에서 TrapRoomMazeGenerator를 찾았습니다: {foundGenerator.name}");
+                }
+            }
+            
+            if (prefabToUse == null)
+            {
+                Debug.LogError($"[{name}] 함정방 미로 생성기 프리펩을 찾을 수 없습니다. " +
+                    "다음 중 하나를 수행하세요:\n" +
+                    "1. BaseRoom 프리팹의 'Trap Room Maze Generator Prefab' 필드에 TrapRoomMazeGenerator 프리팹을 할당\n" +
+                    "2. Resources 폴더에 'TrapRoomMazeGenerator' 이름의 프리팹 생성\n" +
+                    "3. 씬에 TrapRoomMazeGenerator 컴포넌트가 있는 GameObject 배치");
+                return;
+            }
         }
         
         // 미로 생성기 인스턴스 생성
-        GameObject generatorObj = Instantiate(trapRoomMazeGeneratorPrefab, transform);
+        GameObject generatorObj = Instantiate(prefabToUse, transform);
         mazeGenerator = generatorObj.GetComponent<TrapRoomMazeGenerator>();
         
         if (mazeGenerator == null)
         {
-            Debug.LogError($"[{name}] TrapRoomMazeGenerator 컴포넌트가 없습니다.");
+            Debug.LogError($"[{name}] TrapRoomMazeGenerator 컴포넌트가 없습니다. 프리팹에 TrapRoomMazeGenerator 컴포넌트를 추가하세요.");
             Destroy(generatorObj);
             return;
         }
         
-        // 입구 방향 찾기 (연결된 문이 있는 방향)
-        Vector2Int entryDirection = Direction.Up;
+        // 입구 방향 찾기 (연결된 모든 문 방향 수집)
+        Vector2Int primaryEntryDirection = Direction.Up;
         Vector2Int[] directions = { Direction.Up, Direction.Down, Direction.Left, Direction.Right };
+        List<Vector2Int> connectedDirections = new List<Vector2Int>();
         
         foreach (var dir in directions)
         {
             if (roomData.IsDoorConnected(dir))
             {
-                entryDirection = dir;
-                break;
+                connectedDirections.Add(dir);
             }
         }
         
-        // 미로 생성
-        mazeGenerator.GenerateMaze(roomSize, tileSize, entryDirection, transform);
+        // 연결된 문이 하나도 없으면 기본값 사용
+        if (connectedDirections.Count == 0)
+        {
+            connectedDirections.Add(Direction.Up);
+        }
+        
+        // 메인 입구 방향은 첫 번째 연결된 방향으로 설정
+        primaryEntryDirection = connectedDirections[0];
+        
+        // 미로 생성 (여러 입출구 지원)
+        mazeGenerator.GenerateMaze(roomSize, tileSize, primaryEntryDirection, connectedDirections, transform);
         
         Debug.Log($"[{name}] 함정방 미로 생성 완료");
     }

@@ -6,9 +6,12 @@ using UnityEngine;
 public abstract class Interactable : MonoBehaviour
 {
     [Header("Interaction Settings")]
-    [SerializeField] protected float interactionRange = 1.5f;
-    [SerializeField] protected LayerMask playerLayer;
-    [SerializeField] protected bool canInteract = true;
+    [SerializeField] [Tooltip("플레이어가 상호작용 가능한 범위 (Unity 단위)")]
+    protected float interactionRange = 1.5f;
+    [SerializeField] [Tooltip("플레이어가 속한 레이어 (충돌 체크용)")]
+    protected LayerMask playerLayer;
+    [SerializeField] [Tooltip("현재 상호작용 가능한지 여부")]
+    protected bool canInteract = true;
     
     protected bool isPlayerNearby = false;
     

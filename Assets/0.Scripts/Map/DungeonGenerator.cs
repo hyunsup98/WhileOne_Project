@@ -10,41 +10,70 @@ using System.Linq;
 public class DungeonGenerator : MonoBehaviour
 {
     [Header("Dungeon Settings")]
-    [SerializeField] private int roomCount = 9; // 생성할 방의 개수 (1층 기본값: 9개)
-    [SerializeField] private int gridSize = 10; // 그리드 크기 (시작 위치(0,0)를 중심으로 한 반경, -10 ~ +10 범위)
-    [SerializeField] private int eventRoomCount = 2; // 이벤트 방 개수
+    [SerializeField] [Tooltip("생성할 방의 총 개수 (1층 기본값: 9개)")]
+    private int roomCount = 9; // 생성할 방의 개수 (1층 기본값: 9개)
+    [SerializeField] [Tooltip("던전 그리드 크기 (시작 위치(0,0)를 중심으로 한 반경, -gridSize ~ +gridSize 범위)")]
+    private int gridSize = 10; // 그리드 크기 (시작 위치(0,0)를 중심으로 한 반경, -10 ~ +10 범위)
+    [SerializeField] [Tooltip("이벤트 방의 개수")]
+    private int eventRoomCount = 2; // 이벤트 방 개수
     
     [Header("Room Prefabs")]
-    [SerializeField] private GameObject normalRoomPrefab; // 기본 Room 프리펩 (1.Prefabs > Map > Room)
-    [SerializeField] private GameObject startRoomPrefab; // 시작 방 프리펩 (없으면 normalRoomPrefab 사용)
-    [SerializeField] private GameObject exitRoomPrefab; // 다음층 입구 방 프리펩 (없으면 normalRoomPrefab 사용)
-    [SerializeField] private GameObject eventRoomPrefab; // 이벤트 방 프리펩 (없으면 normalRoomPrefab 사용)
+    [SerializeField] [Tooltip("기본 일반 방 프리팹")]
+    private GameObject normalRoomPrefab; // 기본 Room 프리펩 (1.Prefabs > Map > Room)
+    [SerializeField] [Tooltip("시작 방 프리팹 (없으면 normalRoomPrefab 사용)")]
+    private GameObject startRoomPrefab; // 시작 방 프리펩 (없으면 normalRoomPrefab 사용)
+    [SerializeField] [Tooltip("다음층 입구 방 프리팹 (없으면 normalRoomPrefab 사용)")]
+    private GameObject exitRoomPrefab; // 다음층 입구 방 프리펩 (없으면 normalRoomPrefab 사용)
+    [SerializeField] [Tooltip("이벤트 방 프리팹 (없으면 normalRoomPrefab 사용)")]
+    private GameObject eventRoomPrefab; // 이벤트 방 프리펩 (없으면 normalRoomPrefab 사용)
     
     [Header("Corridor")]
-    [SerializeField] private bool useTilemapForCorridors = false; // Tilemap 방식 사용 여부
-    [SerializeField] private GameObject corridorPrefabHorizontal; // 가로 복도 프리펩 (좌우 연결, 너비 1칸) - Sprite 방식
-    [SerializeField] private GameObject corridorPrefabVertical; // 세로 복도 프리펩 (상하 연결, 너비 1칸) - Sprite 방식
-    [SerializeField] private float corridorLength = 2f; // 복도 길이 (칸 수)
+    [SerializeField] [Tooltip("Tilemap 방식으로 복도를 생성할지 여부 (false면 Sprite 방식 사용)")]
+    private bool useTilemapForCorridors = false; // Tilemap 방식 사용 여부
+    [SerializeField] [Tooltip("가로 복도 프리팹 (좌우 연결, Sprite 방식 사용 시)")]
+    private GameObject corridorPrefabHorizontal; // 가로 복도 프리펩 (좌우 연결, 너비 1칸) - Sprite 방식
+    [SerializeField] [Tooltip("세로 복도 프리팹 (상하 연결, Sprite 방식 사용 시)")]
+    private GameObject corridorPrefabVertical; // 세로 복도 프리펩 (상하 연결, 너비 1칸) - Sprite 방식
+    [SerializeField] [Tooltip("복도의 길이 (Unity 단위)")]
+    private float corridorLength = 2f; // 복도 길이 (칸 수)
     
     [Header("Corridor Tilemap (Tilemap 방식 사용 시)")]
-    [SerializeField] private TileBase corridorFloorTile; // 복도 바닥 타일
-    [SerializeField] private TileBase corridorWallTile; // 복도 벽 타일 (선택사항)
+    [SerializeField] [Tooltip("복도 바닥에 사용할 타일 (Tilemap 방식 사용 시)")]
+    private TileBase corridorFloorTile; // 복도 바닥 타일
+    [SerializeField] [Tooltip("복도 벽에 사용할 타일 (선택사항, Tilemap 방식 사용 시)")]
+    private TileBase corridorWallTile; // 복도 벽 타일 (선택사항)
     
     [Header("Generation Settings")]
-    [SerializeField] private float roomSpacing = 6f; // 방 간격 (roomSize + corridorLength 권장)
-    [SerializeField] private bool autoCalculateSpacing = true; // roomSize와 corridorLength로 자동 계산
-    [SerializeField] private bool generateOnStart = true;
-    [SerializeField] private Transform gridParent; // Grid 오브젝트 (없으면 자동으로 찾거나 생성)
-    [SerializeField] private float minTileSpacing = 5f; // 최소 타일 간격 (칸)
+    [SerializeField] [Tooltip("방과 방 사이의 간격 (Unity 단위, roomSize + corridorLength 권장)")]
+    private float roomSpacing = 6f; // 방 간격 (roomSize + corridorLength 권장)
+    [SerializeField] [Tooltip("roomSize와 corridorLength를 기반으로 방 간격을 자동 계산할지 여부")]
+    private bool autoCalculateSpacing = true; // roomSize와 corridorLength로 자동 계산
+    [SerializeField] [Tooltip("시작 시 자동으로 던전을 생성할지 여부")]
+    private bool generateOnStart = true;
+    [SerializeField] [Tooltip("던전 오브젝트들의 부모가 될 Grid Transform (없으면 자동으로 찾거나 생성)")]
+    private Transform gridParent; // Grid 오브젝트 (없으면 자동으로 찾거나 생성)
+    [SerializeField] [Tooltip("최소 타일 간격 (칸 단위)")]
+    private float minTileSpacing = 5f; // 최소 타일 간격 (칸)
     [Header("Scene Objects")]
-    [SerializeField] private GameObject exitPrefab; // 출구 프리펩 (방 중앙에 생성)
-    [SerializeField] private GameObject playerObject; // 시작 방에 배치할 플레이어 오브젝트
-    [SerializeField] private bool showRoomTypeLabels = true; // 방 타입 텍스트 표시 여부
-    [SerializeField] private float roomLabelOffsetY = 0.5f; // 방 타입 텍스트 Y 오프셋 (방 위쪽)
-    [SerializeField] private bool showCorridorLabels = false; // 복도 타일 텍스트 표시 여부 (디버그용)
-    [SerializeField] private float corridorLabelOffsetY = 0.2f; // 복도 텍스트 Y 오프셋
-    [SerializeField] private Font roomLabelFont; // 방 타입 라벨에 사용할 폰트 (null이면 기본 폰트 사용)
-    private const float DefaultCellSize = 0.32f; // 타일 한 칸 기본 크기
+    [SerializeField] [Tooltip("출구 프리팹 (방 중앙에 생성됨)")]
+    private GameObject exitPrefab; // 출구 프리펩 (방 중앙에 생성)
+    [SerializeField] [Tooltip("시작 방에 배치할 플레이어 오브젝트")]
+    private GameObject playerObject; // 시작 방에 배치할 플레이어 오브젝트
+    [SerializeField] [Tooltip("Dig Spot 프리팹 (타일맵에 배치됨)")]
+    private GameObject digSpotPrefab; // Dig Spot 프리펩 (타일맵에 배치)
+    [SerializeField] [Range(0f, 100f)] [Tooltip("Dig Spot 생성 확률 (0 ~ 100%)")]
+    private float digSpotSpawnChance = 10f; // Dig Spot 생성 확률 (%)
+    [SerializeField] [Tooltip("방 타입 텍스트를 표시할지 여부 (디버그용)")]
+    private bool showRoomTypeLabels = true; // 방 타입 텍스트 표시 여부
+    [SerializeField] [Tooltip("방 타입 텍스트의 Y 오프셋 (방 위쪽 기준, Unity 단위)")]
+    private float roomLabelOffsetY = 0.5f; // 방 타입 텍스트 Y 오프셋 (방 위쪽)
+    [SerializeField] [Tooltip("복도 타일 텍스트를 표시할지 여부 (디버그용)")]
+    private bool showCorridorLabels = false; // 복도 타일 텍스트 표시 여부 (디버그용)
+    [SerializeField] [Tooltip("복도 텍스트의 Y 오프셋 (Unity 단위)")]
+    private float corridorLabelOffsetY = 0.2f; // 복도 텍스트 Y 오프셋
+    [SerializeField] [Tooltip("방 타입 라벨에 사용할 폰트 (null이면 기본 폰트 사용)")]
+    private Font roomLabelFont; // 방 타입 라벨에 사용할 폰트 (null이면 기본 폰트 사용)
+    private const float DefaultCellSize = 1f; // 타일 한 칸 기본 크기 (PPU 32, Grid cell size 1)
     
     private DungeonGrid dungeonGrid;
     private Grid unityGrid; // Unity Grid 컴포넌트
@@ -172,6 +201,9 @@ public class DungeonGenerator : MonoBehaviour
         
         // 9. Exit 프리펩을 출구 방 중앙에 배치
         PlaceExitObject();
+        
+        // 10. 일반 전투 방에 Dig Spot 배치 (10% 확률)
+        PlaceDigSpots();
         
         Debug.Log($"던전 생성 완료: {dungeonGrid.GetRoomCount()}개 방");
     }
@@ -1011,7 +1043,7 @@ public class DungeonGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// 셀 크기를 결정합니다. (기본값 0.32)
+    /// 셀 크기를 결정합니다. (기본값 1, PPU 32, Grid cell size 1)
     /// </summary>
     private float ResolveCellSize()
     {
@@ -1094,6 +1126,197 @@ public class DungeonGenerator : MonoBehaviour
         Vector3 center = GetRoomWorldCenter(startRoom.roomObject);
         playerObject.transform.position = center;
         Debug.Log($"플레이어를 시작 방({startRoomPosition}) 중심({center})으로 이동");
+    }
+    
+    /// <summary>
+    /// 일반 전투 방에 Dig Spot을 배치합니다. (10% 확률)
+    /// </summary>
+    private void PlaceDigSpots()
+    {
+        if (digSpotPrefab == null)
+        {
+            Debug.LogWarning("digSpotPrefab이 지정되지 않아 Dig Spot을 생성할 수 없습니다.");
+            return;
+        }
+        
+        int digSpotCount = 0;
+        
+        // 모든 일반 전투 방 확인
+        foreach (var position in dungeonGrid.GetAllPositions())
+        {
+            Room room = dungeonGrid.GetRoom(position);
+            if (room == null || room.roomObject == null) continue;
+            
+            // 일반 전투 방만 처리
+            if (room.roomType != RoomType.Normal) continue;
+            
+            // 10% 확률로 생성
+            if (Random.Range(0f, 100f) >= digSpotSpawnChance) continue;
+            
+            // Dig Spot 배치
+            PlaceDigSpotInRoom(room);
+            digSpotCount++;
+        }
+        
+        Debug.Log($"Dig Spot {digSpotCount}개 생성 완료");
+    }
+    
+    /// <summary>
+    /// 방에 Dig Spot을 배치합니다. (방 중앙 또는 가장 가까운 타일에)
+    /// </summary>
+    private void PlaceDigSpotInRoom(Room room)
+    {
+        if (room.roomObject == null) return;
+        
+        // 방 내부의 Tilemap 찾기
+        Tilemap roomTilemap = room.roomObject.GetComponentInChildren<Tilemap>();
+        if (roomTilemap == null)
+        {
+            Debug.LogWarning($"[Dig Spot] 방({room.roomObject.name})에 Tilemap을 찾을 수 없습니다.");
+            return;
+        }
+        
+        // 방의 중심 위치 계산
+        Vector3 roomCenter = GetRoomWorldCenter(room.roomObject);
+        
+        // Grid 컴포넌트 찾기 (방의 부모 또는 전역 Grid)
+        Grid targetGrid = roomTilemap.GetComponentInParent<Grid>();
+        if (targetGrid == null)
+        {
+            targetGrid = unityGrid;
+        }
+        
+        if (targetGrid == null)
+        {
+            Debug.LogWarning($"[Dig Spot] Grid를 찾을 수 없습니다.");
+            return;
+        }
+        
+        // 방 중심을 Grid 셀 좌표로 변환
+        Vector3Int centerCell = targetGrid.WorldToCell(roomCenter);
+        
+        // 중앙 셀에 타일이 있는지 확인
+        Vector3Int digSpotCell = centerCell;
+        TileBase centerTile = roomTilemap.GetTile(centerCell);
+        
+        // 중앙에 타일이 없으면 가장 가까운 타일이 있는 셀 찾기
+        if (centerTile == null)
+        {
+            digSpotCell = FindNearestTileCell(roomTilemap, centerCell, targetGrid);
+            if (digSpotCell == Vector3Int.zero && centerCell != Vector3Int.zero)
+            {
+                // 찾지 못했으면 중앙 셀 사용
+                digSpotCell = centerCell;
+            }
+        }
+        
+        // 셀 좌표를 월드 좌표로 변환
+        Vector3 digSpotWorldPos = targetGrid.CellToWorld(digSpotCell);
+        
+        // 셀 중심으로 보정 (타일맵의 tileAnchor 고려) + Y 방향으로 1칸 아래 오프셋
+        Vector3 cellSize = targetGrid.cellSize;
+        Vector3 tileAnchor = roomTilemap.tileAnchor;
+        digSpotWorldPos += new Vector3(cellSize.x * tileAnchor.x,
+                                       cellSize.y * tileAnchor.y - cellSize.y, // 1칸 아래
+                                       0f);
+        
+        // Interactive 오브젝트 찾기
+        Transform interactiveParent = FindInteractiveParent(room.roomObject.transform);
+        if (interactiveParent == null)
+        {
+            Debug.LogWarning($"[Dig Spot] 방({room.roomObject.name})에 Interactive 오브젝트를 찾을 수 없어 방의 직접 자식으로 배치합니다.");
+            interactiveParent = room.roomObject.transform;
+        }
+        
+        // Dig Spot 프리팹 생성 (Interactive의 자식으로)
+        GameObject digSpot = Instantiate(digSpotPrefab, digSpotWorldPos, Quaternion.identity, interactiveParent);
+        
+        Debug.Log($"[Dig Spot] 방({room.roomObject.name})의 {interactiveParent.name}에 배치: 셀({digSpotCell}), 월드({digSpotWorldPos})");
+    }
+    
+    /// <summary>
+    /// 방 오브젝트에서 Interactive 자식 오브젝트를 찾습니다.
+    /// </summary>
+    private Transform FindInteractiveParent(Transform roomTransform)
+    {
+        if (roomTransform == null) return null;
+        
+        // 직접 자식에서 찾기
+        foreach (Transform child in roomTransform)
+        {
+            if (child.name.Contains("Interactive") || child.name.Contains("interactive"))
+            {
+                return child;
+            }
+        }
+        
+        // 재귀적으로 찾기
+        return FindInteractiveParentRecursive(roomTransform);
+    }
+    
+    /// <summary>
+    /// 재귀적으로 Interactive 오브젝트를 찾습니다.
+    /// </summary>
+    private Transform FindInteractiveParentRecursive(Transform parent)
+    {
+        if (parent == null) return null;
+        
+        foreach (Transform child in parent)
+        {
+            if (child.name.Contains("Interactive") || child.name.Contains("interactive"))
+            {
+                return child;
+            }
+            
+            Transform found = FindInteractiveParentRecursive(child);
+            if (found != null)
+            {
+                return found;
+            }
+        }
+        
+        return null;
+    }
+    
+    /// <summary>
+    /// 주어진 셀에서 가장 가까운 타일이 있는 셀을 찾습니다.
+    /// </summary>
+    private Vector3Int FindNearestTileCell(Tilemap tilemap, Vector3Int centerCell, Grid grid)
+    {
+        if (tilemap == null || grid == null) return Vector3Int.zero;
+        
+        // BoundsInt로 타일맵의 범위 가져오기
+        BoundsInt bounds = tilemap.cellBounds;
+        
+        // 중심에서 시작하여 점점 멀어지는 원형으로 검색
+        int maxRadius = Mathf.Max(bounds.size.x, bounds.size.y);
+        
+        for (int radius = 1; radius <= maxRadius; radius++)
+        {
+            // 반경 내의 모든 셀 확인
+            for (int x = -radius; x <= radius; x++)
+            {
+                for (int y = -radius; y <= radius; y++)
+                {
+                    // 원형 범위 내인지 확인
+                    if (x * x + y * y > radius * radius) continue;
+                    
+                    Vector3Int checkCell = centerCell + new Vector3Int(x, y, 0);
+                    
+                    // 타일맵 범위 내인지 확인
+                    if (!bounds.Contains(checkCell)) continue;
+                    
+                    // 타일이 있는지 확인
+                    TileBase tile = tilemap.GetTile(checkCell);
+                    if (tile != null)
+                    {
+                        return checkCell;
+                    }
+                }
+            }
+        }
+        
+        return Vector3Int.zero;
     }
     
     /// <summary>
