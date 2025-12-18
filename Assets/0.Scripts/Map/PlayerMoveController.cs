@@ -9,20 +9,44 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
-    [SerializeField] private float moveSpeed = 5f; // 이동 속도
+    [SerializeField] [Tooltip("플레이어의 이동 속도 (단위/초)")]
+    private float moveSpeed = 5f; // 이동 속도
     
     [Header("Collision Check")]
-    [SerializeField] private float collisionCheckRadius = 0.3f; // 충돌 체크 반경
-    [SerializeField] private LayerMask obstacleLayer; // 장애물 레이어 (벽 포함)
-    [SerializeField] private string wallTag = "Wall"; // 벽 태그 (선택사항)
+    [SerializeField] [Tooltip("충돌 체크를 수행할 반경 (Unity unit)")]
+    private float collisionCheckRadius = 0.3f; // 충돌 체크 반경
+    [SerializeField] [Tooltip("충돌 체크할 장애물 레이어 (벽 등 포함)")]
+    private LayerMask obstacleLayer; // 장애물 레이어 (벽 포함)
+    [SerializeField] [Tooltip("벽으로 인식할 태그 이름 (선택사항, 빈 문자열이면 사용 안 함)")]
+    private string wallTag = "Wall"; // 벽 태그 (선택사항)
     
     [Header("Interaction")]
-    [SerializeField] private Key interactKey = Key.E; // 상호작용 키
-    [SerializeField] private float interactRange = 1.5f; // 상호작용 범위
+    [SerializeField] [Tooltip("상호작용에 사용할 키 (Input System Key 타입)")]
+    private Key interactKey = Key.E; // 상호작용 키
+    [SerializeField] [Tooltip("상호작용 가능한 오브젝트를 탐지할 범위 (Unity unit)")]
+    private float interactRange = 1.5f; // 상호작용 범위
+
+    [Header("Status")]
+    [SerializeField] [Tooltip("플레이어의 최대 체력")]
+    private int maxHp = 100;
+    [SerializeField] [Tooltip("시작 시 현재 체력 (최대 체력을 넘지 않도록 자동 보정)")]
+    private int currentHp = 100;
+    [SerializeField] [Tooltip("체력 텍스트가 표시될 위치 오프셋 (플레이어 기준)")]
+    private Vector3 hpTextOffset = new Vector3(0f, 1.0f, 0f);
+    [SerializeField] [Tooltip("체력 텍스트 색상")]
+    private Color hpTextColor = Color.red;
+    [SerializeField] [Tooltip("체력 텍스트 폰트 크기")]
+    private int hpTextFontSize = 24;
     
     private Rigidbody2D rb;
     private Vector2 moveInput;
     private Keyboard keyboard;
+
+    // 머리 위에 표시할 체력 텍스트
+    private TextMesh hpTextMesh;
+
+    // 플레이어가 현재 속해 있는 방 (RoomController)
+    private RoomController currentRoom;
     
     private void Awake()
     {
@@ -43,6 +67,11 @@ public class PlayerController : MonoBehaviour
         
         // 키보드 입력 초기화
         keyboard = Keyboard.current;
+
+        // HP 값 보정 및 텍스트 생성
+        currentHp = Mathf.Clamp(currentHp, 0, maxHp);
+        CreateHpText();
+        UpdateHpText();
     }
     
     private void Update()
@@ -71,6 +100,22 @@ public class PlayerController : MonoBehaviour
         {
             TryInteract();
         }
+
+        // 마우스 우클릭으로 Dig 시도
+        var mouse = Mouse.current;
+        if (mouse != null && mouse.rightButton.wasPressedThisFrame)
+        {
+            TryRightClickDig(mouse);
+        }
+    }
+
+    private void LateUpdate()
+    {
+        // HP 텍스트가 플레이어 머리 위를 따라가도록 위치 갱신
+        if (hpTextMesh != null)
+        {
+            hpTextMesh.transform.position = transform.position + hpTextOffset;
+        }
     }
     
     /// <summary>
@@ -89,6 +134,113 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// 마우스 우클릭 지점에 대해 DigSpot 타일이 있으면 DugSpot으로 변경을 시도합니다.
+    /// (현재 플레이어가 속한 RoomController 기준)
+    /// </summary>
+    private void TryRightClickDig(Mouse mouse)
+    {
+        if (currentRoom == null) return;
+
+        // 마우스 화면 좌표 → 월드 좌표
+        Vector2 screenPos = mouse.position.ReadValue();
+        Vector3 worldPos = Camera.main != null
+            ? Camera.main.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, 0f))
+            : (Vector3)screenPos;
+        worldPos.z = 0f;
+
+        bool dug = currentRoom.TryDigAtWorldPosition(worldPos);
+
+        // 필요하면 디버그 로그
+        // Debug.Log($"[Player] Right click dig result: {dug}, pos:{worldPos}");
+    }
+
+    /// <summary>
+    /// RoomController에서 호출: 플레이어가 이 방에 들어왔을 때 현재 방 설정
+    /// </summary>
+    public void SetCurrentRoom(RoomController room)
+    {
+        currentRoom = room;
+    }
+
+    /// <summary>
+    /// RoomController에서 호출: 플레이어가 이 방에서 나갔을 때 현재 방 해제
+    /// </summary>
+    public void ClearCurrentRoom(RoomController room)
+    {
+        if (currentRoom == room)
+        {
+            currentRoom = null;
+        }
+    }
+
+    #region HP 관리 및 표시
+
+    /// <summary>
+    /// 머리 위에 표시할 HP 텍스트 오브젝트 생성
+    /// </summary>
+    private void CreateHpText()
+    {
+        if (hpTextMesh != null) return;
+
+        GameObject hpObj = new GameObject("PlayerHPText");
+        hpObj.transform.SetParent(transform);
+        hpObj.transform.position = transform.position + hpTextOffset;
+
+        hpTextMesh = hpObj.AddComponent<TextMesh>();
+        hpTextMesh.alignment = TextAlignment.Center;
+        hpTextMesh.anchor = TextAnchor.LowerCenter;
+        hpTextMesh.color = hpTextColor;
+        hpTextMesh.fontSize = hpTextFontSize;
+        // order in layer 설정 (필요시 조정)
+        hpTextMesh.GetComponent<MeshRenderer>().sortingOrder = 999;
+    }
+
+    /// <summary>
+    /// HP 텍스트 내용 갱신
+    /// </summary>
+    private void UpdateHpText()
+    {
+        if (hpTextMesh != null)
+        {
+            hpTextMesh.text = currentHp.ToString();
+        }
+    }
+
+    /// <summary>
+    /// 외부에서 HP를 설정할 때 사용 (0~maxHp로 자동 보정)
+    /// </summary>
+    public void SetHp(int value)
+    {
+        currentHp = Mathf.Clamp(value, 0, maxHp);
+        UpdateHpText();
+    }
+
+    /// <summary>
+    /// HP 증감 (음수 = 데미지, 양수 = 회복)
+    /// </summary>
+    public void AddHp(int delta)
+    {
+        SetHp(currentHp + delta);
+    }
+
+    /// <summary>
+    /// HP를 퍼센트(최대 HP 기준)로 증감합니다. (예: -10 = -10%, 10 = +10%)
+    /// </summary>
+    public void AddHpPercent(float percent)
+    {
+        // 1보다 큰 값은 "퍼센트" 로 간주 (10 -> 0.1), 0~1 사이는 곧바로 비율로 사용
+        float ratio = Mathf.Abs(percent) > 1f ? percent / 100f : percent;
+
+        int delta = Mathf.RoundToInt(maxHp * ratio);
+        AddHp(delta);
+    }
+
+    public int GetCurrentHp() => currentHp;
+    public int GetMaxHp() => maxHp;
+
+    #endregion
     
     private void FixedUpdate()
     {

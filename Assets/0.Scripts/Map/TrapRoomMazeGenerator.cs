@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,121 +10,236 @@ using System.Linq;
 public class TrapRoomMazeGenerator : MonoBehaviour
 {
     [Header("Maze Settings")]
-    [SerializeField] private int mazeWidth = 15; // 미로 가로 크기 (타일 수)
-    [SerializeField] private int mazeHeight = 15; // 미로 세로 크기 (타일 수)
+    [SerializeField] [Tooltip("미로의 가로 크기 (타일 수). 홀수여야 합니다.")]
+    private int mazeWidth = 15; // 미로 가로 크기 (타일 수)
+    [SerializeField] [Tooltip("미로의 세로 크기 (타일 수). 홀수여야 합니다.")]
+    private int mazeHeight = 15; // 미로 세로 크기 (타일 수)
     
     [Header("Trap Settings")]
-    [SerializeField] private GameObject trapPrefab; // 함정 프리펩 (1x1)
-    [SerializeField] private float trapAttackInterval = 2f; // 함정 공격 간격 (초)
-    [SerializeField] private float maxTrapRatio = 0.3f; // 함정 최대 비율 (30%)
-    [SerializeField] private int safeZoneRadius = 2; // 입구/출구 주변 안전 구역 (칸)
+    [SerializeField] [Tooltip("함정 ON 상태에 사용할 프리팹 (1x1 크기)")]
+    private GameObject trapPrefab; // 함정 ON 프리펩 (1x1)
+    [SerializeField] [Tooltip("함정 OFF 상태에 사용할 프리펩 (선택, 비어 있으면 ON 프리펩의 활성/비활성으로 대체)")]
+    private GameObject trapOffPrefab; // 함정 OFF 프리펩
+    [SerializeField] [Tooltip("함정이 공격하는 간격 (초 단위)")]
+    private float trapAttackInterval = 2f; // 함정 공격 간격 (초)
+    [SerializeField] [Tooltip("미로 내 함정의 최대 비율 (0.0 ~ 1.0). 예: 0.3 = 30%")]
+    private float maxTrapRatio = 0.3f; // 함정 최대 비율 (30%)
+    [SerializeField] [Tooltip("입구/출구 주변에 함정을 배치하지 않는 안전 구역의 반경 (칸 단위)")]
+    private int safeZoneRadius = 2; // 입구/출구 주변 안전 구역 (칸)
     
     [Header("Lever Settings")]
-    [SerializeField] private GameObject leverPrefab; // 레버 프리펩
-    [SerializeField] private GameObject treasureChestPrefab; // 보물상자 프리펩 (10% 확률)
-    [SerializeField] private float treasureChance = 0.1f; // 보물상자 등장 확률 (10%)
+    [SerializeField] [Tooltip("레버로 사용할 프리팹")]
+    private GameObject leverPrefab; // 레버 프리펩
+    [SerializeField] [Tooltip("보물상자 프리팹 (레버 대신 일정 확률로 생성됨)")]
+    private GameObject treasureChestPrefab; // 보물상자 프리펩 (10% 확률)
+    [SerializeField] [Tooltip("보물상자가 레버 대신 등장할 확률 (0.0 ~ 1.0). 예: 0.1 = 10%")]
+    private float treasureChance = 0.1f; // 보물상자 등장 확률 (10%)
     
     [Header("Maze Prefabs")]
-    [SerializeField] private GameObject floorTilePrefab; // 바닥 타일 프리펩
-    [SerializeField] private GameObject wallTilePrefab; // 벽 타일 프리펩
+    [SerializeField] [Tooltip("미로의 벽 타일로 사용할 프리팹 (통로를 만들기 위해 사용)")]
+    private GameObject wallTilePrefab; // 벽 타일 프리펩 (통로를 만들기 위해 사용)
     
     // 미로 그리드 (true = 통로, false = 벽)
     private bool[,] mazeGrid;
     
     // 함정 위치
     private List<Vector2Int> trapPositions;
+    // 생성된 함정 오브젝트 (ON/OFF 전환용)
+    private List<GameObject> trapObjects = new List<GameObject>();
     
     // 레버 위치
     private Vector2Int leverPosition;
     
-    // 입구 위치 (문이 있는 방향)
+    // 메인 입구 위치
     private Vector2Int entryPosition;
+    
+    // 여러 입출구가 있을 때, 모든 입구 셀 위치를 저장
+    private List<Vector2Int> entryPositions = new List<Vector2Int>();
     
     // 방 크기 (월드 단위)
     private float roomSize;
     private float cellSize;
     
     /// <summary>
-    /// 함정방 미로를 생성합니다.
+    /// 함정방 미로를 생성합니다. (기존 방식 - 단일 입구 방향)
     /// </summary>
     public void GenerateMaze(float roomSize, float cellSize, Vector2Int entryDirection, Transform parent)
     {
-        this.roomSize = roomSize;
+        // 단일 입구만 사용하는 기존 호출은, 내부적으로 동일한 방향 하나만 가진 리스트를 만들어 새 메서드를 호출
+        List<Vector2Int> entryDirections = new List<Vector2Int> { entryDirection };
+        GenerateMaze(roomSize, cellSize, entryDirection, entryDirections, parent);
+    }
+    
+    /// <summary>
+    /// 함정방 미로를 생성합니다. (여러 개의 입출구 방향 지원)
+    /// primaryEntryDirection: 메인 입구 방향 (시작 방과 연결되는 쪽)
+    /// allEntryDirections: 열려 있는 모든 문 방향 (Up/Down/Left/Right 중 여러 개)
+    /// </summary>
+    public void GenerateMaze(float roomSize, float cellSize, Vector2Int primaryEntryDirection, List<Vector2Int> allEntryDirections, Transform parent)
+    {
+        // cellSize, roomSize 저장 (기본값)
         this.cellSize = cellSize;
+        this.roomSize = roomSize;
         
-        // 미로 크기 계산 (방 크기를 타일 수로 변환)
-        mazeWidth = Mathf.RoundToInt(roomSize / cellSize);
-        mazeHeight = Mathf.RoundToInt(roomSize / cellSize);
+        // 1) BaseRoom 컴포넌트가 있으면 그것을 기준으로 방/미로 크기를 결정 (가장 신뢰할 수 있는 값)
+        BaseRoom baseRoom = parent != null ? parent.GetComponent<BaseRoom>() : null;
+        if (baseRoom != null && baseRoom.TileSize > 0f)
+        {
+            this.cellSize = baseRoom.TileSize;
+            this.roomSize = baseRoom.RoomSize;
+            
+            // roomSize / tileSize = 방의 셀 개수 (정사각형 방 가정)
+            int sizeInCells = Mathf.Max(5, Mathf.RoundToInt(baseRoom.RoomSize / baseRoom.TileSize));
+            mazeWidth = sizeInCells;
+            mazeHeight = sizeInCells;
+        }
+        // 2) BaseRoom 정보가 없으면, 함정방의 실제 크기를 측정하여 미로 크기 결정
+        else if (parent != null)
+        {
+            // 방 내부의 Tilemap과 Grid 찾기
+            Tilemap roomTilemap = parent.GetComponentInChildren<Tilemap>();
+            Grid roomGrid = null;
+            
+            if (roomTilemap != null)
+            {
+                roomGrid = roomTilemap.GetComponentInParent<Grid>();
+            }
+            
+            if (roomGrid != null)
+            {
+                // 방의 실제 중심과 크기 계산
+                Vector3 roomCenter = GetRoomActualCenter(parent);
+                Vector3Int roomCenterCell = roomGrid.WorldToCell(roomCenter);
+                
+                // 방의 bounds를 계산하여 실제 크기 측정
+                BoundsInt roomBounds = CalculateRoomBounds(parent, roomGrid, roomCenterCell);
+                
+                // 방 크기를 셀 단위로 계산
+                int roomWidthInCells = roomBounds.size.x;
+                int roomHeightInCells = roomBounds.size.y;
+                
+                // 요구사항: 방 크기와 미로 크기는 같아야 함
+                // 따라서 미로 너비/높이를 방의 셀 크기와 동일하게 설정
+                mazeWidth = Mathf.Max(5, roomWidthInCells);
+                mazeHeight = Mathf.Max(5, roomHeightInCells);
+            }
+            else
+            {
+                // Grid를 찾지 못하면 roomSize 기반으로 방/미로 동일 크기 계산
+                int sizeInCells = Mathf.Max(5, Mathf.RoundToInt(roomSize / this.cellSize));
+                mazeWidth = sizeInCells;
+                mazeHeight = sizeInCells;
+            }
+        }
+        else
+        {
+            // parent가 없으면 기본값 사용
+            mazeWidth = 15;
+            mazeHeight = 15;
+            if (mazeWidth % 2 == 0) mazeWidth--;
+            if (mazeHeight % 2 == 0) mazeHeight--;
+        }
         
-        // 미로 그리드 초기화 (모두 벽으로 시작)
+        // 미로 그리드 초기화 (모두 벽으로 시작, false = 벽, true = 통로)
         mazeGrid = new bool[mazeWidth, mazeHeight];
         trapPositions = new List<Vector2Int>();
+        trapObjects = new List<GameObject>();
         
-        // 1. 미로 생성 (DFS 기반)
+        // 1단계: 벽으로 통로 만들기 (미로 생성)
         GenerateMazePaths();
         
-        // 2. 입구 위치 결정 (문이 있는 방향의 가장자리)
-        entryPosition = DetermineEntryPosition(entryDirection);
+        // 2단계: 메인 입구 위치 결정 (문이 있는 방향의 가장자리)
+        entryPosition = DetermineEntryPosition(primaryEntryDirection);
         
-        // 3. 레버 위치 결정 (모서리에 최대한 가깝게)
+        // 입구 위치 리스트 초기화 (메인 입구 포함)
+        entryPositions.Clear();
+        entryPositions.Add(entryPosition);
+        
+        // 추가 입출구가 있다면, 각 방향에 대해 가장자리 통로를 열어주고 리스트에 추가
+        OpenAdditionalEntryPositions(primaryEntryDirection, allEntryDirections);
+        
+        // 3단계: 레버 위치 결정 (모서리에 최대한 가깝게)
         leverPosition = DetermineLeverPosition();
         
-        // 4. 입구에서 레버까지 경로 보장
+        // 4단계: 입구에서 레버까지 경로 보장
         EnsurePathToLever();
         
-        // 5. 함정 배치
-        PlaceTraps();
+        // 5단계: 통로 안에 함정 배치
+        PlaceTrapsInPaths();
         
-        // 6. 실제 오브젝트 생성
+        // 6단계: 실제 오브젝트 생성 (벽 먼저, 그 다음 함정)
         CreateMazeObjects(parent);
         CreateTraps(parent);
         CreateLever(parent);
     }
     
     /// <summary>
-    /// DFS 기반 미로 생성
+    /// Recursive Backtracking 기반 미로 생성 (개선된 버전)
+    /// 홀수 크기 그리드에서 2칸씩 이동하여 완벽한 미로 생성
     /// </summary>
     private void GenerateMazePaths()
     {
+        // 미로 크기를 홀수로 보정 (2칸씩 이동하기 위해)
+        int actualWidth = (mazeWidth % 2 == 0) ? mazeWidth - 1 : mazeWidth;
+        int actualHeight = (mazeHeight % 2 == 0) ? mazeHeight - 1 : mazeHeight;
+        
+        // 모든 셀을 벽으로 초기화
+        for (int x = 0; x < mazeWidth; x++)
+        {
+            for (int y = 0; y < mazeHeight; y++)
+            {
+                mazeGrid[x, y] = false;
+            }
+        }
+        
         // DFS 스택
         Stack<Vector2Int> stack = new Stack<Vector2Int>();
         HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
         
-        // 시작점 (중앙 근처)
-        Vector2Int start = new Vector2Int(mazeWidth / 2, mazeHeight / 2);
+        // 시작점 (중앙 근처의 홀수 좌표)
+        int startX = (actualWidth / 2) * 2 + 1;
+        int startY = (actualHeight / 2) * 2 + 1;
+        startX = Mathf.Clamp(startX, 1, actualWidth - 2);
+        startY = Mathf.Clamp(startY, 1, actualHeight - 2);
+        
+        Vector2Int start = new Vector2Int(startX, startY);
         stack.Push(start);
         visited.Add(start);
         mazeGrid[start.x, start.y] = true;
         
-        // DFS로 미로 생성
+        // 4방향 (위, 아래, 오른쪽, 왼쪽)
         Vector2Int[] directions = {
-            new Vector2Int(0, 1),  // 위
-            new Vector2Int(0, -1), // 아래
-            new Vector2Int(1, 0),  // 오른쪽
-            new Vector2Int(-1, 0)  // 왼쪽
+            new Vector2Int(0, 2),   // 위 (2칸)
+            new Vector2Int(0, -2),  // 아래 (2칸)
+            new Vector2Int(2, 0),   // 오른쪽 (2칸)
+            new Vector2Int(-2, 0)   // 왼쪽 (2칸)
         };
         
         while (stack.Count > 0)
         {
             Vector2Int current = stack.Peek();
-            List<Vector2Int> neighbors = new List<Vector2Int>();
+            List<Vector2Int> unvisitedNeighbors = new List<Vector2Int>();
             
-            // 방문하지 않은 인접 셀 찾기
+            // 방문하지 않은 인접 셀 찾기 (2칸 떨어진 홀수 좌표)
             foreach (var dir in directions)
             {
-                Vector2Int next = current + dir * 2; // 2칸씩 이동 (벽 하나 건너뛰기)
+                Vector2Int next = current + dir;
                 
-                if (IsValidCell(next) && !visited.Contains(next))
+                // 유효한 범위 내이고, 방문하지 않았으며, 홀수 좌표인지 확인
+                if (IsValidCell(next) && 
+                    next.x >= 1 && next.x < actualWidth - 1 &&
+                    next.y >= 1 && next.y < actualHeight - 1 &&
+                    !visited.Contains(next))
                 {
-                    neighbors.Add(next);
+                    unvisitedNeighbors.Add(next);
                 }
             }
             
-            if (neighbors.Count > 0)
+            if (unvisitedNeighbors.Count > 0)
             {
                 // 랜덤하게 선택
-                Vector2Int chosen = neighbors[Random.Range(0, neighbors.Count)];
-                Vector2Int wall = current + (chosen - current) / 2;
+                Vector2Int chosen = unvisitedNeighbors[Random.Range(0, unvisitedNeighbors.Count)];
+                Vector2Int wall = current + (chosen - current) / 2; // 중간 벽 위치
                 
                 // 벽 제거 (통로 만들기)
                 mazeGrid[wall.x, wall.y] = true;
@@ -134,9 +250,23 @@ public class TrapRoomMazeGenerator : MonoBehaviour
             }
             else
             {
+                // 더 이상 갈 곳이 없으면 백트래킹
                 stack.Pop();
             }
         }
+        
+        // 가장자리 벽 보정 (경계를 벽으로 확실히 설정)
+        for (int x = 0; x < mazeWidth; x++)
+        {
+            mazeGrid[x, 0] = false; // 아래쪽 벽
+            mazeGrid[x, mazeHeight - 1] = false; // 위쪽 벽
+        }
+        for (int y = 0; y < mazeHeight; y++)
+        {
+            mazeGrid[0, y] = false; // 왼쪽 벽
+            mazeGrid[mazeWidth - 1, y] = false; // 오른쪽 벽
+        }
+        
     }
     
     /// <summary>
@@ -191,37 +321,196 @@ public class TrapRoomMazeGenerator : MonoBehaviour
     }
     
     /// <summary>
-    /// 레버 위치 결정 (모서리에 최대한 가깝게)
+    /// 방향에 따른 가장자리 셀 위치를 계산합니다. (실제 그리드는 변경하지 않음)
+    /// </summary>
+    private Vector2Int GetBorderPositionForDirection(Vector2Int direction)
+    {
+        if (direction == Direction.Up)
+        {
+            return new Vector2Int(mazeWidth / 2, mazeHeight - 1);
+        }
+        if (direction == Direction.Down)
+        {
+            return new Vector2Int(mazeWidth / 2, 0);
+        }
+        if (direction == Direction.Left)
+        {
+            return new Vector2Int(0, mazeHeight / 2);
+        }
+        if (direction == Direction.Right)
+        {
+            return new Vector2Int(mazeWidth - 1, mazeHeight / 2);
+        }
+        // 기본값: 아래쪽 중앙
+        return new Vector2Int(mazeWidth / 2, 0);
+    }
+    
+    /// <summary>
+    /// 메인 입구 외에, 열려 있는 다른 문 방향에 대해서도 가장자리 통로를 엽니다.
+    /// </summary>
+    private void OpenAdditionalEntryPositions(Vector2Int primaryDirection, List<Vector2Int> allDirections)
+    {
+        if (allDirections == null || allDirections.Count == 0) return;
+        
+        foreach (var dir in allDirections)
+        {
+            // 메인 입구 방향은 이미 처리했으므로 건너뜀
+            if (dir == primaryDirection) continue;
+            
+            Vector2Int entry = GetBorderPositionForDirection(dir);
+            
+            // 경계 체크
+            if (!IsValidCell(entry)) continue;
+            
+            // 입구 셀을 통로로 설정
+            mazeGrid[entry.x, entry.y] = true;
+            
+            // 입구 위치 리스트에도 추가 (함정 안전 구역 계산용)
+            entryPositions.Add(entry);
+            
+            // 주변 1칸(3x3)을 통로로 만들어, 방과 자연스럽게 연결되도록 함
+            for (int x = Mathf.Max(0, entry.x - 1); x <= Mathf.Min(mazeWidth - 1, entry.x + 1); x++)
+            {
+                for (int y = Mathf.Max(0, entry.y - 1); y <= Mathf.Min(mazeHeight - 1, entry.y + 1); y++)
+                {
+                    mazeGrid[x, y] = true;
+                }
+            }
+            
+        }
+    }
+    
+    /// <summary>
+    /// 레버 위치 결정
+    /// - 여러 입구가 있을 때, 어떤 입구에서 출발하더라도
+    ///   레버까지의 "최단 경로"가 최대가 되도록(가능한 한 멀도록) 선택합니다.
+    /// - 구현: 모든 입구를 동시에 시작점으로 하는 BFS로 각 셀까지의 최소 거리 계산 →
+    ///   그 중 거리가 가장 큰 통로 셀을 레버 위치로 사용.
     /// </summary>
     private Vector2Int DetermineLeverPosition()
     {
-        // 4개 모서리 후보
-        List<Vector2Int> cornerCandidates = new List<Vector2Int>
+        // 1. 입구 리스트 준비 (없으면 기존 단일 entryPosition 사용)
+        List<Vector2Int> sources = new List<Vector2Int>();
+        if (entryPositions != null && entryPositions.Count > 0)
         {
-            new Vector2Int(1, 1),                    // 왼쪽 아래 모서리
-            new Vector2Int(mazeWidth - 2, 1),        // 오른쪽 아래 모서리
-            new Vector2Int(1, mazeHeight - 2),      // 왼쪽 위 모서리
-            new Vector2Int(mazeWidth - 2, mazeHeight - 2) // 오른쪽 위 모서리
+            sources.AddRange(entryPositions);
+        }
+        else
+        {
+            sources.Add(entryPosition);
+        }
+        
+        // 2. BFS를 위한 거리 배열 초기화 (-1 = 방문 안 함)
+        int[,] dist = new int[mazeWidth, mazeHeight];
+        for (int x = 0; x < mazeWidth; x++)
+        {
+            for (int y = 0; y < mazeHeight; y++)
+            {
+                dist[x, y] = -1;
+            }
+        }
+        
+        Queue<Vector2Int> queue = new Queue<Vector2Int>();
+        
+        // 3. 모든 입구를 시작점(거리 0)으로 큐에 추가 (멀티 소스 BFS)
+        foreach (var src in sources)
+        {
+            if (!IsValidCell(src)) continue;
+            dist[src.x, src.y] = 0;
+            queue.Enqueue(src);
+        }
+        
+        Vector2Int[] directions = {
+            new Vector2Int(0, 1),
+            new Vector2Int(0, -1),
+            new Vector2Int(1, 0),
+            new Vector2Int(-1, 0)
         };
         
-        // 입구에서 가장 먼 모서리 선택
+        // 4. BFS로 각 통로 셀까지의 "가장 가까운 입구"로부터의 거리 계산
+        while (queue.Count > 0)
+        {
+            Vector2Int current = queue.Dequeue();
+            
+            foreach (var dir in directions)
+            {
+                Vector2Int next = current + dir;
+                
+                if (!IsValidCell(next)) continue;
+                if (!mazeGrid[next.x, next.y]) continue; // 통로가 아니면 패스
+                if (dist[next.x, next.y] != -1) continue; // 이미 방문
+                
+                dist[next.x, next.y] = dist[current.x, current.y] + 1;
+                queue.Enqueue(next);
+            }
+        }
+        
+        // 5. 가장 먼 통로 셀을 레버 위치 후보로 선택
+        Vector2Int bestPos = entryPosition;
+        int bestDist = -1;
+        
+        for (int x = 1; x < mazeWidth - 1; x++)
+        {
+            for (int y = 1; y < mazeHeight - 1; y++)
+            {
+                if (!mazeGrid[x, y]) continue;      // 통로만 대상
+                if (dist[x, y] < 0) continue;       // 도달 불가
+                
+                // 입구 안전 구역(safeZoneRadius) 안쪽은 제외 (레버가 입구 바로 옆에 생기지 않도록)
+                bool nearAnyEntry = false;
+                foreach (var src in sources)
+                {
+                    int dEntry = Mathf.Abs(x - src.x) + Mathf.Abs(y - src.y);
+                    if (dEntry <= safeZoneRadius)
+                    {
+                        nearAnyEntry = true;
+                        break;
+                    }
+                }
+                if (nearAnyEntry) continue;
+                
+                // 현재 셀이 기존 최선보다 더 멀다면 갱신
+                if (dist[x, y] > bestDist)
+                {
+                    bestDist = dist[x, y];
+                    bestPos = new Vector2Int(x, y);
+                }
+            }
+        }
+        
+        // 6. 적절한 후보를 못 찾았으면, 기존 모서리 기반 로직으로 fallback
+        if (bestDist < 0)
+        {
+            Debug.LogWarning("[TrapRoomMazeGenerator] 레버 위치 후보를 찾지 못해 기존 모서리 기반 로직을 사용합니다.");
+            
+        List<Vector2Int> cornerCandidates = new List<Vector2Int>
+        {
+                new Vector2Int(1, 1),
+                new Vector2Int(mazeWidth - 2, 1),
+                new Vector2Int(1, mazeHeight - 2),
+                new Vector2Int(mazeWidth - 2, mazeHeight - 2)
+            };
+            
         Vector2Int farthestCorner = cornerCandidates[0];
         float maxDistance = 0f;
         
         foreach (var corner in cornerCandidates)
         {
-            float dist = Vector2Int.Distance(entryPosition, corner);
-            if (dist > maxDistance)
-            {
-                maxDistance = dist;
+                float sumDist = 0f;
+                foreach (var src in sources)
+                {
+                    sumDist += Vector2Int.Distance(src, corner);
+                }
+                
+                if (sumDist > maxDistance)
+                {
+                    maxDistance = sumDist;
                 farthestCorner = corner;
             }
         }
         
         // 모서리 근처에서 통로가 있는 위치 찾기
         Vector2Int leverPos = farthestCorner;
-        
-        // 주변에서 통로 찾기
         for (int radius = 0; radius < 3; radius++)
         {
             for (int x = Mathf.Max(1, farthestCorner.x - radius); x <= Mathf.Min(mazeWidth - 2, farthestCorner.x + radius); x++)
@@ -231,23 +520,16 @@ public class TrapRoomMazeGenerator : MonoBehaviour
                     if (mazeGrid[x, y])
                     {
                         leverPos = new Vector2Int(x, y);
-                        goto FoundLever;
+                            return leverPos;
+                        }
                     }
                 }
             }
+            
+            return leverPos;
         }
         
-        FoundLever:
-        // 레버 주변도 통로로 만들기 (안전 구역)
-        for (int x = Mathf.Max(0, leverPos.x - 1); x <= Mathf.Min(mazeWidth - 1, leverPos.x + 1); x++)
-        {
-            for (int y = Mathf.Max(0, leverPos.y - 1); y <= Mathf.Min(mazeHeight - 1, leverPos.y + 1); y++)
-            {
-                mazeGrid[x, y] = true;
-            }
-        }
-        
-        return leverPos;
+        return bestPos;
     }
     
     /// <summary>
@@ -390,39 +672,60 @@ public class TrapRoomMazeGenerator : MonoBehaviour
     }
     
     /// <summary>
-    /// 함정 배치
+    /// 통로 안에 함정 배치 (벽으로 만든 통로 내부에만 배치)
     /// </summary>
-    private void PlaceTraps()
+    private void PlaceTrapsInPaths()
     {
-        // 이동 가능한 타일 수 계산
-        int walkableTiles = 0;
-        List<Vector2Int> walkablePositions = new List<Vector2Int>();
+        // 1. 통로 위치 수집 (mazeGrid[x,y] == true인 위치만)
+        List<Vector2Int> pathPositions = new List<Vector2Int>();
         
         for (int x = 0; x < mazeWidth; x++)
         {
             for (int y = 0; y < mazeHeight; y++)
             {
+                // 통로인 위치만 수집 (벽이 아닌 곳)
                 if (mazeGrid[x, y])
                 {
-                    walkableTiles++;
-                    walkablePositions.Add(new Vector2Int(x, y));
+                    pathPositions.Add(new Vector2Int(x, y));
                 }
             }
         }
         
-        // 최대 함정 개수 (30%)
-        int maxTraps = Mathf.RoundToInt(walkableTiles * maxTrapRatio);
+        if (pathPositions.Count == 0)
+        {
+            Debug.LogWarning($"[TrapRoomMazeGenerator] 배치할 통로가 없습니다.");
+            return;
+        }
         
-        // 함정 배치 가능한 위치 필터링
+        // 2. 최대 함정 개수 계산 (통로 타일의 30%)
+        int maxTraps = Mathf.RoundToInt(pathPositions.Count * maxTrapRatio);
+        maxTraps = Mathf.Max(1, maxTraps); // 최소 1개
+        
+        // 3. 함정 배치 가능한 위치 필터링
         List<Vector2Int> validTrapPositions = new List<Vector2Int>();
         
-        foreach (var pos in walkablePositions)
+        foreach (var pos in pathPositions)
         {
-            // 입구/출구 안전 구역 제외 (맨해튼 거리)
-            int distToEntry = Mathf.Abs(pos.x - entryPosition.x) + Mathf.Abs(pos.y - entryPosition.y);
+            // 입구/출구 안전 구역 제외 (2칸 안에는 생성 안됨)
+            // 여러 입구가 있을 수 있으므로, 모든 입구에 대해 최소 맨해튼 거리를 사용
+            int minDistToAnyEntry = int.MaxValue;
+            if (entryPositions != null && entryPositions.Count > 0)
+            {
+                foreach (var ep in entryPositions)
+                {
+                    int d = Mathf.Abs(pos.x - ep.x) + Mathf.Abs(pos.y - ep.y);
+                    if (d < minDistToAnyEntry) minDistToAnyEntry = d;
+                }
+            }
+            else
+            {
+                // fallback: 기존 단일 입구 로직
+                minDistToAnyEntry = Mathf.Abs(pos.x - entryPosition.x) + Mathf.Abs(pos.y - entryPosition.y);
+            }
+            
             int distToLever = Mathf.Abs(pos.x - leverPosition.x) + Mathf.Abs(pos.y - leverPosition.y);
             
-            if (distToEntry <= safeZoneRadius || distToLever <= safeZoneRadius)
+            if (minDistToAnyEntry <= safeZoneRadius || distToLever <= safeZoneRadius)
             {
                 continue;
             }
@@ -436,26 +739,104 @@ public class TrapRoomMazeGenerator : MonoBehaviour
             validTrapPositions.Add(pos);
         }
         
-        // 함정 배치 (연속되지 않게, 경로 유지)
+        if (validTrapPositions.Count == 0)
+        {
+            Debug.LogWarning($"[TrapRoomMazeGenerator] 함정을 배치할 수 있는 유효한 위치가 없습니다.");
+            return;
+        }
+        
+        // 4. 함정 배치
+        // - 함정은 가능한 한 "입구 → 레버"로 이어지는 통로 위에 촘촘하게 배치
+        // - 여러 입구가 있을 경우, 모든 입구에서 레버로 가는 경로들의 합집합 위에 우선 배치
+        // - 레버 경로에 최대한 배치하고, 남는 통로(막힌 통로 등)는 굳이 채우지 않아도 됨
         HashSet<Vector2Int> placedTraps = new HashSet<Vector2Int>();
         int trapCount = 0;
         
-        // 위치를 랜덤하게 섞기
-        List<Vector2Int> shuffled = validTrapPositions.OrderBy(x => Random.value).ToList();
-        
         Vector2Int[] directions = {
-            new Vector2Int(0, 1),
-            new Vector2Int(0, -1),
-            new Vector2Int(1, 0),
-            new Vector2Int(-1, 0)
+            new Vector2Int(0, 1),   // 위
+            new Vector2Int(0, -1),  // 아래
+            new Vector2Int(1, 0),   // 오른쪽
+            new Vector2Int(-1, 0)   // 왼쪽
         };
         
-        foreach (var pos in shuffled)
+        // 레버로 가는 모든 경로 찾기 (함정 배치 전)
+        // 입구가 여러 개일 수 있으므로, 각 입구에서 레버로 가는 모든 경로의 셀들을 합집합으로 모읍니다.
+        List<Vector2Int> sourcesForPaths = new List<Vector2Int>();
+        if (entryPositions != null && entryPositions.Count > 0)
+            sourcesForPaths.AddRange(entryPositions);
+        else
+            sourcesForPaths.Add(entryPosition);
+
+        HashSet<Vector2Int> pathToLeverPositions = new HashSet<Vector2Int>();
+        int totalPathCount = 0;
+
+        foreach (var src in sourcesForPaths)
+        {
+            List<List<Vector2Int>> pathsFromEntry = FindAllPaths(src, leverPosition);
+            totalPathCount += pathsFromEntry.Count;
+
+            foreach (var path in pathsFromEntry)
+            {
+                foreach (var pos in path)
+                {
+                    // 안전 구역 제외 (모든 입구 기준)
+                    int minDistToAnyEntryPath = int.MaxValue;
+                    if (entryPositions != null && entryPositions.Count > 0)
+                    {
+                        foreach (var ep in entryPositions)
+                        {
+                            int d = Mathf.Abs(pos.x - ep.x) + Mathf.Abs(pos.y - ep.y);
+                            if (d < minDistToAnyEntryPath) minDistToAnyEntryPath = d;
+                        }
+                    }
+                    else
+                    {
+                        minDistToAnyEntryPath = Mathf.Abs(pos.x - entryPosition.x) + Mathf.Abs(pos.y - entryPosition.y);
+                    }
+
+                    int distToLever = Mathf.Abs(pos.x - leverPosition.x) + Mathf.Abs(pos.y - leverPosition.y);
+
+                    if (minDistToAnyEntryPath > safeZoneRadius && distToLever > safeZoneRadius &&
+                        pos != entryPosition && pos != leverPosition)
+                    {
+                        pathToLeverPositions.Add(pos);
+                    }
+                }
+            }
+        }
+
+        
+        // 함정 배치 위치를 우선순위별로 분류
+        List<Vector2Int> priorityPositions = new List<Vector2Int>(); // 레버로 가는 경로
+        List<Vector2Int> normalPositions = new List<Vector2Int>();   // 일반 통로
+        
+        foreach (var pos in validTrapPositions)
+        {
+            if (pathToLeverPositions.Contains(pos))
+            {
+                priorityPositions.Add(pos);
+            }
+            else
+            {
+                normalPositions.Add(pos);
+            }
+        }
+        
+        // 우선순위 위치를 먼저 섞기 (레버로 가는 경로 위 통로)
+        List<Vector2Int> shuffledPriority = priorityPositions.OrderBy(x => Random.value).ToList();
+        
+        
+        // 1단계 (그리고 사실상 유일 단계):
+        // 레버로 가는 경로 위에 함정을 가능한 한 많이, 촘촘하게 배치한다.
+        // - safeZoneRadius로 이미 입구/레버 근처는 필터링됨
+        // - 인접한 함정이 붙어 있지는 않게 유지
+        // - HasPathWithTraps는 사용하지 않음 (함정은 이동 가능 타일 위에 있는 장애물로 가정)
+        foreach (var pos in shuffledPriority)
         {
             if (trapCount >= maxTraps)
                 break;
             
-            // 인접한 함정이 있는지 확인
+            // 2개 이상 연속되지 않게 확인
             bool hasAdjacentTrap = false;
             foreach (var dir in directions)
             {
@@ -467,32 +848,25 @@ public class TrapRoomMazeGenerator : MonoBehaviour
                 }
             }
             
-            // 인접한 함정이 없으면 배치 시도
+            // 인접한 함정이 없으면 배치
             if (!hasAdjacentTrap)
             {
-                // 임시로 함정 배치하고 경로 확인
                 placedTraps.Add(pos);
-                
-                // 경로가 여전히 존재하는지 확인 (함정은 통과 불가능하므로)
-                if (HasPathWithTraps(entryPosition, leverPosition, placedTraps))
-                {
-                    // 경로가 유지되면 함정 배치
-                    trapPositions.Add(pos);
-                    trapCount++;
-                }
-                else
-                {
-                    // 경로가 끊어지면 함정 제거
-                    placedTraps.Remove(pos);
-                }
+                trapPositions.Add(pos);
+                trapCount++;
             }
         }
         
-        Debug.Log($"[TrapRoomMazeGenerator] 함정 배치 완료: {trapCount}개 (최대: {maxTraps}개)");
+        int priorityTrapCount = trapPositions.Count(pos => pathToLeverPositions.Contains(pos));
+
+        // 2단계: 일반 통로는 굳이 채우지 않는다.
+        // 사용자가 원하는 것은 "어느 입구에서든 레버로 가는 통로에 함정이 가장 많게"이므로,
+        // 레버 경로 위에 배치 가능한 만큼만 배치하고, 나머지 통로는 비워둔다.
+        
     }
     
     /// <summary>
-    /// 함정을 고려한 경로 확인 (BFS)
+    /// 함정을 고려한 경로 확인 (BFS) - 최소 1개 이상의 경로가 존재하는지 확인
     /// </summary>
     private bool HasPathWithTraps(Vector2Int start, Vector2Int end, HashSet<Vector2Int> traps)
     {
@@ -515,7 +889,7 @@ public class TrapRoomMazeGenerator : MonoBehaviour
             
             if (current == end)
             {
-                return true;
+                return true; // 최소 1개 이상의 경로가 존재
             }
             
             foreach (var dir in directions)
@@ -533,89 +907,602 @@ public class TrapRoomMazeGenerator : MonoBehaviour
             }
         }
         
-        return false;
+        return false; // 경로가 없음
     }
     
     /// <summary>
-    /// 미로 오브젝트 생성 (바닥/벽)
+    /// 시작점에서 끝점까지의 모든 경로를 찾습니다. (DFS 기반)
     /// </summary>
-    private void CreateMazeObjects(Transform parent)
+    private List<List<Vector2Int>> FindAllPaths(Vector2Int start, Vector2Int end)
     {
-        if (floorTilePrefab == null || wallTilePrefab == null)
+        List<List<Vector2Int>> allPaths = new List<List<Vector2Int>>();
+        List<Vector2Int> currentPath = new List<Vector2Int>();
+        HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
+        
+        FindAllPathsDFS(start, end, currentPath, visited, allPaths);
+        
+        return allPaths;
+    }
+    
+    /// <summary>
+    /// DFS로 모든 경로를 찾는 재귀 함수
+    /// </summary>
+    private void FindAllPathsDFS(Vector2Int current, Vector2Int end, List<Vector2Int> currentPath, 
+        HashSet<Vector2Int> visited, List<List<Vector2Int>> allPaths)
+    {
+        // 최대 경로 개수 제한 (성능을 위해)
+        if (allPaths.Count >= 10) return;
+        
+        currentPath.Add(current);
+        visited.Add(current);
+        
+        if (current == end)
         {
-            Debug.LogWarning("바닥/벽 프리펩이 설정되지 않았습니다.");
+            // 경로를 찾았으면 복사본 저장
+            allPaths.Add(new List<Vector2Int>(currentPath));
+            currentPath.RemoveAt(currentPath.Count - 1);
+            visited.Remove(current);
             return;
         }
         
-        Vector3 roomCenter = transform.position;
-        Vector3 offset = new Vector3(-roomSize * 0.5f, -roomSize * 0.5f, 0f);
+        Vector2Int[] directions = {
+            new Vector2Int(0, 1),
+            new Vector2Int(0, -1),
+            new Vector2Int(1, 0),
+            new Vector2Int(-1, 0)
+        };
+        
+        foreach (var dir in directions)
+        {
+            Vector2Int next = current + dir;
+            
+            if (IsValidCell(next) && 
+                mazeGrid[next.x, next.y] && 
+                !visited.Contains(next))
+            {
+                FindAllPathsDFS(next, end, currentPath, visited, allPaths);
+            }
+        }
+        
+        currentPath.RemoveAt(currentPath.Count - 1);
+        visited.Remove(current);
+    }
+    
+    /// <summary>
+    /// 미로 벽 생성 (벽만 생성하여 통로 만들기)
+    /// 컨테이너 기반 구조로 생성: Maze > Walls
+    /// </summary>
+    private void CreateMazeObjects(Transform parent)
+    {
+        if (wallTilePrefab == null)
+        {
+            Debug.LogWarning($"[TrapRoomMazeGenerator] 벽 프리펩이 설정되지 않았습니다. wallTilePrefab: {wallTilePrefab}");
+            return;
+        }
+        
+        // Maze 컨테이너 찾기 또는 생성
+        Transform mazeContainer = FindOrCreateContainer(parent, "Maze");
+        Transform wallContainer = FindOrCreateContainer(mazeContainer, "Walls");
+        
+        // 방 내부의 Tilemap과 Grid 찾기
+        Tilemap roomTilemap = parent != null ? parent.GetComponentInChildren<Tilemap>() : null;
+        Grid roomGrid = null;
+        
+        if (roomTilemap != null)
+        {
+            roomGrid = roomTilemap.GetComponentInParent<Grid>();
+        }
+        
+        // 방의 실제 중심 위치 계산 (RoomCenterMarker 기준)
+        Vector3 roomCenter = GetRoomActualCenter(parent);
+        
+        int wallCount = 0;
+        
+        // 1순위: Tilemap bounds가 유효할 때, 타일맵 좌표에 정확히 맞춰 배치
+        if (roomGrid != null && roomTilemap != null)
+        {
+            roomTilemap.CompressBounds();
+            BoundsInt tilemapBounds = roomTilemap.cellBounds;
+            
+            if (tilemapBounds.size.x > 0 && tilemapBounds.size.y > 0)
+            {
+                // 미로가 방보다 위로 3칸 올라가 있으므로, 원점을 y 방향으로 3칸 내려서 맞춘다.
+                Vector3Int mazeOriginCell = new Vector3Int(tilemapBounds.xMin, tilemapBounds.yMin - 3, 0);
         
         for (int x = 0; x < mazeWidth; x++)
         {
             for (int y = 0; y < mazeHeight; y++)
             {
-                Vector3 worldPos = roomCenter + offset + new Vector3(x * cellSize, y * cellSize, 0f);
+                        // 벽만 생성 (mazeGrid[x, y] == false인 경우)
+                        if (!mazeGrid[x, y])
+                        {
+                // 미로 그리드 (x, y) -> 타일맵 셀 좌표
+                Vector3Int tilemapCell = mazeOriginCell + new Vector3Int(x, y, 0);
                 
-                if (mazeGrid[x, y])
-                {
-                    // 통로 = 바닥
-                    Instantiate(floorTilePrefab, worldPos, Quaternion.identity, parent);
+                // 셀 중앙 위치 (RoomCenterMarker 기준 roomCenter와 정렬)
+                Vector3 worldPos = roomGrid.GetCellCenterWorld(tilemapCell);
+                
+                GameObject wall = Instantiate(wallTilePrefab, worldPos, Quaternion.identity, wallContainer);
+                            // PlayerMoveController.wallTag에서 사용하는 "Wall" 태그를 자동으로 설정
+                            wall.tag = "Wall";
+                            wallCount++;
+                        }
+                    }
                 }
+                
+            }
+            else
+            {
+                // 타일맵 bounds가 비어있으면 월드 좌표 방식으로 배치
+                float mazeActualWidth = mazeWidth * cellSize;
+                float mazeActualHeight = mazeHeight * cellSize;
+                Vector3 offset = new Vector3(-mazeActualWidth * 0.5f, -mazeActualHeight * 0.5f, 0f);
+                Vector3 cellCenterOffset = new Vector3(cellSize * 0.5f, cellSize * 0.5f, 0f);
+                
+                for (int x = 0; x < mazeWidth; x++)
+                {
+                    for (int y = 0; y < mazeHeight; y++)
+                    {
+                        if (!mazeGrid[x, y])
+                        {
+                            Vector3 worldPos = roomCenter + offset + new Vector3(x * cellSize, y * cellSize, 0f) + cellCenterOffset;
+                            GameObject wall = Instantiate(wallTilePrefab, worldPos, Quaternion.identity, wallContainer);
+                            wall.tag = "Wall";
+                            wallCount++;
+                        }
+                    }
+                }
+                
+            }
+        }
+        // 2순위: Grid나 Tilemap이 없으면 월드 좌표 방식으로 배치
                 else
                 {
-                    // 벽
-                    Instantiate(wallTilePrefab, worldPos, Quaternion.identity, parent);
+            float mazeActualWidth = mazeWidth * cellSize;
+            float mazeActualHeight = mazeHeight * cellSize;
+            Vector3 offset = new Vector3(-mazeActualWidth * 0.5f, -mazeActualHeight * 0.5f, 0f);
+            Vector3 cellCenterOffset = new Vector3(cellSize * 0.5f, cellSize * 0.5f, 0f);
+            
+            for (int x = 0; x < mazeWidth; x++)
+            {
+                for (int y = 0; y < mazeHeight; y++)
+                {
+                    if (!mazeGrid[x, y])
+                    {
+                        Vector3 worldPos = roomCenter + offset + new Vector3(x * cellSize, y * cellSize, 0f) + cellCenterOffset;
+                        GameObject wall = Instantiate(wallTilePrefab, worldPos, Quaternion.identity, wallContainer);
+                        wall.tag = "Wall";
+                        wallCount++;
+                    }
+                }
+            }
+            
+            Debug.Log($"[TrapRoomMazeGenerator] 벽 생성: Grid/Tilemap 없음, 월드 기준 배치 (roomCenter={roomCenter}, mazeSize={mazeWidth}x{mazeHeight})");
+        }
+        
+    }
+    
+    /// <summary>
+    /// 컨테이너를 찾거나 생성합니다.
+    /// </summary>
+    private Transform FindOrCreateContainer(Transform parent, string containerName)
+    {
+        if (parent == null) return null;
+        
+        // 기존 컨테이너 찾기
+        foreach (Transform child in parent)
+        {
+            if (child.name == containerName)
+            {
+                return child;
+            }
+        }
+        
+        // 컨테이너가 없으면 생성
+        GameObject container = new GameObject(containerName);
+        container.transform.SetParent(parent);
+        container.transform.localPosition = Vector3.zero;
+        container.transform.localRotation = Quaternion.identity;
+        container.transform.localScale = Vector3.one;
+        
+        return container.transform;
+    }
+    
+    /// <summary>
+    /// 방의 bounds를 계산합니다. (Grid 셀 단위)
+    /// </summary>
+    private BoundsInt CalculateRoomBounds(Transform parent, Grid grid, Vector3Int centerCell)
+    {
+        // Tilemap을 우선적으로 사용하여 정확한 크기 측정
+        Tilemap roomTilemap = parent.GetComponentInChildren<Tilemap>();
+        if (roomTilemap != null)
+        {
+            // Tilemap의 실제 사용된 셀 범위 계산
+            roomTilemap.CompressBounds();
+            BoundsInt tilemapBounds = roomTilemap.cellBounds;
+            
+            // Tilemap bounds를 사용 (더 정확함)
+            if (tilemapBounds.size.x > 0 && tilemapBounds.size.y > 0)
+            {
+                return tilemapBounds;
+            }
+        }
+        
+        // Tilemap이 없거나 bounds가 없으면 Renderer/Collider bounds 사용
+        Bounds? bounds = null;
+        foreach (var r in parent.GetComponentsInChildren<Renderer>())
+        {
+            if (r.name.Contains("Door") || r.name.Contains("Maze")) continue;
+            bounds = bounds.HasValue ? EncapsulateBounds(bounds.Value, r.bounds) : r.bounds;
+        }
+        foreach (var c in parent.GetComponentsInChildren<Collider2D>())
+        {
+            if (c.name.Contains("Door") || c.name.Contains("Maze")) continue;
+            bounds = bounds.HasValue ? EncapsulateBounds(bounds.Value, c.bounds) : c.bounds;
+        }
+        
+        if (bounds.HasValue)
+        {
+            // bounds를 Grid 셀 좌표로 변환
+            Vector3Int minCell = grid.WorldToCell(bounds.Value.min);
+            Vector3Int maxCell = grid.WorldToCell(bounds.Value.max);
+            
+            BoundsInt result = new BoundsInt(minCell, maxCell - minCell);
+            return result;
+        }
+        
+        // bounds를 찾지 못하면 BaseRoom의 roomSize 사용
+        BaseRoom baseRoom = parent.GetComponent<BaseRoom>();
+        if (baseRoom != null)
+        {
+            float roomSize = baseRoom.RoomSize;
+            int sizeInCells = Mathf.RoundToInt(roomSize / grid.cellSize.x);
+            int halfSize = sizeInCells / 2;
+            BoundsInt result = new BoundsInt(
+                centerCell - new Vector3Int(halfSize, halfSize, 0),
+                new Vector3Int(sizeInCells, sizeInCells, 0)
+            );
+            return result;
+        }
+        
+        // 최후의 수단: 기본값 반환
+        Debug.LogWarning($"[TrapRoomMazeGenerator] 방 크기를 측정할 수 없어 기본값 사용");
+        return new BoundsInt(centerCell - new Vector3Int(10, 10, 0), new Vector3Int(20, 20, 0));
+    }
+    
+    /// <summary>
+    /// 방의 실제 중심 위치를 계산합니다.
+    /// 우선순위:
+    /// 1) RoomCenterMarker 태그가 붙은 자식 오브젝트 위치
+    /// 2) 방 Tilemap + Grid 의 cellBounds 중심 (시각적으로 보이는 방 중심)
+    /// 3) Renderer/Collider bounds 중심
+    /// 4) BaseRoom/Transform 위치
+    /// </summary>
+    private Vector3 GetRoomActualCenter(Transform parent)
+    {
+        if (parent == null) return transform.position;
+
+        // 1) RoomCenterMarker 우선 사용
+        Transform centerMarker = FindRoomCenterMarker(parent);
+        if (centerMarker != null)
+        {
+            return centerMarker.position;
+        }
+        
+        // 1) 방 Tilemap + Grid 기준 중심 계산
+        Tilemap roomTilemap = parent.GetComponentInChildren<Tilemap>();
+        if (roomTilemap != null)
+        {
+            Grid roomGrid = roomTilemap.GetComponentInParent<Grid>();
+            if (roomGrid != null)
+            {
+                // 실제 타일이 깔린 영역의 중앙 셀을 사용
+                roomTilemap.CompressBounds();
+                BoundsInt tilemapBounds = roomTilemap.cellBounds;
+                if (tilemapBounds.size.x > 0 && tilemapBounds.size.y > 0)
+                {
+                    int centerX = tilemapBounds.xMin + tilemapBounds.size.x / 2;
+                    int centerY = tilemapBounds.yMin + tilemapBounds.size.y / 2;
+                    Vector3Int centerCell = new Vector3Int(centerX, centerY, 0);
+                    
+                    Vector3 worldCenter = roomGrid.GetCellCenterWorld(centerCell);
+                    return worldCenter;
                 }
             }
         }
+        
+        // 2) Renderer/Collider bounds로 계산
+        Bounds? bounds = null;
+        foreach (var r in parent.GetComponentsInChildren<Renderer>())
+        {
+            if (r.name.Contains("Door") || r.name.Contains("Maze")) continue;
+            bounds = bounds.HasValue ? EncapsulateBounds(bounds.Value, r.bounds) : r.bounds;
+        }
+        foreach (var c in parent.GetComponentsInChildren<Collider2D>())
+        {
+            if (c.name.Contains("Door") || c.name.Contains("Maze")) continue;
+            bounds = bounds.HasValue ? EncapsulateBounds(bounds.Value, c.bounds) : c.bounds;
+        }
+        
+        if (bounds.HasValue)
+        {
+            return bounds.Value.center;
+        }
+        
+        // 4) 최후의 수단: BaseRoom/Transform 위치 사용
+        return parent.position;
+    }
+    
+    private Bounds EncapsulateBounds(Bounds a, Bounds b)
+    {
+        a.Encapsulate(b);
+        return a;
+    }
+
+    /// <summary>
+    /// 방 오브젝트 하위에서 RoomCenterMarker 태그를 가진 Transform을 찾습니다.
+    /// </summary>
+    private Transform FindRoomCenterMarker(Transform parent)
+    {
+        if (parent == null) return null;
+
+        Transform[] children = parent.GetComponentsInChildren<Transform>(true);
+        foreach (var t in children)
+        {
+            if (t.CompareTag("RoomCenterMarker"))
+            {
+                return t;
+            }
+        }
+
+        return null;
     }
     
     /// <summary>
     /// 함정 오브젝트 생성
+    /// Traps 컨테이너에 배치
     /// </summary>
     private void CreateTraps(Transform parent)
     {
-        if (trapPrefab == null)
+        if (trapPrefab == null && trapOffPrefab == null)
         {
-            Debug.LogWarning("함정 프리펩이 설정되지 않았습니다.");
+            Debug.LogWarning($"[TrapRoomMazeGenerator] 함정 프리펩이 설정되지 않았습니다.");
             return;
         }
         
-        Vector3 roomCenter = transform.position;
-        Vector3 offset = new Vector3(-roomSize * 0.5f, -roomSize * 0.5f, 0f);
+        if (trapPositions == null || trapPositions.Count == 0)
+        {
+            Debug.LogWarning($"[TrapRoomMazeGenerator] 배치할 함정이 없습니다.");
+            return;
+        }
+
+        // 이전에 생성된 함정 오브젝트 목록 초기화
+        if (trapObjects == null)
+            trapObjects = new List<GameObject>();
+        else
+            trapObjects.Clear();
+        
+        // Traps 컨테이너 찾기 또는 생성 (Maze > Traps 또는 직접 Interactive > Traps)
+        Transform trapsContainer = null;
+        
+        // 먼저 Maze > Traps 찾기
+        Transform mazeContainer = FindOrCreateContainer(parent, "Maze");
+        if (mazeContainer != null)
+        {
+            trapsContainer = FindOrCreateContainer(mazeContainer, "Traps");
+        }
+        
+        // Maze > Traps가 없으면 Interactive > Traps 찾기
+        if (trapsContainer == null)
+        {
+            Transform interactiveContainer = FindOrCreateContainer(parent, "Interactive");
+            if (interactiveContainer != null)
+            {
+                trapsContainer = FindOrCreateContainer(interactiveContainer, "Traps");
+            }
+        }
+        
+        // 둘 다 없으면 Maze > Traps 생성
+        if (trapsContainer == null)
+        {
+            trapsContainer = FindOrCreateContainer(mazeContainer, "Traps");
+        }
+        
+        // 방 내부의 Tilemap과 Grid 찾기
+        Tilemap roomTilemap = parent != null ? parent.GetComponentInChildren<Tilemap>() : null;
+        Grid roomGrid = null;
+        
+        if (roomTilemap != null)
+        {
+            roomGrid = roomTilemap.GetComponentInParent<Grid>();
+        }
+        
+        if (roomGrid == null)
+        {
+            // Grid를 찾지 못하면 기존 방식 사용
+            Debug.LogWarning($"[TrapRoomMazeGenerator] 방의 Grid를 찾을 수 없어 기본 방식으로 배치합니다.");
+            CreateTrapsWithWorldPosition(parent, trapsContainer);
+            return;
+        }
+        
+        // 방의 실제 중심 위치 계산 (RoomCenterMarker 기준)
+        Vector3 roomCenter = GetRoomActualCenter(parent);
+        
+        // 1순위: Tilemap bounds가 유효할 때, 타일맵 좌표에 맞춰 배치
+        roomTilemap.CompressBounds();
+        BoundsInt tilemapBounds = roomTilemap.cellBounds;
+        
+        int trapCount = 0;
+        
+        if (tilemapBounds.size.x > 0 && tilemapBounds.size.y > 0)
+        {
+            // 미로가 방보다 위로 3칸 올라가 있으므로, 원점을 y 방향으로 3칸 내려서 맞춘다.
+            Vector3Int mazeOriginCell = new Vector3Int(tilemapBounds.xMin, tilemapBounds.yMin - 3, 0);
         
         foreach (var trapPos in trapPositions)
         {
-            Vector3 worldPos = roomCenter + offset + new Vector3(trapPos.x * cellSize, trapPos.y * cellSize, 0f);
-            GameObject trap = Instantiate(trapPrefab, worldPos, Quaternion.identity, parent);
+                // 미로 그리드 좌표를 타일맵 Grid 셀 좌표로 변환
+                Vector3Int tilemapCell = mazeOriginCell + new Vector3Int(trapPos.x, trapPos.y, 0);
+                
+                // 셀 중앙 위치
+                Vector3 worldPos = roomGrid.GetCellCenterWorld(tilemapCell);
+                
+                // 기본 상태는 OFF로 시작: trapOffPrefab이 있으면 OFF 프리팹, 없으면 ON 프리팹 사용
+                GameObject initialTrapPrefab = trapOffPrefab != null ? trapOffPrefab : trapPrefab;
+                GameObject trap = Instantiate(initialTrapPrefab, worldPos, Quaternion.identity, trapsContainer);
+                trapObjects.Add(trap);
+                trapCount++;
+            }
             
-            // 함정 공격 간격 설정 (컴포넌트가 있다면)
-            // Trap 컴포넌트가 있다면 설정
+        }
+        // 2순위: Tilemap bounds가 비어있으면 월드 좌표 방식으로 배치
+        else
+        {
+            float mazeActualWidth = mazeWidth * cellSize;
+            float mazeActualHeight = mazeHeight * cellSize;
+            Vector3 offset = new Vector3(-mazeActualWidth * 0.5f, -mazeActualHeight * 0.5f, 0f);
+            Vector3 cellCenterOffset = new Vector3(cellSize * 0.5f, 0.5f * cellSize, 0f);
+            
+            foreach (var trapPos in trapPositions)
+            {
+                Vector3 worldPos = roomCenter + offset + new Vector3(trapPos.x * cellSize, trapPos.y * cellSize, 0f) + cellCenterOffset;
+
+                GameObject initialTrapPrefab = trapOffPrefab != null ? trapOffPrefab : trapPrefab;
+                GameObject trap = Object.Instantiate(initialTrapPrefab, worldPos, Quaternion.identity, trapsContainer);
+                trapObjects.Add(trap);
+                trapCount++;
+            }
+            
         }
     }
     
     /// <summary>
+    /// 월드 좌표로 함정 생성 (Grid를 찾지 못한 경우)
+    /// </summary>
+    private void CreateTrapsWithWorldPosition(Transform parent, Transform trapsContainer)
+    {
+        if (trapsContainer == null)
+        {
+            trapsContainer = FindOrCreateContainer(parent, "Traps");
+        }
+        
+        // 방의 실제 중심 위치 계산
+        Vector3 roomCenter = GetRoomActualCenter(parent);
+        
+        // 미로의 실제 크기 (cellSize = 1)
+        float mazeActualWidth = mazeWidth * cellSize;
+        float mazeActualHeight = mazeHeight * cellSize;
+        
+        // 미로를 방 중앙에 맞추기 위한 오프셋
+        // 미로 그리드 좌표 (0,0)이 방 중앙에 오도록 설정
+        Vector3 offset = new Vector3(-mazeActualWidth * 0.5f, -mazeActualHeight * 0.5f, 0f);
+        
+        // 셀 중심으로 배치하기 위한 오프셋 추가 (cellSize = 1이므로 0.5)
+        Vector3 cellCenterOffset = new Vector3(cellSize * 0.5f, cellSize * 0.5f, 0f);
+        
+        int trapCount = 0;
+        foreach (var trapPos in trapPositions)
+        {
+            // 셀의 중심 위치 계산
+            // trapPos는 미로 그리드 좌표 (0 ~ mazeWidth-1, 0 ~ mazeHeight-1)
+            Vector3 worldPos = roomCenter + offset + new Vector3(trapPos.x * cellSize, trapPos.y * cellSize, 0f) + cellCenterOffset;
+
+            GameObject initialTrapPrefab = trapOffPrefab != null ? trapOffPrefab : trapPrefab;
+            GameObject trap = Instantiate(initialTrapPrefab, worldPos, Quaternion.identity, trapsContainer);
+            trapObjects.Add(trap);
+            trapCount++;
+        }
+        
+    }
+    
+    /// <summary>
     /// 레버 오브젝트 생성
+    /// Interactive 컨테이너에 배치
     /// </summary>
     private void CreateLever(Transform parent)
     {
         if (leverPrefab == null)
         {
-            Debug.LogWarning("레버 프리펩이 설정되지 않았습니다.");
+            Debug.LogWarning($"[TrapRoomMazeGenerator] 레버 프리펩이 설정되지 않았습니다.");
             return;
         }
         
-        Vector3 roomCenter = transform.position;
-        Vector3 offset = new Vector3(-roomSize * 0.5f, -roomSize * 0.5f, 0f);
-        Vector3 worldPos = roomCenter + offset + new Vector3(leverPosition.x * cellSize, leverPosition.y * cellSize, 0f);
+        // Interactive 컨테이너 찾기 또는 생성
+        Transform interactiveContainer = FindOrCreateContainer(parent, "Interactive");
         
-        GameObject lever = Instantiate(leverPrefab, worldPos, Quaternion.identity, parent);
+        // 방 내부의 Tilemap과 Grid 찾기
+        Tilemap roomTilemap = parent != null ? parent.GetComponentInChildren<Tilemap>() : null;
+        Grid roomGrid = null;
         
-        // 10% 확률로 보물상자 생성
-        if (Random.value < treasureChance && treasureChestPrefab != null)
+        if (roomTilemap != null)
         {
-            Instantiate(treasureChestPrefab, worldPos, Quaternion.identity, parent);
+            roomGrid = roomTilemap.GetComponentInParent<Grid>();
         }
+        
+        Vector3 worldPos;
+        
+        if (roomGrid != null && roomTilemap != null)
+        {
+            // 타일맵 Grid 좌표 사용
+            roomTilemap.CompressBounds();
+            BoundsInt tilemapBounds = roomTilemap.cellBounds;
+            
+            if (tilemapBounds.size.x > 0 && tilemapBounds.size.y > 0)
+            {
+                // 미로가 방보다 위로 3칸 올라가 있으므로, 원점을 y 방향으로 3칸 내려서 맞춘다.
+                Vector3Int mazeOriginCell = new Vector3Int(tilemapBounds.xMin, tilemapBounds.yMin - 3, 0);
+                
+                // 미로 그리드 좌표를 타일맵 Grid 셀 좌표로 변환
+                Vector3Int tilemapCell = mazeOriginCell + new Vector3Int(leverPosition.x, leverPosition.y, 0);
+                
+                // 셀 중앙 위치
+                worldPos = roomGrid.GetCellCenterWorld(tilemapCell);
+                
+            }
+            else
+            {
+                // 타일맵 bounds가 비어있으면 월드 좌표 방식 사용
+                Vector3 roomCenter = GetRoomActualCenter(parent);
+                float mazeActualWidth = mazeWidth * cellSize;
+                float mazeActualHeight = mazeHeight * cellSize;
+                Vector3 offset = new Vector3(-mazeActualWidth * 0.5f, -mazeActualHeight * 0.5f, 0f);
+                Vector3 cellCenterOffset = new Vector3(cellSize * 0.5f, cellSize * 0.5f, 0f);
+                worldPos = roomCenter + offset + new Vector3(leverPosition.x * cellSize, leverPosition.y * cellSize, 0f) + cellCenterOffset;
+                
+            }
+        }
+        else
+        {
+            // Grid를 찾지 못하면 기존 방식 사용
+            Vector3 roomCenter = GetRoomActualCenter(parent);
+            float mazeActualWidth = mazeWidth * cellSize;
+            float mazeActualHeight = mazeHeight * cellSize;
+            Vector3 offset = new Vector3(-mazeActualWidth * 0.5f, -mazeActualHeight * 0.5f, 0f);
+            Vector3 cellCenterOffset = new Vector3(cellSize * 0.5f, cellSize * 0.5f, 0f);
+            worldPos = roomCenter + offset + new Vector3(leverPosition.x * cellSize, leverPosition.y * cellSize, 0f) + cellCenterOffset;
+            
+        }
+        
+        GameObject lever = Instantiate(leverPrefab, worldPos, Quaternion.identity, interactiveContainer);
+
+        // TrapRoomController와 연동되는 레버 스크립트 추가/초기화
+        TrapRoomController trapRoomController = parent != null ? parent.GetComponent<TrapRoomController>() : null;
+        if (trapRoomController == null && parent != null)
+        {
+            trapRoomController = parent.GetComponentInParent<TrapRoomController>();
+        }
+
+        if (trapRoomController != null)
+        {
+            TrapRoomLever leverLogic = lever.GetComponent<TrapRoomLever>();
+            if (leverLogic == null)
+            {
+                leverLogic = lever.AddComponent<TrapRoomLever>();
+            }
+            // 레버에 보물상자 프리팹과 확률을 전달 (상호작용 시 사용)
+            leverLogic.Initialize(trapRoomController, treasureChestPrefab, treasureChance);
+        }
+
     }
     
     /// <summary>
@@ -632,5 +1519,47 @@ public class TrapRoomMazeGenerator : MonoBehaviour
     public List<Vector2Int> GetTrapPositions()
     {
         return trapPositions;
+    }
+
+    /// <summary>
+    /// 함정을 ON/OFF 상태로 전환합니다.
+    /// trapPrefab / trapOffPrefab이 모두 설정되어 있으면 프리팹을 갈아끼우고,
+    /// 그렇지 않으면 기존 함정 오브젝트의 활성/비활성만 전환합니다.
+    /// </summary>
+    public void SetTrapsActive(bool isOn)
+    {
+        if (trapObjects == null || trapObjects.Count == 0)
+            return;
+
+        // ON/OFF 프리팹이 모두 설정된 경우: 프리팹 갈아끼우기
+        if (trapPrefab != null && trapOffPrefab != null)
+        {
+            GameObject targetPrefab = isOn ? trapPrefab : trapOffPrefab;
+            for (int i = 0; i < trapObjects.Count; i++)
+            {
+                GameObject oldTrap = trapObjects[i];
+                if (oldTrap == null) continue;
+
+                Transform parent = oldTrap.transform.parent;
+                Vector3 pos = oldTrap.transform.position;
+                Quaternion rot = oldTrap.transform.rotation;
+
+                Object.Destroy(oldTrap);
+
+                GameObject newTrap = Object.Instantiate(targetPrefab, pos, rot, parent);
+                trapObjects[i] = newTrap;
+            }
+        }
+        else
+        {
+            // 한 종류의 프리팹만 있는 경우: 활성/비활성 토글만
+            foreach (var trap in trapObjects)
+            {
+                if (trap != null)
+                {
+                    trap.SetActive(isOn);
+                }
+            }
+        }
     }
 }
