@@ -8,7 +8,7 @@ public class Search : IState
     private float _sight;
     private Vector2 _targetPos;
     private float _maxAngle = 20;
-    private int _searchTime = 3;
+    private int _searchTime = 30;
     private Coroutine _updateLOS;
 
     public Search(Monster monster)
@@ -27,7 +27,7 @@ public class Search : IState
     public void Exit()
     {
         _monster.StopCoroutine(_updateLOS);
-        _searchTime = 3;
+        _searchTime = 30;
     }
 
     public void Update() { }
@@ -48,7 +48,7 @@ public class Search : IState
 
                 RaycastHit2D hit = Physics2D.Raycast(start, dir, _sight);
 
-                Debug.DrawLine(start, start + ( dir * _sight ));
+                Debug.DrawRay(start, dir * _sight, Color.red);
 
                 if (hit.transform != null && hit.transform.CompareTag("Player"))
                 {
@@ -59,7 +59,7 @@ public class Search : IState
                 }
             }
 
-            yield return CoroutineManager.waitForSeconds(1f);
+            yield return CoroutineManager.waitForSeconds(0.1f);
             _searchTime--;
         }
 

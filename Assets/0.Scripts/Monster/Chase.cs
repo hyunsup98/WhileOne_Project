@@ -71,7 +71,7 @@ public class Chase : IState
     {
         while (true)
         {
-            Debug.Log("°æ·Î Å½»ö");
+            Debug.Log("ÃßÀû °æ·Î Å½»ö");
             Vector2 start = _monster.transform.position;
             Vector2 target = _target.position;
 
@@ -88,6 +88,8 @@ public class Chase : IState
     {
         Vector2 dir = target - start;
         RaycastHit2D hit = Physics2D.Raycast(start, dir, _sight);
+
+        Debug.DrawRay(start, dir.normalized * _sight, Color.yellow);
 
         if (hit.transform == null)
             _monster.SetState(MonsterState.Search);

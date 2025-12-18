@@ -8,13 +8,13 @@ public class MonsterAttack : IState
     public MonsterAttack(Monster monster)
     {
         _monster = monster;
-        _attack = monster.Attack[0];
+        _attack = monster.Attack;
     }
 
 
     public void Enter()
     {
-
+        _attack.StartAttack();
     }
 
     public void Exit()
@@ -29,9 +29,10 @@ public class MonsterAttack : IState
 
     private void OnAttack()
     {
-        _monster.Attack[0].OnAttack();
 
-        if ((Vector2)_monster.transform.position == null)
-            return;
+        _monster.Attack.OnAttack();
+
+        if (!_attack.IsAttack)
+            _monster.SetState(MonsterState.Chase);
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine.Tilemaps;
 
 public class Monster : MonoBehaviour
 {
+    public GameObject AttackEffect;
     [SerializeField] private string _name;
     [field: SerializeField] public int Hp {  get; private set; }
     [field: SerializeField] public float Att {  get; private set; }
@@ -12,7 +13,7 @@ public class Monster : MonoBehaviour
     [field: SerializeField] public float Sight { get; private set; } = 5;
     [field: SerializeField] public int Tier {  get; private set; }
     [field: SerializeField] public List<Transform> PatrolTarget {  get; private set; }
-    public List<IAttack> Attack {  get; private set; }
+    public IAttack Attack {  get; private set; }
     
     [SerializeField] private Tilemap _wallTilemap;
 
@@ -33,8 +34,7 @@ public class Monster : MonoBehaviour
         PatrolPoint = MobAstar.Pathfinder(PatrolTarget[0].position, PatrolTarget[1].position);
 
         // 공격 세팅
-        Attack = new();
-        Attack.Add(new ProtoAttack(this));
+        Attack = new ProtoAttack(this);
 
         // 상태 패턴 세팅
         _monsterState = new Dictionary<MonsterState, IState>();

@@ -65,6 +65,8 @@ public class Patrol : IState
         Vector2 dir = target - start;
         RaycastHit2D hit = Physics2D.Raycast(start, dir, _sight);
 
+        Debug.DrawRay(start, dir.normalized * _sight);
+
         if (hit.transform != null && hit.transform.CompareTag("Player"))
         {
             _monster.SetTarget(hit.transform);

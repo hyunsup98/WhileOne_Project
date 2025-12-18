@@ -1,32 +1,71 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class ProtoAttack : IAttack
 {
+    private GameObject _attackPrefab;
     private Monster _monster;
     private Vector2 _target;
-    private float _attackSpeed = 10f;
-    private BoxCollider2D _attackRange;
+    private float _attackSpeed = 7f;
+    private GameObject _attackObj;
+    private AttackEffect _attackEffect;
+    private float _attackTime;
 
+    public bool IsAttack { get; private set; }
 
     public ProtoAttack(Monster monster)
     {
         _monster = monster;
-        _attackRange = _monster.GetComponent<BoxCollider2D>();
+        _attackPrefab = _monster.AttackEffect;
     }
 
 
     public void StartAttack()
     {
         _target = _monster.Target.position;
+        IsAttack = true;
+
+        _attackObj = GameObject.Instantiate
+            (
+            _attackPrefab,
+            _monster.transform.position,
+            Quaternion.identity,
+            _monster.transform
+            );
+
+        _attackEffect = _attackObj.GetComponent<AttackEffect>();
+        _attackEffect.OnAttack += OnDamage;
+
+        _target = (_target - (Vector2)_monster.transform.position).normalized;
     }
 
     public void OnAttack()
     {
-        _monster.OnMove(_target, _attackSpeed);
+        _attackTime += Time.unscaledDeltaTime;
+
+        if (_attackTime < 1.5f)
+        {
+            Debug.Log("준비 동작");
+            return;
+        }
+
+        _monster.transform.Translate(_target * Time.deltaTime * _attackSpeed);
+
+        if(_attackTime >= 2f)
+        {
+            _attackTime = 0f;
+            IsAttack = false;
+        }
+    }
+
+    private void OnDamage()
+    {
+        Debug.Log("<color=red>테이크 데미지</color>");
     }
 
     public void EndAttack()
     {
+        GameObject.Destroy(_attackObj);
+        _attackEffect.Init();
     }
-
 }
