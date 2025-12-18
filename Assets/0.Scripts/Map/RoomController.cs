@@ -60,7 +60,7 @@ public class RoomController : MonoBehaviour
 
     /// <summary>
     /// 주어진 월드 좌표에 DigSpot 타일이 있으면 DugSpot으로 변경합니다.
-    /// (마우스 우클릭 시 TileManager에서 호출하기 좋은 형태)
+    /// (마우스 우클릭 시 TileManager에서 호출하거나, Player 관련 컨트롤러나 매니저에서 호출)
     /// </summary>
     public bool TryDigAtWorldPosition(Vector3 worldPosition)
     {
