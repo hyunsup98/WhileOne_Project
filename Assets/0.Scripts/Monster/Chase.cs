@@ -11,14 +11,14 @@ public class Chase : IState
     private Transform _target;
     private List<Vector2> _chasePoint;
     private int _chaseIndex;
-    private float _visibility;              // LOS판정을 위한 시야 거리
+    private float _sight;              // LOS판정을 위한 시야 거리
     private Coroutine _pathfinder;          // 경로재탐색 제어를 위한 코루틴
 
     public Chase(Monster monster)
     {
         _monster = monster;
         _speed = monster.Speed;
-        _visibility = monster.Visibility;
+        _sight = monster.Sight;
         _attRange = monster.AttRange;
         _astar = monster.MobAstar;
     }
@@ -27,7 +27,6 @@ public class Chase : IState
     {
         _target = _monster.Target;
         _pathfinder = _monster.StartCoroutine(UpdatePathfinder());
-
     }
 
     public void Exit() 
@@ -45,31 +44,26 @@ public class Chase : IState
 
     private void OnChase()
     {
-        Vector2 chasePos = _chasePoint[_chaseIndex];
-
         Vector3 dir = _target.position - _monster.transform.position;
         if (Vector3.SqrMagnitude(dir) <= _attRange)
         {
-            Debug.Log("공격 실행");
+            _monster.SetState(MonsterState.Attack);
             return;
         }
 
-        Move(chasePos);
-    }
+        Vector2 target = _chasePoint[_chaseIndex];
+        // 목표 지점 도달시, 바로 플레이어의 다음 위치를 경로탐색
+        if(_chaseIndex == _chasePoint.Count - 1)
+        {
+            _monster.StopCoroutine(_pathfinder);
+            _pathfinder = _monster.StartCoroutine(UpdatePathfinder());
+        }    
 
-    private void Move(Vector2 target)
-    {
-        _monster.transform.position = Vector2.MoveTowards
-            (
-            _monster.transform.position,
-            target,
-            _speed * Time.deltaTime
-            );
+        _monster.OnMove(target, _speed);
 
         //target 도달시, 다음 포인트 인덱스로 변경
         if ((Vector2)_monster.transform.position == target)
             _chaseIndex++;
-
     }
 
     // 경로 탐색 업데이트
@@ -87,16 +81,13 @@ public class Chase : IState
 
             yield return CoroutineManager.waitForSeconds(1f);
         }
-
     }
 
     // LOS 판정
     private void UpdateLOS(Vector2 start, Vector2 target)
     {
         Vector2 dir = target - start;
-        RaycastHit2D hit = Physics2D.Raycast(start, dir, _visibility);
-
-        Debug.Log("추적LOS: " + hit);
+        RaycastHit2D hit = Physics2D.Raycast(start, dir, _sight);
 
         if (hit.transform == null)
             _monster.SetState(MonsterState.Search);

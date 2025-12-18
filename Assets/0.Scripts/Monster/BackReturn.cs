@@ -7,8 +7,8 @@ public class BackReturn : IState
     private float _speed;
     private Astar _astar;
     private int _backReturnIndex;
-    private List<Transform> _patrolTarget;
-    private List<Vector2> _backReturnPoint;
+    private List<Transform> _patrolTarget;          // 되돌아갈 순찰 포인트
+    private List<Vector2> _backReturnPoint;         // 탐색한 경로를 저장
 
     public BackReturn(Monster monster)
     {
@@ -23,7 +23,7 @@ public class BackReturn : IState
     public void Enter()
     {
         Vector2 start = _monster.transform.position;
-        Vector2 target = _patrolTarget[Random.Range(0, 2)].position;
+        Vector2 target = _patrolTarget[0].position;
         _backReturnPoint = _astar.Pathfinder(start, target);
     }
 
@@ -37,30 +37,19 @@ public class BackReturn : IState
         OnBackReturn();
     }
 
+    // 탐색 후에 플레이어를 찾지 못하면 순찰 포인트로 되돌아가는 메서드
     private void OnBackReturn()
     {
         Vector2 target = _backReturnPoint[_backReturnIndex];
 
-        Move(target);
+        _monster.OnMove(target, _speed);
 
         Vector2 monsterPos = _monster.transform.position;
         if (monsterPos == _backReturnPoint[_backReturnPoint.Count - 1])
             _monster.SetState(MonsterState.Patrol);
 
-    }
-
-    private void Move(Vector2 target)
-    {
-        _monster.transform.position = Vector2.MoveTowards
-            (
-            _monster.transform.position,
-            target,
-            _speed * Time.deltaTime
-            );
-
         //target 도달시, 다음 포인트 인덱스로 변경
         if ((Vector2)_monster.transform.position == target)
             _backReturnIndex++;
-
     }
 }

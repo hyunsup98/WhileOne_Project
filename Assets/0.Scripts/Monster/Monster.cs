@@ -4,14 +4,16 @@ using UnityEngine.Tilemaps;
 
 public class Monster : MonoBehaviour
 {
+    [SerializeField] private string _name;
     [field: SerializeField] public int Hp {  get; private set; }
     [field: SerializeField] public float Att {  get; private set; }
     [field: SerializeField] public float AttRange {  get; private set; }
-    [field: SerializeField] public float Vision { get; private set; }
     [field: SerializeField] public float Speed {  get; private set; }
-    [field: SerializeField] public float Visibility { get; private set; } = 5;
+    [field: SerializeField] public float Sight { get; private set; } = 5;
     [field: SerializeField] public int Tier {  get; private set; }
     [field: SerializeField] public List<Transform> PatrolTarget {  get; private set; }
+    public List<IAttack> Attack {  get; private set; }
+    
     [SerializeField] private Tilemap _wallTilemap;
 
 
@@ -26,10 +28,13 @@ public class Monster : MonoBehaviour
 
     private void Awake()
     {
-
         // 경로 탐색으로 순찰 포인트 초기화
         MobAstar = new Astar(_wallTilemap);
         PatrolPoint = MobAstar.Pathfinder(PatrolTarget[0].position, PatrolTarget[1].position);
+
+        // 공격 세팅
+        Attack = new();
+        Attack.Add(new ProtoAttack(this));
 
         // 상태 패턴 세팅
         _monsterState = new Dictionary<MonsterState, IState>();
@@ -37,6 +42,7 @@ public class Monster : MonoBehaviour
         _monsterState.Add(MonsterState.Chase, new Chase(this));
         _monsterState.Add(MonsterState.Search, new Search(this));
         _monsterState.Add(MonsterState.BackReturn, new BackReturn(this));
+        _monsterState.Add(MonsterState.Attack, new MonsterAttack(this));
         _currentState = _monsterState[MonsterState.Patrol];
     }
 
@@ -59,12 +65,26 @@ public class Monster : MonoBehaviour
     public void SetTarget(Transform target) => Target = target;
 
 
+    public void OnMove(Vector2 target, float speed)
+    {
+        transform.position = Vector2.MoveTowards
+            (
+            transform.position,
+            target,
+            speed * Time.deltaTime
+            );
+    }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+            Debug.Log("플레이어 타격");
+    }
 
 }
 
 
 public enum MonsterState
 {
-    Patrol, Chase, Search, BackReturn
+    Patrol, Chase, Search, BackReturn, Attack
 }
