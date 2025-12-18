@@ -4,9 +4,10 @@ using UnityEngine;
 //게임 상태
 public enum GameState
 {
-    Title,      //타이틀 화면 상태
-    InGame,     //인게임(플레이중인 상태)
-    Pause,      //인게임(팝업 UI등에 의해서 일시중지인 상태)
+    Title,      // 타이틀 화면 상태
+    InGame,     // 인게임(플레이중인 상태)
+    Pause,      // 인게임(팝업 UI등에 의해서 일시중지인 상태)
+    Dead,       // 플레이어가 죽었을 때(데드 엔딩 씬으로 이동)
 }
 
 /// <summary>
@@ -26,15 +27,19 @@ public class GameManager : Singleton<GameManager>
 
             _currentGameState = value;
 
-            if(_currentGameState == GameState.Title)
+            if (_currentGameState == GameState.Title)
             {
 
             }
-            else if(_currentGameState == GameState.InGame)
+            else if (_currentGameState == GameState.InGame)
             {
 
             }
-            else if(_currentGameState == GameState.Pause)
+            else if (_currentGameState == GameState.Pause)
+            {
+
+            }
+            else if (_currentGameState == GameState.Dead)
             {
 
             }
