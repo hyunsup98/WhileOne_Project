@@ -6,13 +6,13 @@ public class Chase : IMonsterState
 {
     private Monster _monster;
     private float _speed;
-    private float _visibility;
     private float _attRange;
     private Astar _astar;
     private Transform _target;
     private List<Vector2> _chasePoint;
     private int _chaseIndex;
-    private Coroutine _pathfinder;
+    private float _visibility;              // LOS판정을 위한 시야 거리
+    private Coroutine _pathfinder;          // 경로재탐색 제어를 위한 코루틴
 
     public Chase(Monster monster)
     {
@@ -38,6 +38,8 @@ public class Chase : IMonsterState
     public void Update()
     {
         OnChase();
+
+        UpdateLOS(_monster.transform.position, _target.position);
     }
 
 
@@ -88,4 +90,15 @@ public class Chase : IMonsterState
 
     }
 
+    // LOS 판정
+    private void UpdateLOS(Vector2 start, Vector2 target)
+    {
+        Vector2 dir = target - start;
+        RaycastHit2D hit = Physics2D.Raycast(start, dir, _visibility);
+
+        Debug.Log("추적LOS: " + hit);
+
+        if (hit.transform == null)
+            _monster.SetState(MonsterState.Search);
+    }
 }

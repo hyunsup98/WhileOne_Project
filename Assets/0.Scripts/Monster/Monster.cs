@@ -11,7 +11,7 @@ public class Monster : MonoBehaviour
     [field: SerializeField] public float Speed {  get; private set; }
     [field: SerializeField] public float Visibility { get; private set; } = 5;
     [field: SerializeField] public int Tier {  get; private set; }
-    [field: SerializeField] public List<Transform> TargetPoint {  get; private set; }
+    [field: SerializeField] public List<Transform> PatrolTarget {  get; private set; }
     [SerializeField] private Tilemap _wallTilemap;
 
 
@@ -26,15 +26,17 @@ public class Monster : MonoBehaviour
 
     private void Awake()
     {
-        MobAstar = new Astar(_wallTilemap);
+
         // 경로 탐색으로 순찰 포인트 초기화
-        PatrolPoint = MobAstar.Pathfinder(TargetPoint[0].position, TargetPoint[1].position);
+        MobAstar = new Astar(_wallTilemap);
+        PatrolPoint = MobAstar.Pathfinder(PatrolTarget[0].position, PatrolTarget[1].position);
 
         // 상태 패턴 세팅
         _monsterState = new Dictionary<MonsterState, IMonsterState>();
         _monsterState.Add(MonsterState.Patrol, new Patrol(this));
         _monsterState.Add(MonsterState.Chase, new Chase(this));
         _monsterState.Add(MonsterState.Search, new Search(this));
+        _monsterState.Add(MonsterState.BackReturn, new BackReturn(this));
         _currentState = _monsterState[MonsterState.Patrol];
     }
 
@@ -56,10 +58,13 @@ public class Monster : MonoBehaviour
 
     public void SetTarget(Transform target) => Target = target;
 
+
+
+
 }
 
 
 public enum MonsterState
 {
-    Patrol, Chase, Search
+    Patrol, Chase, Search, BackReturn
 }

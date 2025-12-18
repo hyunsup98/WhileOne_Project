@@ -70,7 +70,7 @@ public class Patrol : IMonsterState
         Vector2 dir = target - start;
         RaycastHit2D hit = Physics2D.Raycast(start, dir, _visibility);
 
-        Debug.Log("LOS: " + hit);
+        Debug.Log("순찰LOS: " + hit);
 
         if (hit.transform != null && hit.transform.CompareTag("Player"))
         {
@@ -80,4 +80,5 @@ public class Patrol : IMonsterState
 
         
     }
+
 }
