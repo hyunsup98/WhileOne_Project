@@ -1,7 +1,12 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Test : MonoBehaviour
 {
+    public List<Transform> list = new List<Transform>();
+    public Tilemap tilemap;
+
     public float speed = 5;
     private float _maxAngle = 60;
 
@@ -9,17 +14,16 @@ public class Test : MonoBehaviour
 
     private void Start()
     {
-        
+        Astar astar = new Astar(tilemap);
+
+        List<Vector2> vector2s = astar.Pathfinder(list[0].position, list[1].position);
+
+        foreach (var pos in vector2s)
+            Debug.Log(pos);
     }
 
     private void Update()
     {
-        RaycastHit2D hit = Physics2D.Raycast((Vector2)transform.position, target);
-
-        Debug.Log("레이케스트: " + hit.collider);
-
-        if (hit.collider != null)
-            Debug.Log("이름: " + hit.transform);
     }
 
     //private void OnDrawGizmosSelected()

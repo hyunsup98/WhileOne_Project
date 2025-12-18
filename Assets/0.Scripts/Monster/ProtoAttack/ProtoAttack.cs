@@ -16,13 +16,13 @@ public class ProtoAttack : IAttack
     public ProtoAttack(Monster monster)
     {
         _monster = monster;
-        _attackPrefab = _monster.AttackEffect;
+        _attackPrefab = monster.AttackEffect;
     }
 
 
     public void StartAttack()
     {
-        _target = _monster.Target.position;
+        _target = _monster.MonsterModel.Target.position;
         IsAttack = true;
 
         _attackObj = GameObject.Instantiate
@@ -58,9 +58,11 @@ public class ProtoAttack : IAttack
         }
     }
 
-    private void OnDamage()
+    private void OnDamage(Player player)
     {
         Debug.Log("<color=red>테이크 데미지</color>");
+        player.TakenDamage(_monster.Att);
+        Debug.Log(player.Hp);
     }
 
     public void EndAttack()

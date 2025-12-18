@@ -14,13 +14,13 @@ public class Search : IState
     public Search(Monster monster)
     {
         _monster = monster;
-        _sight = monster.Sight;
+        _sight = monster.MonsterModel.MoveSpeed;
     }
 
 
     public void Enter()
     {
-        _targetPos = _monster.Target.position;
+        _targetPos = _monster.MonsterModel.Target.position;
         _updateLOS = _monster.StartCoroutine(UpdateLOS(_monster.transform.position, _targetPos));
     }
 

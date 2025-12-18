@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// 어택 레인지 리펙토링 필요
 public class Chase : IState
 {
     private Monster _monster;
@@ -17,15 +19,17 @@ public class Chase : IState
     public Chase(Monster monster)
     {
         _monster = monster;
-        _speed = monster.Speed;
-        _sight = monster.Sight;
+        _speed = monster.MonsterModel.MoveSpeed;
+        _sight = monster.MonsterModel.MoveSpeed;
+
+        //리펙토링 진행해야 함
         _attRange = monster.AttRange;
-        _astar = monster.MobAstar;
+        _astar = monster.MonsterModel.MobAstar;
     }
 
     public void Enter() 
     {
-        _target = _monster.Target;
+        _target = _monster.MonsterModel.Target;
         _pathfinder = _monster.StartCoroutine(UpdatePathfinder());
     }
 

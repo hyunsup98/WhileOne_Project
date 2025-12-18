@@ -13,9 +13,9 @@ public class Patrol : IState
     public Patrol(Monster monster)
     {
         _monster = monster;
-        _speed = monster.Speed;
-        _patrolPoint = monster.PatrolPoint;
-        _sight = monster.Sight;
+        _speed = monster.MonsterModel.MoveSpeed;
+        _patrolPoint = monster.MonsterModel.PatrolPoint;
+        _sight = monster.MonsterModel.Sight;
     }
 
 

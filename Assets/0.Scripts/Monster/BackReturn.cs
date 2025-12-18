@@ -13,9 +13,9 @@ public class BackReturn : IState
     public BackReturn(Monster monster)
     {
         _monster = monster;
-        _speed = monster.Speed;
-        _astar = monster.MobAstar;
-        _patrolTarget = _monster.PatrolTarget;
+        _speed = monster.MonsterModel.MoveSpeed;
+        _astar = monster.MonsterModel.MobAstar;
+        _patrolTarget = _monster.MonsterModel.PatrolTarget;
     }
 
 

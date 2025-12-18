@@ -4,65 +4,62 @@ using UnityEngine.Tilemaps;
 
 public class Monster : MonoBehaviour
 {
+    [SerializeField] private MonsterDataSO _monsterData;
+    [SerializeField] private Tilemap _wallTilemap;
+    public MonsterModel MonsterModel { get; private set; }
+
+
+    // 추후 지워야 할 목록
     public GameObject AttackEffect;
-    [SerializeField] private string _name;
-    [field: SerializeField] public int Hp {  get; private set; }
     [field: SerializeField] public float Att {  get; private set; }
     [field: SerializeField] public float AttRange {  get; private set; }
-    [field: SerializeField] public float Speed {  get; private set; }
-    [field: SerializeField] public float Sight { get; private set; } = 5;
-    [field: SerializeField] public int Tier {  get; private set; }
-    [field: SerializeField] public List<Transform> PatrolTarget {  get; private set; }
     public IAttack Attack {  get; private set; }
-    
-    [SerializeField] private Tilemap _wallTilemap;
 
 
-    public List<Vector2> PatrolPoint { get; private set; }
-    public Astar MobAstar { get; private set; }
-    public Transform Target { get; private set; }
-
-    
-    private IState _currentState;
-    private Dictionary<MonsterState, IState> _monsterState;
 
 
     private void Awake()
     {
+        MonsterModel = new MonsterModel(_monsterData);
+
         // 경로 탐색으로 순찰 포인트 초기화
-        MobAstar = new Astar(_wallTilemap);
-        PatrolPoint = MobAstar.Pathfinder(PatrolTarget[0].position, PatrolTarget[1].position);
+        MonsterModel.MobAstar = new Astar(_wallTilemap);
+        MonsterModel.PatrolPoint = MonsterModel.MobAstar.Pathfinder
+            (
+            MonsterModel.PatrolTarget[0].position,
+            MonsterModel.PatrolTarget[1].position
+            );
 
         // 공격 세팅
         Attack = new ProtoAttack(this);
 
         // 상태 패턴 세팅
-        _monsterState = new Dictionary<MonsterState, IState>();
-        _monsterState.Add(MonsterState.Patrol, new Patrol(this));
-        _monsterState.Add(MonsterState.Chase, new Chase(this));
-        _monsterState.Add(MonsterState.Search, new Search(this));
-        _monsterState.Add(MonsterState.BackReturn, new BackReturn(this));
-        _monsterState.Add(MonsterState.Attack, new MonsterAttack(this));
-        _currentState = _monsterState[MonsterState.Patrol];
+        MonsterModel.MonsterState = new Dictionary<MonsterState, IState>();
+        MonsterModel.MonsterState.Add(MonsterState.Patrol, new Patrol(this));
+        MonsterModel.MonsterState.Add(MonsterState.Chase, new Chase(this));
+        MonsterModel.MonsterState.Add(MonsterState.Search, new Search(this));
+        MonsterModel.MonsterState.Add(MonsterState.BackReturn, new BackReturn(this));
+        MonsterModel.MonsterState.Add(MonsterState.Attack, new MonsterAttack(this));
+        MonsterModel.CurrentState = MonsterModel.MonsterState[MonsterState.Patrol];
     }
 
     private void Update()
     {
-        _currentState.Update();
+        MonsterModel.CurrentState.Update();
     }
 
     public void SetState(MonsterState state)
     {
-        Debug.Log("이전 상태: " + _currentState);
+        Debug.Log("이전 상태: " + MonsterModel.CurrentState);
 
-        _currentState?.Exit();
-        _currentState = _monsterState[state];
-        _currentState.Enter();
+        MonsterModel.CurrentState?.Exit();
+        MonsterModel.CurrentState = MonsterModel.MonsterState[state];
+        MonsterModel.CurrentState.Enter();
 
-        Debug.Log("현재 상태: " + _currentState);
+        Debug.Log("현재 상태: " + MonsterModel.CurrentState);
     }
 
-    public void SetTarget(Transform target) => Target = target;
+    public void SetTarget(Transform target) => MonsterModel.Target = target;
 
 
     public void OnMove(Vector2 target, float speed)
@@ -75,10 +72,9 @@ public class Monster : MonoBehaviour
             );
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void TakeDamage(float damage)
     {
-        if (other.CompareTag("Player"))
-            Debug.Log("플레이어 타격");
+        MonsterModel.Hp -= damage;
     }
 
 }
