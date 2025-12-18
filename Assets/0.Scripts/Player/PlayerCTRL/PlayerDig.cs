@@ -15,8 +15,8 @@ public class PlayerDig : MonoBehaviour
 
     Vector3 _mousePosition;
     Vector3 dir;
-    bool _isDigging;
 
+    public bool _isDigging;
     private void Awake()
     {
         _input = GetComponent<PlayerInput>();  //최상위 부모의 플레이어 인풋 컴포넌트

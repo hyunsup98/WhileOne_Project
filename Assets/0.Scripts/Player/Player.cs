@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
 
@@ -17,10 +18,10 @@ public class Player : MonoBehaviour
     //현재 상태를 담을 인터페이스 변수
     private IPlayerState currentState;
 
-
     public event Action<float,float> _onHpChanged;
     public event Action<float,float> _onStiminaChanged;
-    
+
+    private WaitForSeconds _delay;
     //외부에서 사용할 프로퍼티
     public float Hp => _hp;
     public float Stamina => _stamina;
@@ -28,6 +29,13 @@ public class Player : MonoBehaviour
     public int Attack => _attack;
     public int AttackSpeed => _attackSpeed;
 
+    void Start()
+    {
+        _hp = _maxHp;
+        _stamina = _maxStamina;
+
+        _delay = new WaitForSeconds(1f);
+    }
 
     public float ChangedHealth
     {
@@ -63,7 +71,10 @@ public class Player : MonoBehaviour
 
     public void RestoreStamina()
     {
-        
+       if(_stamina <= 99)
+        {
+            StartCoroutine(RestoreCoroutine());
+        }
     }
     public void UseStamina()
     {
@@ -74,16 +85,17 @@ public class Player : MonoBehaviour
         _stamina -= 50;
     }
 
-    void Start()
-    {
-        _hp = _maxHp;
-        _stamina = _maxStamina;
-    }
-
     public void SetState(IPlayerState state)
     {
         currentState?.OnExit();
         currentState = state;
         currentState.OnEnter();
     }
+
+    IEnumerator RestoreCoroutine()
+    {
+        yield return _delay;
+        _stamina += 5;
+    }
+
 }

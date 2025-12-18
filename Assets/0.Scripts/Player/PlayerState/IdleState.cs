@@ -4,6 +4,8 @@ public class IdleState : IPlayerState
 {
     Player _player;
     PlayerMovement _playerMovement;
+    PlayerDig _playerDig;
+    PlayerAttack _playerAttack;
     public IdleState(Player player)
     {
         _player = player;
@@ -26,8 +28,15 @@ public class IdleState : IPlayerState
             _player.SetState(new MoveState(_player));
         }
 
+        if(_playerAttack._isAttacking == true)
+        {
+            _player.SetState(new AttackState(_player));
+        }
         
-    }
+        if(_playerDig._isDigging == true)
+        {
+            _player.SetState(new DigState(_player));
+        }
 
-    
+    }
 }
