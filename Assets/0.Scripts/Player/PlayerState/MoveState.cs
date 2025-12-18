@@ -1,7 +1,7 @@
 using UnityEngine;
 using static UnityEditor.Experimental.GraphView.GraphView;
 
-public class MoveState : IPlayerState
+public class MoveState : IState
 {
     Player _player;
     PlayerMovement _playerMovement;
@@ -13,17 +13,17 @@ public class MoveState : IPlayerState
         _player = player;
     }
 
-    public void OnEnter()
+    public void Enter()
     {
        
     }
 
-    public void OnExit()
+    public void Exit()
     {
        
     }
 
-    public void OnUpdate()
+    public void Update()
     {
         //만약 움직임이 멈췄다면 정지 상태로
         if (_playerMovement.Move == Vector3.zero)

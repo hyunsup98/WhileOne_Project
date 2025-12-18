@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 
-public class Search : IMonsterState
+public class Search : IState
 {
     private Monster _monster;
     private float _visibility;

@@ -20,8 +20,8 @@ public class Monster : MonoBehaviour
     public Transform Target { get; private set; }
 
     
-    private IMonsterState _currentState;
-    private Dictionary<MonsterState, IMonsterState> _monsterState;
+    private IState _currentState;
+    private Dictionary<MonsterState, IState> _monsterState;
 
 
     private void Awake()
@@ -32,7 +32,7 @@ public class Monster : MonoBehaviour
         PatrolPoint = MobAstar.Pathfinder(PatrolTarget[0].position, PatrolTarget[1].position);
 
         // 상태 패턴 세팅
-        _monsterState = new Dictionary<MonsterState, IMonsterState>();
+        _monsterState = new Dictionary<MonsterState, IState>();
         _monsterState.Add(MonsterState.Patrol, new Patrol(this));
         _monsterState.Add(MonsterState.Chase, new Chase(this));
         _monsterState.Add(MonsterState.Search, new Search(this));

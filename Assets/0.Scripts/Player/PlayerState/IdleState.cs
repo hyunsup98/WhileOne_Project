@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class IdleState : IPlayerState
+public class IdleState : IState
 {
     Player _player;
     PlayerMovement _playerMovement;
@@ -10,17 +10,17 @@ public class IdleState : IPlayerState
     {
         _player = player;
     }
-    public void OnEnter()
+    public void Enter()
     {
        
     }
 
-    public void OnExit()
+    public void Exit()
     {
         
     }
 
-    public void OnUpdate()
+    public void Update()
     {
         //만약 움직이면 이동상태로 
         if(_playerMovement.Move != Vector3.zero)

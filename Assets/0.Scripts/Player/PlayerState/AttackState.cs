@@ -1,23 +1,23 @@
 using UnityEngine;
 
-public class AttackState : IPlayerState
+public class AttackState : IState
 {
     Player _player;
     public AttackState(Player player)
     {
         _player = player;
     }
-    public void OnEnter()
+    public void Enter()
     {
 
     }
 
-    public void OnExit()
+    public void Exit()
     {
         
     }
 
-    public void OnUpdate()
+    public void Update()
     {
         
     }

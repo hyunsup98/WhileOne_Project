@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Chase : IMonsterState
+public class Chase : IState
 {
     private Monster _monster;
     private float _speed;

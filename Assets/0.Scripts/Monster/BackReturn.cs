@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BackReturn : IMonsterState
+public class BackReturn : IState
 {
     private Monster _monster;
     private float _speed;

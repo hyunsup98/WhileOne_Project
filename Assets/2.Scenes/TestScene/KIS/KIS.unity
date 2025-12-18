@@ -2269,7 +2269,7 @@ MonoBehaviour:
   <Speed>k__BackingField: 5
   <Visibility>k__BackingField: 5
   <Tier>k__BackingField: 0
-  <TargetPoint>k__BackingField:
+  <PatrolTarget>k__BackingField:
   - {fileID: 155911245}
   - {fileID: 233893359}
   _wallTilemap: {fileID: 473278399}

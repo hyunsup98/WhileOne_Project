@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Patrol : IMonsterState
+public class Patrol : IState
 {
     private Monster _monster;
     private float _speed;

@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
     private float _stamina;
 
     //현재 상태를 담을 인터페이스 변수
-    private IPlayerState currentState;
+    private IState currentState;
 
     public event Action<float,float> _onHpChanged;
     public event Action<float,float> _onStiminaChanged;
@@ -85,11 +85,11 @@ public class Player : MonoBehaviour
         _stamina -= 50;
     }
 
-    public void SetState(IPlayerState state)
+    public void SetState(IState state)
     {
-        currentState?.OnExit();
+        currentState?.Exit();
         currentState = state;
-        currentState.OnEnter();
+        currentState.Enter();
     }
 
     IEnumerator RestoreCoroutine()
