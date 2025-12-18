@@ -90,8 +90,8 @@ public class Astar
 
         path.Reverse();
 
-        foreach (var a in path)
-            Debug.Log("최적 경로 노드: " + a);
+        //foreach (var a in path)
+        //    Debug.Log("최적 경로 노드: " + a);
 
         Init();
         return path;

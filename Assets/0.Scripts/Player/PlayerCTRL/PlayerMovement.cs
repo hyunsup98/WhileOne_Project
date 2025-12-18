@@ -43,13 +43,13 @@ public class PlayerMovement : MonoBehaviour
         _moveAction.performed += OnMove; //입력키 눌렀을 때 이동
 
         _moveAction.canceled += OnStopped;
-       
     }
 
     void OnMove(InputAction.CallbackContext ctx)
     {
             _dir = ctx.ReadValue<Vector2>();
             _move = new Vector3(_dir.x, _dir.y, 0).normalized;
+        Debug.Log(_move);
     }
     private void OnStopped(InputAction.CallbackContext ctx)
     {
@@ -59,7 +59,6 @@ public class PlayerMovement : MonoBehaviour
     {
         //마우스 좌표값을 월드 좌표값으로 변환
         _mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        //Debug.Log(_mousePosition);
 
         //플레이어와 마우스 사이 좌표 거리 계산
         Vector3 angle = _mousePosition - transform.position;

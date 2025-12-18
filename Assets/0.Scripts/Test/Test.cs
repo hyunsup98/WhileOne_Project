@@ -1,46 +1,44 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class Test : MonoBehaviour
 {
     public float speed = 5;
-    public Tilemap _wallTilemap;
-    public Transform target;
+    private float _maxAngle = 60;
 
-    private List<Vector2> list;
-    private Astar astar;
-    private int index;
-
-    private void Awake()
-    {
-        astar = new Astar(_wallTilemap);
-    }
+    public Vector2 target;
 
     private void Start()
     {
-        list = astar.Pathfinder(transform.position, target.transform.position);
+        
     }
 
     private void Update()
     {
-        Vector2 tempTarget = astar.GetCellPos(list[index]);
+        RaycastHit2D hit = Physics2D.Raycast((Vector2)transform.position, target);
 
-        Move(tempTarget);
+        Debug.Log("레이케스트: " + hit.collider);
 
-        if (Vector2.Distance(transform.position, tempTarget) <= 0.3f)
-            index++;
+        if (hit.collider != null)
+            Debug.Log("이름: " + hit.transform);
     }
 
-    public void Move(Vector2 target)
-    {
-        target = astar.GetCellPos(target);
+    //private void OnDrawGizmosSelected()
+    //{
+    //    Vector2 start = transform.position;
 
-        Vector2 dir = ( target - (Vector2)transform.position ).normalized;
+    //    Vector2 dirNomlized = (target - start).normalized;
 
-        transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
-    }
 
-    
+    //    for (float f = -_maxAngle; f <= _maxAngle; f++)
+    //    {
+    //        float rad = f * Mathf.Deg2Rad;
+    //        Vector2 dir = Quaternion.Euler(0, 0, f) * dirNomlized;
+    //        dir += start;
+
+    //        Gizmos.color = Color.red;
+    //        Gizmos.DrawLine(start, dir);
+    //    }
+
+    //}
 
 }
