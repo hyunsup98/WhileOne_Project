@@ -6,7 +6,7 @@ using UnityEngine;
 public abstract class Interactable : MonoBehaviour
 {
     [Header("Interaction Settings")]
-    [SerializeField] [Tooltip("플레이어가 상호작용 가능한 범위 (Unity 단위)")]
+    [SerializeField] [Tooltip("플레이어가 상호작용 가능한 범위 (Unity unit)")]
     protected float interactionRange = 1.5f;
     [SerializeField] [Tooltip("플레이어가 속한 레이어 (충돌 체크용)")]
     protected LayerMask playerLayer;

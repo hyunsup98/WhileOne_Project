@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b209ea9e7fa83644953bfd76d78e15b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  moveSpeed: 5
+  moveSpeed: 10
   collisionCheckRadius: 0.09
   obstacleLayer:
     serializedVersion: 2
@@ -266,12 +266,6 @@ MonoBehaviour:
   startRoomPrefab: {fileID: 3670151386598274992, guid: 01a1d2d5142ff704ea5aadc3d251d553, type: 3}
   exitRoomPrefab: {fileID: 3670151386598274992, guid: 01a1d2d5142ff704ea5aadc3d251d553, type: 3}
   eventRoomPrefab: {fileID: 3670151386598274992, guid: 01a1d2d5142ff704ea5aadc3d251d553, type: 3}
-  useTilemapForCorridors: 0
-  corridorPrefabHorizontal: {fileID: 2870543962171593631, guid: 870e601f6684dee4f81ecf6679960311, type: 3}
-  corridorPrefabVertical: {fileID: 2870543962171593631, guid: 5c83add385740f144b0054755f1f4732, type: 3}
-  corridorLength: 3
-  corridorFloorTile: {fileID: 0}
-  corridorWallTile: {fileID: 0}
   roomSpacing: 20
   autoCalculateSpacing: 1
   generateOnStart: 1
@@ -282,6 +276,7 @@ MonoBehaviour:
   digSpotPrefab: {fileID: 7998049852684998797, guid: a63910f0052bbe3448ec7d1b90295311, type: 3}
   digSpotSpawnChance: 50
   showRoomTypeLabels: 1
+  roomLabelOffsetX: -1
   roomLabelOffsetY: 0.5
   showCorridorLabels: 0
   corridorLabelOffsetY: 0.2
@@ -335,13 +330,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71ac4e3f62dc63e4c8d6ee29b90aa3cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrapRoomMazeGenerator
-  mazeWidth: 17
-  mazeHeight: 17
-  trapPrefab: {fileID: 5109053834877527692, guid: 5a8751d06b4ced241a8b0de593aa9945, type: 3}
+  mazeWidth: 15
+  mazeHeight: 15
+  trapPrefab: {fileID: 4652139313107373167, guid: 1fd9b4c6bd5aa1e4c8f0a467bc3d1cbd, type: 3}
   trapAttackInterval: 2
   maxTrapRatio: 0.3
   safeZoneRadius: 2
-  leverPrefab: {fileID: 7852388035868323303, guid: b53f3419676793842a084e6d812f542a, type: 3}
+  leverPrefab: {fileID: 7575494982384084485, guid: f53d75469215d50458095129adeb40f2, type: 3}
   treasureChestPrefab: {fileID: 8093644079317161710, guid: abaf34e072016214d922589279f812e4, type: 3}
   treasureChance: 0.1
   wallTilePrefab: {fileID: 7088328249393432251, guid: fbd44fb6b2590c04799303d629944d0b, type: 3}
@@ -421,9 +416,9 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 100
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -566,7 +561,8 @@ PrefabInstance:
       value: Grid
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 2067800474923929050, guid: c1461426740b0af458f0b70bb728461d, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c1461426740b0af458f0b70bb728461d, type: 3}

@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 3
   tags:
   - DigSpot
+  - RoomCenterMarker
+  - Wall
   layers:
   - Default
   - TransparentFX

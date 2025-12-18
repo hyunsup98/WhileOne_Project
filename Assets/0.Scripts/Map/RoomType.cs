@@ -7,7 +7,8 @@ public enum RoomType
     Normal,     // 일반 방
     Exit,       // 출구 방 (다음층 입구)
     Event,      // 이벤트 방
-    Trap        // 함정 방
-    // Treasure 타입은 제거됨 - 새로운 방 타입은 BaseRoom을 상속받아 구성
+    Trap,        // 함정 방
+    Treasure,   // 보물 방
+    // 새로운 방 타입은 BaseRoom을 상속받아 구성
 }
 

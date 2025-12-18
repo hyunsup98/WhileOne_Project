@@ -16,8 +16,10 @@ public class TrapRoomMazeGenerator : MonoBehaviour
     private int mazeHeight = 15; // 미로 세로 크기 (타일 수)
     
     [Header("Trap Settings")]
-    [SerializeField] [Tooltip("함정으로 사용할 프리팹 (1x1 크기)")]
-    private GameObject trapPrefab; // 함정 프리펩 (1x1)
+    [SerializeField] [Tooltip("함정 ON 상태에 사용할 프리팹 (1x1 크기)")]
+    private GameObject trapPrefab; // 함정 ON 프리펩 (1x1)
+    [SerializeField] [Tooltip("함정 OFF 상태에 사용할 프리펩 (선택, 비어 있으면 ON 프리펩의 활성/비활성으로 대체)")]
+    private GameObject trapOffPrefab; // 함정 OFF 프리펩
     [SerializeField] [Tooltip("함정이 공격하는 간격 (초 단위)")]
     private float trapAttackInterval = 2f; // 함정 공격 간격 (초)
     [SerializeField] [Tooltip("미로 내 함정의 최대 비율 (0.0 ~ 1.0). 예: 0.3 = 30%")]
@@ -42,6 +44,8 @@ public class TrapRoomMazeGenerator : MonoBehaviour
     
     // 함정 위치
     private List<Vector2Int> trapPositions;
+    // 생성된 함정 오브젝트 (ON/OFF 전환용)
+    private List<GameObject> trapObjects = new List<GameObject>();
     
     // 레버 위치
     private Vector2Int leverPosition;
@@ -73,8 +77,6 @@ public class TrapRoomMazeGenerator : MonoBehaviour
     /// </summary>
     public void GenerateMaze(float roomSize, float cellSize, Vector2Int primaryEntryDirection, List<Vector2Int> allEntryDirections, Transform parent)
     {
-        Debug.Log($"[TrapRoomMazeGenerator] GenerateMaze 시작: roomSize={roomSize}, cellSize={cellSize}, primaryEntryDirection={primaryEntryDirection}, allEntries={string.Join(",", allEntryDirections)}");
-        
         // cellSize, roomSize 저장 (기본값)
         this.cellSize = cellSize;
         this.roomSize = roomSize;
@@ -90,8 +92,6 @@ public class TrapRoomMazeGenerator : MonoBehaviour
             int sizeInCells = Mathf.Max(5, Mathf.RoundToInt(baseRoom.RoomSize / baseRoom.TileSize));
             mazeWidth = sizeInCells;
             mazeHeight = sizeInCells;
-            
-            Debug.Log($"[TrapRoomMazeGenerator] BaseRoom 기반 방/미로 크기 설정: roomSize={this.roomSize}, tileSize={this.cellSize}, 미로 크기: {mazeWidth}x{mazeHeight}");
         }
         // 2) BaseRoom 정보가 없으면, 함정방의 실제 크기를 측정하여 미로 크기 결정
         else if (parent != null)
@@ -122,8 +122,6 @@ public class TrapRoomMazeGenerator : MonoBehaviour
                 // 따라서 미로 너비/높이를 방의 셀 크기와 동일하게 설정
                 mazeWidth = Mathf.Max(5, roomWidthInCells);
                 mazeHeight = Mathf.Max(5, roomHeightInCells);
-                
-                Debug.Log($"[TrapRoomMazeGenerator] 방 크기 측정: {roomWidthInCells}x{roomHeightInCells} 셀, 미로 크기(동일): {mazeWidth}x{mazeHeight}");
             }
             else
             {
@@ -131,8 +129,6 @@ public class TrapRoomMazeGenerator : MonoBehaviour
                 int sizeInCells = Mathf.Max(5, Mathf.RoundToInt(roomSize / this.cellSize));
                 mazeWidth = sizeInCells;
                 mazeHeight = sizeInCells;
-                
-                Debug.Log($"[TrapRoomMazeGenerator] Grid를 찾지 못해 roomSize 기반 계산: 방/미로 크기 {mazeWidth}x{mazeHeight}");
             }
         }
         else
@@ -144,22 +140,16 @@ public class TrapRoomMazeGenerator : MonoBehaviour
             if (mazeHeight % 2 == 0) mazeHeight--;
         }
         
-        // 실제 미로 크기 계산 (디버그용)
-        float actualMazeSize = Mathf.Max(mazeWidth, mazeHeight) * this.cellSize;
-        
-        Debug.Log($"[TrapRoomMazeGenerator] 최종 미로 크기: {mazeWidth}x{mazeHeight} (셀 크기: {this.cellSize}, 실제 크기: {actualMazeSize}, 방 크기: {this.roomSize})");
-        
         // 미로 그리드 초기화 (모두 벽으로 시작, false = 벽, true = 통로)
         mazeGrid = new bool[mazeWidth, mazeHeight];
         trapPositions = new List<Vector2Int>();
+        trapObjects = new List<GameObject>();
         
         // 1단계: 벽으로 통로 만들기 (미로 생성)
         GenerateMazePaths();
-        Debug.Log($"[TrapRoomMazeGenerator] 1단계: 미로 통로 생성 완료");
         
         // 2단계: 메인 입구 위치 결정 (문이 있는 방향의 가장자리)
         entryPosition = DetermineEntryPosition(primaryEntryDirection);
-        Debug.Log($"[TrapRoomMazeGenerator] 2단계: 메인 입구 위치 결정: ({entryPosition.x}, {entryPosition.y})");
         
         // 입구 위치 리스트 초기화 (메인 입구 포함)
         entryPositions.Clear();
@@ -170,22 +160,17 @@ public class TrapRoomMazeGenerator : MonoBehaviour
         
         // 3단계: 레버 위치 결정 (모서리에 최대한 가깝게)
         leverPosition = DetermineLeverPosition();
-        Debug.Log($"[TrapRoomMazeGenerator] 3단계: 레버 위치 결정: ({leverPosition.x}, {leverPosition.y})");
         
         // 4단계: 입구에서 레버까지 경로 보장
         EnsurePathToLever();
-        Debug.Log($"[TrapRoomMazeGenerator] 4단계: 경로 보장 완료");
         
         // 5단계: 통로 안에 함정 배치
         PlaceTrapsInPaths();
-        Debug.Log($"[TrapRoomMazeGenerator] 5단계: 함정 배치 완료: {trapPositions.Count}개");
         
         // 6단계: 실제 오브젝트 생성 (벽 먼저, 그 다음 함정)
         CreateMazeObjects(parent);
         CreateTraps(parent);
         CreateLever(parent);
-        
-        Debug.Log($"[TrapRoomMazeGenerator] 미로 생성 완료");
     }
     
     /// <summary>
@@ -282,7 +267,6 @@ public class TrapRoomMazeGenerator : MonoBehaviour
             mazeGrid[mazeWidth - 1, y] = false; // 오른쪽 벽
         }
         
-        Debug.Log($"[TrapRoomMazeGenerator] 미로 생성 완료: {visited.Count}개 셀 방문");
     }
     
     /// <summary>
@@ -393,7 +377,6 @@ public class TrapRoomMazeGenerator : MonoBehaviour
                 }
             }
             
-            Debug.Log($"[TrapRoomMazeGenerator] 추가 입출구 생성: 방향 {dir}, 위치 ({entry.x}, {entry.y})");
         }
     }
     
@@ -546,7 +529,6 @@ public class TrapRoomMazeGenerator : MonoBehaviour
             return leverPos;
         }
         
-        Debug.Log($"[TrapRoomMazeGenerator] 레버 위치 선택: ({bestPos.x}, {bestPos.y}), 최단 거리(가장 가까운 입구 기준) = {bestDist}");
         return bestPos;
     }
     
@@ -823,7 +805,6 @@ public class TrapRoomMazeGenerator : MonoBehaviour
             }
         }
 
-        Debug.Log($"[TrapRoomMazeGenerator] 레버로 가는 경로: 총 {totalPathCount}개 (입구 {sourcesForPaths.Count}개), 경로 셀 합집합 {pathToLeverPositions.Count}개");
         
         // 함정 배치 위치를 우선순위별로 분류
         List<Vector2Int> priorityPositions = new List<Vector2Int>(); // 레버로 가는 경로
@@ -844,7 +825,6 @@ public class TrapRoomMazeGenerator : MonoBehaviour
         // 우선순위 위치를 먼저 섞기 (레버로 가는 경로 위 통로)
         List<Vector2Int> shuffledPriority = priorityPositions.OrderBy(x => Random.value).ToList();
         
-        Debug.Log($"[TrapRoomMazeGenerator] 함정 배치 우선순위: 레버 경로 후보 {shuffledPriority.Count}개, 일반 후보 {normalPositions.Count}개, 최대 함정 {maxTraps}개");
         
         // 1단계 (그리고 사실상 유일 단계):
         // 레버로 가는 경로 위에 함정을 가능한 한 많이, 촘촘하게 배치한다.
@@ -883,7 +863,6 @@ public class TrapRoomMazeGenerator : MonoBehaviour
         // 사용자가 원하는 것은 "어느 입구에서든 레버로 가는 통로에 함정이 가장 많게"이므로,
         // 레버 경로 위에 배치 가능한 만큼만 배치하고, 나머지 통로는 비워둔다.
         
-        Debug.Log($"[TrapRoomMazeGenerator] 함정 배치 완료: {trapCount}개 / 최대: {maxTraps}개 (레버 경로: {priorityTrapCount}개, 일반: 0개)");
     }
     
     /// <summary>
@@ -1014,7 +993,7 @@ public class TrapRoomMazeGenerator : MonoBehaviour
             roomGrid = roomTilemap.GetComponentInParent<Grid>();
         }
         
-        // 방의 실제 중심 위치 계산 (월드 좌표)
+        // 방의 실제 중심 위치 계산 (RoomCenterMarker 기준)
         Vector3 roomCenter = GetRoomActualCenter(parent);
         
         int wallCount = 0;
@@ -1037,19 +1016,20 @@ public class TrapRoomMazeGenerator : MonoBehaviour
                         // 벽만 생성 (mazeGrid[x, y] == false인 경우)
                         if (!mazeGrid[x, y])
                         {
-                            // 미로 그리드 (x, y) -> 타일맵 셀 좌표
-                            Vector3Int tilemapCell = mazeOriginCell + new Vector3Int(x, y, 0);
-                            
-                            // 셀 중앙 위치
-                            Vector3 worldPos = roomGrid.GetCellCenterWorld(tilemapCell);
-                            
-                            Instantiate(wallTilePrefab, worldPos, Quaternion.identity, wallContainer);
+                // 미로 그리드 (x, y) -> 타일맵 셀 좌표
+                Vector3Int tilemapCell = mazeOriginCell + new Vector3Int(x, y, 0);
+                
+                // 셀 중앙 위치 (RoomCenterMarker 기준 roomCenter와 정렬)
+                Vector3 worldPos = roomGrid.GetCellCenterWorld(tilemapCell);
+                
+                GameObject wall = Instantiate(wallTilePrefab, worldPos, Quaternion.identity, wallContainer);
+                            // PlayerMoveController.wallTag에서 사용하는 "Wall" 태그를 자동으로 설정
+                            wall.tag = "Wall";
                             wallCount++;
                         }
                     }
                 }
                 
-                Debug.Log($"[TrapRoomMazeGenerator] 벽 생성: 타일맵 bounds({tilemapBounds.xMin},{tilemapBounds.yMin},{tilemapBounds.size.x}x{tilemapBounds.size.y}), 미로 크기({mazeWidth}x{mazeHeight})");
             }
             else
             {
@@ -1066,13 +1046,13 @@ public class TrapRoomMazeGenerator : MonoBehaviour
                         if (!mazeGrid[x, y])
                         {
                             Vector3 worldPos = roomCenter + offset + new Vector3(x * cellSize, y * cellSize, 0f) + cellCenterOffset;
-                            Instantiate(wallTilePrefab, worldPos, Quaternion.identity, wallContainer);
+                            GameObject wall = Instantiate(wallTilePrefab, worldPos, Quaternion.identity, wallContainer);
+                            wall.tag = "Wall";
                             wallCount++;
                         }
                     }
                 }
                 
-                Debug.Log($"[TrapRoomMazeGenerator] 벽 생성: 타일맵 bounds 비어있음, 월드 기준 배치 (roomCenter={roomCenter}, mazeSize={mazeWidth}x{mazeHeight})");
             }
         }
         // 2순위: Grid나 Tilemap이 없으면 월드 좌표 방식으로 배치
@@ -1090,7 +1070,8 @@ public class TrapRoomMazeGenerator : MonoBehaviour
                     if (!mazeGrid[x, y])
                     {
                         Vector3 worldPos = roomCenter + offset + new Vector3(x * cellSize, y * cellSize, 0f) + cellCenterOffset;
-                        Instantiate(wallTilePrefab, worldPos, Quaternion.identity, wallContainer);
+                        GameObject wall = Instantiate(wallTilePrefab, worldPos, Quaternion.identity, wallContainer);
+                        wall.tag = "Wall";
                         wallCount++;
                     }
                 }
@@ -1099,7 +1080,6 @@ public class TrapRoomMazeGenerator : MonoBehaviour
             Debug.Log($"[TrapRoomMazeGenerator] 벽 생성: Grid/Tilemap 없음, 월드 기준 배치 (roomCenter={roomCenter}, mazeSize={mazeWidth}x{mazeHeight})");
         }
         
-        Debug.Log($"[TrapRoomMazeGenerator] 미로 벽 생성 완료: 벽 {wallCount}개, 총 {mazeWidth}x{mazeHeight} 크기");
     }
     
     /// <summary>
@@ -1144,7 +1124,6 @@ public class TrapRoomMazeGenerator : MonoBehaviour
             // Tilemap bounds를 사용 (더 정확함)
             if (tilemapBounds.size.x > 0 && tilemapBounds.size.y > 0)
             {
-                Debug.Log($"[TrapRoomMazeGenerator] Tilemap bounds: {tilemapBounds.size.x}x{tilemapBounds.size.y}");
                 return tilemapBounds;
             }
         }
@@ -1169,7 +1148,6 @@ public class TrapRoomMazeGenerator : MonoBehaviour
             Vector3Int maxCell = grid.WorldToCell(bounds.Value.max);
             
             BoundsInt result = new BoundsInt(minCell, maxCell - minCell);
-            Debug.Log($"[TrapRoomMazeGenerator] Renderer/Collider bounds: {result.size.x}x{result.size.y}");
             return result;
         }
         
@@ -1184,7 +1162,6 @@ public class TrapRoomMazeGenerator : MonoBehaviour
                 centerCell - new Vector3Int(halfSize, halfSize, 0),
                 new Vector3Int(sizeInCells, sizeInCells, 0)
             );
-            Debug.Log($"[TrapRoomMazeGenerator] BaseRoom roomSize 기반: {result.size.x}x{result.size.y}");
             return result;
         }
         
@@ -1196,13 +1173,21 @@ public class TrapRoomMazeGenerator : MonoBehaviour
     /// <summary>
     /// 방의 실제 중심 위치를 계산합니다.
     /// 우선순위:
-    /// 1) 방 Tilemap + Grid 의 cellBounds 중심 (시각적으로 보이는 방 중심)
-    /// 2) Renderer/Collider bounds 중심
-    /// 3) BaseRoom/Transform 위치
+    /// 1) RoomCenterMarker 태그가 붙은 자식 오브젝트 위치
+    /// 2) 방 Tilemap + Grid 의 cellBounds 중심 (시각적으로 보이는 방 중심)
+    /// 3) Renderer/Collider bounds 중심
+    /// 4) BaseRoom/Transform 위치
     /// </summary>
     private Vector3 GetRoomActualCenter(Transform parent)
     {
         if (parent == null) return transform.position;
+
+        // 1) RoomCenterMarker 우선 사용
+        Transform centerMarker = FindRoomCenterMarker(parent);
+        if (centerMarker != null)
+        {
+            return centerMarker.position;
+        }
         
         // 1) 방 Tilemap + Grid 기준 중심 계산
         Tilemap roomTilemap = parent.GetComponentInChildren<Tilemap>();
@@ -1221,7 +1206,6 @@ public class TrapRoomMazeGenerator : MonoBehaviour
                     Vector3Int centerCell = new Vector3Int(centerX, centerY, 0);
                     
                     Vector3 worldCenter = roomGrid.GetCellCenterWorld(centerCell);
-                    Debug.Log($"[TrapRoomMazeGenerator] GetRoomActualCenter: Tilemap 기준 중심 셀({centerCell.x}, {centerCell.y}) -> 월드 {worldCenter}");
                     return worldCenter;
                 }
             }
@@ -1242,12 +1226,10 @@ public class TrapRoomMazeGenerator : MonoBehaviour
         
         if (bounds.HasValue)
         {
-            Debug.Log($"[TrapRoomMazeGenerator] GetRoomActualCenter: Renderer/Collider 기준 중심 {bounds.Value.center}");
             return bounds.Value.center;
         }
         
-        // 3) 최후의 수단: BaseRoom/Transform 위치 사용
-        Debug.Log($"[TrapRoomMazeGenerator] GetRoomActualCenter: 기본 transform.position 사용 {parent.position}");
+        // 4) 최후의 수단: BaseRoom/Transform 위치 사용
         return parent.position;
     }
     
@@ -1256,6 +1238,25 @@ public class TrapRoomMazeGenerator : MonoBehaviour
         a.Encapsulate(b);
         return a;
     }
+
+    /// <summary>
+    /// 방 오브젝트 하위에서 RoomCenterMarker 태그를 가진 Transform을 찾습니다.
+    /// </summary>
+    private Transform FindRoomCenterMarker(Transform parent)
+    {
+        if (parent == null) return null;
+
+        Transform[] children = parent.GetComponentsInChildren<Transform>(true);
+        foreach (var t in children)
+        {
+            if (t.CompareTag("RoomCenterMarker"))
+            {
+                return t;
+            }
+        }
+
+        return null;
+    }
     
     /// <summary>
     /// 함정 오브젝트 생성
@@ -1263,7 +1264,7 @@ public class TrapRoomMazeGenerator : MonoBehaviour
     /// </summary>
     private void CreateTraps(Transform parent)
     {
-        if (trapPrefab == null)
+        if (trapPrefab == null && trapOffPrefab == null)
         {
             Debug.LogWarning($"[TrapRoomMazeGenerator] 함정 프리펩이 설정되지 않았습니다.");
             return;
@@ -1274,6 +1275,12 @@ public class TrapRoomMazeGenerator : MonoBehaviour
             Debug.LogWarning($"[TrapRoomMazeGenerator] 배치할 함정이 없습니다.");
             return;
         }
+
+        // 이전에 생성된 함정 오브젝트 목록 초기화
+        if (trapObjects == null)
+            trapObjects = new List<GameObject>();
+        else
+            trapObjects.Clear();
         
         // Traps 컨테이너 찾기 또는 생성 (Maze > Traps 또는 직접 Interactive > Traps)
         Transform trapsContainer = null;
@@ -1318,7 +1325,7 @@ public class TrapRoomMazeGenerator : MonoBehaviour
             return;
         }
         
-        // 방의 실제 중심 위치 계산 (월드 좌표)
+        // 방의 실제 중심 위치 계산 (RoomCenterMarker 기준)
         Vector3 roomCenter = GetRoomActualCenter(parent);
         
         // 1순위: Tilemap bounds가 유효할 때, 타일맵 좌표에 맞춰 배치
@@ -1340,11 +1347,13 @@ public class TrapRoomMazeGenerator : MonoBehaviour
                 // 셀 중앙 위치
                 Vector3 worldPos = roomGrid.GetCellCenterWorld(tilemapCell);
                 
-                GameObject trap = Instantiate(trapPrefab, worldPos, Quaternion.identity, trapsContainer);
+                // 기본 상태는 OFF로 시작: trapOffPrefab이 있으면 OFF 프리팹, 없으면 ON 프리팹 사용
+                GameObject initialTrapPrefab = trapOffPrefab != null ? trapOffPrefab : trapPrefab;
+                GameObject trap = Instantiate(initialTrapPrefab, worldPos, Quaternion.identity, trapsContainer);
+                trapObjects.Add(trap);
                 trapCount++;
             }
             
-            Debug.Log($"[TrapRoomMazeGenerator] 함정 {trapCount}개 생성 완료 (타일맵 좌표 사용, 컨테이너: {trapsContainer.name}, 타일맵 bounds: {tilemapBounds.xMin},{tilemapBounds.yMin},{tilemapBounds.size.x}x{tilemapBounds.size.y}, 미로 크기: {mazeWidth}x{mazeHeight})");
         }
         // 2순위: Tilemap bounds가 비어있으면 월드 좌표 방식으로 배치
         else
@@ -1352,16 +1361,18 @@ public class TrapRoomMazeGenerator : MonoBehaviour
             float mazeActualWidth = mazeWidth * cellSize;
             float mazeActualHeight = mazeHeight * cellSize;
             Vector3 offset = new Vector3(-mazeActualWidth * 0.5f, -mazeActualHeight * 0.5f, 0f);
-            Vector3 cellCenterOffset = new Vector3(cellSize * 0.5f, cellSize * 0.5f, 0f);
+            Vector3 cellCenterOffset = new Vector3(cellSize * 0.5f, 0.5f * cellSize, 0f);
             
             foreach (var trapPos in trapPositions)
             {
                 Vector3 worldPos = roomCenter + offset + new Vector3(trapPos.x * cellSize, trapPos.y * cellSize, 0f) + cellCenterOffset;
-                GameObject trap = Instantiate(trapPrefab, worldPos, Quaternion.identity, trapsContainer);
+
+                GameObject initialTrapPrefab = trapOffPrefab != null ? trapOffPrefab : trapPrefab;
+                GameObject trap = Object.Instantiate(initialTrapPrefab, worldPos, Quaternion.identity, trapsContainer);
+                trapObjects.Add(trap);
                 trapCount++;
             }
             
-            Debug.Log($"[TrapRoomMazeGenerator] 함정 {trapCount}개 생성 완료 (월드 좌표 사용, roomCenter={roomCenter}, mazeSize={mazeWidth}x{mazeHeight})");
         }
     }
     
@@ -1395,11 +1406,13 @@ public class TrapRoomMazeGenerator : MonoBehaviour
             // 셀의 중심 위치 계산
             // trapPos는 미로 그리드 좌표 (0 ~ mazeWidth-1, 0 ~ mazeHeight-1)
             Vector3 worldPos = roomCenter + offset + new Vector3(trapPos.x * cellSize, trapPos.y * cellSize, 0f) + cellCenterOffset;
-            GameObject trap = Instantiate(trapPrefab, worldPos, Quaternion.identity, trapsContainer);
+
+            GameObject initialTrapPrefab = trapOffPrefab != null ? trapOffPrefab : trapPrefab;
+            GameObject trap = Instantiate(initialTrapPrefab, worldPos, Quaternion.identity, trapsContainer);
+            trapObjects.Add(trap);
             trapCount++;
         }
         
-        Debug.Log($"[TrapRoomMazeGenerator] 함정 {trapCount}개 생성 완료 (월드 좌표 사용, cellSize: {cellSize})");
     }
     
     /// <summary>
@@ -1445,7 +1458,6 @@ public class TrapRoomMazeGenerator : MonoBehaviour
                 // 셀 중앙 위치
                 worldPos = roomGrid.GetCellCenterWorld(tilemapCell);
                 
-                Debug.Log($"[TrapRoomMazeGenerator] 레버 위치 계산: 미로 그리드({leverPosition.x}, {leverPosition.y}) -> 타일맵 셀({tilemapCell.x}, {tilemapCell.y}) -> 월드({worldPos}), 타일맵 bounds: {tilemapBounds.xMin},{tilemapBounds.yMin},{tilemapBounds.size.x}x{tilemapBounds.size.y}");
             }
             else
             {
@@ -1457,7 +1469,6 @@ public class TrapRoomMazeGenerator : MonoBehaviour
                 Vector3 cellCenterOffset = new Vector3(cellSize * 0.5f, cellSize * 0.5f, 0f);
                 worldPos = roomCenter + offset + new Vector3(leverPosition.x * cellSize, leverPosition.y * cellSize, 0f) + cellCenterOffset;
                 
-                Debug.Log($"[TrapRoomMazeGenerator] 레버 위치 계산 (월드 좌표, Tilemap bounds 비어있음): 미로 그리드({leverPosition.x}, {leverPosition.y}) -> 월드({worldPos}), cellSize: {cellSize}");
             }
         }
         else
@@ -1470,19 +1481,28 @@ public class TrapRoomMazeGenerator : MonoBehaviour
             Vector3 cellCenterOffset = new Vector3(cellSize * 0.5f, cellSize * 0.5f, 0f);
             worldPos = roomCenter + offset + new Vector3(leverPosition.x * cellSize, leverPosition.y * cellSize, 0f) + cellCenterOffset;
             
-            Debug.Log($"[TrapRoomMazeGenerator] 레버 위치 계산 (월드 좌표): 미로 그리드({leverPosition.x}, {leverPosition.y}) -> 월드({worldPos}), cellSize: {cellSize}");
         }
         
         GameObject lever = Instantiate(leverPrefab, worldPos, Quaternion.identity, interactiveContainer);
-        
-        // 10% 확률로 보물상자 생성
-        if (Random.value < treasureChance && treasureChestPrefab != null)
+
+        // TrapRoomController와 연동되는 레버 스크립트 추가/초기화
+        TrapRoomController trapRoomController = parent != null ? parent.GetComponent<TrapRoomController>() : null;
+        if (trapRoomController == null && parent != null)
         {
-            Instantiate(treasureChestPrefab, worldPos, Quaternion.identity, interactiveContainer);
-            Debug.Log($"[TrapRoomMazeGenerator] 보물상자 생성됨 (10% 확률)");
+            trapRoomController = parent.GetComponentInParent<TrapRoomController>();
         }
-        
-        Debug.Log($"[TrapRoomMazeGenerator] 레버 생성 완료: 위치 ({leverPosition.x}, {leverPosition.y}), 월드 위치 {worldPos}");
+
+        if (trapRoomController != null)
+        {
+            TrapRoomLever leverLogic = lever.GetComponent<TrapRoomLever>();
+            if (leverLogic == null)
+            {
+                leverLogic = lever.AddComponent<TrapRoomLever>();
+            }
+            // 레버에 보물상자 프리팹과 확률을 전달 (상호작용 시 사용)
+            leverLogic.Initialize(trapRoomController, treasureChestPrefab, treasureChance);
+        }
+
     }
     
     /// <summary>
@@ -1499,5 +1519,47 @@ public class TrapRoomMazeGenerator : MonoBehaviour
     public List<Vector2Int> GetTrapPositions()
     {
         return trapPositions;
+    }
+
+    /// <summary>
+    /// 함정을 ON/OFF 상태로 전환합니다.
+    /// trapPrefab / trapOffPrefab이 모두 설정되어 있으면 프리팹을 갈아끼우고,
+    /// 그렇지 않으면 기존 함정 오브젝트의 활성/비활성만 전환합니다.
+    /// </summary>
+    public void SetTrapsActive(bool isOn)
+    {
+        if (trapObjects == null || trapObjects.Count == 0)
+            return;
+
+        // ON/OFF 프리팹이 모두 설정된 경우: 프리팹 갈아끼우기
+        if (trapPrefab != null && trapOffPrefab != null)
+        {
+            GameObject targetPrefab = isOn ? trapPrefab : trapOffPrefab;
+            for (int i = 0; i < trapObjects.Count; i++)
+            {
+                GameObject oldTrap = trapObjects[i];
+                if (oldTrap == null) continue;
+
+                Transform parent = oldTrap.transform.parent;
+                Vector3 pos = oldTrap.transform.position;
+                Quaternion rot = oldTrap.transform.rotation;
+
+                Object.Destroy(oldTrap);
+
+                GameObject newTrap = Object.Instantiate(targetPrefab, pos, rot, parent);
+                trapObjects[i] = newTrap;
+            }
+        }
+        else
+        {
+            // 한 종류의 프리팹만 있는 경우: 활성/비활성 토글만
+            foreach (var trap in trapObjects)
+            {
+                if (trap != null)
+                {
+                    trap.SetActive(isOn);
+                }
+            }
+        }
     }
 }

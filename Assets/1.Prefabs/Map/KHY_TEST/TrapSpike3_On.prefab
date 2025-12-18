@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4652139313107373161}
   - component: {fileID: 4652139313107373166}
   m_Layer: 0
-  m_Name: TrapSpike3
+  m_Name: TrapSpike3_On
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
