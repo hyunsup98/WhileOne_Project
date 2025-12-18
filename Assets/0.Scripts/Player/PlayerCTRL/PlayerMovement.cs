@@ -14,7 +14,6 @@ public class PlayerMovement : MonoBehaviour
     InputAction _moveAction;
 
     //리짓바디, 방향 관련"
-    Rigidbody _playerRigid;
     Vector2 _dir;
     Vector3 _move;
 
@@ -34,7 +33,7 @@ public class PlayerMovement : MonoBehaviour
         //playerRigid = GetComponent<Rigidbody>();
 
     }
-    void Start()
+    private void Start()
     {
         _actionMap = _playerInput.actions.FindActionMap("Player");
 
@@ -47,9 +46,8 @@ public class PlayerMovement : MonoBehaviour
 
     void OnMove(InputAction.CallbackContext ctx)
     {
-            _dir = ctx.ReadValue<Vector2>();
-            _move = new Vector3(_dir.x, _dir.y, 0).normalized;
-        Debug.Log(_move);
+        _dir = ctx.ReadValue<Vector2>();
+        _move = new Vector3(_dir.x, _dir.y, 0).normalized;
     }
     private void OnStopped(InputAction.CallbackContext ctx)
     {
@@ -57,6 +55,9 @@ public class PlayerMovement : MonoBehaviour
     }
     void FixedUpdate()
     {
+        Debug.Log(_move * Time.deltaTime * _player.MoveSpeed + " 이동");
+        transform.Translate(_move * Time.deltaTime * _player.MoveSpeed);
+
         //마우스 좌표값을 월드 좌표값으로 변환
         _mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 
@@ -65,7 +66,7 @@ public class PlayerMovement : MonoBehaviour
         //좌표 거리값을 바탕으로 각도(aTan) 계산 
         float angleZ = Mathf.Atan2(angle.y, angle.x) * Mathf.Rad2Deg; //라디안을 도(°)로 단위 변환
 
-        if (angleZ > 90 || angleZ<-90)
+        if (angleZ > 90 || angleZ < -90)
         {
             transform.localScale = new Vector3(1, 1, 1);
         }
@@ -75,7 +76,7 @@ public class PlayerMovement : MonoBehaviour
             transform.localScale = new Vector3(-1, 1, 1);
         }
 
-            transform.Translate(_move * Time.deltaTime * _player.MoveSpeed);
     }
+ 
 
 }
