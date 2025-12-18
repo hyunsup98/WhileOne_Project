@@ -13,12 +13,12 @@ public class TrakingPlayer : MonoBehaviour
     {
         if (_standard.localScale.x > 0)
         {
-            gameObject.transform.position = _trans.position + new Vector3 (-0.2f,0,0);
+            gameObject.transform.position = _trans.position + new Vector3 (-0.3f,0,0);
             _rend.flipX = true;
         }
         else
         {
-            gameObject.transform.position = _trans.position + new Vector3(0.2f, 0, 0);
+            gameObject.transform.position = _trans.position + new Vector3(0.3f, 0, 0);
             _rend.flipX = false;
         }
 

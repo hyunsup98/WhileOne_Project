@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.Rendering;
 
 public class Player : MonoBehaviour
 {
@@ -22,10 +23,18 @@ public class Player : MonoBehaviour
     public event Action<float,float> _onStiminaChanged;
 
     private WaitForSeconds _delay;
+    private WaitForSeconds _blinkTime;
+
+    [SerializeField] float time = 0.5f;
+    float _finsihTime  = 2;
+    float _checkTime = 0;
+
+    SortingGroup _group;
+
     //외부에서 사용할 프로퍼티
     public float Hp => _hp;
     public float Stamina => _stamina;
-    public int MoveSpeed { get; set; }
+    public int MoveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }
     public int Attack => _attack;
     public int AttackSpeed => _attackSpeed;
 
@@ -35,6 +44,12 @@ public class Player : MonoBehaviour
         _stamina = _maxStamina;
 
         _delay = new WaitForSeconds(1f);
+        _blinkTime = new WaitForSeconds(time);
+
+        _group = transform.GetChild(0).GetComponent<SortingGroup>();
+        Debug.Log(_group.name);
+
+        StartCoroutine(Blink());
     }
 
     public float ChangedHealth
@@ -67,6 +82,11 @@ public class Player : MonoBehaviour
     public void TakenDamage(float damage)
     {
         _hp -= damage;
+        
+
+
+
+        StopCoroutine(Blink());
     }
 
     public void RestoreStamina()
@@ -98,4 +118,23 @@ public class Player : MonoBehaviour
         _stamina += 5;
     }
 
+    IEnumerator Blink()
+    {
+        _checkTime = 0;
+
+        while (_finsihTime>_checkTime)
+        {
+            _group.sortingOrder = 0;
+
+            yield return _blinkTime;
+
+            _group.sortingOrder = 1;
+
+            _checkTime += time*Time.deltaTime;
+
+            yield return _blinkTime;
+        }
+        yield return null;
+
+    }
 }
