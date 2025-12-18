@@ -2,7 +2,6 @@ using UnityEngine;
 
 /// <summary>
 /// 도굴 방의 DigSpot 하나를 표현하는 상호작용 오브젝트.
-/// - Interactable을 상속하여 플레이어가 E키로 상호작용합니다.
 /// - 진짜/가짜 여부는 DigRoomController에서 설정합니다.
 /// - 가짜인 경우: 몬스터 소환 또는 플레이어 HP를 일정 퍼센트만큼 감소시킵니다.
 /// </summary>

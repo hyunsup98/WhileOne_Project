@@ -44,6 +44,9 @@ public class PlayerController : MonoBehaviour
 
     // 머리 위에 표시할 체력 텍스트
     private TextMesh hpTextMesh;
+
+    // 플레이어가 현재 속해 있는 방 (RoomController)
+    private RoomController currentRoom;
     
     private void Awake()
     {
@@ -97,6 +100,13 @@ public class PlayerController : MonoBehaviour
         {
             TryInteract();
         }
+
+        // 마우스 우클릭으로 Dig 시도
+        var mouse = Mouse.current;
+        if (mouse != null && mouse.rightButton.wasPressedThisFrame)
+        {
+            TryRightClickDig(mouse);
+        }
     }
 
     private void LateUpdate()
@@ -125,6 +135,46 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 마우스 우클릭 지점에 대해 DigSpot 타일이 있으면 DugSpot으로 변경을 시도합니다.
+    /// (현재 플레이어가 속한 RoomController 기준)
+    /// </summary>
+    private void TryRightClickDig(Mouse mouse)
+    {
+        if (currentRoom == null) return;
+
+        // 마우스 화면 좌표 → 월드 좌표
+        Vector2 screenPos = mouse.position.ReadValue();
+        Vector3 worldPos = Camera.main != null
+            ? Camera.main.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, 0f))
+            : (Vector3)screenPos;
+        worldPos.z = 0f;
+
+        bool dug = currentRoom.TryDigAtWorldPosition(worldPos);
+
+        // 필요하면 디버그 로그
+        // Debug.Log($"[Player] Right click dig result: {dug}, pos:{worldPos}");
+    }
+
+    /// <summary>
+    /// RoomController에서 호출: 플레이어가 이 방에 들어왔을 때 현재 방 설정
+    /// </summary>
+    public void SetCurrentRoom(RoomController room)
+    {
+        currentRoom = room;
+    }
+
+    /// <summary>
+    /// RoomController에서 호출: 플레이어가 이 방에서 나갔을 때 현재 방 해제
+    /// </summary>
+    public void ClearCurrentRoom(RoomController room)
+    {
+        if (currentRoom == room)
+        {
+            currentRoom = null;
+        }
+    }
+
     #region HP 관리 및 표시
 
     /// <summary>
@@ -143,6 +193,8 @@ public class PlayerController : MonoBehaviour
         hpTextMesh.anchor = TextAnchor.LowerCenter;
         hpTextMesh.color = hpTextColor;
         hpTextMesh.fontSize = hpTextFontSize;
+        // order in layer 설정 (필요시 조정)
+        hpTextMesh.GetComponent<MeshRenderer>().sortingOrder = 999;
     }
 
     /// <summary>

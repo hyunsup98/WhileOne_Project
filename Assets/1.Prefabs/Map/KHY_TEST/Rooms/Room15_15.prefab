@@ -2236,6 +2236,7 @@ GameObject:
   - component: {fileID: 7450486452573471336}
   - component: {fileID: 7550445302670266451}
   - component: {fileID: 6420894157076168545}
+  - component: {fileID: 2125230689877814908}
   m_Layer: 0
   m_Name: Room15_15
   m_TagString: Untagged
@@ -2431,6 +2432,21 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 14.0709915, y: 14.205395}
   m_EdgeRadius: 0
+--- !u!114 &2125230689877814908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3670151386598274992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 098f00216fa940042a63b43de2baba97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomController
+  floorTile: {fileID: 0}
+  digSpotTile: {fileID: 0}
+  dugSpotTile: {fileID: 0}
 --- !u!1 &3929308901367267911
 GameObject:
   m_ObjectHideFlags: 0

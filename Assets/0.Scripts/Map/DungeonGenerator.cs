@@ -26,6 +26,10 @@ public class DungeonGenerator : MonoBehaviour
     private GameObject exitRoomPrefab; // 다음층 입구 방 프리펩 (없으면 normalRoomPrefab 사용)
     [SerializeField] [Tooltip("이벤트 방 프리팹 (없으면 normalRoomPrefab 사용)")]
     private GameObject eventRoomPrefab; // 이벤트 방 프리펩 (없으면 normalRoomPrefab 사용)
+    [SerializeField] [Tooltip("함정 방 프리팹 (없으면 normalRoomPrefab 사용)")]
+    private GameObject trapRoomPrefab; // 함정 방 프리펩 (없으면 normalRoomPrefab 사용)
+    [SerializeField] [Tooltip("보물 방 프리팹 (없으면 normalRoomPrefab 사용)")]
+    private GameObject treasureRoomPrefab; // 보물 방 프리펩 (없으면 normalRoomPrefab 사용)
     
     // Corridor(복도) 관련 코드는 현재 레거시 코드입니다 (구현 순위를 뒤로 미뤘음)
     // 복도 관련 코드 임시 주석처리!!
@@ -956,7 +960,7 @@ public class DungeonGenerator : MonoBehaviour
             case RoomType.Event:
                 return eventRoomPrefab != null ? eventRoomPrefab : normalRoomPrefab;
             case RoomType.Trap:
-                return eventRoomPrefab != null ? eventRoomPrefab : normalRoomPrefab;
+                return trapRoomPrefab != null ? trapRoomPrefab : normalRoomPrefab;
             default:
                 return normalRoomPrefab;
         }
