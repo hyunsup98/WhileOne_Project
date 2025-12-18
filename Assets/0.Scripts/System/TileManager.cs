@@ -12,9 +12,6 @@ public class TileManager : Singleton<TileManager>
     [SerializeField] private Tile _alreadyDigTile;      // 이미 발굴이 완료된 타일
     [SerializeField] private LayerMask _digSpotLayer;   // 발굴 가능 타일맵이 가질 레이어
 
-    // 발굴이 가능한 타일을 Vector3Int 키값을 이용해 가지는 딕셔너리 자료구조
-    private Dictionary<Vector3Int, GameObject> digSpotDic = new Dictionary<Vector3Int, GameObject>();
-
     protected override void Awake()
     {
         base.Awake();
