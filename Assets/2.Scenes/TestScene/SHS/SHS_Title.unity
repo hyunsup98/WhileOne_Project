@@ -240,6 +240,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TileManager
   _digSpotTile: {fileID: 0}
+  _alreadyDigTile: {fileID: 0}
+  _digSpotLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &181971004
 GameObject:
   m_ObjectHideFlags: 0
@@ -821,7 +825,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 1976050ad22c6604b9e1cd135cf9c1f8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e1de668a9d1fd084dba65fd48d280bbb, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1

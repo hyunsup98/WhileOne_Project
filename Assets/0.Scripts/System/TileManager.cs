@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
@@ -11,6 +12,9 @@ public class TileManager : Singleton<TileManager>
     [SerializeField] private Tile _alreadyDigTile;      // 이미 발굴이 완료된 타일
     [SerializeField] private LayerMask _digSpotLayer;   // 발굴 가능 타일맵이 가질 레이어
 
+    // 발굴이 가능한 타일을 Vector3Int 키값을 이용해 가지는 딕셔너리 자료구조
+    private Dictionary<Vector3Int, GameObject> digSpotDic = new Dictionary<Vector3Int, GameObject>();
+
     protected override void Awake()
     {
         base.Awake();
@@ -18,21 +22,29 @@ public class TileManager : Singleton<TileManager>
 
     private void Update()
     {
-        if(Mouse.current.leftButton.isPressed)
+        if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-            mousePos.z = 0;
+            Vector3 mousepos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+            mousepos.z = 0;
 
-            CheckDigSpot(mousePos);
+            CheckDigSpot(mousepos);
         }
+    }
+
+    /// <summary>
+    /// 발굴 가능 지역을 생성하는 메서드
+    /// 실질적인 발굴 가능 지역인지는 digSpotDic 딕셔너리에 추가하여 관리
+    /// 타일맵을 통한 타일 그리기는 온전히 시각적인 렌더링 효과만 있음
+    /// </summary>
+    public void SetDigSpot()
+    {
+
     }
 
     public void CheckDigSpot(Vector3 pos)
     {
         // 받아온 pos 좌표에 _digSpotLayer 레이어를 가진 콜라이더가 있는지 확인
         Collider2D col = Physics2D.OverlapPoint(pos, _digSpotLayer);
-
-        Debug.Log(col.name);
 
         // 콜라이더가 있다면
         if (col != null)
@@ -49,15 +61,10 @@ public class TileManager : Singleton<TileManager>
                     // DigSpot 타일을 이미 발굴한 상태의 타일로 바꾸기
                     Debug.Log("보물 획득이 가능한 타일");
                 }
-                //이미 발굴이 완료된 타일이라면
-                else if(_alreadyDigTile == GetTile(tilemap, Vector3Int.FloorToInt(pos)))
-                {
-                    //깡 소리를 냄
-                    Debug.Log("이미 보물을 획득한 타일");
-                }
+                // 발굴 가능한 타일이 없다면 바닥 타일맵에서 일반 바닥, 이미 발굴된 바닥을 체크
                 else
                 {
-                    Debug.Log("발굴이 불가능한 타일");
+
                 }
             }
         }
