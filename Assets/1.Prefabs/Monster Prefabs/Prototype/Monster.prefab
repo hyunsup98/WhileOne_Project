@@ -126,9 +126,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60604d1faea57404ebcc4195f8c09019, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Monster
+  AttackEffect: {fileID: 3913412838696352892, guid: 9554cae266b6fb843bea73ed2a8ebaff, type: 3}
+  _name: 
   <Hp>k__BackingField: 0
   <Att>k__BackingField: 0
-  <AttRange>k__BackingField: 2
+  <AttRange>k__BackingField: 4
   <Speed>k__BackingField: 5
   <Sight>k__BackingField: 5
   <Tier>k__BackingField: 0

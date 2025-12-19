@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// 어택 레인지 리펙토링 필요
 public class Chase : IState
 {
     private Monster _monster;
@@ -17,15 +19,17 @@ public class Chase : IState
     public Chase(Monster monster)
     {
         _monster = monster;
-        _speed = monster.Speed;
-        _sight = monster.Sight;
+        _speed = monster.Model.MoveSpeed;
+        _sight = monster.Model.MoveSpeed;
+
+        //리펙토링 진행해야 함
         _attRange = monster.AttRange;
-        _astar = monster.MobAstar;
+        _astar = monster.Model.MobAstar;
     }
 
     public void Enter() 
     {
-        _target = _monster.Target;
+        _target = _monster.Model.Target;
         _pathfinder = _monster.StartCoroutine(UpdatePathfinder());
     }
 
@@ -36,9 +40,11 @@ public class Chase : IState
 
     public void Update()
     {
+        _monster.OnTurn(_target.position);
+
         OnChase();
 
-        UpdateLOS(_monster.transform.position, _target.position);
+        UpdateLOS(_target.position);
     }
 
 
@@ -71,7 +77,7 @@ public class Chase : IState
     {
         while (true)
         {
-            Debug.Log("경로 탐색");
+            Debug.Log("추적 경로 탐색");
             Vector2 start = _monster.transform.position;
             Vector2 target = _target.position;
 
@@ -84,12 +90,18 @@ public class Chase : IState
     }
 
     // LOS 판정
-    private void UpdateLOS(Vector2 start, Vector2 target)
+    private void UpdateLOS(Vector2 target)
     {
-        Vector2 dir = target - start;
-        RaycastHit2D hit = Physics2D.Raycast(start, dir, _sight);
+        RaycastHit2D hit = _monster.OnLOS(target);
 
-        if (hit.transform == null)
+        int playerLayer = LayerMask.NameToLayer("Player");
+        if (hit.collider != null && hit.collider.gameObject.layer != playerLayer)
             _monster.SetState(MonsterState.Search);
+
+
+        // 레이 시각표현용 임시 코드
+        Vector2 start = (Vector2)_monster.transform.position;
+        Vector2 dir = target - start;
+        Debug.DrawRay(start, dir.normalized * _sight, Color.yellow);
     }
 }

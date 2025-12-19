@@ -1,72 +1,75 @@
+using NUnit.Framework.Interfaces;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class Monster : MonoBehaviour
 {
-    [SerializeField] private string _name;
-    [field: SerializeField] public int Hp {  get; private set; }
+    [SerializeField] private MonsterDataSO _monsterData;    // 몬스터 데이터 SO
+    [SerializeField] private Tilemap _wallTilemap;          // 경로 탐색을 위한 타일맵
+
+    [field: SerializeField] public MonsterView View { get; private set; }
+    
+    public MonsterModel Model { get; private set; }  // 현재 몬스터 데이터 보관한 Model
+    
+
+    // 추후 지워야 할 목록
+    public GameObject AttackEffect;
     [field: SerializeField] public float Att {  get; private set; }
     [field: SerializeField] public float AttRange {  get; private set; }
-    [field: SerializeField] public float Speed {  get; private set; }
-    [field: SerializeField] public float Sight { get; private set; } = 5;
-    [field: SerializeField] public int Tier {  get; private set; }
-    [field: SerializeField] public List<Transform> PatrolTarget {  get; private set; }
-    public List<IAttack> Attack {  get; private set; }
-    
-    [SerializeField] private Tilemap _wallTilemap;
+    public IAttack Attack {  get; private set; }
 
 
-    public List<Vector2> PatrolPoint { get; private set; }
-    public Astar MobAstar { get; private set; }
-    public Transform Target { get; private set; }
-
-    
-    private IState _currentState;
-    private Dictionary<MonsterState, IState> _monsterState;
 
 
     private void Awake()
     {
+        Model = new MonsterModel(_monsterData);
+
         // 경로 탐색으로 순찰 포인트 초기화
-        MobAstar = new Astar(_wallTilemap);
-        PatrolPoint = MobAstar.Pathfinder(PatrolTarget[0].position, PatrolTarget[1].position);
+        Model.MobAstar = new Astar(_wallTilemap);
+        Model.PatrolPoint = Model.MobAstar.Pathfinder
+            (
+            Model.PatrolTarget[0].position,
+            Model.PatrolTarget[1].position
+            );
 
         // 공격 세팅
-        Attack = new();
-        Attack.Add(new ProtoAttack(this));
+        Attack = new ProtoAttack(this);
 
         // 상태 패턴 세팅
-        _monsterState = new Dictionary<MonsterState, IState>();
-        _monsterState.Add(MonsterState.Patrol, new Patrol(this));
-        _monsterState.Add(MonsterState.Chase, new Chase(this));
-        _monsterState.Add(MonsterState.Search, new Search(this));
-        _monsterState.Add(MonsterState.BackReturn, new BackReturn(this));
-        _monsterState.Add(MonsterState.Attack, new MonsterAttack(this));
-        _currentState = _monsterState[MonsterState.Patrol];
+        Model.MonsterState = new Dictionary<MonsterState, IState>();
+        Model.MonsterState.Add(MonsterState.Patrol, new Patrol(this));
+        Model.MonsterState.Add(MonsterState.Chase, new Chase(this));
+        Model.MonsterState.Add(MonsterState.Search, new Search(this));
+        Model.MonsterState.Add(MonsterState.BackReturn, new BackReturn(this));
+        Model.MonsterState.Add(MonsterState.Attack, new MonsterAttack(this));
+        Model.CurrentState = Model.MonsterState[MonsterState.Patrol];
     }
 
     private void Update()
     {
-        _currentState.Update();
+        Model.CurrentState.Update();
     }
 
     public void SetState(MonsterState state)
     {
-        Debug.Log("이전 상태: " + _currentState);
+        Debug.Log("이전 상태: " + Model.CurrentState);
 
-        _currentState?.Exit();
-        _currentState = _monsterState[state];
-        _currentState.Enter();
+        Model.CurrentState?.Exit();
+        Model.CurrentState = Model.MonsterState[state];
+        Model.CurrentState.Enter();
 
-        Debug.Log("현재 상태: " + _currentState);
+        Debug.Log("현재 상태: " + Model.CurrentState);
     }
 
-    public void SetTarget(Transform target) => Target = target;
+    public void SetTarget(Transform target) => Model.Target = target;
 
 
     public void OnMove(Vector2 target, float speed)
     {
+        OnTurn(target);
+
         transform.position = Vector2.MoveTowards
             (
             transform.position,
@@ -75,10 +78,35 @@ public class Monster : MonoBehaviour
             );
     }
 
-    private void OnTriggerEnter(Collider other)
+    // 타겟의 방향으로 몸을 돌리는 로직
+    public void OnTurn(Vector2 target)
     {
-        if (other.CompareTag("Player"))
-            Debug.Log("플레이어 타격");
+        Vector2 dir = target - (Vector2)transform.position;
+        Vector2 dirX = new Vector2(dir.x, 0f).normalized;
+        if (dirX.x != 0f)
+            transform.localScale = new Vector3(dirX.x, 1f, 1f);
+    }
+
+    // target방향으로 LOS를 발사했을 때, 플레이어와 직선 거리에 존재시에 true 반환
+    public RaycastHit2D OnLOS(Vector2 target)
+    {
+        Vector2 start = transform.position;
+        Vector2 dir = target - start;
+
+        int layerMask = LayerMask.GetMask("Wall", "Player");
+        RaycastHit2D hit = Physics2D.Raycast(start, dir, Model.Sight, layerMask);
+
+        return hit;
+    }
+
+    public void TakeDamage(float damage)
+    {
+        View.OnHurtAni();
+        Model.Hp -= damage;
+        Debug.Log("몬스터HP" + Model.Hp);
+
+        if(Model.Hp <= 0f)
+            View.OnDeathAni();
     }
 
 }
