@@ -70,8 +70,8 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField] [Tooltip("시작 방에 배치할 플레이어 오브젝트")]
     private GameObject playerObject; // 시작 방에 배치할 플레이어 오브젝트
 
-    [SerializeField] [Tooltip("Dig Spot 프리팹 (타일맵에 배치됨)")]
-    private GameObject digSpotPrefab; // Dig Spot 프리펩 (타일맵에 배치)
+    [SerializeField] [Tooltip("Dig Spot 타일 (타일맵에 배치됨)")]
+    private Tile digSpotTile; // Dig Spot 타일 (타일맵에 배치)
     [SerializeField] [Range(0f, 100f)] [Tooltip("Dig Spot 생성 확률 (0 ~ 100%)")]
     private float digSpotSpawnChance = 10f; // Dig Spot 생성 확률 (%)
 
@@ -1099,7 +1099,7 @@ public class DungeonGenerator : MonoBehaviour
     /// </summary>
     private void PlaceDigSpots()
     {
-        if (digSpotPrefab == null)
+        if (digSpotTile == null)
         {
             Debug.LogWarning("digSpotPrefab이 지정되지 않아 Dig Spot을 생성할 수 없습니다.");
             return;
@@ -1192,8 +1192,9 @@ public class DungeonGenerator : MonoBehaviour
             interactiveParent = room.roomObject.transform;
         }
         
+        // todo: 프리팹 설치를 타일 맵 설치로 리팩토링
         // Dig Spot 프리팹 생성 (Interactive의 자식으로)
-        GameObject digSpot = Instantiate(digSpotPrefab, digSpotWorldPos, Quaternion.identity, interactiveParent);
+        // GameObject digSpot = Instantiate(digSpotPrefab, digSpotWorldPos, Quaternion.identity, interactiveParent);
         
     }
 

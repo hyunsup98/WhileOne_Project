@@ -48,7 +48,8 @@ public class GameManager : Singleton<GameManager>
     }
     #endregion
 
-    public Player player { get; set; }      // 현재 씬에 존재하는 플레이어를 참조하는 변수
+    public Player player { get; set; }                      // [던전 씬에서만 값이 존재]현재 씬에 존재하는 플레이어를 참조하는 변수
+    public DungeonManager CurrentDungeon { get; set; }      // [던전 씬에서만 값이 존재]현재 씬에 존재하는 던전을 관리하는 매니저
 
     //게임 상태를 변경하는 메서드
     public void SetGameState(GameState state) => _currentGameState = state;

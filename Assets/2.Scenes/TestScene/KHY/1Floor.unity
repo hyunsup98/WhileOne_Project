@@ -332,16 +332,18 @@ MonoBehaviour:
   roomCount: 9
   gridSize: 20
   eventRoomCount: 2
-  normalRoomPrefab: {fileID: 3670151386598274992, guid: 01a1d2d5142ff704ea5aadc3d251d553, type: 3}
-  startRoomPrefab: {fileID: 3670151386598274992, guid: 01a1d2d5142ff704ea5aadc3d251d553, type: 3}
-  exitRoomPrefab: {fileID: 3670151386598274992, guid: 01a1d2d5142ff704ea5aadc3d251d553, type: 3}
-  eventRoomPrefab: {fileID: 3670151386598274992, guid: 47eacaa339dae564cbc1be5c552de518, type: 3}
-  roomSpacing: 21
-  autoCalculateSpacing: 1
+  currentFloor: 1
+  normalRoomPrefab: {fileID: 4474050308984926237, guid: 455047b7d12f15241b41c37d6d4c897b, type: 3}
+  startRoomPrefab: {fileID: 4474050308984926237, guid: 1e6f31b242c865246b19a2fc4a8a80f2, type: 3}
+  exitRoomPrefab: {fileID: 4474050308984926237, guid: d8f2b899e5705de49ba4ca16276c797b, type: 3}
+  eventRoomPrefab: {fileID: 4474050308984926237, guid: 7154686066db2c544a90d0be579f1c96, type: 3}
+  trapRoomPrefab: {fileID: 4474050308984926237, guid: 99b8963901be3e147bbc947a0b56a58e, type: 3}
+  treasureRoomPrefab: {fileID: 4474050308984926237, guid: 455047b7d12f15241b41c37d6d4c897b, type: 3}
+  roomSpacing: 40
+  autoCalculateSpacing: 0
   generateOnStart: 1
   gridParent: {fileID: 286935984}
   minTileSpacing: 3
-  exitPrefab: {fileID: 3168379323661421141, guid: 42aea149e07116342948f03bff4adb52, type: 3}
   playerObject: {fileID: 65964935}
   digSpotPrefab: {fileID: 8606716863736818416, guid: bd7db12b315ffd64cbb2feab4adf8a4d, type: 3}
   digSpotSpawnChance: 10

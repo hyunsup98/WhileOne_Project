@@ -137,6 +137,7 @@ GameObject:
   - component: {fileID: 1485902094766885545}
   - component: {fileID: 2859676890898842891}
   - component: {fileID: 3050728189275549221}
+  - component: {fileID: 1067081628710419604}
   m_Layer: 0
   m_Name: Combat_Room_1F_C
   m_TagString: Untagged
@@ -190,10 +191,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bca181a574cbd34cabff5ef02b945ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BaseRoom
-  roomSize: 4
+  roomSize: 30
   tileSize: 1
-  usePrefabAsIs: 0
+  usePrefabAsIs: 1
   trapRoomMazeGeneratorPrefab: {fileID: 0}
+--- !u!114 &1067081628710419604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4474050308984926237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 098f00216fa940042a63b43de2baba97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomController
+  floorTileMap: {fileID: 6052733454294142852, guid: 455047b7d12f15241b41c37d6d4c897b, type: 3}
+  digSpotTileMap: {fileID: 2697818354413696627, guid: 455047b7d12f15241b41c37d6d4c897b, type: 3}
+  afterDigTile: {fileID: 11400000, guid: d66babbdaada9ee488f89618e97995f1, type: 2}
 --- !u!1 &5005306266959094274
 GameObject:
   m_ObjectHideFlags: 0

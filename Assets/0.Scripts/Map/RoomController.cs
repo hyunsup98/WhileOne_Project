@@ -33,11 +33,10 @@ public class RoomController : MonoBehaviour
     {
         // 플레이어만 처리
         // 플레이어인지 구분하는 걸 플레이어컨트롤러로 확인합니다. 혹시 더 좋은 방안이 있다면 공유 부탁드립니다...
-        var player = other.GetComponent<PlayerController>();
-        if (player == null) return;
-
-        // 플레이어가 현재 방 정보를 알 수 있도록 전달
-        player.SetCurrentRoom(this);
+        if(other.CompareTag("Player"))
+        {
+            GameManager.Instance.CurrentDungeon.CurrentRoom = this;
+        }
 
         // TODO: 나중에 TileManager에서 사용할 추가 로직이 있으면 여기에
         // 예) TileManager.Instance.OnEnterRoom(this, player);
@@ -48,11 +47,10 @@ public class RoomController : MonoBehaviour
     /// </summary>
     private void OnTriggerExit2D(Collider2D other)
     {
-        var player = other.GetComponent<PlayerController>();
-        if (player == null) return;
-
-        // 방에서 나갈 때 현재 방 정보 해제
-        player.ClearCurrentRoom(this);
+        if(other.CompareTag("Player"))
+        {
+            GameManager.Instance.CurrentDungeon.CurrentRoom = null;
+        }
 
         // TODO: 나중에 TileManager에서 사용할 추가 로직이 있으면 여기에
         // 예) TileManager.Instance.OnExitRoom(this, player);

@@ -6,28 +6,13 @@ using UnityEngine.Tilemaps;
 /// <summary>
 /// 타일 조건 체크 관련 기능을 담당하는 클래스
 /// </summary>
-public class TileManager : Singleton<TileManager>
+public class TileManager
 {
-    [SerializeField] private Tile _digSpotTile;         // 발굴이 가능한 타일
-    [SerializeField] private List<Treasure> treasures = new List<Treasure>();
-    [SerializeField] private TreasureBar _treasureBar;
+    private DungeonManager _dungeonManager;
 
-    public RoomController CurrentRoom { get; set; }     //현재 플레이어가 진입한 방
-
-    protected override void Awake()
+    public TileManager(DungeonManager dungeonManager)
     {
-        base.Awake();
-    }
-
-    private void Update()
-    {
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            Vector3 mousepos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-            mousepos.z = 0;
-
-            Dig(mousepos);
-        }
+        _dungeonManager = dungeonManager;
     }
 
     /// <summary>
@@ -37,9 +22,9 @@ public class TileManager : Singleton<TileManager>
     /// <returns> 발굴이 가능한지에 대한 여부 </returns>
     public bool CanDig(Vector3Int pos)
     {
-        if (CurrentRoom == null) return false;
+        if (_dungeonManager.CurrentRoom == null) return false;
 
-        return CurrentRoom.DigSpotTileMap.GetTile(pos) == _digSpotTile;
+        return _dungeonManager.CurrentRoom.DigSpotTileMap.GetTile(pos) == _dungeonManager.DigSpotTile;
     }
 
     /// <summary>
@@ -48,21 +33,23 @@ public class TileManager : Singleton<TileManager>
     /// <param name="pos"> 확인할 좌표 </param>
     public void Dig(Vector3 pos)
     {
-        Vector3Int cellPos = CurrentRoom.DigSpotTileMap.WorldToCell(pos);
+        if (_dungeonManager.CurrentRoom == null) return;
+
+        Vector3Int cellPos = _dungeonManager.CurrentRoom.DigSpotTileMap.WorldToCell(pos);
 
         // 땅을 팔 수 있을 때
         if (CanDig(cellPos))
         {
-            CurrentRoom.DigSpotTileMap.SetTile(cellPos, null);
-            CurrentRoom.FloorTileMap.SetTile(cellPos, CurrentRoom.AfterDigTile);
+            _dungeonManager.CurrentRoom.DigSpotTileMap.SetTile(cellPos, null);
+            _dungeonManager.CurrentRoom.FloorTileMap.SetTile(cellPos, _dungeonManager.CurrentRoom.AfterDigTile);
 
             //보물 획득
-            _treasureBar.AddTreasure(treasures[0]);
+            _dungeonManager.TreasureBarUI.AddTreasure(DataManager.Instance.PickTreasure());
         }
         // 땅을 팔 수 없을 때
         else
         {
-            if(CurrentRoom.FloorTileMap.GetTile(cellPos) == CurrentRoom.AfterDigTile)
+            if(_dungeonManager.CurrentRoom.FloorTileMap.GetTile(cellPos) == _dungeonManager.CurrentRoom.AfterDigTile)
             {
                 // 이미 발굴이 완료된 타일일 때
                 // todo: 흙 사운드 랜덤 재생
@@ -73,28 +60,5 @@ public class TileManager : Singleton<TileManager>
                 // todo: 깡! 소리가 나는 사운드 랜덤 재생
             }
         }
-    }
-
-    /// <summary>
-    /// 특정 타일맵의 특정 좌표 위치에 있는 타일을 반환
-    /// </summary>
-    /// <param name="tilemap"> 검사할 타일맵 </param>
-    /// <param name="pos"> 체크할 좌표 위치 </param>
-    /// <returns> 받아온 타일 </returns>
-    public TileBase GetTile(Tilemap tilemap, Vector3Int pos)
-    {
-        TileBase tile = tilemap.GetTile(pos);
-        return tile;
-    }
-
-    /// <summary>
-    /// 타일맵의 특정 좌표 위치에 타일을 설치
-    /// </summary>
-    /// <param name="tilemap"> 설치할 타일맵 </param>
-    /// <param name="tile"> 설치할 타일 </param>
-    /// <param name="pos"> 설치할 좌표 위치 </param>
-    public void SetTile(Tilemap tilemap, TileBase tile, Vector3Int pos)
-    {
-        tilemap.SetTile(pos, tile);
     }
 }
