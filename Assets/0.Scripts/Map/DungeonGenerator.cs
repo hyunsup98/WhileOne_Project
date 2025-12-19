@@ -67,8 +67,6 @@ public class DungeonGenerator : MonoBehaviour
     private float minTileSpacing = 5f; // 최소 타일 간격 (칸)
     
     [Header("Scene Objects")]
-    [SerializeField] [Tooltip("출구 프리팹 (방 중앙에 생성됨)")]
-    private GameObject exitPrefab; // 출구 프리펩 (방 중앙에 생성)
     [SerializeField] [Tooltip("시작 방에 배치할 플레이어 오브젝트")]
     private GameObject playerObject; // 시작 방에 배치할 플레이어 오브젝트
 
@@ -101,7 +99,6 @@ public class DungeonGenerator : MonoBehaviour
     private List<Vector2Int> eventRoomPositions;
     private Dictionary<Vector2Int, GameObject> corridors; // 복도 오브젝트
     private Tilemap corridorTilemap; // 복도용 Tilemap (Tilemap 방식 사용 시)
-    private Canvas worldSpaceCanvas; // UI Text용 World Space Canvas
     
     private void Start()
     {
@@ -131,12 +128,6 @@ public class DungeonGenerator : MonoBehaviour
         {
             unityGrid.cellSize = new Vector3(resolvedCellSize, resolvedCellSize, 1f);
         }
-        
-        // UI Text용 World Space Canvas 설정
-        // if (showRoomTypeLabels)
-        // {
-        //     SetupWorldSpaceCanvas();
-        // }
         
         // Tilemap 방식 사용 시 복도용 Tilemap 초기화
         //if (useTilemapForCorridors)
@@ -220,13 +211,10 @@ public class DungeonGenerator : MonoBehaviour
         // 8. 플레이어를 시작 방 중심으로 이동
         PlacePlayerObject();
         
-        // 9. Exit 프리펩을 출구 방 중앙에 배치
-        PlaceExitObject();
-        
-        // 10. 일반 전투 방에 Dig Spot 배치 (10% 확률)
+        // 9. 일반 전투 방에 Dig Spot 배치 (10% 확률)
         PlaceDigSpots();
 
-        // 11. 보물 방에 보물 상자 배치 (현재는 무조건 1개, 2개 뜰 확률 추후 구현 예정)
+        // 10. 보물 방에 보물 상자 배치 (현재는 무조건 1개, 2개 뜰 확률 추후 구현 예정)
         PlaceTreasureChest();
     }
 
@@ -360,8 +348,6 @@ public class DungeonGenerator : MonoBehaviour
         return farthest;
     }
     
-    // 이벤트 방 로직은 현재 사용하지 않음 (1층 구성: 일반 7, 함정 1, 출구 1)
-
     /// <summary>
     /// 방 오브젝트를 생성합니다.
     /// </summary>
@@ -491,9 +477,10 @@ public class DungeonGenerator : MonoBehaviour
         textMesh.text = roomTypeText;
         textMesh.color = textColor;
         textMesh.fontSize = 32;          // 글자 해상도
-        textMesh.characterSize = 0.2f;   // 실제 월드 크기 (너무 크면 0.08, 작으면 0.12 정도로 조정)
+        textMesh.characterSize = 0.5f;   // 실제 월드 크기 (너무 크면 0.08, 작으면 0.12 정도로 조정)
         textMesh.anchor = TextAnchor.MiddleCenter;
         textMesh.alignment = TextAlignment.Center;
+        textMesh.offsetZ = -1f;
 
         // 폰트 설정: 인스펙터에서 지정된 폰트가 있으면 사용, 아니면 기본 폰트 유지
         if (roomLabelFont != null)
@@ -678,22 +665,22 @@ public class DungeonGenerator : MonoBehaviour
     /// <summary>
     /// 복도 연결 시 DoorSpace를 활성화하고 통과 가능하게 설정합니다.
     /// </summary>
-    private void ActivateDoorSpacesForCorridor(GameObject roomObj, GameObject nextRoomObj, Vector2Int direction)
-    {
-        // 시작 방의 DoorSpace 활성화
-        BaseRoom baseRoom = roomObj.GetComponent<BaseRoom>();
-        if (baseRoom != null)
-        {
-            baseRoom.ActivateDoorSpace(direction);
-        }
+    //private void ActivateDoorSpacesForCorridor(GameObject roomObj, GameObject nextRoomObj, Vector2Int direction)
+    //{
+    //    // 시작 방의 DoorSpace 활성화
+    //    BaseRoom baseRoom = roomObj.GetComponent<BaseRoom>();
+    //    if (baseRoom != null)
+    //    {
+    //        baseRoom.ActivateDoorSpace(direction);
+    //    }
         
-        // 다음 방의 DoorSpace 활성화
-        BaseRoom nextBaseRoom = nextRoomObj.GetComponent<BaseRoom>();
-        if (nextBaseRoom != null)
-        {
-            nextBaseRoom.ActivateDoorSpace(Direction.Opposite(direction));
-        }
-    }
+    //    // 다음 방의 DoorSpace 활성화
+    //    BaseRoom nextBaseRoom = nextRoomObj.GetComponent<BaseRoom>();
+    //    if (nextBaseRoom != null)
+    //    {
+    //        nextBaseRoom.ActivateDoorSpace(Direction.Opposite(direction));
+    //    }
+    //}
     
     /// <summary>
     /// 복도 타일을 플레이어가 통과 가능하도록 설정합니다.
@@ -972,6 +959,8 @@ public class DungeonGenerator : MonoBehaviour
                 return eventRoomPrefab != null ? eventRoomPrefab : normalRoomPrefab;
             case RoomType.Trap:
                 return trapRoomPrefab != null ? trapRoomPrefab : normalRoomPrefab;
+            case RoomType.Treasure:
+                return treasureRoomPrefab != null ? treasureRoomPrefab : normalRoomPrefab;
             default:
                 return normalRoomPrefab;
         }
@@ -1081,32 +1070,6 @@ public class DungeonGenerator : MonoBehaviour
                 br.RefreshDoorStates();
             }
         }
-    }
-
-    /// <summary>
-    /// Exit 프리펩을 출구 방 중심에 생성합니다.
-    /// </summary>
-    private void PlaceExitObject()
-    {
-        Room exitRoom = dungeonGrid.GetRoom(exitRoomPosition);
-        if (exitRoom == null || exitRoom.roomObject == null)
-        {
-            Debug.LogWarning("출구 방 정보가 없어 Exit 프리펩을 생성하지 못했습니다.");
-            return;
-        }
-        
-        if (exitPrefab == null)
-        {
-            Debug.LogWarning("exitPrefab이 지정되지 않아 Exit를 생성할 수 없습니다.");
-            return;
-        }
-        
-        // 방의 실제 중심(렌더러/콜라이더 합산) 계산
-        Vector3 center = GetRoomWorldCenter(exitRoom.roomObject);
-        
-        // 프리펩 생성
-        Transform parent = gridParent != null ? gridParent : transform;
-        Instantiate(exitPrefab, center, Quaternion.identity, parent);
     }
 
     /// <summary>
@@ -1259,7 +1222,7 @@ public class DungeonGenerator : MonoBehaviour
             // 10% 확률로 생성
             //if (Random.Range(0f, 100f) >= digSpotSpawnChance) continue;
 
-            // Dig Spot 배치
+            // treasure chest 배치
             PlaceTreasureChestInRoom(room);
             treasureChestCount++;
         }
@@ -1328,11 +1291,11 @@ public class DungeonGenerator : MonoBehaviour
         Transform interactiveParent = FindInteractiveParent(room.roomObject.transform);
         if (interactiveParent == null)
         {
-            Debug.LogWarning($"[Dig Spot] 방({room.roomObject.name})에 Interactive 오브젝트를 찾을 수 없어 방의 직접 자식으로 배치합니다.");
+            Debug.LogWarning($"[Treasure Chest] 방({room.roomObject.name})에 Interactive 오브젝트를 찾을 수 없어 방의 직접 자식으로 배치합니다.");
             interactiveParent = room.roomObject.transform;
         }
 
-        // Dig Spot 프리팹 생성 (Interactive의 자식으로)
+        // Treasure Chest 프리팹 생성 (Interactive의 자식으로)
         GameObject treasureChest = Instantiate(treasureChestPrefab, treasureChestWorldPos, Quaternion.identity, interactiveParent);
     }
     

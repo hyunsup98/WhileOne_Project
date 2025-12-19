@@ -139,6 +139,7 @@ GameObject:
   - component: {fileID: 2859434473534963094}
   - component: {fileID: 6819044329838438699}
   - component: {fileID: 5094736993672680711}
+  - component: {fileID: 2992951426869948794}
   m_Layer: 0
   m_Name: Trap_Room_1F
   m_TagString: Untagged
@@ -227,6 +228,18 @@ MonoBehaviour:
   tileSize: 1
   usePrefabAsIs: 0
   trapRoomMazeGeneratorPrefab: {fileID: 0}
+--- !u!114 &2992951426869948794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4474050308984926237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c762e5997e0018044aeb3c93f040c42a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrapRoomController
 --- !u!1 &5005306266959094274
 GameObject:
   m_ObjectHideFlags: 0

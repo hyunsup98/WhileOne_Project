@@ -107,24 +107,4 @@ public class FloorSetting
             return count;
         }
     }
-
-    // 파라미터로 층 정보를 받아서 GetRoomCountWithType
-    //public static int GetRoomCountWithType(int floorNumber, RoomType roomType)
-    //{
-    //    switch (floorNumber)
-    //    {
-    //        case 1:
-    //            Floor1 floor1 = new Floor1();
-    //            return floor1.GetRoomCountWithType(roomType);
-    //        case 2:
-    //            Floor2 floor2 = new Floor2();
-    //            return floor2.GetRoomCountWithType(roomType);
-    //        case 3:
-    //            Floor3 floor3 = new Floor3();
-    //            return floor3.GetRoomCountWithType(roomType);
-    //        default:
-    //            Debug.LogError("Invalid floor number");
-    //            return 0;
-    //    }
-    //}
 }
