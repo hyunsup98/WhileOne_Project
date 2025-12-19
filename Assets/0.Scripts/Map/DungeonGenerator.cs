@@ -3,6 +3,7 @@ using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
+using static FloorSetting;
 
 /// <summary>
 /// 던전을 생성하는 메인 클래스
@@ -16,7 +17,11 @@ public class DungeonGenerator : MonoBehaviour
     private int gridSize = 10; // 그리드 크기 (시작 위치(0,0)를 중심으로 한 반경, -10 ~ +10 범위)
     [SerializeField] [Tooltip("이벤트 방의 개수")]
     private int eventRoomCount = 2; // 이벤트 방 개수
-    
+
+    // 현재 층 정보
+    [SerializeField] [Tooltip("현재 층 (기본값 1층)")]
+    private int currentFloor = 1; // 현재 층 (기본값 1층)
+
     [Header("Room Prefabs")]
     [SerializeField] [Tooltip("기본 일반 방 프리팹")]
     private GameObject normalRoomPrefab; // 기본 Room 프리펩 (1.Prefabs > Map > Room)
@@ -199,7 +204,7 @@ public class DungeonGenerator : MonoBehaviour
         }
         
         // 4. 방 생성 완료 후 처리
-        ProcessPostGeneration();
+        ProcessPostGeneration(currentFloor);
         // 4-1. 인접 방 사이의 문을 보정 (모든 인접 방은 연결되도록, 이거 나중에 뺄 수 있을 것 같은데 일단 2번 확인하도록함...)
         EnsureAdjacentDoorsConnected();
         
@@ -228,8 +233,14 @@ public class DungeonGenerator : MonoBehaviour
     /// <summary>
     /// 방 생성 완료 후 처리 (시작 방, 탈출 방, 이벤트 방 지정)
     /// </summary>
-    private void ProcessPostGeneration()
+    private void ProcessPostGeneration(int currentFloor)
     {
+        //if (currentFloor == 1)
+        //{
+        //    Floor1 floor1Settings = new Floor1();
+        //}
+        //// TODO: floor1Settings의 GetRoomCountWithType로 방 타입 별 개수를 확인 후 지정하는 기능 추가 예정
+
         // 모든 방을 Normal로 초기화
         var allPositions = dungeonGrid.GetAllPositions().ToList();
         foreach (var pos in allPositions)
