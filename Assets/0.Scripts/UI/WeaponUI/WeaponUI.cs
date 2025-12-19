@@ -11,10 +11,10 @@ public class WeaponUI : MonoBehaviour
     [SerializeField] private TMP_Text text_WeaponDesc1;     // 무기 설명 텍스트1
     [SerializeField] private TMP_Text text_WeaponDesc2;     // 무기 설명 텍스트2
 
-    private Weapon weapon;      //UI에 표시할 무기
+    private WeaponData weapon;      //UI에 표시할 무기
 
     // UI로 표시할 무기가 어떤 것인지 받아옴
-    public void SetWeaponInit(Weapon weapon)
+    public void SetWeaponInit(WeaponData weapon)
     {
         this.weapon = weapon;
 
@@ -47,7 +47,7 @@ public class WeaponUI : MonoBehaviour
     /// 무기 획득 UI창을 켜는 메서드
     /// </summary>
     /// <param name="weapon"></param>
-    public void EnableUI(Weapon weapon)
+    public void EnableUI(WeaponData weapon)
     {
         SetWeaponInit(weapon);
 
