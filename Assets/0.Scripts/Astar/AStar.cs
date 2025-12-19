@@ -125,9 +125,11 @@ public class Astar
     public Vector2 GetCellPos(Vector2Int pos) => CellPos(pos);
     private Vector2 CellPos(Vector2 pos)
     {
-        Vector2 change = (Vector2Int)_wallTilemap.WorldToCell(pos);
-        change.x += 0.5f;
-        change.y += 0.5f;
+        Vector2 change = _wallTilemap.GetCellCenterWorld(Vector3Int.FloorToInt(pos));
+
+        //Vector2 change = (Vector2Int)_wallTilemap.WorldToCell(pos);
+        //change.x += 0.5f;
+        //change.y += 0.5f;
 
         return change;
     }

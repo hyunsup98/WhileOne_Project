@@ -43,11 +43,6 @@ public class Monster : MonoBehaviour
             targetPos2.position
             );
 
-        gameObject.name = targetPos1.position.ToString();
-        Debug.Log("----------------");
-        Debug.Log(targetPos1.position);
-        Debug.Log(targetPos2.position);
-        Debug.Log("----------------");
 
         // 공격 세팅
         Attack = new ProtoAttack(this);
@@ -84,6 +79,7 @@ public class Monster : MonoBehaviour
     public void OnMove(Vector2 target, float speed)
     {
         OnTurn(target);
+
 
         transform.position = Vector2.MoveTowards
             (
