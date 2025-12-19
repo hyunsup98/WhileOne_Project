@@ -13,9 +13,9 @@ public class Patrol : IState
     public Patrol(Monster monster)
     {
         _monster = monster;
-        _speed = monster.MonsterModel.MoveSpeed;
-        _patrolPoint = monster.MonsterModel.PatrolPoint;
-        _sight = monster.MonsterModel.Sight;
+        _speed = monster.Model.MoveSpeed;
+        _patrolPoint = monster.Model.PatrolPoint;
+        _sight = monster.Model.Sight;
     }
 
 
@@ -56,24 +56,28 @@ public class Patrol : IState
                 _patrolIndex--;
         }
 
-        UpdateLOS(_monster.transform.position, target);
+        UpdateLOS(target);
     }
 
     // LOS 판정
-    private void UpdateLOS(Vector2 start, Vector2 target)
+    private void UpdateLOS(Vector2 target)
     {
-        Vector2 dir = target - start;
-        RaycastHit2D hit = Physics2D.Raycast(start, dir, _sight);
+        RaycastHit2D hit = _monster.OnLOS(target);
 
-        Debug.DrawRay(start, dir.normalized * _sight);
-
-        if (hit.transform != null && hit.transform.CompareTag("Player"))
+        int playerLayer = LayerMask.NameToLayer("Player");
+        Debug.Log("히트" + hit.transform);
+        if (hit.collider != null && hit.collider.gameObject.layer == playerLayer)
         {
+            Debug.Log("레이 확인");
             _monster.SetTarget(hit.transform);
             _monster.SetState(MonsterState.Chase);
         }
 
-        
+        // 레이 시각표현용 임시 코드
+        Vector2 start = _monster.transform.position;
+        Vector2 dir = target - start;
+        Debug.DrawRay(start, dir.normalized * _sight);
+
     }
 
 }

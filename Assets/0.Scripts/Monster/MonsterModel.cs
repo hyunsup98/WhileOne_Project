@@ -4,10 +4,17 @@ using UnityEngine.Tilemaps;
 
 public class MonsterModel
 {
+    private float _hp;
+
     public int MonsterID { get; set; }
     public string Name { get; set; }
     public int Tier { get; set; }
-    public float Hp { get; set; }
+    public float Hp
+    {
+        get => _hp;
+        set => _hp = Mathf.Max(0, value);
+    }
+
     public float MoveSpeed { get; set; }
     public float Sight { get; set; }
     public List<int> ActionList { get; set; }
@@ -22,10 +29,10 @@ public class MonsterModel
 
     public MonsterModel(MonsterDataSO monsterData)
     {
+        _hp = monsterData.Hp;
         MonsterID = monsterData.MonsterID;
         Name = monsterData.Name;
         Tier = monsterData.Tier;
-        Hp = monsterData.Hp;
         MoveSpeed = monsterData.MoveSpeed;
         Sight = monsterData.Sight;
         ActionList = monsterData.ActionList;

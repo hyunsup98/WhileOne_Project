@@ -10,24 +10,28 @@ public class Search : IState
     private float _maxAngle = 20;
     private int _searchTime = 30;
     private Coroutine _updateLOS;
+    private MonsterView _view;
 
     public Search(Monster monster)
     {
         _monster = monster;
-        _sight = monster.MonsterModel.MoveSpeed;
+        _sight = monster.Model.MoveSpeed;
+        _view = monster.View;
     }
 
 
     public void Enter()
     {
-        _targetPos = _monster.MonsterModel.Target.position;
+        _targetPos = _monster.Model.Target.position;
         _updateLOS = _monster.StartCoroutine(UpdateLOS(_monster.transform.position, _targetPos));
+        _view.OnIdleAni();
     }
 
     public void Exit()
     {
         _monster.StopCoroutine(_updateLOS);
         _searchTime = 30;
+        _view.OnDisIdleAni();
     }
 
     public void Update() { }
@@ -36,21 +40,29 @@ public class Search : IState
 
     private IEnumerator UpdateLOS(Vector2 start, Vector2 target)
     {
+        Vector2 dirNomlized = (target - start).normalized;
+
+        int playerLayer = LayerMask.NameToLayer("Player");
+        int wallLayer = LayerMask.NameToLayer("Wall");
+
         while (_searchTime > 0)
         {
-            Vector2 dirNomlized = (target - start).normalized;
-
             // 전방에 _maxAngle * 2의 범위 LOS 발사
             for (float angle = -_maxAngle; angle <= _maxAngle; angle++)
             {
-
                 Vector2 dir = Quaternion.Euler(0, 0, angle) * dirNomlized;
 
-                RaycastHit2D hit = Physics2D.Raycast(start, dir, _sight);
+                RaycastHit2D hit = Physics2D.Raycast
+                    (
+                    start, 
+                    dir, 
+                    _sight, 
+                    wallLayer | playerLayer
+                    );
 
                 Debug.DrawRay(start, dir * _sight, Color.red);
 
-                if (hit.transform != null && hit.transform.CompareTag("Player"))
+                if (hit.collider != null && hit.collider.gameObject.layer == playerLayer)
                 {
                     Debug.Log("플레이어 탐색");
                     _monster.SetTarget(hit.transform);
@@ -66,6 +78,4 @@ public class Search : IState
         if (_searchTime <= 0)
             _monster.SetState(MonsterState.BackReturn);
     }
-
-    
 }

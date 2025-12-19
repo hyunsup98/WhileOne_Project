@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class ProtoAttack : IAttack
@@ -22,7 +23,7 @@ public class ProtoAttack : IAttack
 
     public void StartAttack()
     {
-        _target = _monster.MonsterModel.Target.position;
+        _target = _monster.Model.Target.position;
         IsAttack = true;
 
         _attackObj = GameObject.Instantiate
@@ -42,32 +43,26 @@ public class ProtoAttack : IAttack
     public void OnAttack()
     {
         _attackTime += Time.unscaledDeltaTime;
-
-        if (_attackTime < 1.5f)
-        {
-            Debug.Log("준비 동작");
-            return;
-        }
-
         _monster.transform.Translate(_target * Time.deltaTime * _attackSpeed);
 
-        if(_attackTime >= 2f)
+        if(_attackTime >= 0.5f)
         {
-            _attackTime = 0f;
+            _attackTime = 0;
             IsAttack = false;
         }
-    }
-
-    private void OnDamage(Player player)
-    {
-        Debug.Log("<color=red>테이크 데미지</color>");
-        player.TakenDamage(_monster.Att);
-        Debug.Log(player.Hp);
     }
 
     public void EndAttack()
     {
         GameObject.Destroy(_attackObj);
         _attackEffect.Init();
+    }
+
+
+    private void OnDamage(Player player)
+    {
+        Debug.Log("<color=red>테이크 데미지</color>");
+        player.TakenDamage(_monster.Att);
+        Debug.Log(player.Hp);
     }
 }
