@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +6,13 @@ public class StatBarView : MonoBehaviour
     [SerializeField] private Slider _staminaSlider;
     [SerializeField] private Slider _hpSlider;
 
-    public event Action<float, float> _onStaminaChanged;
+    private StatBarPresenter _presenter;
+
+    private void Start()
+    {
+        if(GameManager.Instance.player != null)
+            _presenter = new StatBarPresenter(GameManager.Instance.player, this);
+    }
 
     public void SetStaminaSlider(float maxValue, float currentValue)
     {

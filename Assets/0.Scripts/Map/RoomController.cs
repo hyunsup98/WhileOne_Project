@@ -15,15 +15,15 @@ public class RoomController : MonoBehaviour
     [SerializeField] [Tooltip("Dig Spot(도굴 지점)에 사용할 타일맵")]
     private Tilemap digSpotTileMap;
 
-    [SerializeField] [Tooltip("Dig 후 파헤쳐진 자리(Dug Spot)에 사용할 타일맵")]
-    private Tilemap dugSpotTileMap;
+    [SerializeField] [Tooltip("Dig 후 파헤쳐진 자리(Dug Spot)에 사용할 타일")]
+    private Tile afterDigTile;
 
     /// <summary>
     /// 타일매니저에서 읽기 전용으로 사용할 수 있도록 프로퍼티를 제공합니다.
     /// </summary>
     public Tilemap FloorTileMap => floorTileMap;
     public Tilemap DigSpotTileMap => digSpotTileMap;
-    public Tilemap DugSpotTileMap => dugSpotTileMap;
+    public Tile AfterDigTile => afterDigTile;
 
     /// <summary>
     /// 플레이어가 이 방의 트리거 영역에 들어왔을 때 호출됩니다.
@@ -64,7 +64,7 @@ public class RoomController : MonoBehaviour
     /// </summary>
     public bool TryDigAtWorldPosition(Vector3 worldPosition)
     {
-        if (digSpotTileMap == null || dugSpotTileMap == null)
+        if (digSpotTileMap == null)
         {
             Debug.LogWarning($"[RoomController] DigSpot/DugSpot Tilemap 이 설정되지 않았습니다. room:{name}");
             return false;
@@ -79,7 +79,7 @@ public class RoomController : MonoBehaviour
     /// </summary>
     public bool TryDigAtCell(Vector3Int cellPosition)
     {
-        if (digSpotTileMap == null || dugSpotTileMap == null)
+        if (digSpotTileMap == null)
         {
             Debug.LogWarning($"[RoomController] DigSpot/DugSpot Tilemap 이 설정되지 않았습니다. room:{name}");
             return false;

@@ -9,8 +9,10 @@ using UnityEngine.Tilemaps;
 public class TileManager : Singleton<TileManager>
 {
     [SerializeField] private Tile _digSpotTile;         // 발굴이 가능한 타일
-    [SerializeField] private Tile _alreadyDigTile;      // 이미 발굴이 완료된 타일
-    [SerializeField] private LayerMask _digSpotLayer;   // 발굴 가능 타일맵이 가질 레이어
+    [SerializeField] private List<Treasure> treasures = new List<Treasure>();
+    [SerializeField] private TreasureBar _treasureBar;
+
+    public RoomController CurrentRoom { get; set; }     //현재 플레이어가 진입한 방
 
     protected override void Awake()
     {
@@ -24,45 +26,51 @@ public class TileManager : Singleton<TileManager>
             Vector3 mousepos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
             mousepos.z = 0;
 
-            CheckDigSpot(mousepos);
+            Dig(mousepos);
         }
     }
 
     /// <summary>
-    /// 발굴 가능 지역을 생성하는 메서드
-    /// 실질적인 발굴 가능 지역인지는 digSpotDic 딕셔너리에 추가하여 관리
-    /// 타일맵을 통한 타일 그리기는 온전히 시각적인 렌더링 효과만 있음
+    /// 받아온 좌표에 발굴 가능한 타일이 있는지 체크하는 메서드
     /// </summary>
-    public void SetDigSpot()
+    /// <param name="pos"> 확인할 좌표 </param>
+    /// <returns> 발굴이 가능한지에 대한 여부 </returns>
+    public bool CanDig(Vector3Int pos)
     {
+        if (CurrentRoom == null) return false;
 
+        return CurrentRoom.DigSpotTileMap.GetTile(pos) == _digSpotTile;
     }
 
-    public void CheckDigSpot(Vector3 pos)
+    /// <summary>
+    /// 실제로 땅을 파는 메서드
+    /// </summary>
+    /// <param name="pos"> 확인할 좌표 </param>
+    public void Dig(Vector3 pos)
     {
-        // 받아온 pos 좌표에 _digSpotLayer 레이어를 가진 콜라이더가 있는지 확인
-        Collider2D col = Physics2D.OverlapPoint(pos, _digSpotLayer);
+        Vector3Int cellPos = CurrentRoom.DigSpotTileMap.WorldToCell(pos);
 
-        // 콜라이더가 있다면
-        if (col != null)
+        // 땅을 팔 수 있을 때
+        if (CanDig(cellPos))
         {
-            Tilemap tilemap = null;
+            CurrentRoom.DigSpotTileMap.SetTile(cellPos, null);
+            CurrentRoom.FloorTileMap.SetTile(cellPos, CurrentRoom.AfterDigTile);
 
-            // 타일맵 컴포넌트가 있다면
-            if (col.TryGetComponent(out tilemap))
+            //보물 획득
+            _treasureBar.AddTreasure(treasures[0]);
+        }
+        // 땅을 팔 수 없을 때
+        else
+        {
+            if(CurrentRoom.FloorTileMap.GetTile(cellPos) == CurrentRoom.AfterDigTile)
             {
-                // 발굴이 가능한 타일이라면
-                if (_digSpotTile == GetTile(tilemap, Vector3Int.FloorToInt(pos)))
-                {
-                    // 보물 획득 로직
-                    // DigSpot 타일을 이미 발굴한 상태의 타일로 바꾸기
-                    Debug.Log("보물 획득이 가능한 타일");
-                }
-                // 발굴 가능한 타일이 없다면 바닥 타일맵에서 일반 바닥, 이미 발굴된 바닥을 체크
-                else
-                {
-
-                }
+                // 이미 발굴이 완료된 타일일 때
+                // todo: 흙 사운드 랜덤 재생
+            }
+            else
+            {
+                // 원래부터 땅을 팔 수 없는 타일일 때
+                // todo: 깡! 소리가 나는 사운드 랜덤 재생
             }
         }
     }
