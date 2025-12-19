@@ -15,6 +15,7 @@ public enum GameState
 /// </summary>
 public class GameManager : Singleton<GameManager>
 {
+    #region 게임 상태
     public event Action<GameState> StateChanged;
 
     private GameState _currentGameState;
@@ -45,6 +46,9 @@ public class GameManager : Singleton<GameManager>
             }
         }
     }
+    #endregion
+
+    public Player player { get; set; }      // 현재 씬에 존재하는 플레이어를 참조하는 변수
 
     //게임 상태를 변경하는 메서드
     public void SetGameState(GameState state) => _currentGameState = state;
