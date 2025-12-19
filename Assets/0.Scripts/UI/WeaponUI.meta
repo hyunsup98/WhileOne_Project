@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/0.Scripts/UI/WeaponUI.meta
 guid: db07e3b0011d612428181e8a61122ce9
+========
+guid: 711a9e31f6f7e0e428e155d3a22c26fd
+>>>>>>>> Refactor:Assets/9.GitIgnore/Epic RPG World - The dephs of the Mountain V1.5.1.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

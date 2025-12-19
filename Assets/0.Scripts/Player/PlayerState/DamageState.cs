@@ -1,16 +1,30 @@
 using UnityEngine;
 
-public class DamageState : MonoBehaviour
+public class DamageState : IState
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    Player _player;
+
+    public DamageState(Player player)
     {
-        
+        _player = player;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Enter()
     {
-        
+       
+    }
+
+    public void Exit()
+    {
+       
+    }
+
+    public void Update()
+    {
+        if(_player.IsDamaged == false)
+        {
+            _player.ActionState(new ActionIdleState(_player));
+        }
     }
 }
+

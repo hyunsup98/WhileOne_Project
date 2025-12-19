@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/0.Scripts/UI/Canvas.meta
 guid: 2604d96b7445c9e459581de5a91ac829
+========
+guid: cfc45b1781747484b8f77bd202abf0d3
+>>>>>>>> Refactor:Assets/9.GitIgnore/Combat FX 1.1.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
