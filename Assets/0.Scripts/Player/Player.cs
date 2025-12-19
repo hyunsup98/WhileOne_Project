@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 
 public class Player : MonoBehaviour
@@ -16,8 +16,17 @@ public class Player : MonoBehaviour
     private float _hp;
     private float _stamina;
 
+    private bool _isDamage;
+
+    PlayerInput _input;
+    InputActionMap _actionMap;
+
+    Vector3 _mousePosition;
+    Rigidbody2D _rg2d;
+
     //현재 상태를 담을 인터페이스 변수
-    private IState currentState;
+    private IState moveCurrentState;
+    private IState actionCurrentState;
 
     public event Action<float,float> _onHpChanged;
     public event Action<float,float> _onStiminaChanged;
@@ -25,11 +34,15 @@ public class Player : MonoBehaviour
     private WaitForSeconds _delay;
     private WaitForSeconds _blinkTime;
 
-    [SerializeField] float time = 0.5f;
-    float _finsihTime  = 2;
+    [SerializeField] float time = 0.12f;
+    float _finsihTime  = 0.7f;
     float _checkTime = 0;
-
     SortingGroup _group;
+
+    //상태에서 사용할 스크립트
+    [SerializeField] PlayerAttack _attackAction;
+    PlayerMovement _playerMove;
+    PlayerDig _playerDig;
 
     //외부에서 사용할 프로퍼티
     public float Hp => _hp;
@@ -37,17 +50,58 @@ public class Player : MonoBehaviour
     public int MoveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }
     public int Attack => _attack;
     public int AttackSpeed => _attackSpeed;
+    public bool IsDamaged => _isDamage;
+    public PlayerInput Playerinput
+    {
+        get { return _input; }
+        set { _input = value; }
+    }
+    public InputActionMap ActionMap
+    {
+        get { return _actionMap; }
+        set { _actionMap = value; }
+    }
+    public PlayerMovement PlayerMove
+    {
+        get { return _playerMove; } 
+        set { _playerMove = value; }
+    }
+    public PlayerAttack PlayerAttack
+    {
+        get { return _attackAction; }
+        set { _attackAction = value; }
+    }
+    public PlayerDig PlayerDig
+    {
+        get { return _playerDig; }
+        set { _playerDig = value; }
+    }
 
+    private void Awake()
+    {
+        Component();
+        _actionMap = _input.actions.FindActionMap("Player");    
+    }
+    void Component()
+    {
+        _playerMove = GetComponent<PlayerMovement>();
+        _playerDig = GetComponent<PlayerDig>();
+        _input = GetComponent<PlayerInput>();
+        _rg2d = GetComponent<Rigidbody2D>();
+
+    }
     void Start()
     {
         _hp = _maxHp;
         _stamina = _maxStamina;
 
+        MoveState(new IdleState(this));
+        ActionState(new ActionIdleState(this));
+
         _delay = new WaitForSeconds(1f);
         _blinkTime = new WaitForSeconds(time);
 
         _group = transform.GetChild(0).GetComponent<SortingGroup>();
-        Debug.Log(_group.name);
 
         StartCoroutine(Blink());
     }
@@ -78,17 +132,50 @@ public class Player : MonoBehaviour
         }
            
     }
-
-    public void TakenDamage(float damage)
+    private void Update()
     {
-        _hp -= damage;
-        
-
-
-
-        StopCoroutine(Blink());
+        PlayerDir();
+        moveCurrentState?.Update();
+        actionCurrentState?.Update();
     }
 
+    void PlayerDir()
+    {
+        //마우스 좌표값을 월드 좌표값으로 변환
+        _mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+
+        //플레이어와 마우스 사이 좌표 거리 계산
+        Vector3 angle = _mousePosition - transform.position;
+        //좌표 거리값을 바탕으로 각도(aTan) 계산 
+        float angleZ = Mathf.Atan2(angle.y, angle.x) * Mathf.Rad2Deg; //라디안을 도(°)로 단위 변환
+
+        if (angleZ > 90 || angleZ < -90)
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+        }
+        //캐릭터를 기준으로 마우스가 오른쪽으로 넘어가면 캐릭터 방향 변경
+        else
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+    }
+    public void TakenDamage(float damage,Vector2 target)
+    {
+        _isDamage = true;
+        _hp -= damage;
+        Debug.Log(_hp);
+        KnockBack(target);
+        StartCoroutine(Blink());
+    }
+
+    void KnockBack(Vector2 target) //몬스터를 타겟으로 받습니다. 인자값 수정해주세요
+    {
+        int dirx = transform.position.x - target.x > 0 ? 1 : -1;
+        int diry = transform.position.y - target.y > 0 ? 1 : -1;
+        _rg2d.linearVelocityX = dirx * 0.7f;
+        _rg2d.linearVelocityY = diry * 0.7f;
+    }
+    
     public void RestoreStamina()
     {
        if(_stamina <= 99)
@@ -105,11 +192,17 @@ public class Player : MonoBehaviour
         _stamina -= 50;
     }
 
-    public void SetState(IState state)
+    public void MoveState(IState state)
     {
-        currentState?.Exit();
-        currentState = state;
-        currentState.Enter();
+        moveCurrentState?.Exit();
+        moveCurrentState = state;
+        moveCurrentState.Enter();
+    }
+    public void ActionState(IState state)
+    {
+        actionCurrentState?.Exit();
+        actionCurrentState = state;
+        actionCurrentState.Enter();
     }
 
     IEnumerator RestoreCoroutine()
@@ -121,7 +214,8 @@ public class Player : MonoBehaviour
     IEnumerator Blink()
     {
         _checkTime = 0;
-
+        gameObject.layer = LayerMask.NameToLayer("PlayerDamage");
+       
         while (_finsihTime>_checkTime)
         {
             _group.sortingOrder = 0;
@@ -130,11 +224,15 @@ public class Player : MonoBehaviour
 
             _group.sortingOrder = 1;
 
-            _checkTime += time*Time.deltaTime;
+            _checkTime += time;
 
             yield return _blinkTime;
         }
+        gameObject.layer = LayerMask.NameToLayer("Player");
+        _isDamage = false;
         yield return null;
 
     }
+
+   
 }

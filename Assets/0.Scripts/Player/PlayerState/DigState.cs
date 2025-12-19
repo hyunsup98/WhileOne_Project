@@ -1,15 +1,25 @@
-using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class DigState : IState
 {
     Player _player;
-    PlayerMovement _playerMovement;
     PlayerDig _dig;
+   
+
+    public bool _isDigging;
+
+    Vector3 _mousePosition;
+    Vector3 dir;
     public DigState(Player player)
     {
-         _player = player;
+        _player = player;
+
+        _dig = _player.PlayerDig;
+
+        
     }
+   
     public void Enter() //이 상태면 이속 절반
     {
         _player.MoveSpeed /= 2;
@@ -22,20 +32,16 @@ public class DigState : IState
 
     public void Update()
     {
-        if(_dig._isDigging == false) // 피격 받을 때도 해제해야 하니까 꼭 넣으셈
+        _dig.Test.transform.position = new Vector3(_dig.Dir.x + _dig.OffSet, _dig.Dir.y + _dig.OffSet, 0);
+
+        if(_dig.IsDigging == false)
         {
-            if(_playerMovement.Move != Vector3.zero)
-            {
-
-            }
-            else if(_playerMovement.Move == Vector3.zero)
-            {
-
-            }
-            
+            Debug.Log("일반 모드");
+            _player.ActionState(new ActionIdleState(_player));
         }
 
     }
-
     
+
+
 }

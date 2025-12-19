@@ -105,7 +105,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
   _effect1: {fileID: 0}
   _effect2: {fileID: 0}
-  _isAttacking: 0
 --- !u!1 &249447194809812547
 GameObject:
   m_ObjectHideFlags: 0
@@ -2000,6 +1999,7 @@ GameObject:
   - component: {fileID: 6090921389041934258}
   - component: {fileID: 6475511304828831566}
   - component: {fileID: 4875647573395373011}
+  - component: {fileID: 4432484156395506223}
   m_Layer: 5
   m_Name: UseShovel
   m_TagString: Untagged
@@ -5137,6 +5137,8 @@ MonoBehaviour:
   _moveSpeed: 10
   _attack: 5
   _attackSpeed: 10
+  time: 0.2
+  _attackAction: {fileID: 8888813578194253905}
 --- !u!114 &6475511304828831566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5179,9 +5181,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 658cd69416b36da47929d3fd0695c828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerDig
+  _isDigging: 0
   test: {fileID: 0}
   offSet: 0.5
-  _isDigging: 0
+--- !u!50 &4432484156395506223
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4329574107018779310}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
 --- !u!1 &4350439502986678144
 GameObject:
   m_ObjectHideFlags: 0
@@ -5679,7 +5708,7 @@ Animator:
   m_GameObject: {fileID: 4907960998979128360}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 010ee582a809aff4f850e929bf6bbcba, type: 2}
+  m_Controller: {fileID: 9100000, guid: e9358c226bb09e24da9c5f7064768810, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

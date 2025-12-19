@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 public class PlayerAttack : MonoBehaviour
 {
     private Player _player;
+    private PlayerDig _dig;
 
     //플레이어 인풋 관련
     private PlayerInput _input;
@@ -19,7 +20,12 @@ public class PlayerAttack : MonoBehaviour
     bool _isEffect1 = true; //그냥 토글용 변수
     bool _timer = false;
     float _attSpeed;
-    public bool _isAttacking = false;
+    private bool _isAttacking = false;
+
+
+    public GameObject Effect1 => _effect1;
+    public GameObject Effect2 => _effect2;
+    public bool IsAttacking => _isAttacking;
 
     private void Awake()
     {
@@ -49,32 +55,38 @@ public class PlayerAttack : MonoBehaviour
         {
             _isAttacking = false;
         };
+        _dig = _player.PlayerDig;
     }
     private void Attaking(InputAction.CallbackContext ctx)
     {
-
-        if (_timer) //딜레이 중이면 리턴
+        if (_dig.IsDigging == false)
         {
-            return;
-        }
 
-        StartCoroutine(AttackSpeed()); //공격속도 딜레이
 
-        _isAttacking = true; //공격 트리거용 변수
+            if (_timer) //딜레이 중이면 리턴
+            {
+                return;
+            }
 
-        if (_isEffect1) //첫번째 이펙트 위에서 아래로 쓸기
-        {
-            _effect1.SetActive(true);
-            _isEffect1 = false;
-            _timer = true;
-        }
-        else //두번째 이펙트 아래에서 위로 쓸기
-        {
-            _effect2.SetActive(true);
-            _isEffect1 = true;
-            _timer = true;
+            StartCoroutine(AttackSpeed()); //공격속도 딜레이
+
+            _isAttacking = true; //공격 트리거용 변수
+
+            if (_isEffect1) //첫번째 이펙트 위에서 아래로 쓸기
+            {
+                _effect1.SetActive(true);
+                _isEffect1 = false;
+                _timer = true;
+            }
+            else //두번째 이펙트 아래에서 위로 쓸기
+            {
+                _effect2.SetActive(true);
+                _isEffect1 = true;
+                _timer = true;
+            }
         }
     }
+  
     IEnumerator AttackSpeed() //공격 속도 딜레이 코루틴
     {
         Debug.Log($"{_attSpeed}초만큼 딜레이");
