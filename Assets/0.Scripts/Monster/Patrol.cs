@@ -65,10 +65,8 @@ public class Patrol : IState
         RaycastHit2D hit = _monster.OnLOS(target);
 
         int playerLayer = LayerMask.NameToLayer("Player");
-        Debug.Log("히트" + hit.transform);
         if (hit.collider != null && hit.collider.gameObject.layer == playerLayer)
         {
-            Debug.Log("레이 확인");
             _monster.SetTarget(hit.transform);
             _monster.SetState(MonsterState.Chase);
         }
@@ -76,7 +74,7 @@ public class Patrol : IState
         // 레이 시각표현용 임시 코드
         Vector2 start = _monster.transform.position;
         Vector2 dir = target - start;
-        Debug.DrawRay(start, dir.normalized * _sight);
+        Debug.DrawRay(start, dir.normalized * _sight, Color.aliceBlue);
 
     }
 

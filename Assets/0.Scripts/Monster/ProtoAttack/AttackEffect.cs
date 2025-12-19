@@ -3,15 +3,11 @@ using UnityEngine;
 
 public class AttackEffect : MonoBehaviour
 {
-    public event Action<Player> OnAttack;
+    public event Action<Collider2D> OnAttack;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
-        {
-            Player player = collision.GetComponent<Player>();
-            OnAttack?.Invoke(player);
-        }
+        OnAttack?.Invoke(collision);
     }
 
     public void Init() => OnAttack = null;

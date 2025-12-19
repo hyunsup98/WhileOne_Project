@@ -42,7 +42,9 @@ public class MonsterAttack : IState
         _monster.Attack.OnAttack();
 
         if (!_attack.IsAttack)
+        {
             _monster.SetState(MonsterState.Chase);
+        }
     }
 
     private IEnumerator AttackTimer()

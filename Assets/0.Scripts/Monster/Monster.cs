@@ -93,9 +93,8 @@ public class Monster : MonoBehaviour
         Vector2 start = transform.position;
         Vector2 dir = target - start;
 
-        int playerLayer = LayerMask.NameToLayer("Player");
-        int wallLayer = LayerMask.NameToLayer("Wall");
-        RaycastHit2D hit = Physics2D.Raycast(start, dir, Model.Sight, wallLayer | playerLayer);
+        int layerMask = LayerMask.GetMask("Wall", "Player");
+        RaycastHit2D hit = Physics2D.Raycast(start, dir, Model.Sight, layerMask);
 
         return hit;
     }

@@ -16,10 +16,9 @@ MonoBehaviour:
   _name: "\uD504\uB85C\uD1A0\uD0C0\uC785"
   _tier: 0
   _hp: 100
-  _moveSpeed: 5
+  _moveSpeed: 4
   _sight: 5
   _actionList: 
-  _wallTilemap: {fileID: 5738263046574582976, guid: 8c800deb7c3bb3349ac73ad736775e4a, type: 3}
   _patrolTarget:
   - {fileID: 6276686730491337152, guid: 720bf207f5f342843be8edb0f66a4be9, type: 3}
   - {fileID: 7921424649548622541, guid: b352ed73505da3f448e62c762716e07b, type: 3}

@@ -35,7 +35,7 @@ public class ProtoAttack : IAttack
             );
 
         _attackEffect = _attackObj.GetComponent<AttackEffect>();
-        _attackEffect.OnAttack += OnDamage;
+        _attackEffect.OnAttack += OnCrash;
 
         _target = (_target - (Vector2)_monster.transform.position).normalized;
     }
@@ -43,13 +43,24 @@ public class ProtoAttack : IAttack
     public void OnAttack()
     {
         _attackTime += Time.unscaledDeltaTime;
-        _monster.transform.Translate(_target * Time.deltaTime * _attackSpeed);
+
+        Vector2 start = _monster.transform.position;
+        int layerMask = LayerMask.GetMask("Wall");
+        RaycastHit2D hit = Physics2D.Raycast(start, _target, 0.5f, layerMask);
 
         if(_attackTime >= 0.5f)
         {
             _attackTime = 0;
             IsAttack = false;
         }
+
+        if (hit.collider != null)
+            return;
+        else
+        {
+            _monster.transform.Translate(_target * Time.deltaTime * _attackSpeed);
+        }
+
     }
 
     public void EndAttack()
@@ -59,10 +70,19 @@ public class ProtoAttack : IAttack
     }
 
 
-    private void OnDamage(Player player)
+    private void OnCrash(Collider2D collision)
     {
-        Debug.Log("<color=red>테이크 데미지</color>");
-        player.TakenDamage(_monster.Att);
-        Debug.Log(player.Hp);
+        int playerLayer = LayerMask.NameToLayer("Player");
+        int wallLayer = LayerMask.NameToLayer("Wall");
+        Debug.Log("접촉 대상" + collision.gameObject.name);
+
+        if (collision.gameObject.layer == playerLayer)
+        {
+            Player player = collision.GetComponent<Player>();
+
+            player.TakenDamage(_monster.Att);
+            Debug.Log("<color=red>테이크 데미지</color>");
+            Debug.Log(player.Hp);
+        }
     }
 }

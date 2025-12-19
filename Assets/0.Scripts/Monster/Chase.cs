@@ -95,7 +95,7 @@ public class Chase : IState
         RaycastHit2D hit = _monster.OnLOS(target);
 
         int playerLayer = LayerMask.NameToLayer("Player");
-        if (hit.collider != null && hit.collider.gameObject.layer == playerLayer)
+        if (hit.collider != null && hit.collider.gameObject.layer != playerLayer)
             _monster.SetState(MonsterState.Search);
 
 
