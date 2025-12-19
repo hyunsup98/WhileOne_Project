@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -29,7 +30,7 @@ public class Player : MonoBehaviour
     private IState actionCurrentState;
 
     public event Action<float,float> _onHpChanged;
-    public event Action<float,float> _onStiminaChanged;
+    public event Action<float,float> _onStaminaChanged;
 
     private WaitForSeconds _delay;
     private WaitForSeconds _blinkTime;
@@ -80,7 +81,9 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         Component();
-        _actionMap = _input.actions.FindActionMap("Player");    
+        _actionMap = _input.actions.FindActionMap("Player");
+
+        GameManager.Instance.player = this;
     }
     void Component()
     {
@@ -112,9 +115,14 @@ public class Player : MonoBehaviour
         private set
         {
             _hp = Mathf.Clamp(value, 0, _maxHp);
-            if(_hp != value)
+            if(_hp >= 0f)
             {
                 _onHpChanged?.Invoke(_maxHp,ChangedHealth);
+
+                if(_hp <= Mathf.Epsilon)
+                {
+                    GameManager.Instance._CurrentGameState = GameState.Dead;
+                }
             }
         }
            
@@ -125,7 +133,7 @@ public class Player : MonoBehaviour
         private set
         {
             _stamina = Mathf.Clamp(value, 0, _maxStamina);
-            if(_stamina != value)
+            if(_stamina <= 0)
             {
                 _onHpChanged?.Invoke(_maxStamina, ChangedStamina);
             }
@@ -137,6 +145,11 @@ public class Player : MonoBehaviour
         PlayerDir();
         moveCurrentState?.Update();
         actionCurrentState?.Update();
+
+        if(Keyboard.current.qKey.wasPressedThisFrame)
+        {
+            TakenDamage(10, Vector2.zero);
+        }
     }
 
     void PlayerDir()
@@ -162,7 +175,7 @@ public class Player : MonoBehaviour
     public void TakenDamage(float damage,Vector2 target)
     {
         _isDamage = true;
-        _hp -= damage;
+        ChangedHealth -= damage;
         Debug.Log(_hp);
         KnockBack(target);
         StartCoroutine(Blink());
@@ -222,7 +235,7 @@ public class Player : MonoBehaviour
 
             yield return _blinkTime;
 
-            _group.sortingOrder = 1;
+            _group.sortingOrder = 3;
 
             _checkTime += time;
 
@@ -234,5 +247,8 @@ public class Player : MonoBehaviour
 
     }
 
-   
+    private void OnDisable()
+    {
+        GameManager.Instance.player = null;
+    }
 }

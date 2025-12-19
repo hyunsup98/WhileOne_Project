@@ -27,5 +27,6 @@ public class StatBarView : MonoBehaviour
     private void SetSliderValue(Slider slider, float maxValue, float currentValue)
     {
         slider.value = currentValue / maxValue;
+        Debug.Log(currentValue / maxValue);
     }
 }

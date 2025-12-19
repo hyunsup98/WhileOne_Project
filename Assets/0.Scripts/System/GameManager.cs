@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 //게임 상태
 public enum GameState
@@ -16,7 +17,10 @@ public enum GameState
 public class GameManager : Singleton<GameManager>
 {
     #region 게임 상태
-    public event Action<GameState> StateChanged;
+    public event Action onGameStateTitle;
+    public event Action onGameStateInGame;
+    public event Action onGameStatePause;
+    public event Action onGameStateDead;
 
     private GameState _currentGameState;
     public GameState _CurrentGameState
@@ -30,26 +34,28 @@ public class GameManager : Singleton<GameManager>
 
             if (_currentGameState == GameState.Title)
             {
-
+                SceneManager.LoadScene("Pro_Title");
+                onGameStateTitle?.Invoke();
             }
             else if (_currentGameState == GameState.InGame)
             {
-
+                onGameStateInGame?.Invoke();
             }
             else if (_currentGameState == GameState.Pause)
             {
-
+                onGameStatePause?.Invoke();
             }
             else if (_currentGameState == GameState.Dead)
             {
-
+                SceneManager.LoadScene("Pro_DeadEnding");
+                onGameStateDead?.Invoke();
             }
         }
     }
     #endregion
 
-    public Player player { get; set; }                      // [던전 씬에서만 값이 존재]현재 씬에 존재하는 플레이어를 참조하는 변수
-    public DungeonManager CurrentDungeon { get; set; }      // [던전 씬에서만 값이 존재]현재 씬에 존재하는 던전을 관리하는 매니저
+    [field: SerializeField] public Player player { get; set; }                      // [던전 씬에서만 값이 존재]현재 씬에 존재하는 플레이어를 참조하는 변수
+    [field: SerializeField] public DungeonManager CurrentDungeon { get; set; }      // [던전 씬에서만 값이 존재]현재 씬에 존재하는 던전을 관리하는 매니저
 
     //게임 상태를 변경하는 메서드
     public void SetGameState(GameState state) => _currentGameState = state;

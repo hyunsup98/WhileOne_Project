@@ -39,7 +39,6 @@ public class DigState : IState
             Debug.Log("일반 모드");
             _player.ActionState(new ActionIdleState(_player));
         }
-
     }
     
 

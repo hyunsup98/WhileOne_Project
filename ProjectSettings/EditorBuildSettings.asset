@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/2.Scenes/TestScene/Prototype/Pro_Dungeon.unity
     guid: 233707437afe0504a9a419617a8b2699
+  - enabled: 1
+    path: Assets/2.Scenes/TestScene/Prototype/Pro_DeadEnding.unity
+    guid: 06278eebd95610e48bf415480b95959e
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

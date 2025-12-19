@@ -1,4 +1,5 @@
 using NUnit.Framework.Interfaces;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -25,8 +26,6 @@ public class Monster : MonoBehaviour
 
     private void Awake()
     {
-        Model = new MonsterModel(_monsterData);
-
         // 경로 탐색으로 순찰 포인트 초기화
         //Model.MobAstar = new Astar(_wallTilemap);
         //Model.PatrolPoint = Model.MobAstar.Pathfinder

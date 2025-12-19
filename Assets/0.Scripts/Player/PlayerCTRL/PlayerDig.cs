@@ -1,7 +1,7 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerDig : MonoBehaviour
 {
@@ -15,15 +15,23 @@ public class PlayerDig : MonoBehaviour
 
     [SerializeField] GameObject test;
     [SerializeField] float offSet;
-    
+
+    [SerializeField] private Transform pivotTrans;
+
     Vector3 _mousePosition;
     Vector3 dir;
+    Vector3 cursorPos = Vector3.zero;       //타일 커서 벡터값
 
     public GameObject Test => test;
     public float OffSet => offSet;
     public Vector3 Dir => dir;
 
     public bool IsDigging => _isDigging;
+
+    // 타일 커서 관련 변수들
+    [SerializeField] private SpriteRenderer tileCursor;
+    [SerializeField] private Color blue;
+    [SerializeField] private Color red;
 
     private void Awake()
     {
@@ -39,8 +47,9 @@ public class PlayerDig : MonoBehaviour
         _digAction.performed += Dig;
         _digAction.canceled += ctx =>
         {
+            tileCursor.gameObject.SetActive(false);
             test.SetActive(false);
-
+            GameManager.Instance.CurrentDungeon._tileManager.Dig(cursorPos);
             _isDigging = false;
         };
         _attack = _player.PlayerAttack;
@@ -49,6 +58,7 @@ public class PlayerDig : MonoBehaviour
     {
         if (!_attack.IsAttacking)
         {
+            tileCursor.gameObject.SetActive(true);
             test.SetActive(true);
              _isDigging = true;
 
@@ -61,34 +71,50 @@ public class PlayerDig : MonoBehaviour
         _mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 
         //플레이어와 마우스 사이 좌표 거리 계산
-        Vector3 angle = _mousePosition - transform.position;
+        Vector3 angle = _mousePosition - pivotTrans.position;
 
        
-        Vector3 a = Vector3Int.FloorToInt(transform.position);
+        cursorPos = Vector3Int.FloorToInt(pivotTrans.position);
 
         if (angle.x > 1)
         {
-            dir.x = a.x+1f;
+            cursorPos.x += 1f;
+            dir.x = cursorPos.x+1f;
         }
         else if(angle.x < -1)
         {
-            dir.x = a.x - 1f;
+            cursorPos.x -= 1f;
+            dir.x = cursorPos.x - 1f;
         }
         else
         {
-            dir.x = a.x;
+            dir.x = cursorPos.x;
         }
         if (angle.y > 1)
         {
-            dir.y = a.y+1f;
+            cursorPos.y += 1f;
+            dir.y = cursorPos.y+1f;
         }
         else if(angle.y < -1)
         {
-            dir.y = a.y - 1f;
+            cursorPos.y -= 1f;
+            dir.y = cursorPos.y - 1f;
         }
         else
         {
-            dir.y = a.y;
+            dir.y = cursorPos.y;
         }
+
+        cursorPos = new Vector3(cursorPos.x + 0.5f, cursorPos.y + 0.5f, 0f);
+        CheckTileCursor();
+    }
+
+    public void CheckTileCursor()
+    {
+        if (GameManager.Instance.CurrentDungeon == null || !_isDigging) return;
+
+        tileCursor.transform.position = cursorPos;
+        tileCursor.color = GameManager.Instance.CurrentDungeon._tileManager.CanDig(cursorPos)
+            ? blue : red;
     }
 }

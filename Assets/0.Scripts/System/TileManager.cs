@@ -27,6 +27,14 @@ public class TileManager
         return _dungeonManager.CurrentRoom.DigSpotTileMap.GetTile(pos) == _dungeonManager.DigSpotTile;
     }
 
+    public bool CanDig(Vector3 pos)
+    {
+        if (_dungeonManager.CurrentRoom == null) return false;
+
+        Vector3Int cellPos = _dungeonManager.CurrentRoom.DigSpotTileMap.WorldToCell(pos);
+        return _dungeonManager.CurrentRoom.DigSpotTileMap.GetTile(cellPos) == _dungeonManager.DigSpotTile;
+    }
+
     /// <summary>
     /// 실제로 땅을 파는 메서드
     /// </summary>

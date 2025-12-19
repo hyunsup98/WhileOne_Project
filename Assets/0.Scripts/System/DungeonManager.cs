@@ -17,29 +17,19 @@ public class DungeonManager : MonoBehaviour
             Test = value;
         }
     }
-    private TileManager _tileManager;
+
+    public TileManager _tileManager { get; private set; }
 
     public RoomController Test;
+
+    private void Awake()
+    {
+        GameManager.Instance.CurrentDungeon = this;
+    }
 
     private void Start()
     {
         _tileManager = new TileManager(this);
-    }
-
-    private void Update()
-    {
-        if(Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-            mousePos.z = 0f;
-
-            _tileManager.Dig(mousePos);
-        }
-    }
-
-    private void OnEnable()
-    {
-        GameManager.Instance.CurrentDungeon = this;
     }
 
     private void OnDisable()

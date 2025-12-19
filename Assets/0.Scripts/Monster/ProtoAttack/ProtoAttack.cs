@@ -80,7 +80,7 @@ public class ProtoAttack : IAttack
         {
             Player player = collision.GetComponent<Player>();
 
-            player.TakenDamage(_monster.Att);
+            player.TakenDamage(_monster.Att, _monster.transform.position);
             Debug.Log("<color=red>테이크 데미지</color>");
             Debug.Log(player.Hp);
         }
