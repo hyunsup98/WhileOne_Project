@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/1.Prefabs/Weapon.meta
 guid: d8294f8075f00a9409424a73c5e8c5ec
+========
+guid: ef7488543def76c418fd99825be953e8
+>>>>>>>> 251219_Map:Assets/_Recovery.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

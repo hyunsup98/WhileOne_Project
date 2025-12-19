@@ -1,5 +1,10 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/2.Scenes/TestScene/SHS/SHS_Dead.unity.meta
 guid: 8a79c6de2ecb2d443a93f6e2f09c1a7d
+========
+guid: 871bb7de34070294380e9d4a95f28cd3
+folderAsset: yes
+>>>>>>>> 251219_Map:Assets/SPUM.meta
 DefaultImporter:
   externalObjects: {}
   userData: 

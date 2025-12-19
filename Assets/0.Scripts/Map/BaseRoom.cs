@@ -27,9 +27,8 @@ public class BaseRoom : MonoBehaviour
     
     protected Room roomData;
     
-    // DoorSpace와 NoDoor 오브젝트 캐시
-    private Dictionary<Vector2Int, GameObject> doorSpaces;
-    private Dictionary<Vector2Int, GameObject> noDoors;
+    // Door 오브젝트 캐시
+    private Dictionary<Vector2Int, GameObject> doors;
     
     // 함정방 미로 생성기
     private TrapRoomMazeGenerator mazeGenerator;
@@ -40,19 +39,16 @@ public class BaseRoom : MonoBehaviour
     public virtual void InitializeRoom(Room room)
     {
         roomData = room;
-        doorSpaces = new Dictionary<Vector2Int, GameObject>();
-        noDoors = new Dictionary<Vector2Int, GameObject>();
+        doors = new Dictionary<Vector2Int, GameObject>();
         
-        // DoorSpace와 NoDoor 오브젝트 찾기
-        FindDoorSpacesAndNoDoors();
+        // Door 오브젝트 찾기
+        FindDoors();
 
         // 프리팹으로 방 크기 계산
         CalculateRoomSizeFromPrefab();
 
-        // DoorSpace와 NoDoor 활성화/비활성화
-        UpdateDoorSpaces();
-        
-        //CreateDoors();
+        // Door 활성화/비활성화
+        UpdateDoors();
         
         // 함정방인 경우 미로 생성
         if (room.roomType == RoomType.Trap)
@@ -62,162 +58,71 @@ public class BaseRoom : MonoBehaviour
     }
 
     /// <summary>
-    /// 외부에서 문 연결 상태 변화 후 DoorSpace/NoDoor를 갱신할 때 호출.
+    /// 외부에서 문 연결 상태 변화 후 Door를 갱신할 때 호출.
     /// </summary>
     public void RefreshDoorStates()
     {
         if (roomData == null)
         {
-            Debug.LogWarning($"[{name}] roomData가 없어 DoorSpace/NoDoor 갱신 불가");
+            Debug.LogWarning($"[{name}] roomData가 없어 Door 갱신 불가");
             return;
         }
-        UpdateDoorSpaces();
+        UpdateDoors();
     }
     
     /// <summary>
-    /// DoorSpace와 NoDoor 오브젝트를 찾습니다.
+    /// Door 오브젝트를 찾습니다.
+    /// Door 컨테이너의 자식으로 Door_Up, Door_Down, Door_Left, Door_Right를 찾습니다.
     /// </summary>
-    private void FindDoorSpacesAndNoDoors()
+    private void FindDoors()
     {
-        // 모든 자식 오브젝트에서 DoorSpace와 NoDoor 찾기
+        // Door 컨테이너 찾기
+        Transform doorContainer = null;
         foreach (Transform child in transform)
         {
-            string childName = child.name;
-            
-            // DoorSpace 찾기
-            if (childName.Contains("DoorSpace"))
+            if (child.name.Contains("Door") && !child.name.Contains("_"))
             {
-                if (childName.Contains("Up") || childName.EndsWith("_Up"))
-                {
-                    doorSpaces[Direction.Up] = child.gameObject;
-                }
-                else if (childName.Contains("Down") || childName.EndsWith("_Down"))
-                {
-                    doorSpaces[Direction.Down] = child.gameObject;
-                }
-                else if (childName.Contains("Left") || childName.EndsWith("_Left"))
-                {
-                    doorSpaces[Direction.Left] = child.gameObject;
-                }
-                else if (childName.Contains("Right") || childName.EndsWith("_Right"))
-                {
-                    doorSpaces[Direction.Right] = child.gameObject;
-                }
-            }
-            
-            // NoDoor/NoneDoor 찾기 (둘 다 지원)
-            if (childName.Contains("NoDoor") || childName.Contains("NoneDoor"))
-            {
-                if (childName.Contains("Up") || childName.EndsWith("_Up"))
-                {
-                    noDoors[Direction.Up] = child.gameObject;
-                }
-                else if (childName.Contains("Down") || childName.EndsWith("_Down"))
-                {
-                    noDoors[Direction.Down] = child.gameObject;
-                }
-                else if (childName.Contains("Left") || childName.EndsWith("_Left"))
-                {
-                    noDoors[Direction.Left] = child.gameObject;
-                }
-                else if (childName.Contains("Right") || childName.EndsWith("_Right"))
-                {
-                    noDoors[Direction.Right] = child.gameObject;
-                }
+                doorContainer = child;
+                break;
             }
         }
         
-        // 재귀적으로 모든 하위 오브젝트 검색
-        SearchInChildren(transform);
-    }
-    
-    /// <summary>
-    /// 자식 오브젝트를 재귀적으로 검색합니다.
-    /// </summary>
-    private void SearchInChildren(Transform parent)
-    {
-        foreach (Transform child in parent)
+        if (doorContainer == null)
+        {
+            Debug.LogWarning($"[{name}] Door 컨테이너를 찾을 수 없습니다.");
+            return;
+        }
+        
+        // Door 컨테이너의 자식에서 방향별 Door 찾기
+        foreach (Transform child in doorContainer)
         {
             string childName = child.name;
             
-            // DoorSpace 찾기
-            if (childName.Contains("DoorSpace"))
+            if (childName.Contains("Up") || childName.EndsWith("_Up"))
             {
-                if (childName.Contains("Up") || childName.EndsWith("_Up"))
-                {
-                    if (!doorSpaces.ContainsKey(Direction.Up))
-                        doorSpaces[Direction.Up] = child.gameObject;
-                }
-                else if (childName.Contains("Down") || childName.EndsWith("_Down"))
-                {
-                    if (!doorSpaces.ContainsKey(Direction.Down))
-                        doorSpaces[Direction.Down] = child.gameObject;
-                }
-                else if (childName.Contains("Left") || childName.EndsWith("_Left"))
-                {
-                    if (!doorSpaces.ContainsKey(Direction.Left))
-                        doorSpaces[Direction.Left] = child.gameObject;
-                }
-                else if (childName.Contains("Right") || childName.EndsWith("_Right"))
-                {
-                    if (!doorSpaces.ContainsKey(Direction.Right))
-                        doorSpaces[Direction.Right] = child.gameObject;
-                }
+                doors[Direction.Up] = child.gameObject;
             }
-            
-            // NoDoor 찾기
-            if (childName.Contains("NoDoor") || childName.Contains("NoneDoor"))
+            else if (childName.Contains("Down") || childName.EndsWith("_Down"))
             {
-                if (childName.Contains("Up") || childName.EndsWith("_Up"))
-                {
-                    if (!noDoors.ContainsKey(Direction.Up))
-                        noDoors[Direction.Up] = child.gameObject;
-                }
-                else if (childName.Contains("Down") || childName.EndsWith("_Down"))
-                {
-                    if (!noDoors.ContainsKey(Direction.Down))
-                        noDoors[Direction.Down] = child.gameObject;
-                }
-                else if (childName.Contains("Left") || childName.EndsWith("_Left"))
-                {
-                    if (!noDoors.ContainsKey(Direction.Left))
-                        noDoors[Direction.Left] = child.gameObject;
-                }
-                else if (childName.Contains("Right") || childName.EndsWith("_Right"))
-                {
-                    if (!noDoors.ContainsKey(Direction.Right))
-                        noDoors[Direction.Right] = child.gameObject;
-                }
-                else
-                {
-                    // 방향명이 없는 NoDoor 컨테이너라면 하위에서 방향별 자식을 찾아 매핑
-                    foreach (Transform sub in child)
-                    {
-                        string subName = sub.name;
-                        if ((subName.Contains("Up") || subName.EndsWith("_Up")) && !noDoors.ContainsKey(Direction.Up))
-                            noDoors[Direction.Up] = sub.gameObject;
-                        else if ((subName.Contains("Down") || subName.EndsWith("_Down")) && !noDoors.ContainsKey(Direction.Down))
-                            noDoors[Direction.Down] = sub.gameObject;
-                        else if ((subName.Contains("Left") || subName.EndsWith("_Left")) && !noDoors.ContainsKey(Direction.Left))
-                            noDoors[Direction.Left] = sub.gameObject;
-                        else if ((subName.Contains("Right") || subName.EndsWith("_Right")) && !noDoors.ContainsKey(Direction.Right))
-                            noDoors[Direction.Right] = sub.gameObject;
-                    }
-                }
+                doors[Direction.Down] = child.gameObject;
             }
-            
-            // 재귀 검색
-            if (child.childCount > 0)
+            else if (childName.Contains("Left") || childName.EndsWith("_Left"))
             {
-                SearchInChildren(child);
+                doors[Direction.Left] = child.gameObject;
+            }
+            else if (childName.Contains("Right") || childName.EndsWith("_Right"))
+            {
+                doors[Direction.Right] = child.gameObject;
             }
         }
     }
     
     /// <summary>
-    /// DoorSpace와 NoDoor를 문 연결 상태에 따라 활성화/비활성화합니다.
+    /// Door를 문 연결 상태에 따라 활성화/비활성화합니다.
+    /// 연결된 경우: active = false (문이 열려있음)
+    /// 연결되지 않은 경우: active = true (벽처럼 막힘)
     /// </summary>
-    private void UpdateDoorSpaces()
+    private void UpdateDoors()
     {
         if (roomData == null) return;
         
@@ -228,80 +133,37 @@ public class BaseRoom : MonoBehaviour
         {
             bool isConnected = roomData.IsDoorConnected(direction);
             
-            // DoorSpace: 부모는 항상 활성, 연결되면 ON, 끊기면 OFF
-            bool hasDoorSpace = doorSpaces.ContainsKey(direction);
-            if (doorSpaces.ContainsKey(direction))
+            if (doors.ContainsKey(direction))
             {
-                GameObject ds = doorSpaces[direction];
-                if (!ds.activeSelf) ds.SetActive(true);
-                SetComponentsActive(ds, isConnected);
-                SetChildrenActive(ds, isConnected);
-                
-                if (isConnected)
+                GameObject door = doors[direction];
+                if (door != null)
                 {
-                    SetDoorSpacePassable(ds);
+                    // 연결된 경우: active = false (문이 열려있음)
+                    // 연결되지 않은 경우: active = true (벽처럼 막힘)
+                    door.SetActive(!isConnected);
+                    
+                    // 연결되지 않은 경우 벽처럼 막기 위해 Wall 태그 설정
+                    if (!isConnected)
+                    {
+                        Collider2D[] colliders = door.GetComponentsInChildren<Collider2D>(true);
+                        foreach (var col in colliders)
+                        {
+                            if (col != null)
+                            {
+                                col.enabled = true;
+                                col.isTrigger = true; // 물리 충돌은 피하고 이동 로직으로만 막기
+                                col.gameObject.tag = "Wall";
+                            }
+                        }
+                    }
                 }
             }
-            
-            // NoDoor: 부모는 항상 활성, DoorSpace와 반대로
-            bool hasNoDoor = noDoors.ContainsKey(direction);
-            if (noDoors.ContainsKey(direction))
-            {
-                GameObject nd = noDoors[direction];
-                if (!nd.activeSelf) nd.SetActive(true);
-                bool noDoorOn = !isConnected;
-                SetComponentsActive(nd, noDoorOn);
-                SetChildrenActive(nd, noDoorOn);
-            }
-            else
-            {
-                Debug.LogWarning($"[{name}] NoDoor가 없어 방향 {direction} 비활성 처리 불가");
-            }
-
-        }
-    }
-    
-    /// <summary>
-    /// DoorSpace를 플레이어가 통과 가능하도록 설정합니다.
-    /// </summary>
-    private void SetDoorSpacePassable(GameObject doorSpace)
-    {
-        // DoorSpace와 그 자식들의 충돌체 확인
-        Collider2D[] colliders = doorSpace.GetComponentsInChildren<Collider2D>();
-        foreach (Collider2D collider in colliders)
-        {
-            // 충돌체를 Trigger로 설정하여 통과 가능하게
-            collider.isTrigger = true;
-        }
-    }
-
-    /// <summary>
-    /// 특정 방향의 DoorSpace를 활성화합니다. (외부에서 호출 가능)
-    /// </summary>
-    public void ActivateDoorSpace(Vector2Int direction)
-    {
-        if (doorSpaces.ContainsKey(direction))
-        {
-            GameObject ds = doorSpaces[direction];
-            if (!ds.activeSelf) ds.SetActive(true);
-            SetComponentsActive(ds, true);
-            SetChildrenActive(ds, true);
-            SetDoorSpacePassable(ds);
-        }
-        
-        if (noDoors.ContainsKey(direction))
-        {
-            GameObject nd = noDoors[direction];
-            if (!nd.activeSelf) nd.SetActive(true);
-            SetComponentsActive(nd, false);
-            SetChildrenActive(nd, false);
         }
     }
 
     /// <summary>
     /// 모든 방향의 문을 "잠금" 상태로 전환합니다.
-    /// - DoorSpace 시각/충돌을 비활성화하고
-    /// - NoDoor 시각/충돌을 활성화합니다.
+    /// 모든 Door를 active = true로 설정하여 벽처럼 막습니다.
     /// roomData의 연결 정보는 건드리지 않으므로, UnlockAllDoors로 원래 상태를 복원할 수 있습니다.
     /// </summary>
     public void LockAllDoors()
@@ -310,29 +172,17 @@ public class BaseRoom : MonoBehaviour
 
         foreach (var direction in directions)
         {
-            if (doorSpaces != null && doorSpaces.ContainsKey(direction))
+            if (doors != null && doors.ContainsKey(direction))
             {
-                GameObject ds = doorSpaces[direction];
-                if (ds != null)
+                GameObject door = doors[direction];
+                if (door != null)
                 {
-                    SetComponentsActive(ds, false);
-                    SetChildrenActive(ds, false);
-                }
-            }
-
-            if (noDoors != null && noDoors.ContainsKey(direction))
-            {
-                GameObject nd = noDoors[direction];
-                if (nd != null)
-                {
-                    // 닫힌 문(벽)을 활성화
-                    SetComponentsActive(nd, true);
-                    SetChildrenActive(nd, true);
-
+                    // 모든 문을 닫기 (벽처럼 막기)
+                    door.SetActive(true);
+                    
                     // PlayerMoveController.CanMoveTo에서 벽으로 인식되도록
-                    // NoDoor 쪽 콜라이더들이 "Wall" 태그를 가지게 설정
-                    // (태그 기반 체크는 레이어와 무관하게 동작)
-                    Collider2D[] colliders = nd.GetComponentsInChildren<Collider2D>(true);
+                    // 콜라이더들이 "Wall" 태그를 가지게 설정
+                    Collider2D[] colliders = door.GetComponentsInChildren<Collider2D>(true);
                     foreach (var col in colliders)
                     {
                         if (col != null)
@@ -355,38 +205,9 @@ public class BaseRoom : MonoBehaviour
     /// </summary>
     public void UnlockAllDoors()
     {
-        UpdateDoorSpaces();
+        UpdateDoors();
     }
 
-    /// <summary>
-    /// 부모 활성 상태는 유지하고 자식들만 활성/비활성 토글합니다.
-    /// </summary>
-    private void SetChildrenActive(GameObject parentObj, bool active)
-    {
-        if (parentObj == null) return;
-        foreach (Transform child in parentObj.transform)
-        {
-            child.gameObject.SetActive(active);
-        }
-    }
-
-    /// <summary>
-    /// 부모 활성 상태는 유지하고, 부모/자식의 Renderer, Collider2D, TilemapRenderer, SpriteRenderer를 on/off합니다.
-    /// </summary>
-    private void SetComponentsActive(GameObject parentObj, bool active)
-    {
-        if (parentObj == null) return;
-        
-        // 부모 포함 Renderer/Collider on/off
-        foreach (Renderer r in parentObj.GetComponentsInChildren<Renderer>(true))
-        {
-            r.enabled = active;
-        }
-        foreach (Collider2D c in parentObj.GetComponentsInChildren<Collider2D>(true))
-        {
-            c.enabled = active;
-        }
-    }
 
     /// <summary>
     /// 프리펩의 실제 크기를 계산합니다.

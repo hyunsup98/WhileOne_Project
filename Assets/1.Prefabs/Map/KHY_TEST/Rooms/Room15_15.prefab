@@ -2444,9 +2444,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 098f00216fa940042a63b43de2baba97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomController
-  floorTile: {fileID: 0}
-  digSpotTile: {fileID: 0}
-  dugSpotTile: {fileID: 0}
+  floorTileMap: {fileID: 0}
+  digSpotTileMap: {fileID: 0}
+  dugSpotTileMap: {fileID: 0}
 --- !u!1 &3929308901367267911
 GameObject:
   m_ObjectHideFlags: 0
