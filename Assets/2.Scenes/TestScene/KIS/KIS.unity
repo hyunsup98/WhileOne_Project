@@ -1098,6 +1098,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3867641718593240911, guid: f7b3578d53e9d8344bbf0198c98575e2, type: 3}
+      propertyPath: AttackEffect
+      value: 
+      objectReference: {fileID: 3913412838696352892, guid: e2e661ebf21a15d4e8b50513701a79ab, type: 3}
+    - target: {fileID: 3867641718593240911, guid: f7b3578d53e9d8344bbf0198c98575e2, type: 3}
       propertyPath: _monsterData
       value: 
       objectReference: {fileID: 11400000, guid: 7671038e83694cc4eb2bec024be9c4e8, type: 2}

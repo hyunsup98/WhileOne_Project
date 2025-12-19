@@ -19,7 +19,8 @@ public class Monster : MonoBehaviour
     [field: SerializeField] public float AttRange {  get; private set; }
     public IAttack Attack {  get; private set; }
 
-
+    [SerializeField] private Transform targetPos1;
+    [SerializeField] private Transform targetPos2;
 
 
     private void Awake()
@@ -27,12 +28,26 @@ public class Monster : MonoBehaviour
         Model = new MonsterModel(_monsterData);
 
         // 경로 탐색으로 순찰 포인트 초기화
+        //Model.MobAstar = new Astar(_wallTilemap);
+        //Model.PatrolPoint = Model.MobAstar.Pathfinder
+        //    (
+        //    Model.PatrolTarget[0].position,
+        //    Model.PatrolTarget[1].position
+        //    );
+
+        // 순찰 테스트 코드
         Model.MobAstar = new Astar(_wallTilemap);
         Model.PatrolPoint = Model.MobAstar.Pathfinder
             (
-            Model.PatrolTarget[0].position,
-            Model.PatrolTarget[1].position
+            targetPos1.position,
+            targetPos2.position
             );
+
+        gameObject.name = targetPos1.position.ToString();
+        Debug.Log("----------------");
+        Debug.Log(targetPos1.position);
+        Debug.Log(targetPos2.position);
+        Debug.Log("----------------");
 
         // 공격 세팅
         Attack = new ProtoAttack(this);
@@ -108,7 +123,6 @@ public class Monster : MonoBehaviour
         if(Model.Hp <= 0f)
             View.OnDeathAni();
     }
-
 }
 
 

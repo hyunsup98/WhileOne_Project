@@ -3173,8 +3173,8 @@ GameObject:
   - component: {fileID: 584107648}
   - component: {fileID: 584107650}
   - component: {fileID: 584107652}
-  m_Layer: 0
-  m_Name: Circle
+  m_Layer: 8
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5263,6 +5263,7 @@ MonoBehaviour:
   showCorridorLabels: 0
   corridorLabelOffsetY: 0.2
   roomLabelFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  monster: {fileID: 3867641718593240911, guid: f7b3578d53e9d8344bbf0198c98575e2, type: 3}
 --- !u!1 &925626713
 GameObject:
   m_ObjectHideFlags: 0

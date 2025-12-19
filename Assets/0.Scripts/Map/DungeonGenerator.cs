@@ -99,6 +99,8 @@ public class DungeonGenerator : MonoBehaviour
     private List<Vector2Int> eventRoomPositions;
     private Dictionary<Vector2Int, GameObject> corridors; // 복도 오브젝트
     private Tilemap corridorTilemap; // 복도용 Tilemap (Tilemap 방식 사용 시)
+
+    [SerializeField] private Monster monster;
     
     private void Start()
     {
@@ -1191,7 +1193,7 @@ public class DungeonGenerator : MonoBehaviour
             Debug.LogWarning($"[Dig Spot] 방({room.roomObject.name})에 Interactive 오브젝트를 찾을 수 없어 방의 직접 자식으로 배치합니다.");
             interactiveParent = room.roomObject.transform;
         }
-        
+
         // todo: 프리팹 설치를 타일 맵 설치로 리팩토링
         // Dig Spot 프리팹 생성 (Interactive의 자식으로)
         // GameObject digSpot = Instantiate(digSpotPrefab, digSpotWorldPos, Quaternion.identity, interactiveParent);

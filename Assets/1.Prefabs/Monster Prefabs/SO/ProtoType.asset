@@ -19,6 +19,4 @@ MonoBehaviour:
   _moveSpeed: 4
   _sight: 5
   _actionList: 
-  _patrolTarget:
-  - {fileID: 6276686730491337152, guid: 720bf207f5f342843be8edb0f66a4be9, type: 3}
-  - {fileID: 7921424649548622541, guid: b352ed73505da3f448e62c762716e07b, type: 3}
+  _patrolTarget: []
