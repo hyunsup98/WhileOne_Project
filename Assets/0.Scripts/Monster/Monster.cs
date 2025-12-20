@@ -1,5 +1,3 @@
-using NUnit.Framework.Interfaces;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -8,6 +6,7 @@ public class Monster : MonoBehaviour
 {
     [SerializeField] private MonsterDataSO _monsterData;    // 몬스터 데이터 SO
     [SerializeField] private Tilemap _wallTilemap;          // 경로 탐색을 위한 타일맵
+    [SerializeField] private List<Transform> _patrolTarget;
 
     [field: SerializeField] public MonsterView View { get; private set; }
     
@@ -20,27 +19,30 @@ public class Monster : MonoBehaviour
     [field: SerializeField] public float AttRange {  get; private set; }
     public IAttack Attack {  get; private set; }
 
-    [SerializeField] private Transform targetPos1;
-    [SerializeField] private Transform targetPos2;
 
 
     private void Awake()
     {
-        // 경로 탐색으로 순찰 포인트 초기화
-        //Model.MobAstar = new Astar(_wallTilemap);
-        //Model.PatrolPoint = Model.MobAstar.Pathfinder
-        //    (
-        //    Model.PatrolTarget[0].position,
-        //    Model.PatrolTarget[1].position
-        //    );
+        int num = Random.Range(0, 1);
+        
+        Model = new MonsterModel(_monsterData);
 
-        // 순찰 테스트 코드
+        //// 경로 탐색으로 순찰 포인트 초기화
         Model.MobAstar = new Astar(_wallTilemap);
+        Model.PatrolTarget = _patrolTarget;
+
+        if(num == 0)
         Model.PatrolPoint = Model.MobAstar.Pathfinder
             (
-            targetPos1.position,
-            targetPos2.position
+            Model.PatrolTarget[0].position,
+            Model.PatrolTarget[1].position
             );
+        else 
+        {
+            Model.PatrolPoint = new();
+            Model.PatrolPoint.Add(Model.PatrolTarget[0].position);
+            Model.PatrolPoint.Add(Model.PatrolTarget[1].position);
+        }
 
 
         // 공격 세팅

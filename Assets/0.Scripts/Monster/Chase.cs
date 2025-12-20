@@ -30,12 +30,13 @@ public class Chase : IState
     public void Enter() 
     {
         _target = _monster.Model.Target;
-        _pathfinder = _monster.StartCoroutine(UpdatePathfinder());
+        //_pathfinder = _monster.StartCoroutine(UpdatePathfinder());
     }
 
     public void Exit() 
     {
-        _monster.StopCoroutine(_pathfinder);
+        //_monster.StopCoroutine(_pathfinder);
+        //_pathfinder = null;
     }
 
     public void Update()
@@ -54,22 +55,27 @@ public class Chase : IState
         if (Vector3.SqrMagnitude(dir) <= _attRange)
         {
             _monster.SetState(MonsterState.Attack);
+            Debug.LogWarning("<color=red>공격실행</color>");
             return;
         }
 
-        Vector2 target = _chasePoint[_chaseIndex];
-        // 목표 지점 도달시, 바로 플레이어의 다음 위치를 경로탐색
-        if(_chaseIndex == _chasePoint.Count - 1)
-        {
-            _monster.StopCoroutine(_pathfinder);
-            _pathfinder = _monster.StartCoroutine(UpdatePathfinder());
-        }    
+        _monster.transform.Translate(dir.normalized * Time.deltaTime * _speed);
 
-        _monster.OnMove(target, _speed);
+        //Vector2 target = _chasePoint[_chaseIndex];
+        ////// 목표 지점 도달시, 바로 플레이어의 다음 위치를 경로탐색
+        ////if(_chaseIndex == _chasePoint.Count - 1)
+        ////{
+        ////    Debug.LogWarning("<color=yellow>스탑 코루틴</color>");
+        ////    _monster.StopCoroutine(_pathfinder);
+        ////    Debug.LogWarning("<color=yellow>코루틴 재시작</color>");
+        ////    _pathfinder = _monster.StartCoroutine(UpdatePathfinder());
+        ////}
 
-        //target 도달시, 다음 포인트 인덱스로 변경
-        if ((Vector2)_monster.transform.position == target)
-            _chaseIndex++;
+        //_monster.OnMove(target, _speed);
+
+        ////target 도달시, 다음 포인트 인덱스로 변경
+        //if ((Vector2)_monster.transform.position == target)
+        //    _chaseIndex++;
     }
 
     // 경로 탐색 업데이트
@@ -85,7 +91,7 @@ public class Chase : IState
             _chasePoint = _astar.Pathfinder(start, target);
             _chaseIndex = 1;
 
-            yield return CoroutineManager.waitForSeconds(1f);
+            yield return CoroutineManager.waitForSeconds(5f);
         }
     }
 
@@ -96,7 +102,10 @@ public class Chase : IState
 
         int playerLayer = LayerMask.NameToLayer("Player");
         if (hit.collider != null && hit.collider.gameObject.layer != playerLayer)
+        {
+            Debug.LogWarning("<color=blue>탐색모드 실행</color>" + _pathfinder);
             _monster.SetState(MonsterState.Search);
+        }
 
 
         // 레이 시각표현용 임시 코드

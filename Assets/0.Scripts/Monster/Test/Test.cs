@@ -9,7 +9,7 @@ public class Test : MonoBehaviour
     {
         int layer = LayerMask.NameToLayer("Wall");
         Debug.Log(collision.gameObject.name);
-        if(collision.gameObject.layer == layer)
+        if (collision.gameObject.layer == layer)
         {
             Debug.Log("Ãæµ¹");
         }

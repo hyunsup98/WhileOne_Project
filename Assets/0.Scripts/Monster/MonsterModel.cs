@@ -36,6 +36,5 @@ public class MonsterModel
         MoveSpeed = monsterData.MoveSpeed;
         Sight = monsterData.Sight;
         ActionList = monsterData.ActionList;
-        PatrolTarget = monsterData.PatrolTarget;
     }
 }

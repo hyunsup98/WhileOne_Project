@@ -18,12 +18,6 @@ public class MonsterDataSO : ScriptableObject
     [SerializeField] private List<int> _actionList;
 
 
-    [Header("순찰용 데이터")]
-
-    [Tooltip("순찰을 위한 2개의 포인트 추가(반드시 왕복할 2개의 포인트 지정!")]
-    [SerializeField] private List<Transform> _patrolTarget;
-
-
     // 외부 참조 프로퍼티
     public int MonsterID => _monsterID;
     public string Name => _name;
@@ -32,6 +26,4 @@ public class MonsterDataSO : ScriptableObject
     public float MoveSpeed => _moveSpeed;
     public float Sight => _sight;
     public List<int> ActionList => _actionList;
-    public List<Transform> PatrolTarget => _patrolTarget;
-
 }

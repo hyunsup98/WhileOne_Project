@@ -6,15 +6,19 @@ public class Astar
 {
     private Tilemap _wallTilemap;
     private NodeManager _nodeManager;
+
     private List<Node> _openList;
-    private List<Vector2Int> _closedList;
+    private Dictionary<Vector2Int, Node> _openDict;
+    private HashSet<Vector2Int> _closedSet;
 
     public Astar(Tilemap wallTilemap)
     {
         _wallTilemap = wallTilemap;
         _nodeManager = new NodeManager(wallTilemap);
+
         _openList = new List<Node>();
-        _closedList = new List<Vector2Int>();
+        _openDict = new Dictionary<Vector2Int, Node>();
+        _closedSet = new HashSet<Vector2Int>();
     }
 
 
@@ -25,8 +29,9 @@ public class Astar
         Vector2Int targetCellPos = (Vector2Int)_wallTilemap.WorldToCell(target);
 
         Node current = _nodeManager.GetNode(startCellPos, 0, Heuristic(startCellPos, targetCellPos));
-            
+
         _openList.Add(current);
+        _openDict.Add(startCellPos, current);
 
 
         while (_openList.Count > 0)
@@ -38,32 +43,40 @@ public class Astar
                 return BuildPath(current);
 
             _openList.Remove(current);
-            _closedList.Add(current.Pos);
+            _openDict.Remove(current.Pos);
+            _closedSet.Add(current.Pos);
 
             // 갈 수 있는 이웃 셀좌표를 GetNeighbors로 생성 후 순회하며 이웃 노드 추가
             foreach (var neighborPos in _nodeManager.GetNeighbors(current.Pos))
             {
                 // 방문 기록이 있다면 다음 이웃 노드 확인
-                if (_closedList.Contains(neighborPos))
+                if (_closedSet.Contains(neighborPos))
                     continue;
 
                 int sumG = current.G + _nodeManager.GetMoveCost(current.Pos);
 
-                // 이웃 노드 생성
-                Node neighborNode = _nodeManager.GetNode
+                // _openDict에 이웃 노드 정보가 없으면 이웃 노드 생성 및 추가
+                if (!_openDict.TryGetValue(neighborPos, out Node neighborNode))
+                {
+                    Debug.LogWarning("A스타 경로 탐색" + startCellPos);
+                    neighborNode = _nodeManager.GetNode
                     (
-                    neighborPos, 
-                    sumG, 
-                    Heuristic(neighborPos, targetCellPos), 
+                    neighborPos,
+                    sumG,
+                    Heuristic(neighborPos, targetCellPos),
                     current
                     );
 
-                if (!_openList.Contains(neighborNode))
-                {
                     _openList.Add(neighborNode);
+                    _openDict.Add(neighborPos, neighborNode);
+
+                }
+                else if (sumG < neighborNode.G)
+                {
+                    neighborNode.G = sumG;
+                    neighborNode.Parent = current;
                 }
             }
-
         }
 
         Init();
@@ -76,15 +89,12 @@ public class Astar
     List<Vector2> BuildPath(Node targetNode)
     {
         List<Vector2> path = new List<Vector2>();
-
         Node current = targetNode;
 
         while (current != null)
         {
             // 타일 중앙 좌표로 변환
-            Vector2 currentCellPos = GetCellPos(current.Pos);
-
-            path.Add(currentCellPos);
+            path.Add(GetCellPos(current.Pos));
             current = current.Parent;
         }
 
@@ -100,17 +110,14 @@ public class Astar
     // 오픈리스트에서 F 비용이 가장 적은 노드를 반환
     private Node GetLowestFNode(List<Node> openList)
     {
-        Node best = null;
-        int bestF = int.MaxValue;
+        Node best = openList[0];
 
         foreach (var node in openList)
         {
-            if (node.F < bestF)
-            {
-                bestF = node.F;
+            if (node.F < best.F || (node.F == best.F && node.H < best.H))
                 best = node;
-            }
         }
+
         return best;
     }
 
@@ -123,21 +130,15 @@ public class Astar
     public Vector2 GetCellPos(Vector3 pos) => CellPos(pos);
     public Vector2 GetCellPos(Vector2 pos) => CellPos(pos);
     public Vector2 GetCellPos(Vector2Int pos) => CellPos(pos);
-    private Vector2 CellPos(Vector2 pos)
-    {
-        Vector2 change = _wallTilemap.GetCellCenterWorld(Vector3Int.FloorToInt(pos));
 
-        //Vector2 change = (Vector2Int)_wallTilemap.WorldToCell(pos);
-        //change.x += 0.5f;
-        //change.y += 0.5f;
-
-        return change;
-    }
+    private Vector2 CellPos(Vector2 pos) => 
+        _wallTilemap.GetCellCenterWorld(Vector3Int.FloorToInt(pos));
 
     private void Init()
     {
         _openList.Clear();
-        _closedList.Clear();
+        _openDict.Clear();
+        _closedSet.Clear();
         _nodeManager.Init();
     }
 

@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 315338376463560120}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 22.04, y: -15.01, z: 0}
+  m_LocalPosition: {x: -1.14, y: -11.66, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -574,7 +574,7 @@ Transform:
   m_GameObject: {fileID: 5557283538315291736}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15.29, y: -0.33, z: 0}
+  m_LocalPosition: {x: 17.68, y: 10.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -686,12 +686,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Monster
   _monsterData: {fileID: 11400000, guid: 7671038e83694cc4eb2bec024be9c4e8, type: 2}
   _wallTilemap: {fileID: 6908162673671313679}
+  _patrolTarget:
+  - {fileID: 7598693174964845109}
+  - {fileID: 7967898895106548914}
   <View>k__BackingField: {fileID: 3162374863481624826}
   AttackEffect: {fileID: 3913412838696352892, guid: e2e661ebf21a15d4e8b50513701a79ab, type: 3}
   <Att>k__BackingField: 1
   <AttRange>k__BackingField: 4
-  targetPos1: {fileID: 7598693174964845109}
-  targetPos2: {fileID: 7967898895106548914}
 --- !u!1 &5983427550593173687
 GameObject:
   m_ObjectHideFlags: 0
@@ -14935,7 +14936,7 @@ Transform:
   m_GameObject: {fileID: 7591493486006820595}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.82, y: 9.5, z: 0}
+  m_LocalPosition: {x: 7.87, y: 9.58, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
