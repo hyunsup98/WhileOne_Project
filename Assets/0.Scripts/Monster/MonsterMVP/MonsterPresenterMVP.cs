@@ -1,72 +1,74 @@
-//using UnityEngine;
-//using UnityEngine.Tilemaps;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Tilemaps;
+using static UnityEngine.GraphicsBuffer;
 
-//public class MonsterPresenterMVP : Monster
-//{
 
-//    public MonsterModelMVP Model { get; private set; }  // 현재 몬스터 데이터 보관한 Model
 
-//    public MonsterViewMVP View { get; private set; }
+public class MonsterPresenterMVP
+{
 
-//    // 추후 지워야 할 목록
-//    public GameObject AttackEffect;
-//    public float Att { get; private set; } = 10f;
-//    public float AttRange { get; private set; } = 5f;
-//    public IAttack Attack { get; private set; }
+    public MonsterModelMVP Model { get; private set; }  // 현재 몬스터 데이터 보관한 Model
 
-//    public MonsterPresenterMVP(MonsterDataSO monsterData, MonsterViewMVP monsterView, Tilemap wallTilmap)
-//    {
-//        Model = new MonsterModelMVP(monsterData, this);
-//        View = monsterView;
+    public MonsterViewMVP View { get; private set; }
 
-//        // 경로 탐색으로 순찰 포인트 초기화
-//        Model.MobAstar = new Astar(wallTilmap);
-//        Model.PatrolPoint = Model.MobAstar.Pathfinder
-//            (
-//            Model.PatrolTarget[0].position,
-//            Model.PatrolTarget[1].position
-//            );
+    // 추후 지워야 할 목록
+    public GameObject AttackEffect;
+    public float Att { get; private set; } = 10f;
+    public float AttRange { get; private set; } = 5f;
+    public IAttack Attack { get; private set; }
 
-//        // 공격 세팅
-//        Attack = new ProtoAttack(this);
-//    }
+    public MonsterPresenterMVP
+        (
+        MonsterDataSO monsterData,
+        MonsterViewMVP monsterView,
+        Tilemap wallTilmap,
+        List<Transform> patrolTarget
+        )
+    {
+        View = monsterView;
+        Model = new MonsterModelMVP(monsterData, patrolTarget);
+        
 
-//    public void OnUpdate()
-//    {
-//        Model.CurrentState.Update();
-//    }
+        // 경로 탐색으로 순찰 포인트 초기화
+        Model.MobAstar = new Astar(wallTilmap);
+        Model.PatrolPoint = Model.MobAstar.Pathfinder
+            (
+            patrolTarget[0].position,
+            patrolTarget[1].position
+            );
 
-//    public void OnMove(Vector2 target, float speed)
-//    {
-//        OnTurn(target);
 
-//        transform.position = Vector2.MoveTowards
-//            (
-//            transform.position,
-//            target,
-//            speed * Time.deltaTime
-//            );
-//    }
+        AttackEffect = View.AttackEffect;
+        // 공격 세팅
+        Attack = new ProtoAttack(this);
 
-//    // 타겟의 방향으로 몸을 돌리는 로직
-//    public void OnTurn(Vector2 target)
-//    {
-//        Vector2 dir = target - (Vector2)transform.position;
-//        Vector2 dirX = new Vector2(dir.x, 0f).normalized;
-//        if (dirX.x != 0f)
-//            transform.localScale = new Vector3(dirX.x, 1f, 1f);
-//    }
 
-//    // target방향으로 LOS를 발사했을 때, 플레이어와 직선 거리에 존재시에 true 반환
-//    public RaycastHit2D OnLOS(Vector2 target)
-//    {
-//        Vector2 start = transform.position;
-//        Vector2 dir = target - start;
 
-//        int layerMask = LayerMask.GetMask("Wall", "Player");
-//        RaycastHit2D hit = Physics2D.Raycast(start, dir, Model.Sight, layerMask);
+        // 상태 패턴 세팅
+        Model.StateList = new Dictionary<MonsterState, IState>();
+        Model.StateList.Add(MonsterState.Patrol, new Patrol(this));
+        Model.StateList.Add(MonsterState.Chase, new Chase(this));
+        Model.StateList.Add(MonsterState.Search, new Search(this));
+        Model.StateList.Add(MonsterState.Attack, new MonsterAttack(this));
+        Model.StateList.Add(MonsterState.BackReturn, new BackReturn(this));
+        Model.CurrentState = Model.StateList[MonsterState.Patrol];
+    }
 
-//        return hit;
-//    }
 
-//}
+    public void Tick()
+    {
+        Model.CurrentState.Update();
+    }
+
+
+    public RaycastHit2D OnLOS(Vector2 target, float sight, int layerMask)
+    {
+        return View.OnLOS(target, sight, layerMask);
+    }
+
+    public void StartCoroutine(IEnumerator coroutine) => View.StartCoroutine(coroutine);
+
+
+}

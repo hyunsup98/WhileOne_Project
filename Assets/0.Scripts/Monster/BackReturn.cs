@@ -3,16 +3,18 @@ using UnityEngine;
 
 public class BackReturn : IState
 {
-    private Monster _monster;
+    private MonsterPresenterMVP _monster;
+    private Transform _myTransform;
     private float _speed;
     private Astar _astar;
     private int _backReturnIndex;
     private List<Transform> _patrolTarget;          // 되돌아갈 순찰 포인트
     private List<Vector2> _backReturnPoint;         // 탐색한 경로를 저장
 
-    public BackReturn(Monster monster)
+    public BackReturn(MonsterPresenterMVP monster)
     {
         _monster = monster;
+        _myTransform = monster.View.transform;
         _speed = monster.Model.MoveSpeed;
         _astar = monster.Model.MobAstar;
         _patrolTarget = _monster.Model.PatrolTarget;
@@ -22,7 +24,7 @@ public class BackReturn : IState
 
     public void Enter()
     {
-        Vector2 start = _monster.transform.position;
+        Vector2 start = _myTransform.position;
         Vector2 target = _patrolTarget[0].position;
         _backReturnPoint = _astar.Pathfinder(start, target);
     }
@@ -42,14 +44,14 @@ public class BackReturn : IState
     {
         Vector2 target = _backReturnPoint[_backReturnIndex];
 
-        _monster.OnMove(target, _speed);
+        _monster.View.OnMove(target, _speed);
 
-        Vector2 monsterPos = _monster.transform.position;
+        Vector2 monsterPos = _myTransform.position;
         if (monsterPos == _backReturnPoint[_backReturnPoint.Count - 1])
-            _monster.SetState(MonsterState.Patrol);
+            _monster.Model.SetState(MonsterState.Patrol);
 
         //target 도달시, 다음 포인트 인덱스로 변경
-        if ((Vector2)_monster.transform.position == target)
+        if ((Vector2)_myTransform.position == target)
             _backReturnIndex++;
     }
 }
