@@ -16,12 +16,11 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private GameObject _effect1;
     [SerializeField] private GameObject _effect2;
 
-    WaitForSeconds _delay;
-    bool _isEffect1 = true; //그냥 토글용 변수
     bool _timer = false;
     float _attSpeed;
     private bool _isAttacking = false;
-
+    bool _isEffect1 = true; //그냥 토글용 변수
+    private bool isUse;
 
     public GameObject Effect1 => _effect1;
     public GameObject Effect2 => _effect2;
@@ -49,19 +48,22 @@ public class PlayerAttack : MonoBehaviour
 
         _attackAtion = _actionMap.FindAction("Attack");
 
-        _attackAtion.performed += Attaking;//입력 받을 때
+        _attackAtion.started += Attaking;//입력 받을 때
+        _attackAtion.started += NotDuplication;
 
         _attackAtion.canceled += ctx => //입력 뗄 때
         {
             _isAttacking = false;
+            isUse = false;
         };
+
         _dig = _player.PlayerDig;
     }
     private void Attaking(InputAction.CallbackContext ctx)
     {
+        
         if (_dig.IsDigging == false)
         {
-
 
             if (_timer) //딜레이 중이면 리턴
             {
@@ -74,19 +76,30 @@ public class PlayerAttack : MonoBehaviour
 
             if (_isEffect1) //첫번째 이펙트 위에서 아래로 쓸기
             {
-                _effect1.SetActive(true);
+                Effect1.SetActive(true);
                 _isEffect1 = false;
-                _timer = true;
+
             }
             else //두번째 이펙트 아래에서 위로 쓸기
             {
-                _effect2.SetActive(true);
+                Effect2.SetActive(true);
                 _isEffect1 = true;
-                _timer = true;
             }
+
+            _timer = true;
+           
         }
+       
     }
-  
+    private void NotDuplication(InputAction.CallbackContext ctx)
+    {
+        
+            StartCoroutine(Delay());
+            
+        
+    }
+
+
     IEnumerator AttackSpeed() //공격 속도 딜레이 코루틴
     {
         Debug.Log($"{_attSpeed}초만큼 딜레이");
@@ -100,6 +113,11 @@ public class PlayerAttack : MonoBehaviour
 
     private void OnDisable()
     {
-        _attackAtion.performed -= Attaking;
+        _attackAtion.started -= Attaking;
+    }
+    IEnumerator Delay()
+    {
+        yield return new WaitForSeconds(0.3f);
+        _isAttacking = false;
     }
 }

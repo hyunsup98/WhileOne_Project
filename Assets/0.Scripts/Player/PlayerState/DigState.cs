@@ -5,6 +5,7 @@ public class DigState : IState
 {
     Player _player;
     PlayerDig _dig;
+    Animator _animator;
    
 
     public bool _isDigging;
@@ -17,7 +18,7 @@ public class DigState : IState
 
         _dig = _player.PlayerDig;
 
-        
+        _animator = _player.Animator;
     }
    
     public void Enter() //이 상태면 이속 절반
@@ -28,6 +29,7 @@ public class DigState : IState
     public void Exit() //상태 나가면 이속 원래대로
     {
         _player.MoveSpeed *= 2;
+        _animator.SetBool("isDig", false);
     }
 
     public void Update()

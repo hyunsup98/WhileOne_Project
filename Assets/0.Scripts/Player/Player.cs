@@ -29,21 +29,25 @@ public class Player : MonoBehaviour
     private IState moveCurrentState;
     private IState actionCurrentState;
 
+    //이벤트 관련 변수
     public event Action<float,float> _onHpChanged;
     public event Action<float,float> _onStaminaChanged;
 
+    //코루틴 변수
     private WaitForSeconds _delay;
     private WaitForSeconds _blinkTime;
-
     [SerializeField] float time = 0.12f;
-    float _finsihTime  = 0.7f;
-    float _checkTime = 0;
-    SortingGroup _group;
+    private float _finsihTime  = 0.7f;
+    private float _checkTime = 0;
+    
+    //레이어 관련 변수
+    private SortingGroup _group;
 
     //상태에서 사용할 스크립트
-    [SerializeField] PlayerAttack _attackAction;
+    [SerializeField] private PlayerAttack _attackAction;
     PlayerMovement _playerMove;
     PlayerDig _playerDig;
+    Animator _animator;
 
     //외부에서 사용할 프로퍼티
     public float Hp => _hp;
@@ -77,6 +81,11 @@ public class Player : MonoBehaviour
         get { return _playerDig; }
         set { _playerDig = value; }
     }
+    public Animator Animator
+    {
+        get { return _animator; }
+        set { _animator = value; }
+    }
 
     private void Awake()
     {
@@ -91,6 +100,7 @@ public class Player : MonoBehaviour
         _playerDig = GetComponent<PlayerDig>();
         _input = GetComponent<PlayerInput>();
         _rg2d = GetComponent<Rigidbody2D>();
+        _animator = transform.GetChild(0).GetComponent<Animator>();
 
     }
     void Start()
@@ -177,17 +187,11 @@ public class Player : MonoBehaviour
         _isDamage = true;
         ChangedHealth -= damage;
         Debug.Log(_hp);
-        KnockBack(target);
+        StartCoroutine(KnockBack(target));
         StartCoroutine(Blink());
     }
 
-    void KnockBack(Vector2 target) //몬스터를 타겟으로 받습니다. 인자값 수정해주세요
-    {
-        int dirx = transform.position.x - target.x > 0 ? 1 : -1;
-        int diry = transform.position.y - target.y > 0 ? 1 : -1;
-        _rg2d.linearVelocityX = dirx * 0.7f;
-        _rg2d.linearVelocityY = diry * 0.7f;
-    }
+    
     
     public void RestoreStamina()
     {
@@ -245,6 +249,15 @@ public class Player : MonoBehaviour
         _isDamage = false;
         yield return null;
 
+    }
+    IEnumerator KnockBack(Vector2 target) //몬스터를 타겟으로 받습니다. 인자값 수정해주세요
+    {
+        int dirx = transform.position.x - target.x > 0 ? 1 : -1;
+        int diry = transform.position.y - target.y > 0 ? 1 : -1;
+        _rg2d.linearVelocityX = dirx * 1f;
+        _rg2d.linearVelocityY = diry * 1f;
+        yield return new WaitForSeconds(0.5f);
+        _rg2d.linearVelocity = Vector2.zero;
     }
 
     private void OnDisable()
