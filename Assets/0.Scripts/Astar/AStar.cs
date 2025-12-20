@@ -58,7 +58,6 @@ public class Astar
                 // _openDict에 이웃 노드 정보가 없으면 이웃 노드 생성 및 추가
                 if (!_openDict.TryGetValue(neighborPos, out Node neighborNode))
                 {
-                    Debug.LogWarning("A스타 경로 탐색" + startCellPos);
                     neighborNode = _nodeManager.GetNode
                     (
                     neighborPos,
@@ -100,8 +99,8 @@ public class Astar
 
         path.Reverse();
 
-        //foreach (var a in path)
-        //    Debug.Log("최적 경로 노드: " + a);
+        foreach (var a in path)
+            Debug.Log("최적 경로 노드: " + a);
 
         Init();
         return path;

@@ -5,16 +5,18 @@ using UnityEngine;
 
 public class Search : IState
 {
-    private Monster _monster;
+    private MonsterPresenterMVP _monster;
+    private Transform _myTransform;
     private float _sight;
     private Vector2 _targetPos;
     private float _maxAngle = 20;
     private int _searchTime = 30;
-    private MonsterView _view;
+    private MonsterViewMVP _view;
 
-    public Search(Monster monster)
+    public Search(MonsterPresenterMVP monster)
     {
         _monster = monster;
+        _myTransform = monster.View.transform;
         _sight = monster.Model.MoveSpeed;
         _view = monster.View;
     }
@@ -23,7 +25,7 @@ public class Search : IState
     public void Enter()
     {
         _targetPos = _monster.Model.Target.position;
-        _monster.StartCoroutine(UpdateLOS(_monster.transform.position, _targetPos));
+        _monster.StartCoroutine(UpdateLOS(_myTransform.position, _targetPos));
         _view.OnIdleAni();
     }
 
@@ -60,8 +62,8 @@ public class Search : IState
 
                 if (hit.collider.gameObject.layer == playerLayer)
                 {
-                    _monster.SetTarget(hit.transform);
-                    _monster.SetState(MonsterState.Chase);
+                    _monster.Model.SetTarget(hit.transform);
+                    _monster.Model.SetState(MonsterState.Chase);
                     yield break;
                 }
             }
@@ -71,6 +73,6 @@ public class Search : IState
         }
 
         if (_searchTime <= 0)
-            _monster.SetState(MonsterState.BackReturn);
+            _monster.Model.SetState(MonsterState.BackReturn);
     }
 }

@@ -5,7 +5,8 @@ using UnityEngine;
 public class ProtoAttack : IAttack
 {
     private GameObject _attackPrefab;
-    private Monster _monster;
+    private MonsterPresenterMVP _monster;
+    private Transform _myTransform;
     private Vector2 _target;
     private float _attackSpeed = 7f;
     private GameObject _attackObj;
@@ -14,9 +15,10 @@ public class ProtoAttack : IAttack
 
     public bool IsAttack { get; private set; }
 
-    public ProtoAttack(Monster monster)
+    public ProtoAttack(MonsterPresenterMVP monster)
     {
         _monster = monster;
+        _myTransform = monster.View.transform;
         _attackPrefab = monster.AttackEffect;
     }
 
@@ -29,22 +31,22 @@ public class ProtoAttack : IAttack
         _attackObj = GameObject.Instantiate
             (
             _attackPrefab,
-            _monster.transform.position,
+            _myTransform.position,
             Quaternion.identity,
-            _monster.transform
+            _myTransform
             );
 
         _attackEffect = _attackObj.GetComponent<AttackEffect>();
         _attackEffect.OnAttack += OnCrash;
 
-        _target = (_target - (Vector2)_monster.transform.position).normalized;
+        _target = (_target - (Vector2)_myTransform.position).normalized;
     }
 
     public void OnAttack()
     {
         _attackTime += Time.unscaledDeltaTime;
 
-        Vector2 start = _monster.transform.position;
+        Vector2 start = _myTransform.position;
         int layerMask = LayerMask.GetMask("Wall");
         RaycastHit2D hit = Physics2D.Raycast(start, _target, 0.5f, layerMask);
 
@@ -58,7 +60,7 @@ public class ProtoAttack : IAttack
             return;
         else
         {
-            _monster.transform.Translate(_target * Time.deltaTime * _attackSpeed);
+            _myTransform.Translate(_target * Time.deltaTime * _attackSpeed);
         }
 
     }
@@ -80,7 +82,7 @@ public class ProtoAttack : IAttack
         {
             Player player = collision.GetComponent<Player>();
 
-            player.TakenDamage(_monster.Att, _monster.transform.position);
+            player.TakenDamage(_monster.Att, _myTransform.position);
             Debug.Log("<color=red>테이크 데미지</color>");
             Debug.Log(player.Hp);
         }

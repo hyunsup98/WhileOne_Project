@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class MonsterAttack : IState
 {
-    private Monster _monster;
-    private MonsterView _view;
+    private MonsterPresenterMVP _monster;
+    private MonsterViewMVP _view;
     private IAttack _attack;
     private float _attackReadyTime = 1.5f;
     private bool _isAttackStart;
 
-    public MonsterAttack(Monster monster)
+    public MonsterAttack(MonsterPresenterMVP monster)
     {
         _monster = monster;
         _view = monster.View;
@@ -43,7 +43,7 @@ public class MonsterAttack : IState
 
         if (!_attack.IsAttack)
         {
-            _monster.SetState(MonsterState.Chase);
+            _monster.Model.SetState(MonsterState.Chase);
         }
     }
 

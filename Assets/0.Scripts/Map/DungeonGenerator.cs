@@ -100,7 +100,7 @@ public class DungeonGenerator : MonoBehaviour
     private Dictionary<Vector2Int, GameObject> corridors; // 복도 오브젝트
     private Tilemap corridorTilemap; // 복도용 Tilemap (Tilemap 방식 사용 시)
 
-    [SerializeField] private Monster monster;
+    [SerializeField] private MonsterPresenterMVP monster;
     
     private void Start()
     {
