@@ -49,8 +49,8 @@ public class PlayerDig : MonoBehaviour
         {
             tileCursor.gameObject.SetActive(false);
             test.SetActive(false);
-            GameManager.Instance.CurrentDungeon._tileManager.Dig(cursorPos);
             _isDigging = false;
+            GameManager.Instance.CurrentDungeon._tileManager.Dig(cursorPos);
         };
         _attack = _player.PlayerAttack;
     }

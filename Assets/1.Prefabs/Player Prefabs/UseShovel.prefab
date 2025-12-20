@@ -103,8 +103,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51f39f3d10c59ee4284e93229549d198, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
-  _effect1: {fileID: 5977391792085109959, guid: 8b95ac2c10e6893449d0351a855206d1, type: 3}
-  _effect2: {fileID: 5082914850714743240, guid: dd4c224b2d5afe442b5310a16cb5bba9, type: 3}
+  _effect1: {fileID: 0}
+  _effect2: {fileID: 0}
 --- !u!1 &249447194809812547
 GameObject:
   m_ObjectHideFlags: 0
@@ -2000,7 +2000,7 @@ GameObject:
   - component: {fileID: 6475511304828831566}
   - component: {fileID: 4875647573395373011}
   - component: {fileID: 4432484156395506223}
-  - component: {fileID: 964704832268806536}
+  - component: {fileID: 808456578035544522}
   m_Layer: 8
   m_Name: UseShovel
   m_TagString: Player
@@ -5136,7 +5136,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player
   _maxHp: 100
   _maxStamina: 100
-  _moveSpeed: 10
+  _moveSpeed: 3
   _attack: 5
   _attackSpeed: 10
   time: 0.2
@@ -5217,7 +5217,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!61 &964704832268806536
+--- !u!61 &808456578035544522
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5251,7 +5251,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.37}
+  m_Offset: {x: -0.017504513, y: 0.39910343}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -5261,7 +5261,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.49, y: 0.67}
+  m_Size: {x: 0.5588857, y: 0.8039492}
   m_EdgeRadius: 0
 --- !u!1 &4350439502986678144
 GameObject:
@@ -5760,7 +5760,7 @@ Animator:
   m_GameObject: {fileID: 4907960998979128360}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: e9358c226bb09e24da9c5f7064768810, type: 2}
+  m_Controller: {fileID: 9100000, guid: 010ee582a809aff4f850e929bf6bbcba, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
