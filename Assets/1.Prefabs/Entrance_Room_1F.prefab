@@ -257,7 +257,7 @@ GameObject:
   - component: {fileID: 6074996344575544727}
   - component: {fileID: 5792521620499151978}
   m_Layer: 0
-  m_Name: Door_East
+  m_Name: Door_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5636,7 +5636,7 @@ GameObject:
   - component: {fileID: 1481014377681712123}
   - component: {fileID: 7196069521615594007}
   m_Layer: 0
-  m_Name: Door_West
+  m_Name: Door_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5820,7 +5820,7 @@ GameObject:
   - component: {fileID: 442940471190082025}
   - component: {fileID: 3064743216883832707}
   m_Layer: 0
-  m_Name: Door_North
+  m_Name: Door_Up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6188,7 +6188,7 @@ GameObject:
   - component: {fileID: 2572890254995142345}
   - component: {fileID: 4158872535104203035}
   m_Layer: 0
-  m_Name: Door_South
+  m_Name: Door_Down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

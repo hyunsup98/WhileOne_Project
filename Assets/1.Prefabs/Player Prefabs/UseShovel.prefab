@@ -103,8 +103,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51f39f3d10c59ee4284e93229549d198, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
-  _effect1: {fileID: 0}
-  _effect2: {fileID: 0}
+  _effect1: {fileID: 5977391792085109959, guid: 8b95ac2c10e6893449d0351a855206d1, type: 3}
+  _effect2: {fileID: 5082914850714743240, guid: dd4c224b2d5afe442b5310a16cb5bba9, type: 3}
 --- !u!1 &249447194809812547
 GameObject:
   m_ObjectHideFlags: 0
@@ -1607,7 +1607,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4703368205314125819}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1999,8 +1999,8 @@ GameObject:
   - component: {fileID: 6090921389041934258}
   - component: {fileID: 6475511304828831566}
   - component: {fileID: 4875647573395373011}
-  - component: {fileID: 4432484156395506223}
   - component: {fileID: 808456578035544522}
+  - component: {fileID: 6098639447216804011}
   m_Layer: 8
   m_Name: UseShovel
   m_TagString: Player
@@ -5139,6 +5139,7 @@ MonoBehaviour:
   _moveSpeed: 3
   _attack: 5
   _attackSpeed: 10
+  _rg2d: {fileID: 6098639447216804011}
   time: 0.2
   _attackAction: {fileID: 8888813578194253905}
 --- !u!114 &6475511304828831566
@@ -5184,39 +5185,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerDig
   _isDigging: 0
-  test: {fileID: 0}
+  test: {fileID: 6823875298443514270, guid: 682cfaa39fdab174f9284398ca302175, type: 3}
   offSet: 0.5
   pivotTrans: {fileID: 4703368205314125819}
   tileCursor: {fileID: 3658747494255264244}
   blue: {r: 0.45882353, g: 0.8901961, b: 1, a: 0.19607843}
   red: {r: 1, g: 0.53333336, b: 0.47843137, a: 0.19607843}
---- !u!50 &4432484156395506223
-Rigidbody2D:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4329574107018779310}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 4
 --- !u!61 &808456578035544522
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5227,7 +5201,7 @@ BoxCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 8716ba90e3b1232449ceceed101dba8a, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -5263,6 +5237,33 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.5588857, y: 0.8039492}
   m_EdgeRadius: 0
+--- !u!50 &6098639447216804011
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4329574107018779310}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &4350439502986678144
 GameObject:
   m_ObjectHideFlags: 0

@@ -44,7 +44,7 @@ public class ProtoAttack : IAttack
 
     public void OnAttack()
     {
-        _attackTime += Time.unscaledDeltaTime;
+        _attackTime += Time.deltaTime;
 
         Vector2 start = _myTransform.position;
         int layerMask = LayerMask.GetMask("Wall");
@@ -71,20 +71,15 @@ public class ProtoAttack : IAttack
         _attackEffect.Init();
     }
 
-
     private void OnCrash(Collider2D collision)
     {
         int playerLayer = LayerMask.NameToLayer("Player");
         int wallLayer = LayerMask.NameToLayer("Wall");
-        Debug.Log("접촉 대상" + collision.gameObject.name);
 
         if (collision.gameObject.layer == playerLayer)
         {
             Player player = collision.GetComponent<Player>();
-
             player.TakenDamage(_monster.Att, _myTransform.position);
-            Debug.Log("<color=red>테이크 데미지</color>");
-            Debug.Log(player.Hp);
         }
     }
 }

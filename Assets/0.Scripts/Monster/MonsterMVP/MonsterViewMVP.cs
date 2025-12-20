@@ -67,4 +67,9 @@ public class MonsterViewMVP : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(start, dir, sight, layer);
         return hit;
     }
+
+    public void OnDead()
+    {
+        Destroy(gameObject);
+    }
 }

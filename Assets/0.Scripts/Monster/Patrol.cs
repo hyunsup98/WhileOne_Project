@@ -38,7 +38,6 @@ public class Patrol : IState
     private void OnPatrol()
     {
         Vector2 target = _patrolPoint[_patrolIndex];
-        Debug.Log("타겟" + target);
 
         _monster.View.OnMove(target, _speed);
 

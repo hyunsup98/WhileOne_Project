@@ -26,8 +26,10 @@ public class MonsterModelMVP
     public IState CurrentState { get; set; }
     public Dictionary<MonsterState, IState> StateList { get; set; }
 
+    private MonsterViewMVP view;
 
-    public MonsterModelMVP(MonsterDataSO monsterData, List<Transform> patrolTarget)
+
+    public MonsterModelMVP(MonsterDataSO monsterData, List<Transform> patrolTarget, MonsterViewMVP view)
     {
         _hp = monsterData.Hp;
         MonsterID = monsterData.MonsterID;
@@ -37,30 +39,30 @@ public class MonsterModelMVP
         Sight = monsterData.Sight;
         ActionList = monsterData.ActionList;
         PatrolTarget = patrolTarget;
+        this.view = view;
     }
 
 
     public void SetState(MonsterState state)
     {
-        Debug.Log("이전 상태: " + CurrentState);
-
         CurrentState?.Exit();
         CurrentState = StateList[state];
         CurrentState.Enter();
-
-        Debug.Log("현재 상태: " + CurrentState);
     }
 
     public void SetTarget(Transform target) => Target = target;
 
     public void TakeDamage(float damage)
     {
-        //View.OnHurtAni();
+        view.OnHurtAni();
         Hp -= damage;
         Debug.Log("몬스터HP" + Hp);
-
-        //if (Hp <= 0f)
-        //    View.OnDeathAni();
+        
+        if (Hp <= 0f)
+        {
+            view.OnDead();
+            //view.OnDeathAni();        //죽는 애니메이션 재생
+        }
     }
 }
 

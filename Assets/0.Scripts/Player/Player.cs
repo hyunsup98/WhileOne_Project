@@ -14,6 +14,8 @@ public class Player : MonoBehaviour
     [SerializeField] private int _attack = 5;
     [SerializeField] private int _attackSpeed = 4;
 
+    [SerializeField] private Rigidbody2D _rg2d;
+
     private float _hp;
     private float _stamina;
 
@@ -23,7 +25,6 @@ public class Player : MonoBehaviour
     InputActionMap _actionMap;
 
     Vector3 _mousePosition;
-    Rigidbody2D _rg2d;
 
     //현재 상태를 담을 인터페이스 변수
     private IState moveCurrentState;
@@ -99,7 +100,6 @@ public class Player : MonoBehaviour
         _playerMove = GetComponent<PlayerMovement>();
         _playerDig = GetComponent<PlayerDig>();
         _input = GetComponent<PlayerInput>();
-        _rg2d = GetComponent<Rigidbody2D>();
         _animator = transform.GetChild(0).GetComponent<Animator>();
 
     }
@@ -186,7 +186,6 @@ public class Player : MonoBehaviour
     {
         _isDamage = true;
         ChangedHealth -= damage;
-        Debug.Log(_hp);
         StartCoroutine(KnockBack(target));
         StartCoroutine(Blink());
     }

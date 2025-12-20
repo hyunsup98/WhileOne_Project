@@ -28,7 +28,7 @@ public class MonsterPresenterMVP
         )
     {
         View = monsterView;
-        Model = new MonsterModelMVP(monsterData, patrolTarget);
+        Model = new MonsterModelMVP(monsterData, patrolTarget, View);
         
 
         // 경로 탐색으로 순찰 포인트 초기화
