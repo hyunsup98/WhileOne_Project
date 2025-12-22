@@ -35,9 +35,9 @@ public class ActionIdleState : IState
         {
             _player.ActionState(new DigState(_player));
         }
-        if(_player.IsDamaged == true)
-        {
-            _player.ActionState(new DamageState(_player));
-        }
+        //if(_player.IsDamaged == true)
+        //{
+        //    _player.ActionState(new DamageState(_player));
+        //}
     }
 }

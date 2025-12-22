@@ -22,7 +22,7 @@ public class PlayerDash : MonoBehaviour
 
     private void Awake()
     {
-        obj = transform.GetChild(2).GetComponent<AfterimagePool>();
+        //obj = transform.GetChild(2).GetComponent<AfterimagePool>();
         _playerMovement = GetComponent<PlayerMovement>();
         _player = GetComponent<Player>();
         _rd2D = GetComponent<Rigidbody2D>();
@@ -41,12 +41,15 @@ public class PlayerDash : MonoBehaviour
 
     private void OnDash(InputAction.CallbackContext ctx)
     {
+        Debug.Log("대쉬");
         StartCoroutine(Dash());
     }
     IEnumerator Dash()
     {
+        Debug.Log("땅파기안했음");
         if (!_dig.IsDigging && !_player.Stop.Action)
         {
+            Debug.Log("ㅁㄴㅇㄹ");
             _rd2D.linearVelocity = _playerMovement.Move.normalized * _dashForce;
             yield return new WaitForSeconds(_dashTime);
             //obj.Take();

@@ -4981,6 +4981,10 @@ PrefabInstance:
       propertyPath: _rg2d
       value: 
       objectReference: {fileID: 860721907}
+    - target: {fileID: 6090921389041934258, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
+      propertyPath: _moveSpeed
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 6098639447216804011, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
       propertyPath: m_Constraints
       value: 4
@@ -5076,7 +5080,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4329574107018779310, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 860721908}
   m_SourcePrefab: {fileID: 100100000, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
 --- !u!4 &860721904 stripped
 Transform:
@@ -5098,6 +5105,20 @@ Rigidbody2D:
   m_CorrespondingSourceObject: {fileID: 6098639447216804011, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
   m_PrefabInstance: {fileID: 860721903}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &860721908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 860721906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98a57d9858fa195458c4130f0a9cfdca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDash
+  _dashForce: 10
+  _dashTime: 0.1
 --- !u!1 &886082057
 GameObject:
   m_ObjectHideFlags: 0
