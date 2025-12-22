@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class MonsterTest : MonoBehaviour
 {
-    [SerializeField] Player _player;
+    [SerializeField] Blink _player;
 
     int _layer;
    
@@ -10,7 +10,7 @@ public class MonsterTest : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            _player.TakenDamage(10,gameObject.transform.position);
+            //_player.TakenDamage(10,gameObject.transform.position);
         }
     }
 }

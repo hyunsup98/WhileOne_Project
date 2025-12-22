@@ -10,12 +10,13 @@ public class WeaponRotation : MonoBehaviour
     [SerializeField] private float min;
     [SerializeField] private float angleSpeed = 5f;
 
+
     //회전값을 저장
     private float currentAngle;
-   
 
     void Update()
     {
+       
         //마우스 좌표값을 월드 좌표값으로 변환
         _mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 
@@ -42,20 +43,13 @@ public class WeaponRotation : MonoBehaviour
             }
             else
                 transform.rotation = Quaternion.Euler(0, 0, max);
-            
+
 
         }
         else if (transform.rotation.eulerAngles.z <= min && transform.rotation.eulerAngles.z > 255)
         {
             transform.rotation = Quaternion.Euler(0, 0, min);
         }
-        //if(transform.rotation.eulerAngles.z < 180+min && transform.rotation.eulerAngles.z>180)
-        //{
-        //    transform.rotation = Quaternion.Euler(0, 0, 180 + min);
-        //}
-        //else if(transform.rotation.eulerAngles.z < 180 + max && transform.rotation.eulerAngles.z < 360)
-        //{
-        //    transform.rotation = Quaternion.Euler(0, 0, 180+ max);
-        //}
+       
     }
 }

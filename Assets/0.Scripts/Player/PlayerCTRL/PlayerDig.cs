@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -12,7 +13,6 @@ public class PlayerDig : MonoBehaviour
     private InputAction _digAction;
     public bool _isDigging;
 
-
     [SerializeField] GameObject test;
     [SerializeField] float offSet;
 
@@ -20,7 +20,7 @@ public class PlayerDig : MonoBehaviour
 
     Vector3 _mousePosition;
     Vector3 dir;
-    Vector3 cursorPos = Vector3.zero;       //타일 커서 벡터값
+    Vector3 cursorPos = Vector3.zero;  //타일 커서 벡터값
 
     public GameObject Test => test;
     public float OffSet => offSet;
@@ -36,7 +36,7 @@ public class PlayerDig : MonoBehaviour
     private void Awake()
     {
         _player = GetComponent<Player>();
-        _input = GetComponent<PlayerInput>(); 
+        _input = GetComponent<PlayerInput>();
 
     }
     void Start()
@@ -56,11 +56,12 @@ public class PlayerDig : MonoBehaviour
     }
     void Dig(InputAction.CallbackContext ctx)
     {
-        if (!_attack.IsAttacking)
+
+        if (!_attack.IsAttacking )
         {
             tileCursor.gameObject.SetActive(true);
             test.SetActive(true);
-             _isDigging = true;
+            _isDigging = true;
 
         }
     }
@@ -108,7 +109,6 @@ public class PlayerDig : MonoBehaviour
         cursorPos = new Vector3(cursorPos.x + 0.5f, cursorPos.y + 0.5f, 0f);
         CheckTileCursor();
     }
-
     public void CheckTileCursor()
     {
         if (GameManager.Instance.CurrentDungeon == null || !_isDigging) return;
@@ -117,4 +117,7 @@ public class PlayerDig : MonoBehaviour
         tileCursor.color = GameManager.Instance.CurrentDungeon._tileManager.CanDig(cursorPos)
             ? blue : red;
     }
+   
+
+
 }

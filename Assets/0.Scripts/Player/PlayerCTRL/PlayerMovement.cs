@@ -1,8 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
-using UnityEngine.Windows;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -13,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     PlayerInput _playerInput;
     InputActionMap _actionMap;
     InputAction _moveAction;
+
 
     //리짓바디, 방향 관련"
     Vector2 _dir;
@@ -31,10 +30,12 @@ public class PlayerMovement : MonoBehaviour
     {
         _player = GetComponent<Player>();
        
+
+
         //playerRigid = GetComponent<Rigidbody>();
 
     }
-    private void Start() 
+    private void Start()
     {
 
         _playerInput = _player.Playerinput;
@@ -47,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
 
         _moveAction.canceled += OnStopped;
     }
-   
+
     void OnMove(InputAction.CallbackContext ctx)
     {
         _dir = ctx.ReadValue<Vector2>();
@@ -55,8 +56,17 @@ public class PlayerMovement : MonoBehaviour
     }
     private void OnStopped(InputAction.CallbackContext ctx)
     {
-
         Move = Vector3.zero;
     }
+    private void Update()
+    {
+        if (_player.Stop.Action)
+        {
+            _dir = Vector2.zero;
+            return;
+        }
 
+        _player.transform.Translate(_player.MoveSpeed * Time.deltaTime * Move);
+
+    }
 }
