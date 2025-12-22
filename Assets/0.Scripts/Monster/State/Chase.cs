@@ -6,7 +6,7 @@ using UnityEngine;
 // 어택 레인지 리펙토링 필요
 public class Chase : IState
 {
-    private MonsterPresenterMVP _monster;
+    private MonsterPresenter _monster;
     private Transform _myTransform;
     private float _speed;
     private float _attRange;
@@ -17,7 +17,7 @@ public class Chase : IState
     private float _sight;              // LOS판정을 위한 시야 거리
     private Coroutine _pathfinder;          // 경로재탐색 제어를 위한 코루틴
 
-    public Chase(MonsterPresenterMVP monster)
+    public Chase(MonsterPresenter monster)
     {
         _monster = monster;
         _myTransform = monster.View.transform;

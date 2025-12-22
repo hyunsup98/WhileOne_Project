@@ -125,14 +125,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 3789408753425000989}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef30dfb41869595458240829c7c80428, type: 3}
+  m_Script: {fileID: 11500000, guid: cf7ea998ec743d5429fd2e638a7c6ac6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Monster
   _monsterData: {fileID: 11400000, guid: 7671038e83694cc4eb2bec024be9c4e8, type: 2}
   _wallTilemap: {fileID: 0}
-  _patrolTarget:
-  - {fileID: 0}
-  - {fileID: 0}
+  _patrolTarget: []
   AttackEffect: {fileID: 3913412838696352892, guid: e2e661ebf21a15d4e8b50513701a79ab, type: 3}
 --- !u!61 &5230112735198013445
 BoxCollider2D:
@@ -171,8 +169,8 @@ BoxCollider2D:
   m_Offset: {x: 0.024533033, y: 0.6076021}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.23}
-    oldSize: {x: 6.875, y: 3}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.5625, y: 1.25}
     newSize: {x: 1.5625, y: 1.25}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

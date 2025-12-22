@@ -2,16 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using static UnityEngine.GraphicsBuffer;
 
 
 
-public class MonsterPresenterMVP
+public class MonsterPresenter
 {
 
-    public MonsterModelMVP Model { get; private set; }  // 현재 몬스터 데이터 보관한 Model
+    public MonsterModel Model { get; private set; }  // 현재 몬스터 데이터 보관한 Model
 
-    public MonsterViewMVP View { get; private set; }
+    public MonsterView View { get; private set; }
+
+    private bool _isHit;
+    private bool _isDeath;
 
     // 추후 지워야 할 목록
     public GameObject AttackEffect;
@@ -19,16 +21,17 @@ public class MonsterPresenterMVP
     public float AttRange { get; private set; } = 5f;
     public IAttack Attack { get; private set; }
 
-    public MonsterPresenterMVP
+    // 생성자
+    public MonsterPresenter
         (
         MonsterDataSO monsterData,
-        MonsterViewMVP monsterView,
+        MonsterView monsterView,
         Tilemap wallTilmap,
         List<Transform> patrolTarget
         )
     {
         View = monsterView;
-        Model = new MonsterModelMVP(monsterData, patrolTarget, View);
+        Model = new MonsterModel(monsterData, patrolTarget);
         
 
         // 경로 탐색으로 순찰 포인트 초기화
@@ -57,9 +60,14 @@ public class MonsterPresenterMVP
     }
 
 
+    // 업데이트로 전달하는 내용
     public void Tick()
     {
-        Model.CurrentState.Update();
+        _isHit = View.GetPlayingAni().IsName("Hurt");
+
+
+        if (!_isHit && !_isDeath)
+            Model.CurrentState.Update();
     }
 
 
@@ -68,7 +76,32 @@ public class MonsterPresenterMVP
         return View.OnLOS(target, sight, layerMask);
     }
 
+    public void OnHit(float Damage)
+    {
+        if(!_isHit)
+            _isHit = true;
+
+        View.OnHurtAni();
+        Model.TakeDamage(Damage);
+
+        if(Model.Hp <= 0)
+            View.StartCoroutine(OnDead());
+    }
+
+    // 죽음 애니메이션 호출
+    public IEnumerator OnDead()
+    {
+        _isDeath = true;
+        View.OnDeathAni();
+        while (View.GetPlayingAni().normalizedTime < 0.5f)
+            yield return null;
+
+        yield return CoroutineManager.waitForSeconds(0.5f);
+        float destroyTime = View.GetPlayingAni().length;
+
+        View.RequestDestroy(destroyTime + 1f);
+
+    }
+
     public void StartCoroutine(IEnumerator coroutine) => View.StartCoroutine(coroutine);
-
-
 }

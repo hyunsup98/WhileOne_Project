@@ -3,7 +3,7 @@ using UnityEngine;
 
 
 
-public class MonsterModelMVP
+public class MonsterModel
 {
     private float _hp;
 
@@ -26,10 +26,8 @@ public class MonsterModelMVP
     public IState CurrentState { get; set; }
     public Dictionary<MonsterState, IState> StateList { get; set; }
 
-    private MonsterViewMVP view;
 
-
-    public MonsterModelMVP(MonsterDataSO monsterData, List<Transform> patrolTarget, MonsterViewMVP view)
+    public MonsterModel(MonsterDataSO monsterData, List<Transform> patrolTarget)
     {
         _hp = monsterData.Hp;
         MonsterID = monsterData.MonsterID;
@@ -39,7 +37,6 @@ public class MonsterModelMVP
         Sight = monsterData.Sight;
         ActionList = monsterData.ActionList;
         PatrolTarget = patrolTarget;
-        this.view = view;
     }
 
 
@@ -54,15 +51,8 @@ public class MonsterModelMVP
 
     public void TakeDamage(float damage)
     {
-        view.OnHurtAni();
         Hp -= damage;
         Debug.Log("몬스터HP" + Hp);
-        
-        if (Hp <= 0f)
-        {
-            view.OnDead();
-            //view.OnDeathAni();        //죽는 애니메이션 재생
-        }
     }
 }
 

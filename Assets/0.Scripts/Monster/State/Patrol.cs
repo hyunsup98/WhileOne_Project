@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Patrol : IState
 {
-    private MonsterPresenterMVP _monster;
+    private MonsterPresenter _monster;
     private Transform _myTransform;
     private float _speed;
     private float _sight;
@@ -11,7 +11,7 @@ public class Patrol : IState
     private int _patrolIndex;
     private bool _isRise = true;        // 순찰인덱스 방향 true: 0 -> 끝 , false: 끝 -> 0
 
-    public Patrol(MonsterPresenterMVP monster)
+    public Patrol(MonsterPresenter monster)
     {
         _monster = monster;
         _myTransform = _monster.View.transform;

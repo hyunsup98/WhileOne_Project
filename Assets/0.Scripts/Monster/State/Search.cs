@@ -5,15 +5,15 @@ using UnityEngine;
 
 public class Search : IState
 {
-    private MonsterPresenterMVP _monster;
+    private MonsterPresenter _monster;
     private Transform _myTransform;
     private float _sight;
     private Vector2 _targetPos;
     private float _maxAngle = 20;
     private int _searchTime = 30;
-    private MonsterViewMVP _view;
+    private MonsterView _view;
 
-    public Search(MonsterPresenterMVP monster)
+    public Search(MonsterPresenter monster)
     {
         _monster = monster;
         _myTransform = monster.View.transform;

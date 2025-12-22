@@ -5,7 +5,7 @@ using UnityEngine;
 public class ProtoAttack : IAttack
 {
     private GameObject _attackPrefab;
-    private MonsterPresenterMVP _monster;
+    private MonsterPresenter _monster;
     private Transform _myTransform;
     private Vector2 _target;
     private float _attackSpeed = 7f;
@@ -15,7 +15,7 @@ public class ProtoAttack : IAttack
 
     public bool IsAttack { get; private set; }
 
-    public ProtoAttack(MonsterPresenterMVP monster)
+    public ProtoAttack(MonsterPresenter monster)
     {
         _monster = monster;
         _myTransform = monster.View.transform;

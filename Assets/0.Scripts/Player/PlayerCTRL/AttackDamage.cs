@@ -13,9 +13,9 @@ public class AttackDamage : MonoBehaviour
     {
         if(collision.CompareTag("Monster"))
         {
-            if(collision.TryGetComponent<MonsterViewMVP>(out var monster))
+            if(collision.TryGetComponent<MonsterView>(out var monster))
             {
-                monster.Presenter.Model.TakeDamage(25f);
+                monster.Presenter.OnHit(25f);
             }
         }
     }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class BackReturn : IState
 {
-    private MonsterPresenterMVP _monster;
+    private MonsterPresenter _monster;
     private Transform _myTransform;
     private float _speed;
     private Astar _astar;
@@ -11,7 +11,7 @@ public class BackReturn : IState
     private List<Transform> _patrolTarget;          // 되돌아갈 순찰 포인트
     private List<Vector2> _backReturnPoint;         // 탐색한 경로를 저장
 
-    public BackReturn(MonsterPresenterMVP monster)
+    public BackReturn(MonsterPresenter monster)
     {
         _monster = monster;
         _myTransform = monster.View.transform;

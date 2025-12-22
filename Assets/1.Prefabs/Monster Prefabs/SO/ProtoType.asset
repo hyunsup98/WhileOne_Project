@@ -16,7 +16,6 @@ MonoBehaviour:
   _name: "\uD504\uB85C\uD1A0\uD0C0\uC785"
   _tier: 0
   _hp: 100
-  _moveSpeed: 4
-  _sight: 5
+  _moveSpeed: 2.5
+  _sight: 3
   _actionList: 
-  _patrolTarget: []
