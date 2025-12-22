@@ -18,11 +18,12 @@ public class MonsterModel
 
     public float MoveSpeed { get; set; }
     public float Sight { get; set; }
+    public float SightAngle { get; set; }
     public List<int> ActionList { get; set; }
     public List<Transform> PatrolTarget {  get; set; }  // 순찰 할 지점 저장
     public List<Vector2> PatrolPoint { get; set; }      // 순찰 경로 저장
     public Astar MobAstar { get; set; }
-    public Transform Target { get; set; }
+    public Transform ChaseTarget { get; set; }
     public IState CurrentState { get; set; }
     public Dictionary<MonsterState, IState> StateList { get; set; }
 
@@ -35,6 +36,7 @@ public class MonsterModel
         Tier = monsterData.Tier;
         MoveSpeed = monsterData.MoveSpeed;
         Sight = monsterData.Sight;
+        SightAngle = Mathf.Cos(monsterData.SightAngle * Mathf.Deg2Rad);
         ActionList = monsterData.ActionList;
         PatrolTarget = patrolTarget;
     }
@@ -47,7 +49,7 @@ public class MonsterModel
         CurrentState.Enter();
     }
 
-    public void SetTarget(Transform target) => Target = target;
+    public void SetTarget(Transform target) => ChaseTarget = target;
 
     public void TakeDamage(float damage)
     {

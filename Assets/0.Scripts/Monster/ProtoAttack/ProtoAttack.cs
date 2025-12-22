@@ -25,7 +25,7 @@ public class ProtoAttack : IAttack
 
     public void StartAttack()
     {
-        _target = _monster.Model.Target.position;
+        _target = _monster.Model.ChaseTarget.position;
         IsAttack = true;
 
         _attackObj = GameObject.Instantiate

@@ -13,6 +13,7 @@ public class MonsterDataSO : ScriptableObject
     [SerializeField] private float _hp;
     [SerializeField] private float _moveSpeed;
     [SerializeField] private float _sight = 5;
+    [SerializeField] private float _sightAngle = 90;
 
     [Tooltip("몬스터의 행동 리스트")]
     [SerializeField] private List<int> _actionList;
@@ -25,5 +26,6 @@ public class MonsterDataSO : ScriptableObject
     public float Hp => _hp;
     public float MoveSpeed => _moveSpeed;
     public float Sight => _sight;
+    public float SightAngle => _sightAngle;
     public List<int> ActionList => _actionList;
 }

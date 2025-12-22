@@ -31,7 +31,7 @@ public class Chase : IState
 
     public void Enter() 
     {
-        _target = _monster.Model.Target;
+        _target = _monster.Model.ChaseTarget;
     }
 
     public void Exit() 
@@ -44,7 +44,7 @@ public class Chase : IState
 
         OnChase();
 
-        UpdateLOS(_target.position);
+        UpdateLOS();
     }
 
 
@@ -62,21 +62,17 @@ public class Chase : IState
     }
 
     // LOS 판정
-    private void UpdateLOS(Vector2 target)
+    private void UpdateLOS()
     {
-        int playerLayer = LayerMask.NameToLayer("Player");
-        RaycastHit2D hit = _monster.OnLOS(target, _sight, playerLayer);
-
-        if (hit.collider != null && hit.collider.gameObject.layer != playerLayer)
+        if (!_monster.OnSight())
         {
             Debug.LogWarning("<color=blue>탐색모드 실행</color>" + _pathfinder);
             _monster.Model.SetState(MonsterState.Search);
         }
 
-
         // 레이 시각표현용 임시 코드
         Vector2 start = (Vector2)_myTransform.position;
-        Vector2 dir = target - start;
+        Vector2 dir = (Vector2)_monster.Model.ChaseTarget.position - start;
         Debug.DrawRay(start, dir.normalized * _sight, Color.yellow);
     }
 }

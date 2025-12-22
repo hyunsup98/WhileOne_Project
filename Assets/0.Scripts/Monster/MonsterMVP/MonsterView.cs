@@ -18,7 +18,8 @@ public class MonsterView : MonoBehaviour
 
     private void Awake()
     {
-        Presenter = new MonsterPresenter(_monsterData, this, _wallTilemap, _patrolTarget);
+        Presenter = new MonsterPresenter
+            (_monsterData, this, _wallTilemap, _patrolTarget);
         _animator = GetComponent<Animator>();
     }
 
@@ -26,6 +27,11 @@ public class MonsterView : MonoBehaviour
     public void OnTest()
     {
         Presenter.OnHit(15);
+    }
+
+    private void Start()
+    {
+        Presenter.OnStart();
     }
 
     private void Update()
@@ -65,13 +71,14 @@ public class MonsterView : MonoBehaviour
     }
 
     // target방향으로 LOS를 발사했을 때, 플레이어와 직선 거리에 존재시에 true 반환
-    public RaycastHit2D OnLOS(Vector2 target, float sight, int layerMask)
+    public RaycastHit2D OnLOS(Vector2 target, float sight)
     {
         Vector2 start = transform.position;
         Vector2 dir = target - start;
 
-        int layer = LayerMask.GetMask("Wall", "Player");
-        RaycastHit2D hit = Physics2D.Raycast(start, dir, sight, layer);
+        int layerMask = LayerMask.GetMask("Wall", "Player");
+        RaycastHit2D hit = Physics2D.Raycast(start, dir, sight, layerMask);
+
         return hit;
     }
 

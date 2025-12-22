@@ -37,6 +37,8 @@ public class BackReturn : IState
     public void Update()
     {
         OnBackReturn();
+
+        UpdateLOS();
     }
 
     // 탐색 후에 플레이어를 찾지 못하면 순찰 포인트로 되돌아가는 메서드
@@ -54,4 +56,11 @@ public class BackReturn : IState
         if ((Vector2)_myTransform.position == target)
             _backReturnIndex++;
     }
+
+    private void UpdateLOS()
+    {
+        if (_monster.OnSight())
+            _monster.Model.SetState(MonsterState.Chase);
+    }
+
 }

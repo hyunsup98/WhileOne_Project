@@ -59,6 +59,11 @@ public class MonsterPresenter
         Model.CurrentState = Model.StateList[MonsterState.Patrol];
     }
 
+    public void OnStart()
+    {
+        Model.SetTarget(GameObject.FindWithTag("Player").transform);
+    }
+
 
     // 업데이트로 전달하는 내용
     public void Tick()
@@ -70,11 +75,38 @@ public class MonsterPresenter
             Model.CurrentState.Update();
     }
 
-
-    public RaycastHit2D OnLOS(Vector2 target, float sight, int layerMask)
+    // 몬스터 시야각에 플레이어가 들어왔는지 판단 후 LOS 발사
+    public bool OnSight()
     {
-        return View.OnLOS(target, sight, layerMask);
+        Vector2 dir = Model.ChaseTarget.position - View.transform.position;
+
+        Vector2 frontal = new Vector2(View.transform.localScale.x, 0).normalized;
+
+        Vector2 taget = dir.normalized * Model.Sight;
+        Debug.DrawRay(View.transform.position, taget, Color.blue);
+        
+
+        // 몬스터와의 타겟의 거리가 가시 거리에 들어오는지 판단
+        if (Vector2.SqrMagnitude(dir) > Model.Sight * Model.Sight)
+            return false;
+
+        // 내적으로 시야각에 포착됐는지 판단
+        float dot = Vector2.Dot(dir.normalized, frontal);
+
+        if (dot < Model.SightAngle)
+            return false;
+
+        // LOS를 발사해 적중한 게 Player라면 true 반환
+        int playerLayer = LayerMask.NameToLayer("Player");
+        RaycastHit2D hit = View.OnLOS(Model.ChaseTarget.position, Model.Sight);
+
+        if (hit.collider.gameObject.layer != playerLayer)
+            return false;
+
+        return true;
+
     }
+
 
     public void OnHit(float Damage)
     {
@@ -100,7 +132,6 @@ public class MonsterPresenter
         float destroyTime = View.GetPlayingAni().length;
 
         View.RequestDestroy(destroyTime + 1f);
-
     }
 
     public void StartCoroutine(IEnumerator coroutine) => View.StartCoroutine(coroutine);

@@ -18,4 +18,6 @@ MonoBehaviour:
   _hp: 100
   _moveSpeed: 2.5
   _sight: 3
+  _chaseTarget: {fileID: 345697463390390132, guid: b6c908f7607c1a54a9407a5c040d9021, type: 3}
+  _sightAngle: 90
   _actionList: 
