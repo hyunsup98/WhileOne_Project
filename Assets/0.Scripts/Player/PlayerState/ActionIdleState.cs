@@ -28,14 +28,11 @@ public class ActionIdleState : IState
     {
         if(_attack.IsAttacking == true)
         {
-            Debug.Log("공격 전환");
             _animator.SetBool("isAttack", true);
             _player.ActionState(new AttackState(_player));
         }
         if (_dig.IsDigging == true)
         {
-            Debug.Log("땅파기 전환");
-            _animator.SetBool("isDig", true);
             _player.ActionState(new DigState(_player));
         }
         if(_player.IsDamaged == true)

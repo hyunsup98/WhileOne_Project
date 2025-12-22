@@ -12,7 +12,7 @@ public class WeaponRotation : MonoBehaviour
 
     //회전값을 저장
     private float currentAngle;
-   
+
 
     void Update()
     {
@@ -42,7 +42,7 @@ public class WeaponRotation : MonoBehaviour
             }
             else
                 transform.rotation = Quaternion.Euler(0, 0, max);
-            
+
 
         }
         else if (transform.rotation.eulerAngles.z <= min && transform.rotation.eulerAngles.z > 255)

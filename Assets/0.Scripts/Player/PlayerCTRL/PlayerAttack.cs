@@ -93,16 +93,12 @@ public class PlayerAttack : MonoBehaviour
     }
     private void NotDuplication(InputAction.CallbackContext ctx)
     {
-        
-            StartCoroutine(Delay());
-            
-        
+        StartCoroutine(Delay());
     }
 
 
     IEnumerator AttackSpeed() //공격 속도 딜레이 코루틴
     {
-        Debug.Log($"{_attSpeed}초만큼 딜레이");
         yield return new WaitForSeconds(_attSpeed);
         _timer = false;
     }

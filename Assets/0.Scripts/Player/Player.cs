@@ -186,7 +186,6 @@ public class Player : MonoBehaviour
     {
         _isDamage = true;
         ChangedHealth -= damage;
-        Debug.Log(_hp);
         StartCoroutine(KnockBack(target));
         StartCoroutine(Blink());
     }
@@ -250,7 +249,7 @@ public class Player : MonoBehaviour
         yield return null;
 
     }
-    IEnumerator KnockBack(Vector2 target) //몬스터를 타겟으로 받습니다. 인자값 수정해주세요
+    IEnumerator KnockBack(Vector2 target)
     {
         int dirx = transform.position.x - target.x > 0 ? 1 : -1;
         int diry = transform.position.y - target.y > 0 ? 1 : -1;

@@ -5714,6 +5714,7 @@ GameObject:
   - component: {fileID: 6556896868152485762}
   - component: {fileID: 1117383380203097495}
   - component: {fileID: 3642252984853493166}
+  - component: {fileID: 5702264617188040040}
   m_Layer: 8
   m_Name: UnitRoot
   m_TagString: Untagged
@@ -5772,6 +5773,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5702264617188040040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4907960998979128360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0ededbadcab89a47b1bfc03ca6d3232, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MoveStopAnimation
 --- !u!1 &5113456714470151829
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,6 +13,8 @@ public class PlayerMovement : MonoBehaviour
     PlayerInput _playerInput;
     InputActionMap _actionMap;
     InputAction _moveAction;
+    MoveStopAnimation _stop;
+
 
     //리짓바디, 방향 관련"
     Vector2 _dir;
@@ -30,11 +32,13 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         _player = GetComponent<Player>();
-       
+        _stop = transform.GetChild(0).GetComponent<MoveStopAnimation>();
+
+
         //playerRigid = GetComponent<Rigidbody>();
 
     }
-    private void Start() 
+    private void Start()
     {
 
         _playerInput = _player.Playerinput;
@@ -47,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
 
         _moveAction.canceled += OnStopped;
     }
-   
+
     void OnMove(InputAction.CallbackContext ctx)
     {
         _dir = ctx.ReadValue<Vector2>();
@@ -55,8 +59,17 @@ public class PlayerMovement : MonoBehaviour
     }
     private void OnStopped(InputAction.CallbackContext ctx)
     {
-
         Move = Vector3.zero;
     }
+    private void Update()
+    {
+        if (_stop.Action)
+        {
+            _dir = Vector2.zero;
+            return;
+        }
 
+        _player.transform.Translate(Move * Time.deltaTime * _player.MoveSpeed);
+
+    }
 }

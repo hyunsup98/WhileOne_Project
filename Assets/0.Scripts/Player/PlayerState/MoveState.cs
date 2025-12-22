@@ -20,30 +20,28 @@ public class MoveState : IState
         _player = player;
 
         _playerMovement = _player.PlayerMove;
-        
+
         _animator = _player.Animator;
     }
 
     public void Enter()
     {
-       
+
     }
 
     public void Exit()
     {
-       _animator.SetBool("isMoving", false);
+        _animator.SetBool("isMoving", false);
     }
 
     public void Update()
     {
-        _player.transform.Translate(_playerMovement.Move * Time.deltaTime * _player.MoveSpeed);
         _animator.SetBool("isMoving", true);
-        
+
         if (_playerMovement.Move == Vector3.zero)
         {
             _player.MoveState(new IdleState(_player));
-            Debug.Log("∏ÿ√„ªÛ≈¬ ¿¸»Ø");
         }
     }
-   
+
 }

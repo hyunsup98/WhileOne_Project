@@ -5110,7 +5110,7 @@ MonoBehaviour:
   showCorridorLabels: 0
   corridorLabelOffsetY: 0.2
   roomLabelFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-  monster: {fileID: 3867641718593240911, guid: f7b3578d53e9d8344bbf0198c98575e2, type: 3}
+  monster: {fileID: 0}
 --- !u!1 &925626713
 GameObject:
   m_ObjectHideFlags: 0
@@ -8276,10 +8276,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: UseShovel
       objectReference: {fileID: 0}
-    - target: {fileID: 4875647573395373011, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
-      propertyPath: test
-      value: 
-      objectReference: {fileID: 8791466451667248734, guid: b0714c75412dff34ba8597942c7fde5a, type: 3}
     - target: {fileID: 9078672956431459521, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

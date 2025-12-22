@@ -13,7 +13,7 @@ public class IdleState : IState
     }
     public void Enter()
     {
-       
+
     }
 
     public void Exit()
@@ -28,7 +28,6 @@ public class IdleState : IState
         if (_playerMovement.Move != Vector3.zero)
         {
             _player.MoveState(new MoveState(_player));
-            Debug.Log("이동상태 전환");
         }
 
     }

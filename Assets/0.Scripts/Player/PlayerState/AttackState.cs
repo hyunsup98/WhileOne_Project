@@ -28,11 +28,9 @@ public class AttackState : IState
 
     public void Update()
     {
-       
 
        if (_attack.IsAttacking == false)
        {
-            Debug.Log("일반으로 전환");
             _player.ActionState(new ActionIdleState(_player));
        }
     }

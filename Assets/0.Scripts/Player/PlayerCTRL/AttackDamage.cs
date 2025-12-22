@@ -11,8 +11,6 @@ public class AttackDamage : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.layer == LayerMask.NameToLayer("Monster"))
-        Debug.Log("몬스터와 격돌");
-
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Monster")) ;
     }
 }
