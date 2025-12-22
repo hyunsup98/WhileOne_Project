@@ -5,7 +5,7 @@ using UnityEngine;
 /// </summary>
 public class ExitZoneTrigger : MonoBehaviour
 {
-    [SerializeField] [Tooltip("이 ExitZone이 속한 ExitRoom (비워두면 부모에서 자동으로 찾습니다)")]
+    [SerializeField] [Tooltip("이 ExitZone이 속한 ExitRoom")]
     private ExitRoom exitRoom;
 
     private void Awake()

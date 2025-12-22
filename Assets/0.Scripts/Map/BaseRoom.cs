@@ -54,10 +54,10 @@ public class BaseRoom : MonoBehaviour
         }
         UpdateDoors();
     }
-    
+
     /// <summary>
     /// Door 오브젝트를 찾습니다.
-    /// Door 컨테이너의 자식으로 Door_Up, Door_Down, Door_Left, Door_Right를 찾습니다.
+    /// Door 컨테이너의 자식으로 Door_North, Door_South, Door_West, Door_East를 찾습니다.
     /// </summary>
     protected void FindDoors()
     {
@@ -83,19 +83,19 @@ public class BaseRoom : MonoBehaviour
         {
             string childName = child.name;
             
-            if (childName.Contains("Up") || childName.EndsWith("_Up"))
+            if (childName.Contains("North") || childName.EndsWith("_North"))
             {
                 doors[Direction.Up] = child.gameObject;
             }
-            else if (childName.Contains("Down") || childName.EndsWith("_Down"))
+            else if (childName.Contains("South") || childName.EndsWith("_South"))
             {
                 doors[Direction.Down] = child.gameObject;
             }
-            else if (childName.Contains("Left") || childName.EndsWith("_Left"))
+            else if (childName.Contains("West") || childName.EndsWith("_West"))
             {
                 doors[Direction.Left] = child.gameObject;
             }
-            else if (childName.Contains("Right") || childName.EndsWith("_Right"))
+            else if (childName.Contains("East") || childName.EndsWith("_East"))
             {
                 doors[Direction.Right] = child.gameObject;
             }

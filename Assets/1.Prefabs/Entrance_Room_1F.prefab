@@ -171,8 +171,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1485902094766885545}
   - component: {fileID: 2859676890898842891}
-  - component: {fileID: -6782383993222708802}
-  - component: {fileID: 7016331624954525410}
+  - component: {fileID: 6019409335205269225}
+  - component: {fileID: -1101002615159372710}
   m_Layer: 0
   m_Name: Entrance_Room_1F
   m_TagString: Untagged
@@ -199,7 +199,7 @@ Transform:
   - {fileID: 2076168673533453088}
   - {fileID: 3094221188033386229}
   - {fileID: 8721587062327749134}
-  - {fileID: 5097212720078990326}
+  - {fileID: 3455684179315565265}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!156049354 &2859676890898842891
@@ -214,22 +214,7 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
---- !u!114 &-6782383993222708802
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4474050308984926237}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 098f00216fa940042a63b43de2baba97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RoomController
-  floorTileMap: {fileID: 6052733454294142852, guid: 455047b7d12f15241b41c37d6d4c897b, type: 3}
-  digSpotTileMap: {fileID: 2697818354413696627, guid: 455047b7d12f15241b41c37d6d4c897b, type: 3}
-  afterDigTile: {fileID: 11400000, guid: d66babbdaada9ee488f89618e97995f1, type: 2}
---- !u!114 &7016331624954525410
+--- !u!114 &6019409335205269225
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -244,6 +229,21 @@ MonoBehaviour:
   roomSize: 15
   tileSize: 1
   usePrefabAsIs: 1
+--- !u!114 &-1101002615159372710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4474050308984926237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 098f00216fa940042a63b43de2baba97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomController
+  floorTileMap: {fileID: 6052733454294142852}
+  digSpotTileMap: {fileID: 1718942876602534588}
+  afterDigTile: {fileID: 11400000, guid: 3d27f42032428844c9ac032667277538, type: 2}
 --- !u!1 &4593993758655215412
 GameObject:
   m_ObjectHideFlags: 0
@@ -256,7 +256,7 @@ GameObject:
   - component: {fileID: 6074996344575544727}
   - component: {fileID: 5792521620499151978}
   m_Layer: 0
-  m_Name: Door_Right
+  m_Name: Door_East
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5635,7 +5635,7 @@ GameObject:
   - component: {fileID: 1481014377681712123}
   - component: {fileID: 7196069521615594007}
   m_Layer: 0
-  m_Name: Door_Left
+  m_Name: Door_West
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5819,7 +5819,7 @@ GameObject:
   - component: {fileID: 442940471190082025}
   - component: {fileID: 3064743216883832707}
   m_Layer: 0
-  m_Name: Door_Up
+  m_Name: Door_North
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6187,7 +6187,7 @@ GameObject:
   - component: {fileID: 2572890254995142345}
   - component: {fileID: 4158872535104203035}
   m_Layer: 0
-  m_Name: Door_Down
+  m_Name: Door_South
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8021,7 +8021,7 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
---- !u!1001 &9009523879193186329
+--- !u!1001 &1459627790790170942
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -8078,8 +8078,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ebbfd28f10c403b48bf664bd9613ef15, type: 3}
---- !u!4 &5097212720078990326 stripped
+--- !u!4 &3455684179315565265 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4302254643152206831, guid: ebbfd28f10c403b48bf664bd9613ef15, type: 3}
-  m_PrefabInstance: {fileID: 9009523879193186329}
+  m_PrefabInstance: {fileID: 1459627790790170942}
   m_PrefabAsset: {fileID: 0}

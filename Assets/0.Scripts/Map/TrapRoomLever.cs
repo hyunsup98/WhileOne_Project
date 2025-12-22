@@ -33,7 +33,7 @@ public class TrapRoomLever : Interactable
     /// 플레이어가 E키를 눌러 상호작용할 때 호출되는 실제 동작.
     /// Player 쪽에서는 Interactable.Interact(player) 를 호출해 주면 됩니다.
     /// </summary>
-    protected override void OnInteract(GameObject player)
+    protected override void OnInteract(Player player)
     {
         Debug.Log($"[TrapRoomLever] OnInteract - activated:{activated}, canInteract:{canInteract}");
 

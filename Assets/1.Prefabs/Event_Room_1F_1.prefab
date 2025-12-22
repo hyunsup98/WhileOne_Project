@@ -194,8 +194,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1485902094766885545}
   - component: {fileID: 2859676890898842891}
-  - component: {fileID: -381102312460036881}
-  - component: {fileID: 1824506777207663556}
+  - component: {fileID: 8192589512995064770}
+  - component: {fileID: 6147637960224254468}
   m_Layer: 0
   m_Name: Event_Room_1F_1
   m_TagString: Untagged
@@ -222,7 +222,7 @@ Transform:
   - {fileID: 3860139245138376794}
   - {fileID: 9034448568445850005}
   - {fileID: 7166686379780675273}
-  - {fileID: 6431968570497668715}
+  - {fileID: 725070493694984455}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!156049354 &2859676890898842891
@@ -237,22 +237,7 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
---- !u!114 &-381102312460036881
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4474050308984926237}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 098f00216fa940042a63b43de2baba97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RoomController
-  floorTileMap: {fileID: 6052733454294142852, guid: 455047b7d12f15241b41c37d6d4c897b, type: 3}
-  digSpotTileMap: {fileID: 2697818354413696627, guid: 455047b7d12f15241b41c37d6d4c897b, type: 3}
-  afterDigTile: {fileID: 11400000, guid: d66babbdaada9ee488f89618e97995f1, type: 2}
---- !u!114 &1824506777207663556
+--- !u!114 &8192589512995064770
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -267,6 +252,21 @@ MonoBehaviour:
   roomSize: 15
   tileSize: 1
   usePrefabAsIs: 1
+--- !u!114 &6147637960224254468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4474050308984926237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 098f00216fa940042a63b43de2baba97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomController
+  floorTileMap: {fileID: 6052733454294142852}
+  digSpotTileMap: {fileID: 8431079681925531888}
+  afterDigTile: {fileID: 11400000, guid: 3d27f42032428844c9ac032667277538, type: 2}
 --- !u!1 &4649929659397084723
 GameObject:
   m_ObjectHideFlags: 0
@@ -6981,7 +6981,7 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
---- !u!1001 &7130988882935491972
+--- !u!1001 &3583556919036623592
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -7038,8 +7038,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ebbfd28f10c403b48bf664bd9613ef15, type: 3}
---- !u!4 &6431968570497668715 stripped
+--- !u!4 &725070493694984455 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4302254643152206831, guid: ebbfd28f10c403b48bf664bd9613ef15, type: 3}
-  m_PrefabInstance: {fileID: 7130988882935491972}
+  m_PrefabInstance: {fileID: 3583556919036623592}
   m_PrefabAsset: {fileID: 0}

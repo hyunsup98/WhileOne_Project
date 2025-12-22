@@ -44,7 +44,7 @@ public abstract class Interactable : MonoBehaviour
     /// <summary>
     /// 상호작용을 수행합니다.
     /// </summary>
-    public virtual void Interact(GameObject player)
+    public virtual void Interact(Player player)
     {
         if (!canInteract) return;
         OnInteract(player);
@@ -69,7 +69,7 @@ public abstract class Interactable : MonoBehaviour
     /// <summary>
     /// 상호작용 실행
     /// </summary>
-    protected abstract void OnInteract(GameObject player);
+    protected abstract void OnInteract(Player player);
     
     void OnDrawGizmos()
     {

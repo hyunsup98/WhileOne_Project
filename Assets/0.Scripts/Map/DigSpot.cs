@@ -34,7 +34,7 @@ public class DigSpot : Interactable
     /// <summary>
     /// 플레이어가 E키로 상호작용했을 때의 실제 동작.
     /// </summary>
-    protected override void OnInteract(GameObject player)
+    protected override void OnInteract(Player player)
     {
         if (!canInteract || isDug)
             return;
@@ -71,7 +71,8 @@ public class DigSpot : Interactable
             {
                 float damagePercent = roomController.GetFakeDamagePercent(); // 예: 10 = 10%
                 Debug.Log($"[DigSpot] 플레이어 HP {damagePercent}% 감소.");
-                playerController.AddHpPercent(-damagePercent);
+                //playerController.AddHpPercent(-damagePercent);
+                player.TakenDamage(damagePercent, new Vector2(0,0));
             }
         }
 

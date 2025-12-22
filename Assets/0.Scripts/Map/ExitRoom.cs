@@ -72,6 +72,9 @@ public class ExitRoom : BaseRoom
         // ExitZone 오브젝트인 경우에만 처리
         if (exitZoneObject != null)
         {
+            // 임시로 DungeonGenerator 층 값 증가
+            // TODO: 나중에 DungeonManager나 DataManager에서 층 정보 관리하도록 수정 필요
+            DungeonGenerator.currentFloor++;
             LoadNextScene();
         }
     }

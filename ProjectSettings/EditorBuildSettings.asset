@@ -12,14 +12,23 @@ EditorBuildSettings:
     path: Assets/2.Scenes/TestScene/Prototype/Pro_Dungeon.unity
     guid: c216469879f15d345bfe44de2bee7d91
   - enabled: 1
-    path: Assets/2.Scenes/TestScene/KHY/Pro_Dungeon 2.unity
-    guid: cdc2aacd7de30a54cb659e182280391d
-  - enabled: 1
-    path: Assets/2.Scenes/TestScene/KHY/Pro_Dungeon 3.unity
-    guid: 3b4cd1f64f9fcf645b669f4d8f20b25c
-  - enabled: 1
     path: Assets/2.Scenes/TestScene/Prototype/Pro_DeadEnding.unity
     guid: 06278eebd95610e48bf415480b95959e
+  - enabled: 1
+    path: Assets/2.Scenes/TestScene/KHY/KHY_Pro_Title.unity
+    guid: 722e92a2c1680ac4589337701d2323c5
+  - enabled: 1
+    path: Assets/2.Scenes/TestScene/KHY/KHY_Pro_Dungeon.unity
+    guid: 20eafff778176b74ba186e2ab286738e
+  - enabled: 1
+    path: Assets/2.Scenes/TestScene/KHY/KHY_Pro_Dungeon 1.unity
+    guid: c822353b77c0bca479c77a6289c57603
+  - enabled: 1
+    path: Assets/2.Scenes/TestScene/KHY/KHY_Pro_Dungeon 2.unity
+    guid: 2f46cccfdacb59b4f822f33e0d118fc3
+  - enabled: 1
+    path: Assets/2.Scenes/TestScene/KHY/KHY_Pro_DeadEnding.unity
+    guid: 5f4f9338246c9c44a95966e9b02d468e
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

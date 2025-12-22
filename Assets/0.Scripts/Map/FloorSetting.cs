@@ -1,35 +1,37 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 /// <summary>
-/// Ãş´ç ¹æ ¼³Á¤ Á¤º¸¸¦ ÀúÀåÇÕ´Ï´Ù.
+/// ì¸µë³„ ë°© íƒ€ì… êµ¬ì„±ì„ ì •ì˜í•˜ê³ , ì¸µ ì •ë³´ë¥¼ í¸í•˜ê²Œ ì¡°íšŒí•  ìˆ˜ ìˆë„ë¡ ì œê³µí•˜ëŠ” ìœ í‹¸ë¦¬í‹°.
 /// </summary>
-public class FloorSetting
+public static class FloorSetting
 {
-    // 1Ãş
-    // ¹æ 9°³
-    // ½ÃÀÛ ¹æ 1°³, ÀüÅõ ¹æ 4°³, ÀÌº¥Æ® ¹æ 1°³, º¸¹° ¹æ 1°³, ÇÔÁ¤ ¹æ 1°³, Å»Ãâ ¹æ 1°³
-    // ¹æ Å¸ÀÔ(RoomType enum)°ú °³¼ö¸¦ Ãş¸¶´Ù ÀúÀå
-    public class Floor1
+    /// <summary>
+    /// í•œ ì¸µì— ëŒ€í•œ ì •ë³´(ë°© íƒ€ì… ë°°ì—´ + í¸ì˜ ë©”ì„œë“œ)ë¥¼ ë‹´ëŠ” í´ë˜ìŠ¤.
+    /// </summary>
+    public class FloorInfo
     {
-        // RoomType enum ¹è¿­·Î ¹æ Å¸ÀÔ°ú °³¼ö¸¦ ÀúÀå
-        public RoomType[] rooms = new RoomType[]
-        {
-            RoomType.Start,
-            RoomType.Normal,
-            RoomType.Normal,
-            RoomType.Normal,
-            RoomType.Normal,
-            RoomType.Event,
-            RoomType.Treasure,
-            RoomType.Trap,
-            RoomType.Exit
-        };
+        /// <summary>ì¸µ ë²ˆí˜¸ (1, 2, 3, ...)</summary>
+        public int FloorNumber { get; }
 
-        // ÆÄ¶ó¹ÌÅÍ·Î RoomTypeÀ» ¹Ş¾Æ ÇØ´ç Å¸ÀÔÀÇ ¹æ °³¼ö¸¦ ¹İÈ¯ÇÏ´Â ¸Ş¼­µå
+        /// <summary>ì´ ì¸µì— í¬í•¨ëœ ë°© íƒ€ì… ë°°ì—´ (ìˆœì„œëŠ” ììœ , í•„ìš”ì‹œ ì‚¬ìš©)</summary>
+        public RoomType[] Rooms { get; }
+
+        public FloorInfo(int floorNumber, RoomType[] rooms)
+        {
+            FloorNumber = floorNumber;
+            Rooms = rooms;
+        }
+
+        /// <summary>
+        /// ì´ ì¸µì—ì„œ íŠ¹ì • RoomTypeì´ ëª‡ ê°œ ìˆëŠ”ì§€ ë°˜í™˜.
+        /// </summary>
         public int GetRoomCountWithType(RoomType roomType)
         {
+            if (Rooms == null || Rooms.Length == 0) return 0;
+
             int count = 0;
-            foreach (RoomType type in rooms)
+            foreach (RoomType type in Rooms)
             {
                 if (type == roomType)
                 {
@@ -40,71 +42,100 @@ public class FloorSetting
         }
     }
 
-    // 2Ãş
-    // ¹æ 12°³
-    // ½ÃÀÛ ¹æ 1°³, ÀüÅõ ¹æ 4°³, ÀÌº¥Æ® ¹æ 2°³, º¸¹° ¹æ 1°³, ÇÔÁ¤ ¹æ 3°³, Å»Ãâ ¹æ 1°³
-    public class Floor2
+    /// <summary>
+    /// ì¸µ ë²ˆí˜¸ â†’ FloorInfo ë§¤í•‘ í…Œì´ë¸”.
+    /// </summary>
+    private static readonly Dictionary<int, FloorInfo> floorInfos = new Dictionary<int, FloorInfo>
     {
-        public RoomType[] rooms = new RoomType[]
         {
-            RoomType.Start,
-            RoomType.Normal,
-            RoomType.Normal,
-            RoomType.Normal,
-            RoomType.Normal,
-            RoomType.Event,
-            RoomType.Event,
-            RoomType.Treasure,
-            RoomType.Trap,
-            RoomType.Trap,
-            RoomType.Trap,
-            RoomType.Exit
-        };
-
-        public int GetRoomCountWithType(RoomType roomType)
-        {
-            int count = 0;
-            foreach (RoomType type in rooms)
-            {
-                if (type == roomType)
+            1,
+            new FloorInfo(
+                1,
+                new[]
                 {
-                    count++;
-                }
-            }
-            return count;
+                    RoomType.Start,
+                    RoomType.Normal,
+                    RoomType.Normal,
+                    RoomType.Normal,
+                    RoomType.Normal,
+                    RoomType.Event,
+                    RoomType.Treasure,
+                    RoomType.Trap,
+                    RoomType.Exit
+                })
+        },
+        {
+            2,
+            new FloorInfo(
+                2,
+                new[]
+                {
+                    RoomType.Start,
+                    RoomType.Normal,
+                    RoomType.Normal,
+                    RoomType.Normal,
+                    RoomType.Normal,
+                    RoomType.Normal,
+                    RoomType.Event,
+                    RoomType.Event,
+                    RoomType.Treasure,
+                    RoomType.Trap,
+                    RoomType.Trap,
+                    RoomType.Exit
+                })
+        },
+        {
+            3,
+            new FloorInfo(
+                3,
+                new[]
+                {
+                    RoomType.Start,
+                    RoomType.Normal,
+                    RoomType.Normal,
+                    RoomType.Normal,
+                    RoomType.Normal,
+                    RoomType.Event,
+                    RoomType.Event,
+                    RoomType.Trap,
+                    RoomType.Trap,
+                    RoomType.Boss
+                })
         }
+    };
+
+    /// <summary>
+    /// ì¸µ ë²ˆí˜¸ë¥¼ ë„£ìœ¼ë©´ í•´ë‹¹ ì¸µì˜ ì •ë³´ë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
+    /// - ì •ì˜ë˜ì§€ ì•Šì€ ì¸µì´ë©´ null ì„ ë°˜í™˜í•˜ê³  ê²½ê³  ë¡œê·¸ë¥¼ ë‚¨ê¹ë‹ˆë‹¤.
+    /// </summary>
+    public static FloorInfo GetFloorInfo(int floorNumber)
+    {
+        if (floorInfos.TryGetValue(floorNumber, out FloorInfo info))
+        {
+            return info;
+        }
+
+        Debug.LogWarning($"[FloorSetting] ì •ì˜ë˜ì§€ ì•Šì€ ì¸µ ë²ˆí˜¸ì…ë‹ˆë‹¤: {floorNumber}.");
+        return null;
     }
 
-    // 3Ãş
-    // ¹æ 10°³
-    // ½ÃÀÛ ¹æ 1°³, ÀüÅõ ¹æ 5°³, ÀÌº¥Æ® ¹æ 1°³, º¸¹° ¹æ 1°³, ÇÔÁ¤ ¹æ 1°³, º¸½º ¹æ 1°³
-    public class Floor3
+    /// <summary>
+    /// ì¸µ ë²ˆí˜¸ë¥¼ ë„£ìœ¼ë©´ í•´ë‹¹ ì¸µì˜ ë°© íƒ€ì… ë°°ì—´ì„ ë°”ë¡œ ë°˜í™˜í•©ë‹ˆë‹¤.
+    /// - ì •ì˜ë˜ì§€ ì•Šì€ ì¸µì´ë©´ null ë°˜í™˜.
+    /// </summary>
+    public static RoomType[] GetRooms(int floorNumber)
     {
-        public RoomType[] rooms = new RoomType[]
-        {
-            RoomType.Start,
-            RoomType.Normal,
-            RoomType.Normal,
-            RoomType.Normal,
-            RoomType.Normal,
-            RoomType.Normal,
-            RoomType.Event,
-            RoomType.Treasure,
-            RoomType.Trap,
-            RoomType.Boss
-        };
+        return GetFloorInfo(floorNumber)?.Rooms;
+    }
 
-        public int GetRoomCountWithType(RoomType roomType)
-        {
-            int count = 0;
-            foreach (RoomType type in rooms)
-            {
-                if (type == roomType)
-                {
-                    count++;
-                }
-            }
-            return count;
-        }
+    /// <summary>
+    /// ì¸µ ë²ˆí˜¸ì™€ RoomTypeì„ ë„£ìœ¼ë©´, ê·¸ ì¸µì— í•´ë‹¹ íƒ€ì… ë°©ì´ ëª‡ ê°œ ìˆëŠ”ì§€ ë°˜í™˜í•©ë‹ˆë‹¤.
+    /// - ì •ì˜ë˜ì§€ ì•Šì€ ì¸µì´ë©´ 0 ë°˜í™˜.
+    /// </summary>
+    public static int GetRoomCountWithType(int floorNumber, RoomType roomType)
+    {
+        FloorInfo info = GetFloorInfo(floorNumber);
+        if (info == null) return 0;
+        return info.GetRoomCountWithType(roomType);
     }
 }
