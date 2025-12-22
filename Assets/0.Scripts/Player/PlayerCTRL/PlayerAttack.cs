@@ -62,7 +62,7 @@ public class PlayerAttack : MonoBehaviour
     private void Attaking(InputAction.CallbackContext ctx)
     {
         
-        if (_dig.IsDigging == false)
+        if (_dig.IsDigging == false && !_player.Stop.Action)
         {
 
             if (_timer) //딜레이 중이면 리턴

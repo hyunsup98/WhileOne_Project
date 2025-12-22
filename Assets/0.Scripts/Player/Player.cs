@@ -3,7 +3,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
-using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -47,6 +46,8 @@ public class Player : MonoBehaviour
     [SerializeField] private PlayerAttack _attackAction;
     PlayerMovement _playerMove;
     PlayerDig _playerDig;
+    PlayerDash _dash;
+    MoveStopAnimation _stop;
     Animator _animator;
 
     //외부에서 사용할 프로퍼티
@@ -55,7 +56,7 @@ public class Player : MonoBehaviour
     public int MoveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }
     public int Attack => _attack;
     public int AttackSpeed => _attackSpeed;
-    public bool IsDamaged => _isDamage;
+    public bool IsDamaged { get { return _isDamage; } set { _isDamage = value; } }
     public PlayerInput Playerinput
     {
         get { return _input; }
@@ -81,6 +82,16 @@ public class Player : MonoBehaviour
         get { return _playerDig; }
         set { _playerDig = value; }
     }
+    public PlayerDash PlayerDash
+    {
+        get { return _dash; }
+        set { _dash = value; }
+    }
+    public MoveStopAnimation Stop
+    {
+        get { return _stop; }
+        set { _stop = value; }
+    }
     public Animator Animator
     {
         get { return _animator; }
@@ -100,7 +111,9 @@ public class Player : MonoBehaviour
         _playerDig = GetComponent<PlayerDig>();
         _input = GetComponent<PlayerInput>();
         _rg2d = GetComponent<Rigidbody2D>();
+        _dash = GetComponent<PlayerDash>();
         _animator = transform.GetChild(0).GetComponent<Animator>();
+        _stop = transform.GetChild(0).GetComponent<MoveStopAnimation>();
 
     }
     void Start()
@@ -122,7 +135,7 @@ public class Player : MonoBehaviour
     public float ChangedHealth
     {
         get { return _hp; }
-        private set
+        set
         {
             _hp = Mathf.Clamp(value, 0, _maxHp);
             if(_hp >= 0f)
@@ -156,10 +169,10 @@ public class Player : MonoBehaviour
         moveCurrentState?.Update();
         actionCurrentState?.Update();
 
-        if(Keyboard.current.qKey.wasPressedThisFrame)
-        {
-            TakenDamage(10, Vector2.zero);
-        }
+        //if(Keyboard.current.qKey.wasPressedThisFrame)
+        //{
+        //    TakenDamage(10, Vector2.zero);
+        //}
     }
 
     void PlayerDir()
@@ -182,16 +195,16 @@ public class Player : MonoBehaviour
             transform.localScale = new Vector3(-1, 1, 1);
         }
     }
-    public void TakenDamage(float damage,Vector2 target)
+    public void TakenDamage(float damage, Vector2 target)
     {
-        _isDamage = true;
+        IsDamaged = true;
         ChangedHealth -= damage;
         StartCoroutine(KnockBack(target));
-        StartCoroutine(Blink());
+        //StartCoroutine(Blink());
     }
 
-    
-    
+
+
     public void RestoreStamina()
     {
        if(_stamina <= 99)

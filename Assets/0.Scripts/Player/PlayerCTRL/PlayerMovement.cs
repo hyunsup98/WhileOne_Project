@@ -1,8 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
-using UnityEngine.Windows;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -13,7 +11,6 @@ public class PlayerMovement : MonoBehaviour
     PlayerInput _playerInput;
     InputActionMap _actionMap;
     InputAction _moveAction;
-    MoveStopAnimation _stop;
 
 
     //리짓바디, 방향 관련"
@@ -32,7 +29,7 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         _player = GetComponent<Player>();
-        _stop = transform.GetChild(0).GetComponent<MoveStopAnimation>();
+       
 
 
         //playerRigid = GetComponent<Rigidbody>();
@@ -63,13 +60,13 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Update()
     {
-        if (_stop.Action)
+        if (_player.Stop.Action)
         {
             _dir = Vector2.zero;
             return;
         }
 
-        _player.transform.Translate(Move * Time.deltaTime * _player.MoveSpeed);
+        _player.transform.Translate(_player.MoveSpeed * Time.deltaTime * Move);
 
     }
 }

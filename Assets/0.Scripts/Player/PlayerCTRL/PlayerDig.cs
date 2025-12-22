@@ -57,7 +57,7 @@ public class PlayerDig : MonoBehaviour
     void Dig(InputAction.CallbackContext ctx)
     {
 
-        if (!_attack.IsAttacking)
+        if (!_attack.IsAttacking )
         {
             tileCursor.gameObject.SetActive(true);
             test.SetActive(true);
