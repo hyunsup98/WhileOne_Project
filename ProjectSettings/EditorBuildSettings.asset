@@ -7,10 +7,16 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/2.Scenes/TestScene/Prototype/Pro_Title.unity
-    guid: d57ecd73074a31c4eb8a661ca9169947
+    guid: 6f4f15647900d6245a6b2946fa5835a4
   - enabled: 1
     path: Assets/2.Scenes/TestScene/Prototype/Pro_Dungeon.unity
-    guid: 233707437afe0504a9a419617a8b2699
+    guid: c216469879f15d345bfe44de2bee7d91
+  - enabled: 1
+    path: Assets/2.Scenes/TestScene/KHY/Pro_Dungeon 2.unity
+    guid: cdc2aacd7de30a54cb659e182280391d
+  - enabled: 1
+    path: Assets/2.Scenes/TestScene/KHY/Pro_Dungeon 3.unity
+    guid: 3b4cd1f64f9fcf645b669f4d8f20b25c
   - enabled: 1
     path: Assets/2.Scenes/TestScene/Prototype/Pro_DeadEnding.unity
     guid: 06278eebd95610e48bf415480b95959e

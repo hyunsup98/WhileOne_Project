@@ -136,10 +136,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1485902094766885545}
   - component: {fileID: 2859676890898842891}
-  - component: {fileID: 2859434473534963094}
   - component: {fileID: 6819044329838438699}
-  - component: {fileID: 5094736993672680711}
   - component: {fileID: 2992951426869948794}
+  - component: {fileID: 5842926620653430155}
+  - component: {fileID: 8647403733007037461}
   m_Layer: 0
   m_Name: Trap_Room_1F
   m_TagString: Untagged
@@ -166,7 +166,7 @@ Transform:
   - {fileID: 7261854760957571133}
   - {fileID: 8324708037111300747}
   - {fileID: 8923979550000498883}
-  - {fileID: 4151823893385084459}
+  - {fileID: 5755950919092734271}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!156049354 &2859676890898842891
@@ -181,22 +181,6 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
---- !u!114 &2859434473534963094
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4474050308984926237}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1bca181a574cbd34cabff5ef02b945ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BaseRoom
-  roomSize: 30
-  tileSize: 1
-  usePrefabAsIs: 1
-  trapRoomMazeGeneratorPrefab: {fileID: 0}
 --- !u!114 &6819044329838438699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -210,24 +194,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomController
   floorTileMap: {fileID: 6052733454294142852}
-  digSpotTileMap: {fileID: 0}
-  dugSpotTileMap: {fileID: 0}
---- !u!114 &5094736993672680711
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4474050308984926237}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1bca181a574cbd34cabff5ef02b945ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BaseRoom
-  roomSize: 4
-  tileSize: 1
-  usePrefabAsIs: 0
-  trapRoomMazeGeneratorPrefab: {fileID: 0}
+  digSpotTileMap: {fileID: 2697818354413696627}
+  afterDigTile: {fileID: 0}
 --- !u!114 &2992951426869948794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,6 +208,68 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c762e5997e0018044aeb3c93f040c42a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrapRoomController
+--- !u!114 &5842926620653430155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4474050308984926237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a76c06e83ccb539429806999aec0c71d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrapRoom
+  roomSize: 30
+  tileSize: 1
+  usePrefabAsIs: 1
+  trapRoomMazeGeneratorPrefab: {fileID: 0}
+--- !u!61 &8647403733007037461
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4474050308984926237}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 8.973301, y: -1.0207725}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 29.10685, y: 29.154327}
+  m_EdgeRadius: 0
 --- !u!1 &5005306266959094274
 GameObject:
   m_ObjectHideFlags: 0
@@ -458,7 +488,7 @@ GameObject:
   - component: {fileID: 1716727197664594423}
   - component: {fileID: 20613648095398236}
   m_Layer: 0
-  m_Name: Door_East
+  m_Name: Door_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14086,7 +14116,7 @@ GameObject:
   - component: {fileID: 408498344384493494}
   - component: {fileID: 2790582729375552204}
   m_Layer: 0
-  m_Name: Door_South
+  m_Name: Door_Down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14298,7 +14328,7 @@ GameObject:
   - component: {fileID: 4248890550653855611}
   - component: {fileID: 1029485956630912529}
   m_Layer: 0
-  m_Name: Door_North
+  m_Name: Door_Up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17312,7 +17342,7 @@ GameObject:
   - component: {fileID: 4916123014062631184}
   - component: {fileID: 705193496597650982}
   m_Layer: 0
-  m_Name: Door_West
+  m_Name: Door_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17504,7 +17534,7 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
---- !u!1001 &156095573432124868
+--- !u!1001 &8382767982363259600
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -17522,7 +17552,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4302254643152206831, guid: ebbfd28f10c403b48bf664bd9613ef15, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4302254643152206831, guid: ebbfd28f10c403b48bf664bd9613ef15, type: 3}
       propertyPath: m_LocalPosition.z
@@ -17534,15 +17564,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4302254643152206831, guid: ebbfd28f10c403b48bf664bd9613ef15, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4302254643152206831, guid: ebbfd28f10c403b48bf664bd9613ef15, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4302254643152206831, guid: ebbfd28f10c403b48bf664bd9613ef15, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4302254643152206831, guid: ebbfd28f10c403b48bf664bd9613ef15, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -17561,8 +17591,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ebbfd28f10c403b48bf664bd9613ef15, type: 3}
---- !u!4 &4151823893385084459 stripped
+--- !u!4 &5755950919092734271 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4302254643152206831, guid: ebbfd28f10c403b48bf664bd9613ef15, type: 3}
-  m_PrefabInstance: {fileID: 156095573432124868}
+  m_PrefabInstance: {fileID: 8382767982363259600}
   m_PrefabAsset: {fileID: 0}

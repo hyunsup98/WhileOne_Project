@@ -211,8 +211,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1485902094766885545}
   - component: {fileID: 2859676890898842891}
-  - component: {fileID: -1917944347111053688}
   - component: {fileID: 2042556734040290187}
+  - component: {fileID: -7690237363837739947}
   - component: {fileID: 1287544646992792555}
   m_Layer: 0
   m_Name: Combat_Room_1F_A
@@ -258,22 +258,6 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
---- !u!114 &-1917944347111053688
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4474050308984926237}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1bca181a574cbd34cabff5ef02b945ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BaseRoom
-  roomSize: 30
-  tileSize: 1
-  usePrefabAsIs: 1
-  trapRoomMazeGeneratorPrefab: {fileID: 0}
 --- !u!114 &2042556734040290187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -289,6 +273,21 @@ MonoBehaviour:
   floorTileMap: {fileID: 6052733454294142852}
   digSpotTileMap: {fileID: 2697818354413696627}
   afterDigTile: {fileID: 11400000, guid: 4e61dff2f6448e24789fbca33a654bf0, type: 2}
+--- !u!114 &-7690237363837739947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4474050308984926237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a49ee2a50119ee4db4498ee5d12a24a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NormalRoom
+  roomSize: 30
+  tileSize: 1
+  usePrefabAsIs: 1
 --- !u!61 &1287544646992792555
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -373,7 +373,7 @@ public class DungeonGenerator : MonoBehaviour
                 continue;
             }
             
-            // 공통 기준: Grid 셀 좌표를 사용하여 방 중심을 정렬
+            // 공통 기준: Grid 셀 좌표를 사용하여 "방의 논리적 중심(RoomCenterMarker)"을 정렬
             Vector3Int roomCenterCell = new Vector3Int(position.x * spacingInCells, position.y * spacingInCells, 0);
             Vector3 worldPosition = unityGrid != null
                 ? unityGrid.CellToWorld(roomCenterCell) + cellCenterOffset
@@ -381,6 +381,10 @@ public class DungeonGenerator : MonoBehaviour
             
             // Grid 하위에 생성
             GameObject roomObj = Instantiate(prefab, worldPosition, Quaternion.identity, parent);
+            
+            // RoomCenterMarker가 있다면, 그 위치가 worldPosition에 오도록 전체 방을 오프셋 조정
+            AlignRoomToGridCenter(roomObj, worldPosition);
+            
             room.roomObject = roomObj;
             
             // 방 스크립트에 문 정보 전달
@@ -398,9 +402,28 @@ public class DungeonGenerator : MonoBehaviour
             // 방 타입 텍스트 표시
             if (showRoomTypeLabels)
             {
-                CreateRoomTypeLabel(roomObj, room.roomType, worldPosition);
+                // 실제 방 중심(가능하면 RoomCenterMarker 기준)을 사용
+                Vector3 center = GetRoomWorldCenter(roomObj);
+                CreateRoomTypeLabel(roomObj, room.roomType, center);
             }
         }
+    }
+    
+    /// <summary>
+    /// 방 프리팹을 Grid 셀 중심에 정렬합니다.
+    /// - RoomCenterMarker가 있으면 그 위치를 targetCenter에 맞추고,
+    /// - 없으면 roomObj.transform.position을 기준으로 유지합니다.
+    /// </summary>
+    private void AlignRoomToGridCenter(GameObject roomObj, Vector3 targetCenter)
+    {
+        if (roomObj == null) return;
+
+        // RoomCenterMarker를 우선 사용
+        Transform marker = FindRoomCenterMarker(roomObj);
+        Vector3 currentCenter = marker != null ? marker.position : roomObj.transform.position;
+
+        Vector3 offset = targetCenter - currentCenter;
+        roomObj.transform.position += offset;
     }
     
     /// <summary>

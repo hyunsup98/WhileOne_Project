@@ -109,8 +109,24 @@ public class TrapRoomController : MonoBehaviour
 
     private bool IsPlayer(Collider2D other)
     {
-        // PlayerController 컴포넌트가 있으면 플레이어로 간주
-        return other.GetComponent<PlayerController>() != null;
+        // 1순위: 태그로 빠르게 판별
+        if (other.CompareTag("Player"))
+        {
+            return true;
+        }
+
+        // 2순위: 자신 또는 부모 중에 PlayerController가 있는지 확인
+        if (other.GetComponent<PlayerController>() != null)
+        {
+            return true;
+        }
+
+        if (other.GetComponentInParent<PlayerController>() != null)
+        {
+            return true;
+        }
+
+        return false;
     }
 }
 

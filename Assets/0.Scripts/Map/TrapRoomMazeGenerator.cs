@@ -1529,12 +1529,16 @@ public class TrapRoomMazeGenerator : MonoBehaviour
     public void SetTrapsActive(bool isOn)
     {
         if (trapObjects == null || trapObjects.Count == 0)
+        {
+            Debug.LogWarning($"[TrapRoomMazeGenerator] SetTrapsActive({isOn}) 호출됐지만 trapObjects가 비어 있습니다. 방:{name}");
             return;
+        }
 
         // ON/OFF 프리팹이 모두 설정된 경우: 프리팹 갈아끼우기
         if (trapPrefab != null && trapOffPrefab != null)
         {
             GameObject targetPrefab = isOn ? trapPrefab : trapOffPrefab;
+            Debug.Log($"[TrapRoomMazeGenerator] SetTrapsActive({isOn}) - 프리팹 교체, target:{targetPrefab.name}, count:{trapObjects.Count}");
             for (int i = 0; i < trapObjects.Count; i++)
             {
                 GameObject oldTrap = trapObjects[i];
@@ -1552,6 +1556,7 @@ public class TrapRoomMazeGenerator : MonoBehaviour
         }
         else
         {
+            Debug.Log($"[TrapRoomMazeGenerator] SetTrapsActive({isOn}) - 프리팹 한 종류만 있어 active 토글, count:{trapObjects.Count}");
             // 한 종류의 프리팹만 있는 경우: 활성/비활성 토글만
             foreach (var trap in trapObjects)
             {

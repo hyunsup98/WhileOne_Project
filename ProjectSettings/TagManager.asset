@@ -8,6 +8,7 @@ TagManager:
   - RoomCenterMarker
   - Wall
   - Monster
+  - ExitZone
   layers:
   - Default
   - TransparentFX
