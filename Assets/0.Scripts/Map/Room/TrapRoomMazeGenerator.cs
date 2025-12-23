@@ -1350,6 +1350,7 @@ public class TrapRoomMazeGenerator : MonoBehaviour
                 // 기본 상태는 OFF로 시작: trapOffPrefab이 있으면 OFF 프리팹, 없으면 ON 프리팹 사용
                 GameObject initialTrapPrefab = trapOffPrefab != null ? trapOffPrefab : trapPrefab;
                 GameObject trap = Instantiate(initialTrapPrefab, worldPos, Quaternion.identity, trapsContainer);
+                
                 trapObjects.Add(trap);
                 trapCount++;
             }
@@ -1369,6 +1370,7 @@ public class TrapRoomMazeGenerator : MonoBehaviour
 
                 GameObject initialTrapPrefab = trapOffPrefab != null ? trapOffPrefab : trapPrefab;
                 GameObject trap = Object.Instantiate(initialTrapPrefab, worldPos, Quaternion.identity, trapsContainer);
+                
                 trapObjects.Add(trap);
                 trapCount++;
             }
@@ -1409,6 +1411,7 @@ public class TrapRoomMazeGenerator : MonoBehaviour
 
             GameObject initialTrapPrefab = trapOffPrefab != null ? trapOffPrefab : trapPrefab;
             GameObject trap = Instantiate(initialTrapPrefab, worldPos, Quaternion.identity, trapsContainer);
+            
             trapObjects.Add(trap);
             trapCount++;
         }

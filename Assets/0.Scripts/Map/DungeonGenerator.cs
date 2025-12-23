@@ -188,6 +188,7 @@ public class DungeonGenerator : MonoBehaviour
     }
 
     /// <summary>
+    /// 방 생성 완료 후 처리 (시작 방, 탈출 방, 이벤트 방 지정)
     /// 층별 설정에 따른 방 타입을 지정합니다.
     /// </summary>
     private void SetRooms(FloorInfo floorInfo)
@@ -215,11 +216,16 @@ public class DungeonGenerator : MonoBehaviour
         
         // 방 거리 계산
         Dictionary<Vector2Int, int> distances = DungeonRoomGenerator.CalculateDistancesFrom(dungeonGrid, startRoomPosition);
-        
+
         // 출구 방 지정 (가장 먼 방)
+        // 3층일 경우 출구방 대신 보스방으로 지정
         exitRoomPosition = DungeonRoomGenerator.SelectExitRoom(distances, startRoomPosition);
         var exitRoom = dungeonGrid.GetRoom(exitRoomPosition);
-        if (exitRoom != null) exitRoom.roomType = RoomType.Exit;
+        if (exitRoom != null)
+        {
+            if (floorInfo.FloorNumber == 3) exitRoom.roomType = RoomType.Boss;
+            else exitRoom.roomType = RoomType.Exit;
+        }
 
         // 이벤트 방, 함정 방, 보물 방, 등 기타 특수 방 지정
         Vector2Int startPos = startRoomPosition;
