@@ -1,25 +1,24 @@
 using System.Collections;
-using UnityEngine;
 
-public class MonsterAttack : IState
+public class MonsterAction : IState
 {
     private MonsterPresenter _monster;
     private MonsterView _view;
-    private IAttack _attack;
+    private IAction _action;
     private float _attackReadyTime = 1.5f;
     private bool _isAttackStart;
 
-    public MonsterAttack(MonsterPresenter monster)
+    public MonsterAction(MonsterPresenter monster)
     {
         _monster = monster;
         _view = monster.View;
-        _attack = monster.Attack;
+        _action = monster.Model.ActionDict[ActionID.one];
     }
 
 
     public void Enter()
     {
-        _attack.StartAttack();
+        _action.StartAction();
         _view.OnIdleAni();
         _monster.StartCoroutine(AttackTimer());
     }
@@ -27,7 +26,7 @@ public class MonsterAttack : IState
     public void Exit()
     {
         _isAttackStart = false;
-        _attack.EndAttack();
+        _action.EndAction();
         _view.OnDisIdleAni();
     }
 
@@ -39,9 +38,11 @@ public class MonsterAttack : IState
 
     private void OnAttack()
     {
-        _monster.Attack.OnAttack();
+        //_monster.Attack.OnAction();
 
-        if (!_attack.IsAttack)
+        _monster.Model.ActionDict[ActionID.one].OnAction();
+
+        if (!_action.IsAction)
         {
             _monster.Model.SetState(MonsterState.Chase);
         }

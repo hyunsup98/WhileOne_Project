@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -9,11 +7,8 @@ public class Chase : IState
     private MonsterPresenter _monster;
     private Transform _myTransform;
     private float _speed;
-    private float _attRange;
-    private Astar _astar;
+    private float _ationTrigger;
     private Transform _target;
-    private List<Vector2> _chasePoint;
-    private int _chaseIndex;
     private float _sight;              // LOS판정을 위한 시야 거리
     private Coroutine _pathfinder;          // 경로재탐색 제어를 위한 코루틴
 
@@ -25,8 +20,7 @@ public class Chase : IState
         _sight = monster.Model.MoveSpeed;
 
         //리펙토링 진행해야 함
-        _attRange = monster.AttRange;
-        _astar = monster.Model.MobAstar;
+        _ationTrigger = monster.ActionTrigger;
     }
 
     public void Enter() 
@@ -51,7 +45,7 @@ public class Chase : IState
     private void OnChase()
     {
         Vector3 dir = _target.position - _myTransform.position;
-        if (Vector3.SqrMagnitude(dir) <= _attRange)
+        if (Vector3.SqrMagnitude(dir) <= _ationTrigger)
         {
             _monster.Model.SetState(MonsterState.Attack);
             Debug.LogWarning("<color=red>공격실행</color>");

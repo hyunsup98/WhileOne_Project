@@ -3,6 +3,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "MonsterActionSO", menuName = "MonsterSO/MonsterActionSO")]
 public class MonsterActionSO : ScriptableObject
 {
+    [Header("액션 공통 데이터")]
+
     [SerializeField] private int _monsterActionID;
     [SerializeField] private string _name;
     [SerializeField] private int _monsterID;

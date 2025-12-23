@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 [CreateAssetMenu(fileName = "MonsterDataSO", menuName = "MonsterSO/MonsterDataSO")]
 public class MonsterDataSO : ScriptableObject
@@ -13,10 +12,14 @@ public class MonsterDataSO : ScriptableObject
     [SerializeField] private float _hp;
     [SerializeField] private float _moveSpeed;
     [SerializeField] private float _sight = 5;
+
+    [Header("프로그래밍 중 추가한 필드값")]
     [SerializeField] private float _sightAngle = 90;
+    [SerializeField] private float _searchTime = 3f;
+
 
     [Tooltip("몬스터의 행동 리스트")]
-    [SerializeField] private List<int> _actionList;
+    [SerializeField] private List<MonsterActionSO> _actionList;
 
 
     // 외부 참조 프로퍼티
@@ -27,5 +30,7 @@ public class MonsterDataSO : ScriptableObject
     public float MoveSpeed => _moveSpeed;
     public float Sight => _sight;
     public float SightAngle => _sightAngle;
-    public List<int> ActionList => _actionList;
+    public float SearchTime => _searchTime;
+
+    public List<MonsterActionSO> ActionList => _actionList;
 }

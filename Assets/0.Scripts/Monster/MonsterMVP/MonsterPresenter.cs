@@ -16,10 +16,7 @@ public class MonsterPresenter
     private bool _isDeath;
 
     // 추후 지워야 할 목록
-    public GameObject AttackEffect;
-    public float Att { get; private set; } = 10f;
-    public float AttRange { get; private set; } = 5f;
-    public IAttack Attack { get; private set; }
+    public float ActionTrigger { get; private set; } = 5f;
 
     // 생성자
     public MonsterPresenter
@@ -43,10 +40,17 @@ public class MonsterPresenter
             );
 
 
-        AttackEffect = View.AttackEffect;
-        // 공격 세팅
-        Attack = new ProtoAttack(this);
+        // 몬스터 행동 매칭
+        foreach (var action in monsterData.ActionList)
+        {
+            Model.ActionDict.Add(
+                (ActionID)(action.MonsterActionID % 10),
+                ActionFactory.Create(action, this)
+                );
 
+            Debug.Log("액션ID" + (ActionID)(action.MonsterActionID % 10));
+            Debug.Log("어떤 액션인지" + Model.ActionDict[(ActionID)(action.MonsterActionID % 10)]);
+        }
 
 
         // 상태 패턴 세팅
@@ -54,10 +58,11 @@ public class MonsterPresenter
         Model.StateList.Add(MonsterState.Patrol, new Patrol(this));
         Model.StateList.Add(MonsterState.Chase, new Chase(this));
         Model.StateList.Add(MonsterState.Search, new Search(this));
-        Model.StateList.Add(MonsterState.Attack, new MonsterAttack(this));
+        Model.StateList.Add(MonsterState.Attack, new MonsterAction(this));
         Model.StateList.Add(MonsterState.BackReturn, new BackReturn(this));
         Model.CurrentState = Model.StateList[MonsterState.Patrol];
     }
+
 
     public void OnStart()
     {
@@ -75,16 +80,18 @@ public class MonsterPresenter
             Model.CurrentState.Update();
     }
 
+
     // 몬스터 시야각에 플레이어가 들어왔는지 판단 후 LOS 발사
     public bool OnSight()
     {
         Vector2 dir = Model.ChaseTarget.position - View.transform.position;
-
         Vector2 frontal = new Vector2(View.transform.localScale.x, 0).normalized;
 
+        //LOS 검사를 위한 테스트용 레이
         Vector2 taget = dir.normalized * Model.Sight;
         Debug.DrawRay(View.transform.position, taget, Color.blue);
-        
+        //
+
 
         // 몬스터와의 타겟의 거리가 가시 거리에 들어오는지 판단
         if (Vector2.SqrMagnitude(dir) > Model.Sight * Model.Sight)
@@ -92,7 +99,6 @@ public class MonsterPresenter
 
         // 내적으로 시야각에 포착됐는지 판단
         float dot = Vector2.Dot(dir.normalized, frontal);
-
         if (dot < Model.SightAngle)
             return false;
 
@@ -104,9 +110,7 @@ public class MonsterPresenter
             return false;
 
         return true;
-
     }
-
 
     public void OnHit(float Damage)
     {

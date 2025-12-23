@@ -8,9 +8,7 @@ public class Search : IState
     private MonsterPresenter _monster;
     private Transform _myTransform;
     private float _sight;
-    private Vector2 _targetPos;
-    private float _maxAngle = 20;
-    private float _searchTime = 3f;
+    private float _searchTime;
     private float _timer;
     private MonsterView _view;
 
@@ -21,14 +19,13 @@ public class Search : IState
         _monster = monster;
         _myTransform = monster.View.transform;
         _sight = monster.Model.Sight;
+        _searchTime = monster.Model.SearchTime;
         _view = monster.View;
     }
 
 
     public void Enter()
     {
-        _targetPos = _monster.Model.ChaseTarget.position;
-        //_monster.StartCoroutine(UpdateLOS(_myTransform.position, _targetPos));
         _view.OnIdleAni();
     }
 
