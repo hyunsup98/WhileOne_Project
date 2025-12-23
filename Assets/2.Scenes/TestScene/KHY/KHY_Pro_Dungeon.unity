@@ -5091,14 +5091,14 @@ MonoBehaviour:
   exitRoomPrefab: {fileID: 4474050308984926237, guid: d8f2b899e5705de49ba4ca16276c797b, type: 3}
   eventRoomPrefab: {fileID: 4474050308984926237, guid: 7154686066db2c544a90d0be579f1c96, type: 3}
   trapRoomPrefab: {fileID: 4474050308984926237, guid: 99b8963901be3e147bbc947a0b56a58e, type: 3}
-  treasureRoomPrefab: {fileID: 4474050308984926237, guid: 455047b7d12f15241b41c37d6d4c897b, type: 3}
+  treasureRoomPrefab: {fileID: 4474050308984926237, guid: b19713a99ee861f45aa0d0d9e58a975b, type: 3}
   bossRoomPrefab: {fileID: 4474050308984926237, guid: 455047b7d12f15241b41c37d6d4c897b, type: 3}
   corridorPrefabHorizontal: {fileID: 4474050308984926237, guid: b734ba1dbdbe92a4390eca47755692b1, type: 3}
   corridorPrefabVertical: {fileID: 4474050308984926237, guid: b9f4e3586b4c1714d87d78ecdc378ad7, type: 3}
-  corridorPrefabCross: {fileID: 0}
+  corridorPrefabCross: {fileID: 4474050308984926237, guid: 5c36556847c98ad40a72d5b28379f9a9, type: 3}
   branchProbability: 40
   maxBranchCount: 3
-  roomSpacingInCells: 12
+  roomSpacingInCells: 40
   autoCalculateSpacing: 1
   generateOnStart: 1
   gridParent: {fileID: 2016025121}
@@ -7772,8 +7772,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71ac4e3f62dc63e4c8d6ee29b90aa3cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrapRoomMazeGenerator
-  mazeWidth: 15
-  mazeHeight: 15
+  mazeWidth: 31
+  mazeHeight: 31
   trapPrefab: {fileID: 4652139313107373167, guid: 1fd9b4c6bd5aa1e4c8f0a467bc3d1cbd, type: 3}
   trapOffPrefab: {fileID: 5727424884913838383, guid: 3a0d0fb6410dede4fb5c17bbc79db5f1, type: 3}
   trapAttackInterval: 2
