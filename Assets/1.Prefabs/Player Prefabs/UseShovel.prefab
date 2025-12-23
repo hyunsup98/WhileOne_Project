@@ -79,7 +79,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 30
+  m_SortingOrder: -13
   m_Sprite: {fileID: 4146179885737347489, guid: 39cc188e60b6b98488e8a5b5e05935a8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -103,8 +103,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51f39f3d10c59ee4284e93229549d198, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
-  _effect1: {fileID: 5977391792085109959, guid: 8b95ac2c10e6893449d0351a855206d1, type: 3}
-  _effect2: {fileID: 5082914850714743240, guid: dd4c224b2d5afe442b5310a16cb5bba9, type: 3}
+  _effect1: {fileID: 0}
+  _effect2: {fileID: 0}
 --- !u!1 &249447194809812547
 GameObject:
   m_ObjectHideFlags: 0
@@ -2000,7 +2000,9 @@ GameObject:
   - component: {fileID: 6475511304828831566}
   - component: {fileID: 4875647573395373011}
   - component: {fileID: 808456578035544522}
+  - component: {fileID: 3802105110377086570}
   - component: {fileID: 6098639447216804011}
+  - component: {fileID: 8009744367677018761}
   m_Layer: 8
   m_Name: UseShovel
   m_TagString: Player
@@ -2022,6 +2024,7 @@ RectTransform:
   m_Children:
   - {fileID: 6556896868152485762}
   - {fileID: 8121034346171974544}
+  - {fileID: 301703253533378218}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -5185,7 +5188,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerDig
   _isDigging: 0
-  test: {fileID: 6823875298443514270, guid: 682cfaa39fdab174f9284398ca302175, type: 3}
+  test: {fileID: 0}
   offSet: 0.5
   pivotTrans: {fileID: 4703368205314125819}
   tileCursor: {fileID: 3658747494255264244}
@@ -5237,6 +5240,21 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.5588857, y: 0.8039492}
   m_EdgeRadius: 0
+--- !u!114 &3802105110377086570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4329574107018779310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98a57d9858fa195458c4130f0a9cfdca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDash
+  _dashForce: 10
+  _dashTime: 0.1
+  _test: {fileID: 5140450331245654192, guid: 4e12750aee72a654c8afb407a265ea71, type: 3}
 --- !u!50 &6098639447216804011
 Rigidbody2D:
   serializedVersion: 5
@@ -5263,7 +5281,126 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
+--- !u!96 &8009744367677018761
+TrailRenderer:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4329574107018779310}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 7549126fc311c48919a9dcbe1d43a364, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 1
+  m_Time: 5
+  m_PreviewTimeScale: 1
+  m_Parameters:
+    serializedVersion: 3
+    widthMultiplier: 1
+    widthCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0.11538236
+        value: 0.15429202
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.93332815
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    colorGradient:
+      serializedVersion: 2
+      key0: {r: 0.4433962, g: 0.4245728, b: 0.4245728, a: 1}
+      key1: {r: 0.46274513, g: 0.41176474, b: 0.41176474, a: 1}
+      key2: {r: 0, g: 0, b: 0, a: 0}
+      key3: {r: 0, g: 0, b: 0, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 65535
+      ctime2: 65535
+      ctime3: 0
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 0
+      m_ColorSpace: 0
+      m_NumColorKeys: 2
+      m_NumAlphaKeys: 2
+    numCornerVertices: 0
+    numCapVertices: 0
+    alignment: 0
+    textureMode: 0
+    textureScale: {x: 1, y: 1}
+    shadowBias: 0.5
+    generateLightingData: 1
+  m_MinVertexDistance: 0.1
+  m_MaskInteraction: 0
+  m_Autodestruct: 0
+  m_Emitting: 1
+  m_ApplyActiveColorSpace: 1
 --- !u!1 &4350439502986678144
 GameObject:
   m_ObjectHideFlags: 0
@@ -5765,7 +5902,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 010ee582a809aff4f850e929bf6bbcba, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
@@ -7204,7 +7341,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6821279241261790031}
-  - component: {fileID: 6113377560364902424}
+  - component: {fileID: 804451866350770644}
   m_Layer: 8
   m_Name: ArmR
   m_TagString: Untagged
@@ -7228,7 +7365,7 @@ Transform:
   - {fileID: 6847975069558347886}
   m_Father: {fileID: 367032873270685902}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6113377560364902424
+--- !u!114 &804451866350770644
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7241,7 +7378,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponRotation
   max: 80
-  min: 20
+  min: 0
   angleSpeed: 5
 --- !u!1 &6749629052683003493
 GameObject:
@@ -8120,7 +8257,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8313796629084861632}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c562f92f3b8b435d98ac3b65547b755, type: 3}
   m_Name: 
@@ -8190,6 +8327,54 @@ Transform:
   - {fileID: 2425241117059705580}
   m_Father: {fileID: 6451287454633372634}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8726181158408641911
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 301703253533378218}
+  - component: {fileID: 270095338336496546}
+  m_Layer: 8
+  m_Name: AfterImage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &301703253533378218
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8726181158408641911}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9078672956431459521}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &270095338336496546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8726181158408641911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87cc66aec49cd20419943f7d5e639e81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AfterimagePool
 --- !u!1 &8820383808164162001
 GameObject:
   m_ObjectHideFlags: 0

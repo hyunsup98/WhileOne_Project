@@ -53,7 +53,7 @@ public class Player : MonoBehaviour
 
     //외부에서 사용할 프로퍼티
     public float Hp => _hp;
-    public float Stamina => _stamina;
+    public float Stamina { get { return _stamina; } set { _stamina = value; } }
     public int MoveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }
     public int Attack => _attack;
     public int AttackSpeed => _attackSpeed;
@@ -125,12 +125,11 @@ public class Player : MonoBehaviour
         MoveState(new IdleState(this));
         ActionState(new ActionIdleState(this));
 
-        _delay = new WaitForSeconds(1f);
+        _delay = new WaitForSeconds(5f);
         _blinkTime = new WaitForSeconds(time);
 
         _group = transform.GetChild(0).GetComponent<SortingGroup>();
-
-        StartCoroutine(Blink());
+        RestoreStamina();
     }
 
     public float ChangedHealth
@@ -157,9 +156,9 @@ public class Player : MonoBehaviour
         private set
         {
             _stamina = Mathf.Clamp(value, 0, _maxStamina);
-            if(_stamina <= 0)
+            if(_stamina >= 0f)
             {
-                _onHpChanged?.Invoke(_maxStamina, ChangedStamina);
+                _onStaminaChanged?.Invoke(_maxStamina, ChangedStamina);
             }
         }
            
@@ -170,6 +169,7 @@ public class Player : MonoBehaviour
         moveCurrentState?.Update();
         actionCurrentState?.Update();
 
+        Debug.Log(Stamina);
         //if(Keyboard.current.qKey.wasPressedThisFrame)
         //{
         //    TakenDamage(10, Vector2.zero);
@@ -188,11 +188,13 @@ public class Player : MonoBehaviour
 
         if (angleZ > 90 || angleZ < -90)
         {
+            //transform.localRotation =new Quaternion(0,0,0,0);
             transform.localScale = new Vector3(1, 1, 1);
         }
         //캐릭터를 기준으로 마우스가 오른쪽으로 넘어가면 캐릭터 방향 변경
         else
         {
+            //transform.localRotation = new Quaternion(0, 180, 0, 0);
             transform.localScale = new Vector3(-1, 1, 1);
         }
     }
@@ -237,8 +239,16 @@ public class Player : MonoBehaviour
 
     IEnumerator RestoreCoroutine()
     {
-        yield return _delay;
-        _stamina += 5;
+        while (_stamina < 100)
+        {
+            yield return _delay;
+            _stamina += 5;
+            if (_stamina > _maxStamina)
+            {
+                _stamina = _maxStamina;
+            }
+        }
+        
     }
 
     IEnumerator Blink()
