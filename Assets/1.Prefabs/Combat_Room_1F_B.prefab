@@ -10697,7 +10697,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a49ee2a50119ee4db4498ee5d12a24a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NormalRoom
-  roomSize: 30
+  roomSize: 31
+  roomWidth: 31
+  roomHeight: 31
   tileSize: 1
   usePrefabAsIs: 1
 --- !u!1 &5005306266959094274

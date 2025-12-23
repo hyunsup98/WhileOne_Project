@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 using static FloorSetting;
@@ -43,10 +42,19 @@ public class DungeonGenerator : MonoBehaviour
     private GameObject corridorPrefabHorizontal; // 가로 복도 프리펩 (좌우 연결)
     [SerializeField] [Tooltip("세로 복도 프리팹 (상하 연결용, Corridor_V)")]
     private GameObject corridorPrefabVertical; // 세로 복도 프리펩 (상하 연결)
+    [SerializeField] [Tooltip("교차로 복도 프리팹 (4방향 연결용, Corridor_Cross, 없으면 일반 복도 사용)")]
+    private GameObject corridorPrefabCross; // 교차로 복도 프리팹 (4방향 연결)
     
     [Header("Generation Settings")]
-    [SerializeField] [Tooltip("방과 방 사이의 간격 (Unity unit, roomSize + corridorLength 권장)")]
-    private float roomSpacing = 6f; // 방 간격 (roomSize + corridorLength 권장)
+    [SerializeField] [Tooltip("방 생성 시 여러 방향으로 분기할 확률 (0~100%, 높을수록 더 많은 분기)")]
+    [Range(0f, 100f)]
+    private float branchProbability = 40f; // 여러 방향으로 분기할 확률 (%)
+    [SerializeField] [Tooltip("최대 분기 개수 (한 방에서 생성할 수 있는 최대 연결 수)")]
+    [Range(1, 4)]
+    private int maxBranchCount = 3; // 최대 분기 개수
+    [SerializeField] [Tooltip("방과 방 사이의 간격 (칸 수, 4의 배수로 지정, 기본값: 12칸)")]
+    [Range(4, 100)]
+    private int roomSpacingInCells = 12; // 방 간격 (칸 수, 4의 배수)
     [SerializeField] [Tooltip("roomSize와 corridorLength를 기반으로 방 간격을 자동 계산할지 여부")]
     private bool autoCalculateSpacing = true; // roomSize와 corridorLength로 자동 계산
     [SerializeField] [Tooltip("시작 시 자동으로 던전을 생성할지 여부")]
@@ -74,19 +82,11 @@ public class DungeonGenerator : MonoBehaviour
     private float roomLabelOffsetX = -0.5f;
     [SerializeField] [Tooltip("방 타입 텍스트의 Y 오프셋 (방 위쪽 기준, Unity unit)")]
     private float roomLabelOffsetY = 0.5f; // 방 타입 텍스트 Y 오프셋 (방 위쪽)
-    [SerializeField] [Tooltip("복도 텍스트의 Y 오프셋 (Unity unit)")]
-    private float corridorLabelOffsetY = 0.2f; // 복도 텍스트 Y 오프셋
-    [SerializeField] [Tooltip("방 타입 라벨에 사용할 폰트 (null이면 기본 폰트 사용)")]
-    private Font roomLabelFont; // 방 타입 라벨에 사용할 폰트 (null이면 기본 폰트 사용)
-    private const float DefaultCellSize = 1f; // 타일 한 칸 기본 크기 (PPU 32, Grid cell size 1)
     
     private DungeonGrid dungeonGrid;
     private Grid unityGrid; // Unity Grid 컴포넌트
     private Vector2Int startRoomPosition;
     private Vector2Int exitRoomPosition;
-    private List<Vector2Int> eventRoomPositions;
-    private Dictionary<Vector2Int, GameObject> corridors; // 복도 오브젝트
-    private Tilemap corridorTilemap; // 복도용 Tilemap (Tilemap 방식 사용 시)
 
     [SerializeField] private MonsterPresenterMVP monster;
     
@@ -116,109 +116,88 @@ public class DungeonGenerator : MonoBehaviour
         ClearDungeon();
         
         // Grid 오브젝트 찾기 또는 생성
-        SetupGridParent();
+        Transform finalGridParent;
+        unityGrid = DungeonGridHelper.SetupGridParent(gridParent, transform, out finalGridParent);
+        gridParent = finalGridParent;
         
-        // Grid 셀 크기를 방 타일 크기와 동일하게 맞춤 (World/Cell 변환 일관성 확보)
-        float resolvedCellSize = ResolveCellSize();
+        // Grid 셀 크기를 방 타일 크기와 동일하게 맞춤
+        float resolvedCellSize = DungeonGridHelper.ResolveCellSize(normalRoomPrefab, unityGrid);
         if (unityGrid != null)
         {
             unityGrid.cellSize = new Vector3(resolvedCellSize, resolvedCellSize, 1f);
         }
         
-        // Tilemap 방식 사용 시 복도용 Tilemap 초기화
-        //if (useTilemapForCorridors)
-        //{
-        //    SetupCorridorTilemap();
-        //}
-        
-        // 방 간격 자동 계산
+        // 방 간격 자동 계산 (칸 수로 계산 후 4의 배수로 반올림)
         if (autoCalculateSpacing && normalRoomPrefab != null)
         {
-            CalculateRoomSpacing();
+            roomSpacingInCells = DungeonGridHelper.CalculateRoomSpacingInCells(normalRoomPrefab, minTileSpacing, resolvedCellSize);
+        }
+        
+        // 4의 배수 검증 및 조정
+        if (roomSpacingInCells % 4 != 0)
+        {
+            roomSpacingInCells = ((roomSpacingInCells + 3) / 4) * 4; // 올림하여 4의 배수로 조정
+            Debug.LogWarning($"[DungeonGenerator] roomSpacingInCells가 4의 배수가 아니어서 {roomSpacingInCells}로 조정되었습니다.");
         }
         
         // 1. 그리드 초기화
         dungeonGrid = new DungeonGrid(gridSize);
-        corridors = new Dictionary<Vector2Int, GameObject>();
-        eventRoomPositions = new List<Vector2Int>();
         
-        // 2. 시작 방 생성
-        startRoomPosition = Vector2Int.zero;
-        Room startRoom = new Room(startRoomPosition, RoomType.Start);
-        dungeonGrid.AddRoom(startRoomPosition, startRoom);
+        // 2. 방 생성
+        DungeonRoomGenerator.GenerateRooms(dungeonGrid, roomCount, branchProbability, maxBranchCount);
         
-        Room currentRoom = startRoom;
-        int count = 1;
+        // 3. 인접 방 사이의 문을 보정
+        DungeonRoomGenerator.EnsureAdjacentDoorsConnected(dungeonGrid);
         
-        // 3. 방 생성 루프
-        while (count < roomCount)
-        {
-            // 방향 선택
-            Vector2Int direction = Direction.Random();
-            Vector2Int nextPosition = currentRoom.gridPosition + direction;
-            
-            // next가 grid 안인가?
-            if (!dungeonGrid.IsInGrid(nextPosition))
-            {
-                continue; // 다시 방향 선택
-            }
-            
-            // next 위치가 비어있는가?
-            if (dungeonGrid.IsEmpty(nextPosition))
-            {
-                // 새 방 생성
-                Room newRoom = new Room(nextPosition, RoomType.Normal);
-                dungeonGrid.AddRoom(nextPosition, newRoom);
-                
-                // 문 연결
-                currentRoom.ConnectDoor(direction);
-                newRoom.ConnectDoor(Direction.Opposite(direction));
-                
-                currentRoom = newRoom;
-                count++;
-            }
-            else
-            {
-                // 통로만 업데이트 (이미 있는 방과 연결)
-                Room existingRoom = dungeonGrid.GetRoom(nextPosition);
-                if (existingRoom != null)
-                {
-                    currentRoom.ConnectDoor(direction);
-                    existingRoom.ConnectDoor(Direction.Opposite(direction));
-                    currentRoom = existingRoom;
-                }
-            }
-        }
-        
-        // 4. 방 생성 완료 후 처리
-        ProcessPostGeneration(floorInfo);
-        // 4-1. 인접 방 사이의 문을 보정 (모든 인접 방은 연결되도록, 이거 나중에 뺄 수 있을 것 같은데 일단 2번 확인하도록함...)
-        EnsureAdjacentDoorsConnected();
+        // 4. 층별 설정에 따른 방 타입 지정 (방 오브젝트 생성 전에 설정해야 함)
+        SetRooms(floorInfo);
         
         // 5. 방 오브젝트 생성
-        CreateRoomObjects();
+        Dictionary<RoomType, GameObject> roomPrefabs = new Dictionary<RoomType, GameObject>
+        {
+            { RoomType.Normal, normalRoomPrefab },
+            { RoomType.Start, startRoomPrefab },
+            { RoomType.Exit, exitRoomPrefab },
+            { RoomType.Event, eventRoomPrefab },
+            { RoomType.Trap, trapRoomPrefab },
+            { RoomType.Treasure, treasureRoomPrefab },
+            { RoomType.Boss, bossRoomPrefab }
+        };
         
-        // 6. 복도 생성 (RoomCenterMarker 기준으로 방과 방 사이 연결)
-        CreateCorridors();
+        Transform parent = gridParent != null ? gridParent : transform;
+        DungeonRoomPlacer.CreateRoomObjects(
+            dungeonGrid, parent, unityGrid, roomSpacingInCells, roomPrefabs,
+            showRoomTypeLabels, roomLabelOffsetX, roomLabelOffsetY, resolvedCellSize);
         
+        // 6. 복도 생성
+        DungeonCorridorGenerator.CreateCorridors(
+            dungeonGrid, parent, unityGrid,
+            corridorPrefabHorizontal, corridorPrefabVertical, corridorPrefabCross);
+
         // 7. DoorSpace/NoDoor 갱신
         RefreshAllDoorStates();
         
-        // 8. 플레이어를 시작 방 중심으로 이동
+        // 9. 플레이어를 시작 방 중심으로 이동
         PlacePlayerObject();
         
-        // 9. 일반 전투 방에 Dig Spot 배치 (10% 확률)
-        PlaceDigSpots();
+        // 10. 일반 전투 방에 Dig Spot 배치
+        DungeonItemPlacer.PlaceDigSpots(dungeonGrid, digSpotTile, digSpotSpawnChance, unityGrid);
 
-        // 10. 보물 방에 보물 상자 배치 (현재는 무조건 1개, 2개 뜰 확률 추후 구현 예정)
-        PlaceTreasureChest();
+        // 11. 보물 방에 보물 상자 배치
+        DungeonItemPlacer.PlaceTreasureChests(dungeonGrid, treasureChestPrefab, unityGrid);
     }
 
     /// <summary>
-    /// 방 생성 완료 후 처리 (시작 방, 탈출 방, 이벤트 방 지정)
+    /// 층별 설정에 따른 방 타입을 지정합니다.
     /// </summary>
-    private void ProcessPostGeneration(FloorInfo floorInfo)
+    private void SetRooms(FloorInfo floorInfo)
     {
+        if (floorInfo == null)
+        {
+            Debug.LogWarning("[DungeonGenerator] floorInfo가 null이어서 방 타입을 지정할 수 없습니다.");
+            return;
+        }
+        
         // 모든 방을 Normal로 초기화
         var allPositions = dungeonGrid.GetAllPositions().ToList();
         foreach (var pos in allPositions)
@@ -235,15 +214,17 @@ public class DungeonGenerator : MonoBehaviour
         if (startRoom != null) startRoom.roomType = RoomType.Start;
         
         // 방 거리 계산
-        Dictionary<Vector2Int, int> distances = CalculateDistancesFrom(startRoomPosition);
+        Dictionary<Vector2Int, int> distances = DungeonRoomGenerator.CalculateDistancesFrom(dungeonGrid, startRoomPosition);
         
         // 출구 방 지정 (가장 먼 방)
-        exitRoomPosition = SelectExitRoom(distances, startRoomPosition);
+        exitRoomPosition = DungeonRoomGenerator.SelectExitRoom(distances, startRoomPosition);
         var exitRoom = dungeonGrid.GetRoom(exitRoomPosition);
         if (exitRoom != null) exitRoom.roomType = RoomType.Exit;
 
         // 이벤트 방, 함정 방, 보물 방, 등 기타 특수 방 지정
-        var remaining = allPositions.Where(p => p != startRoomPosition && p != exitRoomPosition).ToList();
+        Vector2Int startPos = startRoomPosition;
+        Vector2Int exitPos = exitRoomPosition;
+        var remaining = allPositions.Where(p => p != startPos && p != exitPos).ToList();
 
         // 함정 방 지정
         int trapRoomCount = floorInfo.GetRoomCountWithType(RoomType.Trap);
@@ -286,535 +267,6 @@ public class DungeonGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// 시작 방으로부터의 실제 경로 거리를 계산합니다. (BFS 사용)
-    /// </summary>
-    private Dictionary<Vector2Int, int> CalculateDistancesFrom(Vector2Int startPos)
-    {
-        Dictionary<Vector2Int, int> distances = new Dictionary<Vector2Int, int>();
-        Queue<Vector2Int> queue = new Queue<Vector2Int>();
-        HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
-        
-        // 시작 방 초기화
-        queue.Enqueue(startPos);
-        visited.Add(startPos);
-        distances[startPos] = 0;
-        
-        // BFS로 실제 경로 거리 계산
-        while (queue.Count > 0)
-        {
-            Vector2Int current = queue.Dequeue();
-            Room currentRoom = dungeonGrid.GetRoom(current);
-            if (currentRoom == null) continue;
-            
-            // 연결된 모든 방향 확인
-            foreach (var kvp in currentRoom.doors)
-            {
-                if (kvp.Value) // 문이 연결되어 있으면
-                {
-                    Vector2Int direction = kvp.Key;
-                    Vector2Int nextPos = current + direction;
-                    
-                    if (!visited.Contains(nextPos) && dungeonGrid.GetRoom(nextPos) != null)
-                    {
-                        visited.Add(nextPos);
-                        distances[nextPos] = distances[current] + 1;
-                        queue.Enqueue(nextPos);
-                    }
-                }
-            }
-        }
-        
-        return distances;
-    }
-    
-    /// <summary>
-    /// 출구 방을 선택합니다. (시작 방에서 가장 먼 방)
-    /// </summary>
-    private Vector2Int SelectExitRoom(Dictionary<Vector2Int, int> distances, Vector2Int startPos)
-    {
-        // 시작 방 제외한 모든 방 중 가장 먼 방 선택
-        Vector2Int farthest = startPos;
-        int maxDistance = 0;
-        
-        foreach (var kvp in distances)
-        {
-            // 시작 방은 제외
-            if (kvp.Key == startPos) continue;
-            
-            if (kvp.Value > maxDistance)
-            {
-                maxDistance = kvp.Value;
-                farthest = kvp.Key;
-            }
-        }
-        
-        return farthest;
-    }
-    
-    /// <summary>
-    /// 방 오브젝트를 생성합니다.
-    /// </summary>
-    private void CreateRoomObjects()
-    {
-        Transform parent = gridParent != null ? gridParent : transform;
-        float cellSize = ResolveCellSize();
-        
-        int spacingInCells = Mathf.RoundToInt(roomSpacing / cellSize);
-        Vector3 cellCenterOffset = new Vector3(cellSize * 0.5f, cellSize * 0.5f, 0f);
-        
-        foreach (var position in dungeonGrid.GetAllPositions())
-        {
-            Room room = dungeonGrid.GetRoom(position);
-            if (room == null) continue;
-            
-            GameObject prefab = GetRoomPrefab(room.roomType);
-            if (prefab == null)
-            {
-                Debug.LogWarning($"{room.roomType} 프리펩이 설정되지 않았습니다.");
-                continue;
-            }
-            
-            // 공통 기준: Grid 셀 좌표를 사용하여 "방의 논리적 중심(RoomCenterMarker)"을 정렬
-            Vector3Int roomCenterCell = new Vector3Int(position.x * spacingInCells, position.y * spacingInCells, 0);
-            Vector3 worldPosition = unityGrid != null
-                ? unityGrid.CellToWorld(roomCenterCell) + cellCenterOffset
-                : new Vector3(position.x * roomSpacing, position.y * roomSpacing, 0f);
-            
-            // Grid 하위에 생성
-            GameObject roomObj = Instantiate(prefab, worldPosition, Quaternion.identity, parent);
-            
-            // RoomCenterMarker가 있다면, 그 위치가 worldPosition에 오도록 전체 방을 오프셋 조정
-            AlignRoomToGridCenter(roomObj, worldPosition);
-            
-            room.roomObject = roomObj;
-            
-            // 방 스크립트에 문 정보 전달
-            BaseRoom roomScript = roomObj.GetComponent<BaseRoom>();
-            if (roomScript != null)
-            {
-                roomScript.InitializeRoom(room);
-                roomScript.RefreshDoorStates(); // 생성 직후 문/NoDoor 상태 재정렬
-            }
-            else
-            {
-                Debug.LogWarning($"[CreateRoomObjects] BaseRoom 컴포넌트가 없습니다: {roomObj.name}");
-            }
-            
-            // 방 타입 텍스트 표시
-            if (showRoomTypeLabels)
-            {
-                // 실제 방 중심(가능하면 RoomCenterMarker 기준)을 사용
-                Vector3 center = GetRoomWorldCenter(roomObj);
-                CreateRoomTypeLabel(roomObj, room.roomType, center);
-            }
-        }
-    }
-    
-    /// <summary>
-    /// 방 프리팹을 Grid 셀 중심에 정렬합니다.
-    /// - RoomCenterMarker가 있으면 그 위치를 targetCenter에 맞추고,
-    /// - 없으면 roomObj.transform.position을 기준으로 유지합니다.
-    /// </summary>
-    private void AlignRoomToGridCenter(GameObject roomObj, Vector3 targetCenter)
-    {
-        if (roomObj == null) return;
-
-        // RoomCenterMarker를 우선 사용
-        Transform marker = FindRoomCenterMarker(roomObj);
-        Vector3 currentCenter = marker != null ? marker.position : roomObj.transform.position;
-
-        Vector3 offset = targetCenter - currentCenter;
-        roomObj.transform.position += offset;
-    }
-    
-    /// <summary>
-    /// 방 타입을 표시하는 텍스트 라벨을 생성합니다. (TextMesh 사용, 방 자식으로 붙임)
-    /// </summary>
-    private void CreateRoomTypeLabel(GameObject roomObj, RoomType roomType, Vector3 roomWorldPos)
-    {
-        // 방 중심 기준 크기 계산 (월드 단위)
-        float roomSize = 0f;
-        BaseRoom baseRoom = roomObj.GetComponent<BaseRoom>();
-        if (baseRoom != null && baseRoom.RoomSize > 0)
-        {
-            float cellSize = ResolveCellSize();
-            float tileSize = baseRoom.TileSize > 0f ? baseRoom.TileSize : cellSize;
-            roomSize = baseRoom.RoomSize * tileSize; // RoomSize는 칸 수, tileSize를 곱해 월드 크기
-        }
-        else
-        {
-            // Renderer로부터 크기 추정
-            Renderer renderer = roomObj.GetComponentInChildren<Renderer>();
-            if (renderer != null)
-            {
-                roomSize = Mathf.Max(renderer.bounds.size.x, renderer.bounds.size.y);
-            }
-        }
-
-        float halfRoomSize = roomSize > 0 ? roomSize * 0.5f : 0f;
-
-        // 라벨의 월드 위치 계산 (방 중심에서 X/Y 오프셋 적용)
-        Vector3 worldLabelPos = roomWorldPos + new Vector3(roomLabelOffsetX, halfRoomSize + roomLabelOffsetY, 0f);
-
-        // 방의 로컬 좌표계로 변환하여 자식으로 붙였을 때도 정확한 위치 유지
-        Vector3 localLabelPos = roomObj.transform.InverseTransformPoint(worldLabelPos);
-
-        // TextMesh 오브젝트 생성 (방 자식)
-        GameObject labelObj = new GameObject($"RoomTypeLabel_{roomType}");
-        labelObj.transform.SetParent(roomObj.transform, false);
-        labelObj.transform.localPosition = localLabelPos;
-
-        TextMesh textMesh = labelObj.AddComponent<TextMesh>();
-
-        // 방 타입에 따라 텍스트와 색상 설정
-        string roomTypeText = "";
-        Color textColor = Color.white;
-
-        switch (roomType)
-        {
-            case RoomType.Start:
-                roomTypeText = "시작 방";
-                textColor = Color.green;
-                break;
-            case RoomType.Exit:
-                roomTypeText = "탈출 방";
-                textColor = Color.cyan;
-                break;
-            case RoomType.Event:
-                roomTypeText = "이벤트 방";
-                textColor = Color.purple;
-                break;
-            case RoomType.Trap:
-                roomTypeText = "함정 방";
-                textColor = Color.red;
-                break;
-            case RoomType.Treasure:
-                roomTypeText = "보물 방";
-                textColor = Color.yellow;
-                break;
-            case RoomType.Boss:
-                roomTypeText = "보스 방";
-                textColor = Color.orange;
-                break;
-            case RoomType.Normal:
-            default:
-                roomTypeText = "전투 방";
-                textColor = Color.white;
-                break;
-        }
-
-        // TextMesh 설정
-        textMesh.text = roomTypeText;
-        textMesh.color = textColor;
-        textMesh.fontSize = 40;          // 글자 해상도
-        textMesh.characterSize = 0.5f;   // 실제 월드 크기 (너무 크면 0.08, 작으면 0.12 정도로 조정)
-        textMesh.anchor = TextAnchor.MiddleCenter;
-        textMesh.alignment = TextAlignment.Center;
-        textMesh.offsetZ = -1f;
-
-        // 폰트 설정: 인스펙터에서 지정된 폰트가 있으면 사용, 아니면 기본 폰트 유지
-        if (roomLabelFont != null)
-        {
-            textMesh.font = roomLabelFont;
-        }
-    }
-    
-    /// <summary>
-    /// RoomCenterMarker를 기준으로 연결된 방 사이에 복도를 생성합니다.
-    /// Grid 셀 단위로 각 셀에 복도 타일을 배치합니다.
-    /// </summary>
-    private void CreateCorridors()
-    {
-        if (corridorPrefabHorizontal == null && corridorPrefabVertical == null)
-        {
-            Debug.LogWarning("[DungeonGenerator] 복도 프리팹이 설정되지 않아 복도를 생성할 수 없습니다.");
-            return;
-        }
-        
-        if (unityGrid == null)
-        {
-            Debug.LogWarning("[DungeonGenerator] Grid를 찾을 수 없어 복도를 생성할 수 없습니다.");
-            return;
-        }
-        
-        Transform parent = gridParent != null ? gridParent : transform;
-        float cellSize = ResolveCellSize();
-        HashSet<string> createdCorridors = new HashSet<string>(); // 중복 방지용
-        
-        // 모든 방을 순회하면서 연결된 방 찾기
-        foreach (var position in dungeonGrid.GetAllPositions())
-        {
-            Room room = dungeonGrid.GetRoom(position);
-            if (room == null || room.roomObject == null) continue;
-            
-            // 4방향 모두 확인
-            Vector2Int[] directions = { Direction.Up, Direction.Down, Direction.Left, Direction.Right };
-            
-            foreach (Vector2Int direction in directions)
-            {
-                // 문이 연결되어 있는지 확인
-                if (!room.IsDoorConnected(direction)) continue;
-                
-                // 인접한 방 위치 계산
-                Vector2Int nextPos = position + direction;
-                
-                // 인접한 방이 실제로 존재하는지 확인
-                Room nextRoom = dungeonGrid.GetRoom(nextPos);
-                if (nextRoom == null || nextRoom.roomObject == null) continue;
-                
-                // 복도 키 생성 (중복 방지 - 한 쌍의 방 사이에는 하나의 복도만 생성)
-                string corridorKey;
-                if (position.x < nextPos.x || (position.x == nextPos.x && position.y < nextPos.y))
-                {
-                    corridorKey = $"{position.x}_{position.y}_{nextPos.x}_{nextPos.y}";
-                }
-                else
-                {
-                    corridorKey = $"{nextPos.x}_{nextPos.y}_{position.x}_{position.y}";
-                }
-                
-                if (createdCorridors.Contains(corridorKey)) continue;
-                createdCorridors.Add(corridorKey);
-                
-                // 두 방의 RoomCenterMarker 위치 가져오기
-                Vector3 room1Center = GetRoomWorldCenter(room.roomObject);
-                Vector3 room2Center = GetRoomWorldCenter(nextRoom.roomObject);
-                
-                // 월드 좌표를 Grid 셀 좌표로 변환
-                Vector3Int room1Cell = unityGrid.WorldToCell(room1Center);
-                Vector3Int room2Cell = unityGrid.WorldToCell(room2Center);
-                
-                // 복도 프리팹 선택 (가로/세로)
-                bool isHorizontal = (direction == Direction.Left || direction == Direction.Right);
-                GameObject corridorPrefab = isHorizontal ? corridorPrefabHorizontal : corridorPrefabVertical;
-                
-                if (corridorPrefab == null)
-                {
-                    Debug.LogWarning($"[DungeonGenerator] {(isHorizontal ? "가로" : "세로")} 복도 프리팹이 설정되지 않아 복도를 생성할 수 없습니다.");
-                    continue;
-                }
-                
-                // 복도가 지나갈 셀들 계산 (두 방 중심 사이)
-                Vector3Int delta = room2Cell - room1Cell;
-                Vector3Int cellDirection = Vector3Int.zero;
-                
-                if (isHorizontal)
-                {
-                    // 가로 방향: X만 이동
-                    cellDirection = new Vector3Int(delta.x > 0 ? 1 : -1, 0, 0);
-                }
-                else
-                {
-                    // 세로 방향: Y만 이동
-                    cellDirection = new Vector3Int(0, delta.y > 0 ? 1 : -1, 0);
-                }
-                
-                // 복도 시작/끝 셀: 각 방 중심에서 한 칸씩 밖으로
-                Vector3Int startCell = room1Cell + cellDirection;
-                Vector3Int endCell = room2Cell - cellDirection;
-                
-                // 복도 길이 (셀 개수)
-                int cellDistance = isHorizontal ? Mathf.Abs(endCell.x - startCell.x) : Mathf.Abs(endCell.y - startCell.y);
-                
-                if (cellDistance <= 0)
-                {
-                    Debug.LogWarning($"[DungeonGenerator] 복도 길이가 0 이하입니다. {room.roomObject.name} <-> {nextRoom.roomObject.name}");
-                    continue;
-                }
-                
-                // 각 셀에 복도 타일 배치
-                Vector3 cellCenterOffset = new Vector3(cellSize * 0.5f, cellSize * 0.5f, 0f);
-                
-                for (int i = 0; i <= cellDistance; i++)
-                {
-                    Vector3Int currentCell = startCell + cellDirection * i;
-                    Vector3 worldPos = unityGrid.CellToWorld(currentCell) + cellCenterOffset;
-                    
-                    // 복도 타일 생성
-                    GameObject corridorTile = Instantiate(corridorPrefab, worldPos, Quaternion.identity, parent);
-                    SetCorridorTilePassable(corridorTile);
-                }
-                
-                Debug.Log($"[DungeonGenerator] 복도 생성: {room.roomObject.name} <-> {nextRoom.roomObject.name}, 방향: {direction}, 셀 개수: {cellDistance + 1}");
-            }
-        }
-    }
-    
-    /// <summary>
-    /// 복도 타일을 플레이어가 통과 가능하도록 설정합니다.
-    /// </summary>
-    private void SetCorridorTilePassable(GameObject corridorTile)
-    {
-        // 복도 타일의 모든 충돌체를 Trigger로 설정
-        Collider2D[] colliders = corridorTile.GetComponentsInChildren<Collider2D>();
-        foreach (Collider2D collider in colliders)
-        {
-            // 바닥 타일은 통과 가능하게 (벽은 제외할 수도 있음)
-            // 이름에 "Wall"이 포함되어 있지 않으면 통과 가능하게 설정
-            if (!collider.name.Contains("Wall") && !collider.name.Contains("wall"))
-            {
-                collider.isTrigger = true;
-            }
-        }
-    }
-    
-    /// <summary>
-    /// 방의 크기를 가져옵니다.
-    /// </summary>
-    private float GetRoomSize()
-    {
-        if (normalRoomPrefab != null)
-        {
-            BaseRoom baseRoom = normalRoomPrefab.GetComponent<BaseRoom>();
-            if (baseRoom != null)
-            {
-                float ts = baseRoom.TileSize > 0f ? baseRoom.TileSize : 1f;
-                return baseRoom.RoomSize * ts; // RoomSize를 칸 수로 보고 tileSize를 곱해 월드 크기로 변환
-            }
-            
-            // BaseRoom이 없으면 Renderer로 추정
-            Renderer renderer = normalRoomPrefab.GetComponentInChildren<Renderer>();
-            if (renderer != null)
-            {
-                return Mathf.Max(renderer.bounds.size.x, renderer.bounds.size.y);
-            }
-        }
-        
-        return 4f; // 기본값
-    }
-    
-    /// <summary>
-    /// DoorSpace를 재귀적으로 찾습니다.
-    /// </summary>
-    private Transform FindDoorSpaceRecursive(Transform parent, string directionName)
-    {
-        if (parent.name.Contains("DoorSpace") && 
-            (parent.name.Contains(directionName) || parent.name.EndsWith("_" + directionName)))
-        {
-            return parent;
-        }
-        
-        foreach (Transform child in parent)
-        {
-            Transform found = FindDoorSpaceRecursive(child, directionName);
-            if (found != null)
-                return found;
-        }
-        
-        return null;
-    }
-    
-    /// <summary>
-    /// 방 타입에 맞는 프리펩을 반환합니다.
-    /// </summary>
-    private GameObject GetRoomPrefab(RoomType type)
-    {
-        switch (type)
-        {
-            case RoomType.Start:
-                return startRoomPrefab != null ? startRoomPrefab : normalRoomPrefab;
-            case RoomType.Exit:
-                return exitRoomPrefab != null ? exitRoomPrefab : normalRoomPrefab;
-            case RoomType.Event:
-                return eventRoomPrefab != null ? eventRoomPrefab : normalRoomPrefab;
-            case RoomType.Trap:
-                return trapRoomPrefab != null ? trapRoomPrefab : normalRoomPrefab;
-            case RoomType.Treasure:
-                return treasureRoomPrefab != null ? treasureRoomPrefab : normalRoomPrefab;
-            default:
-                return normalRoomPrefab;
-        }
-    }
-    
-    /// <summary>
-    /// Grid 오브젝트를 찾거나 생성합니다.
-    /// </summary>
-    private void SetupGridParent()
-    {
-        // 이미 설정되어 있으면 사용
-        if (gridParent != null)
-        {
-            unityGrid = gridParent.GetComponent<Grid>();
-            return;
-        }
-        
-        // 씬에서 Grid 오브젝트 찾기
-        Grid foundGrid = FindFirstObjectByType<Grid>();
-        if (foundGrid != null)
-        {
-            gridParent = foundGrid.transform;
-            unityGrid = foundGrid;
-            return;
-        }
-        
-        // Grid 오브젝트가 없으면 생성
-        GameObject gridObj = new GameObject("Grid");
-        gridObj.transform.SetParent(transform);
-        gridParent = gridObj.transform;
-        unityGrid = gridObj.AddComponent<Grid>();
-    }
-    
-    /// <summary>
-    /// 방 간격을 자동으로 계산합니다. (최소 5칸 이상 간격 보장)
-    /// </summary>
-    private void CalculateRoomSpacing()
-    {
-        if (normalRoomPrefab == null) return;
-        
-        // Grid의 셀 크기 가져오기
-        float cellSize = ResolveCellSize();
-        
-        BaseRoom baseRoom = normalRoomPrefab.GetComponent<BaseRoom>();
-        float roomSize = 0f;
-        
-        if (baseRoom != null)
-        {
-            float ts = baseRoom.TileSize > 0f ? baseRoom.TileSize : cellSize;
-            roomSize = baseRoom.RoomSize * ts; // RoomSize는 칸 수
-        }
-        else
-        {
-            // BaseRoom이 없으면 프리펩의 크기로 추정
-            Renderer renderer = normalRoomPrefab.GetComponentInChildren<Renderer>();
-            if (renderer != null)
-            {
-                roomSize = Mathf.Max(renderer.bounds.size.x, renderer.bounds.size.y);
-            }
-        }
-        
-        if (roomSize > 0)
-        {
-            // corridorLength는 '칸 수'로 간주 → 월드 거리로 변환
-            //float corridorLengthWorld = corridorLength * cellSize;
-            float corridorLengthWorld = 3 * cellSize;
-            // 최소 간격 계산: roomSize + 복도(칸수*cell) + 최소 5칸 간격
-            float minSpacing = roomSize + corridorLengthWorld + (minTileSpacing * cellSize);
-            
-            // roomSize + corridorLengthWorld와 비교해서 더 큰 값 사용
-            float baseSpacing = roomSize + corridorLengthWorld;
-            roomSpacing = Mathf.Max(minSpacing, baseSpacing);
-        }
-    }
-
-    /// <summary>
-    /// 셀 크기를 결정합니다. (기본값 1, PPU 32, Grid cell size 1)
-    /// </summary>
-    private float ResolveCellSize()
-    {
-        // BaseRoom tileSize 우선
-        BaseRoom prefabBaseRoom = normalRoomPrefab != null ? normalRoomPrefab.GetComponent<BaseRoom>() : null;
-        if (prefabBaseRoom != null && prefabBaseRoom.TileSize > 0f)
-            return prefabBaseRoom.TileSize;
-        
-        // Grid cellSize 사용
-        if (unityGrid != null && unityGrid.cellSize.x > 0f)
-            return unityGrid.cellSize.x;
-        
-        // 기본값
-        return DefaultCellSize;
-    }
-
-    /// <summary>
     /// 생성된 모든 방의 DoorSpace/NoDoor 상태를 갱신합니다.
     /// </summary>
     private void RefreshAllDoorStates()
@@ -850,418 +302,8 @@ public class DungeonGenerator : MonoBehaviour
             return;
         }
         
-        Vector3 center = GetRoomWorldCenter(startRoom.roomObject);
+        Vector3 center = DungeonRoomHelper.GetRoomWorldCenter(startRoom.roomObject);
         playerObject.transform.position = center;
-    }
-    
-    /// <summary>
-    /// 일반 전투 방에 Dig Spot을 배치합니다. (10% 확률)
-    /// </summary>
-    private void PlaceDigSpots()
-    {
-        if (digSpotTile == null)
-        {
-            Debug.LogWarning("digSpotPrefab이 지정되지 않아 Dig Spot을 생성할 수 없습니다.");
-            return;
-        }
-        
-        int digSpotCount = 0;
-        
-        // 모든 일반 전투 방 확인
-        foreach (var position in dungeonGrid.GetAllPositions())
-        {
-            Room room = dungeonGrid.GetRoom(position);
-            if (room == null || room.roomObject == null) continue;
-            
-            // 일반 전투 방만 처리
-            if (room.roomType != RoomType.Normal) continue;
-            
-            // 10% 확률로 생성
-            if (Random.Range(0f, 100f) >= digSpotSpawnChance) continue;
-            
-            // Dig Spot 배치
-            PlaceDigSpotInRoom(room);
-            digSpotCount++;
-        }
-    }
-    
-    /// <summary>
-    /// 방에 Dig Spot을 배치합니다. (방 중앙 또는 가장 가까운 타일에)
-    /// </summary>
-    private void PlaceDigSpotInRoom(Room room)
-    {
-        if (room.roomObject == null) return;
-        
-        // 방 내부의 Tilemap 찾기
-        Tilemap roomTilemap = room.roomObject.GetComponentInChildren<Tilemap>();
-        if (roomTilemap == null)
-        {
-            Debug.LogWarning($"[Dig Spot] 방({room.roomObject.name})에 Tilemap을 찾을 수 없습니다.");
-            return;
-        }
-        
-        // Grid 컴포넌트 찾기 (방의 부모 또는 전역 Grid)
-        Grid targetGrid = roomTilemap.GetComponentInParent<Grid>();
-        if (targetGrid == null)
-        {
-            targetGrid = unityGrid;
-        }
-        
-        if (targetGrid == null)
-        {
-            Debug.LogWarning($"[Dig Spot] Grid를 찾을 수 없습니다.");
-            return;
-        }
-        
-        // 중앙 기준: RoomCenterMarker가 있으면 그 위치를 사용, 없으면 타일맵 중앙 셀 사용
-        Transform centerMarker = FindRoomCenterMarker(room.roomObject);
-        Vector3Int centerCell = centerMarker != null
-            ? targetGrid.WorldToCell(centerMarker.position)
-            : GetRoomCenterCell(roomTilemap);
-        
-        // 중앙 셀에 타일이 있는지 확인
-        Vector3Int digSpotCell = centerCell;
-        TileBase centerTile = roomTilemap.GetTile(centerCell);
-        
-        // 중앙에 타일이 없으면 가장 가까운 타일이 있는 셀 찾기
-        if (centerTile == null)
-        {
-            digSpotCell = FindNearestTileCell(roomTilemap, centerCell, targetGrid);
-            if (digSpotCell == Vector3Int.zero && centerCell != Vector3Int.zero)
-            {
-                // 찾지 못했으면 중앙 셀 사용
-                digSpotCell = centerCell;
-            }
-        }
-        
-        // 셀 좌표를 월드 좌표로 변환
-        Vector3 digSpotWorldPos = targetGrid.CellToWorld(digSpotCell);
-        
-        // 셀 중심으로 보정 (타일맵의 tileAnchor 고려) + Y 방향으로 1칸 아래 오프셋
-        Vector3 cellSize = targetGrid.cellSize;
-        Vector3 tileAnchor = roomTilemap.tileAnchor;
-        digSpotWorldPos += new Vector3(cellSize.x * tileAnchor.x,
-                                       cellSize.y * tileAnchor.y - cellSize.y, // 1칸 아래
-                                       0f);
-        
-        // Interactive 오브젝트 찾기
-        Transform interactiveParent = FindInteractiveParent(room.roomObject.transform);
-        if (interactiveParent == null)
-        {
-            Debug.LogWarning($"[Dig Spot] 방({room.roomObject.name})에 Interactive 오브젝트를 찾을 수 없어 방의 직접 자식으로 배치합니다.");
-            interactiveParent = room.roomObject.transform;
-        }
-
-        // todo: 프리팹 설치를 타일 맵 설치로 리팩토링
-        // Dig Spot 프리팹 생성 (Interactive의 자식으로)
-        // GameObject digSpot = Instantiate(digSpotPrefab, digSpotWorldPos, Quaternion.identity, interactiveParent);
-        
-    }
-
-    /// <summary>
-    /// 보물 방에 Treasure Chest를 배치합니다. (확률 ??%로 2개)
-    /// </summary>
-    private void PlaceTreasureChest()
-    {
-        if (treasureChestPrefab == null)
-        {
-            Debug.LogWarning("treasureChestPrefab이 지정되지 않아 treasure chest를 생성할 수 없습니다.");
-            return;
-        }
-
-        int treasureChestCount = 0;
-
-        // 모든 보물 방 확인
-        foreach (var position in dungeonGrid.GetAllPositions())
-        {
-            Room room = dungeonGrid.GetRoom(position);
-            if (room == null || room.roomObject == null) continue;
-
-            // 보물 방만 처리
-            if (room.roomType != RoomType.Treasure) continue;
-
-            // 10% 확률로 생성
-            //if (Random.Range(0f, 100f) >= digSpotSpawnChance) continue;
-
-            // treasure chest 배치
-            PlaceTreasureChestInRoom(room);
-            treasureChestCount++;
-        }
-    }
-
-    /// <summary>
-    /// 보물 방에 보물 상자를 배치합니다.
-    /// </summary>
-    private void PlaceTreasureChestInRoom(Room room)
-    {
-        if (room.roomObject == null) return;
-
-        // 방 내부의 Tilemap 찾기
-        Tilemap roomTilemap = room.roomObject.GetComponentInChildren<Tilemap>();
-        if (roomTilemap == null)
-        {
-            Debug.LogWarning($"[Treasure Chest] 방({room.roomObject.name})에 Tilemap을 찾을 수 없습니다.");
-            return;
-        }
-
-        // Grid 컴포넌트 찾기 (방의 부모 또는 전역 Grid)
-        Grid targetGrid = roomTilemap.GetComponentInParent<Grid>();
-        if (targetGrid == null)
-        {
-            targetGrid = unityGrid;
-        }
-
-        if (targetGrid == null)
-        {
-            Debug.LogWarning($"[Treasure Chest] Grid를 찾을 수 없습니다.");
-            return;
-        }
-
-        // 중앙 기준: RoomCenterMarker가 있으면 그 위치를 사용, 없으면 타일맵 중앙 셀 사용
-        Transform centerMarker = FindRoomCenterMarker(room.roomObject);
-        Vector3Int centerCell = centerMarker != null
-            ? targetGrid.WorldToCell(centerMarker.position)
-            : GetRoomCenterCell(roomTilemap);
-
-        // 중앙 셀에 타일이 있는지 확인
-        Vector3Int treasureChestCell = centerCell;
-        TileBase centerTile = roomTilemap.GetTile(centerCell);
-
-        // 중앙에 타일이 없으면 가장 가까운 타일이 있는 셀 찾기
-        if (centerTile == null)
-        {
-            treasureChestCell = FindNearestTileCell(roomTilemap, centerCell, targetGrid);
-            if (treasureChestCell == Vector3Int.zero && centerCell != Vector3Int.zero)
-            {
-                // 찾지 못했으면 중앙 셀 사용
-                treasureChestCell = centerCell;
-            }
-        }
-
-        // 셀 좌표를 월드 좌표로 변환
-        Vector3 treasureChestWorldPos = targetGrid.CellToWorld(treasureChestCell);
-
-        // 셀 중심으로 보정 (타일맵의 tileAnchor 고려) + Y 방향으로 1칸 아래 오프셋
-        Vector3 cellSize = targetGrid.cellSize;
-        Vector3 tileAnchor = roomTilemap.tileAnchor;
-        treasureChestWorldPos += new Vector3(cellSize.x * tileAnchor.x,
-                                       cellSize.y * tileAnchor.y - cellSize.y, // 1칸 아래
-                                       0f);
-
-        // Interactive 오브젝트 찾기
-        Transform interactiveParent = FindInteractiveParent(room.roomObject.transform);
-        if (interactiveParent == null)
-        {
-            Debug.LogWarning($"[Treasure Chest] 방({room.roomObject.name})에 Interactive 오브젝트를 찾을 수 없어 방의 직접 자식으로 배치합니다.");
-            interactiveParent = room.roomObject.transform;
-        }
-
-        // Treasure Chest 프리팹 생성 (Interactive의 자식으로)
-        GameObject treasureChest = Instantiate(treasureChestPrefab, treasureChestWorldPos, Quaternion.identity, interactiveParent);
-    }
-    
-    /// <summary>
-    /// 방 오브젝트에서 Interactive 자식 오브젝트를 찾습니다.
-    /// </summary>
-    private Transform FindInteractiveParent(Transform roomTransform)
-    {
-        if (roomTransform == null) return null;
-        
-        // 직접 자식에서 찾기
-        foreach (Transform child in roomTransform)
-        {
-            if (child.name.Contains("Interactive") || child.name.Contains("interactive"))
-            {
-                return child;
-            }
-        }
-        
-        // 재귀적으로 찾기
-        return FindInteractiveParentRecursive(roomTransform);
-    }
-    
-    /// <summary>
-    /// 재귀적으로 Interactive 오브젝트를 찾습니다.
-    /// </summary>
-    private Transform FindInteractiveParentRecursive(Transform parent)
-    {
-        if (parent == null) return null;
-        
-        foreach (Transform child in parent)
-        {
-            if (child.name.Contains("Interactive") || child.name.Contains("interactive"))
-            {
-                return child;
-            }
-            
-            Transform found = FindInteractiveParentRecursive(child);
-            if (found != null)
-            {
-                return found;
-            }
-        }
-        
-        return null;
-    }
-    
-    /// <summary>
-    /// 주어진 셀에서 가장 가까운 타일이 있는 셀을 찾습니다.
-    /// </summary>
-    private Vector3Int FindNearestTileCell(Tilemap tilemap, Vector3Int centerCell, Grid grid)
-    {
-        if (tilemap == null || grid == null) return Vector3Int.zero;
-        
-        // BoundsInt로 타일맵의 범위 가져오기
-        BoundsInt bounds = tilemap.cellBounds;
-        
-        // 중심에서 시작하여 점점 멀어지는 원형으로 검색
-        int maxRadius = Mathf.Max(bounds.size.x, bounds.size.y);
-        
-        for (int radius = 1; radius <= maxRadius; radius++)
-        {
-            // 반경 내의 모든 셀 확인
-            for (int x = -radius; x <= radius; x++)
-            {
-                for (int y = -radius; y <= radius; y++)
-                {
-                    // 원형 범위 내인지 확인
-                    if (x * x + y * y > radius * radius) continue;
-                    
-                    Vector3Int checkCell = centerCell + new Vector3Int(x, y, 0);
-                    
-                    // 타일맵 범위 내인지 확인
-                    if (!bounds.Contains(checkCell)) continue;
-                    
-                    // 타일이 있는지 확인
-                    TileBase tile = tilemap.GetTile(checkCell);
-                    if (tile != null)
-                    {
-                        return checkCell;
-                    }
-                }
-            }
-        }
-        
-        return Vector3Int.zero;
-    }
-    
-    /// <summary>
-    /// 타일맵에서 실제로 타일이 채워져 있는 영역의 중앙 셀을 반환합니다.
-    /// (맵 중앙에 배치해야 하는 오브젝트들의 기준 셀로 사용)
-    /// </summary>
-    private Vector3Int GetRoomCenterCell(Tilemap tilemap)
-    {
-        if (tilemap == null)
-            return Vector3Int.zero;
-
-        BoundsInt bounds = tilemap.cellBounds;
-        bool hasTile = false;
-
-        Vector3Int min = new Vector3Int(int.MaxValue, int.MaxValue, 0);
-        Vector3Int max = new Vector3Int(int.MinValue, int.MinValue, 0);
-
-        foreach (Vector3Int cell in bounds.allPositionsWithin)
-        {
-            TileBase tile = tilemap.GetTile(cell);
-            if (tile == null) continue;
-
-            hasTile = true;
-
-            if (cell.x < min.x) min.x = cell.x;
-            if (cell.y < min.y) min.y = cell.y;
-            if (cell.x > max.x) max.x = cell.x;
-            if (cell.y > max.y) max.y = cell.y;
-        }
-
-        if (!hasTile)
-        {
-            // 타일이 하나도 없으면 bounds의 중앙을 사용 (예외 상황)
-            return new Vector3Int(
-                bounds.xMin + bounds.size.x / 2,
-                bounds.yMin + bounds.size.y / 2,
-                0
-            );
-        }
-
-        Vector3Int size = max - min;
-        // 실제 타일 영역의 중앙 셀 (짝수 크기인 경우 왼쪽/아래쪽에 더 가깝게 정수 나눗셈)
-        return new Vector3Int(
-            min.x + size.x / 2,
-            min.y + size.y / 2,
-            0
-        );
-    }
-    
-    /// <summary>
-    /// 방 오브젝트 하위에서 RoomCenterMarker 태그를 가진 Transform을 찾습니다.
-    /// </summary>
-    private Transform FindRoomCenterMarker(GameObject roomObj)
-    {
-        if (roomObj == null) return null;
-
-        Transform[] children = roomObj.GetComponentsInChildren<Transform>(true);
-        foreach (var t in children)
-        {
-            if (t.CompareTag("RoomCenterMarker"))
-            {
-                return t;
-            }
-        }
-
-        return null;
-    }
-    
-    /// <summary>
-    /// 방의 "논리적 중심" 월드 좌표를 반환합니다.
-    /// 1순위: RoomCenterMarker 태그가 붙은 자식 Transform 위치
-    /// 2순위: roomObj.transform.position
-    /// </summary>
-    private Vector3 GetRoomWorldCenter(GameObject roomObj)
-    {
-        if (roomObj == null)
-            return Vector3.zero;
-
-        // RoomCenterMarker를 우선 사용
-        Transform marker = FindRoomCenterMarker(roomObj);
-        if (marker != null)
-            return marker.position;
-
-        // 없으면 프리팹 기준 위치 사용
-        return roomObj.transform.position;
-    }
-
-    private Bounds Encapsulate(Bounds a, Bounds b)
-    {
-        a.Encapsulate(b);
-        return a;
-    }
-
-    /// <summary>
-    /// 인접한 방들이 모두 서로 문이 연결되도록 보정합니다.
-    /// </summary>
-    private void EnsureAdjacentDoorsConnected()
-    {
-        Vector2Int[] directions = { Direction.Up, Direction.Down, Direction.Left, Direction.Right };
-        
-        foreach (var position in dungeonGrid.GetAllPositions())
-        {
-            Room room = dungeonGrid.GetRoom(position);
-            if (room == null) continue;
-            
-            foreach (Vector2Int dir in directions)
-            {
-                Vector2Int neighborPos = position + dir;
-                Room neighbor = dungeonGrid.GetRoom(neighborPos);
-                if (neighbor == null) continue;
-                
-                // 양쪽 모두 문 연결 상태 보정
-                if (!room.IsDoorConnected(dir) || !neighbor.IsDoorConnected(Direction.Opposite(dir)))
-                {
-                    room.ConnectDoor(dir);
-                    neighbor.ConnectDoor(Direction.Opposite(dir));
-                }
-            }
-        }
     }
     
     /// <summary>
@@ -1290,8 +332,6 @@ public class DungeonGenerator : MonoBehaviour
         }
         
         dungeonGrid = null;
-        corridors?.Clear();
-        eventRoomPositions?.Clear();
     }
 }
 

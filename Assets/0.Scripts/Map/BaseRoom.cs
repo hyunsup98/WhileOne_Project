@@ -8,8 +8,12 @@ using System.Collections.Generic;
 public class BaseRoom : MonoBehaviour
 {
     [Header("Room Settings")]
-    [SerializeField] [Tooltip("방의 크기 (단위: Unity unit)")]
+    [SerializeField] [Tooltip("방의 크기 (단위: Unity unit, 하위 호환용)")]
     protected float roomSize = 4f;
+    [SerializeField] [Tooltip("방의 가로 크기 (단위: 타일 수, 0이면 roomSize 사용)")]
+    protected int roomWidth = 0; // 타일 수 단위
+    [SerializeField] [Tooltip("방의 세로 크기 (단위: 타일 수, 0이면 roomSize 사용)")]
+    protected int roomHeight = 0; // 타일 수 단위
     [SerializeField] [Tooltip("타일 하나의 크기 (단위: Unity unit)")]
     protected float tileSize = 1f;
     [SerializeField] [Tooltip("프리펩을 그대로 사용할지 여부. true면 방을 재생성하지 않고 프리펩 상태 그대로 사용합니다.")]
@@ -18,6 +22,16 @@ public class BaseRoom : MonoBehaviour
     // 외부 접근용
     public float RoomSize => roomSize;
     public float TileSize => tileSize;
+    
+    /// <summary>
+    /// 방의 가로 크기를 Unity unit으로 반환합니다.
+    /// </summary>
+    public float RoomWidth => (roomWidth > 0) ? roomWidth * tileSize : roomSize;
+    
+    /// <summary>
+    /// 방의 세로 크기를 Unity unit으로 반환합니다.
+    /// </summary>
+    public float RoomHeight => (roomHeight > 0) ? roomHeight * tileSize : roomSize;
 
     protected Room roomData;
     
