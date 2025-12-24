@@ -88,7 +88,7 @@ public class DungeonGenerator : MonoBehaviour
     private Vector2Int startRoomPosition;
     private Vector2Int exitRoomPosition;
 
-    [SerializeField] private MonsterPresenter monster;
+    [SerializeField] private MonsterPresenterMVP monster;
     
     private void Start()
     {
