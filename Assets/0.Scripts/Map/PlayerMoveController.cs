@@ -129,7 +129,7 @@ public class PlayerController : MonoBehaviour
             Interactable interactable = hit.GetComponent<Interactable>();
             if (interactable != null)
             {
-                interactable.Interact(gameObject);
+                //interactable.Interact(player);
                 break; // 첫 번째 상호작용 가능한 오브젝트만
             }
         }

@@ -53,6 +53,7 @@ public class Player : MonoBehaviour
 
     //외부에서 사용할 프로퍼티
     public float Hp => _hp;
+    public float MaxHp => _maxHp; // 잠시만추가할게요
     public float Stamina => _stamina;
     public int MoveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }
     public int Attack => _attack;
