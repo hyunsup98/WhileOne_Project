@@ -33,9 +33,9 @@ public class PlayerAttack : MonoBehaviour
     }
     void inIt()
     {
-        _player = transform.root.GetComponent<Player>();
+        _player = GetComponent<Player>();
 
-        _input = transform.root.GetComponent<PlayerInput>();  //최상위 부모의 플레이어 인풋 컴포넌트
+        _input = GetComponent<PlayerInput>();  //최상위 부모의 플레이어 인풋 컴포넌트
 
         _traking = GetComponentInChildren<TrakingPlayer>();
     }

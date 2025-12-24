@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 public class TrakingPlayer : MonoBehaviour
 {
     [SerializeField] GameObject _attackFX;
+    public Transform _test;
     private GameObject _attackFxInstance;
     Vector3 _mousePosition;
     private SpriteRenderer _rend;
@@ -17,29 +18,33 @@ public class TrakingPlayer : MonoBehaviour
            _attackFxInstance = Instantiate(_attackFX);
            _attackFxInstance.SetActive(false);
         }
-        _rend = _attackFxInstance.GetComponent<SpriteRenderer>();
+        _rend = _attackFxInstance.GetComponentInChildren<SpriteRenderer>();
     }
 
     public void PlayEffect()
     {
         if (_attackFxInstance == null) return;
-
-        _mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        Vector3 _mouse = Mouse.current.position.ReadValue();
+        float distanceToCamera = Mathf.Abs(Camera.main.transform.position.z);
+        _mousePosition = Camera.main.ScreenToWorldPoint(new (_mouse.x, _mouse.y, distanceToCamera));
         _mousePosition.z = 0f;
-        Vector2 dir = (_mousePosition - transform.position).normalized;
 
-        if (gameObject.transform.root.localScale.x > 0)
+        Vector2 dir = (_mousePosition - transform.position).normalized;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        if (transform.localScale.x > 0)
         {
-            _attackFxInstance.transform.position = gameObject.transform.root.position + new Vector3(-0.5f, Mathf.Clamp(dir.y, -0.1f, 0.7f), 0);
-            _attackFxInstance.transform.rotation = Quaternion.Euler(_mousePosition);
+            _attackFxInstance.transform.position = transform.position - new Vector3(0,0.4f);
+            _attackFxInstance.transform.rotation = Quaternion.Euler(0, 0, angle + 90f);
             _rend.flipX = true;
         }
         else
         {
-            _attackFxInstance.transform.position = gameObject.transform.root.position + new Vector3(0.5f, Mathf.Clamp(dir.y, -0.1f, 0.7f), 0);
-            _attackFxInstance.transform.rotation = Quaternion.Euler(_mousePosition);
+            _attackFxInstance.transform.position = transform.position - new Vector3(0, 0.4f);
+            _attackFxInstance.transform.rotation = Quaternion.Euler(0, 0, angle + 90f);
             _rend.flipX = false;
         }
+        //_attackFxInstance.transform.position = _test.position + (Vector3)dir;
+        //_attackFxInstance.transform.rotation = _test.rotation;
 
         _attackFxInstance.SetActive(false);
         _attackFxInstance.SetActive(true);
