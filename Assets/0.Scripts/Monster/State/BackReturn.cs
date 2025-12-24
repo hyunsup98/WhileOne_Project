@@ -14,7 +14,7 @@ public class BackReturn : IState
     public BackReturn(MonsterPresenter monster)
     {
         _monster = monster;
-        _myTransform = monster.View.transform;
+        _myTransform = monster.View.MyTransform;
         _speed = monster.Model.MoveSpeed;
         _astar = monster.Model.MobAstar;
         _patrolTarget = _monster.Model.PatrolTarget;

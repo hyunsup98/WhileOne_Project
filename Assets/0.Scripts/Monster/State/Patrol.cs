@@ -6,7 +6,6 @@ public class Patrol : IState
     private MonsterPresenter _monster;
     private Transform _myTransform;
     private float _speed;
-    private float _sight;
     private List<Vector2> _patrolPoint;
     private int _patrolIndex;
     private bool _isRise = true;        // 순찰인덱스 방향 true: 0 -> 끝 , false: 끝 -> 0
@@ -14,10 +13,9 @@ public class Patrol : IState
     public Patrol(MonsterPresenter monster)
     {
         _monster = monster;
-        _myTransform = _monster.View.transform;
+        _myTransform = _monster.View.MyTransform;
         _speed = monster.Model.MoveSpeed;
         _patrolPoint = monster.Model.PatrolPoint;
-        _sight = monster.Model.Sight;
     }
 
 
@@ -64,17 +62,8 @@ public class Patrol : IState
     // LOS 판정
     private void UpdateLOS()
     {
-
         if (_monster.OnSight())
-        {
             _monster.Model.SetState(MonsterState.Chase);
-        }
-
-        //// 레이 시각표현용 임시 코드
-        //Vector2 start = _myTransform.position;
-        //Vector2 dir = (Vector2)_monster.Model.ChaseTarget.position - start;
-        //Debug.DrawRay(start, dir.normalized * _sight, Color.aliceBlue);
-
     }
 
 }
