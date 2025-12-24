@@ -1088,6 +1088,150 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 157689164}
   m_CullTransparentMesh: 1
+--- !u!1 &180236430
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 180236431}
+  - component: {fileID: 180236432}
+  m_Layer: 0
+  m_Name: DungeonGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &180236431
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180236430}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -42.513783, y: -23.43475, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1700578010}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &180236432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180236430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13d55e68e568bed478cebac2752b61f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DungeonGenerator
+  gridSize: 20
+  normalRoomPrefab: {fileID: 4474050308984926237, guid: 455047b7d12f15241b41c37d6d4c897b, type: 3}
+  startRoomPrefab: {fileID: 4474050308984926237, guid: 1e6f31b242c865246b19a2fc4a8a80f2, type: 3}
+  exitRoomPrefab: {fileID: 4474050308984926237, guid: d8f2b899e5705de49ba4ca16276c797b, type: 3}
+  eventRoomPrefab: {fileID: 4474050308984926237, guid: 7154686066db2c544a90d0be579f1c96, type: 3}
+  trapRoomPrefab: {fileID: 4474050308984926237, guid: 99b8963901be3e147bbc947a0b56a58e, type: 3}
+  treasureRoomPrefab: {fileID: 4474050308984926237, guid: b19713a99ee861f45aa0d0d9e58a975b, type: 3}
+  bossRoomPrefab: {fileID: 4474050308984926237, guid: 455047b7d12f15241b41c37d6d4c897b, type: 3}
+  corridorPrefabHorizontal: {fileID: 4474050308984926237, guid: b734ba1dbdbe92a4390eca47755692b1, type: 3}
+  corridorPrefabVertical: {fileID: 4474050308984926237, guid: b9f4e3586b4c1714d87d78ecdc378ad7, type: 3}
+  corridorPrefabCross: {fileID: 4474050308984926237, guid: 5c36556847c98ad40a72d5b28379f9a9, type: 3}
+  branchProbability: 40
+  maxBranchCount: 3
+  roomSpacingInCells: 40
+  autoCalculateSpacing: 1
+  generateOnStart: 1
+  gridParent: {fileID: 2016025121}
+  minTileSpacing: 3
+  playerObject: {fileID: 860721906}
+  digSpotTile: {fileID: 11400000, guid: 6030469b5d45faa4085da000fe36bca1, type: 2}
+  digSpotSpawnChance: 10
+  treasureChestPrefab: {fileID: 8093644079317161710, guid: 79cf0b19d7e468b429c2cf33248d9a67, type: 3}
+  showRoomTypeLabels: 1
+  roomLabelOffsetX: -10
+  roomLabelOffsetY: 5
+--- !u!1 &180391842
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 180391843}
+  - component: {fileID: 180391844}
+  m_Layer: 0
+  m_Name: FloorRoomSetManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &180391843
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180391842}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.28873062, y: -62.32975, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1700578010}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &180391844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180391842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f44ec65a5f04b6e43a61f00d33adef4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FloorRoomSetManager
+  floor1Prefabs:
+    startRoomPrefabs:
+    - {fileID: 4474050308984926237, guid: 1e6f31b242c865246b19a2fc4a8a80f2, type: 3}
+    normalRoomPrefabs:
+    - {fileID: 4474050308984926237, guid: 455047b7d12f15241b41c37d6d4c897b, type: 3}
+    - {fileID: 4474050308984926237, guid: fcb80f439471d30479df03a9cf1ca5ac, type: 3}
+    exitRoomPrefabs:
+    - {fileID: 4474050308984926237, guid: d8f2b899e5705de49ba4ca16276c797b, type: 3}
+    eventRoomPrefabs:
+    - {fileID: 4474050308984926237, guid: 7154686066db2c544a90d0be579f1c96, type: 3}
+    trapRoomPrefabs:
+    - {fileID: 4474050308984926237, guid: 99b8963901be3e147bbc947a0b56a58e, type: 3}
+    treasureRoomPrefabs:
+    - {fileID: 4474050308984926237, guid: b19713a99ee861f45aa0d0d9e58a975b, type: 3}
+    bossRoomPrefabs: []
+  floor2Prefabs:
+    startRoomPrefabs: []
+    normalRoomPrefabs: []
+    exitRoomPrefabs: []
+    eventRoomPrefabs: []
+    trapRoomPrefabs: []
+    treasureRoomPrefabs: []
+    bossRoomPrefabs: []
+  floor3Prefabs:
+    startRoomPrefabs: []
+    normalRoomPrefabs: []
+    exitRoomPrefabs: []
+    eventRoomPrefabs: []
+    trapRoomPrefabs: []
+    treasureRoomPrefabs: []
+    bossRoomPrefabs: []
 --- !u!1 &234527786
 GameObject:
   m_ObjectHideFlags: 0
@@ -1297,6 +1441,61 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 247959782}
   m_CullTransparentMesh: 1
+--- !u!1 &263618620
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 263618621}
+  - component: {fileID: 263618622}
+  m_Layer: 0
+  m_Name: TrapRoomMazeGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &263618621
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 263618620}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -56.612953, y: 1.1742496, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1700578010}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &263618622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 263618620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71ac4e3f62dc63e4c8d6ee29b90aa3cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrapRoomMazeGenerator
+  mazeWidth: 31
+  mazeHeight: 31
+  trapPrefab: {fileID: 4652139313107373167, guid: 1fd9b4c6bd5aa1e4c8f0a467bc3d1cbd, type: 3}
+  trapOffPrefab: {fileID: 5727424884913838383, guid: 3a0d0fb6410dede4fb5c17bbc79db5f1, type: 3}
+  trapAttackInterval: 2
+  maxTrapRatio: 0.3
+  safeZoneRadius: 2
+  leverPrefab: {fileID: 7575494982384084485, guid: f53d75469215d50458095129adeb40f2, type: 3}
+  treasureChestPrefab: {fileID: 6940347219486403973, guid: 883d5bfda88b652449c67ac0311a8464, type: 3}
+  treasureChance: 0.8
+  wallTilePrefab: {fileID: 7088328249393432251, guid: fbd44fb6b2590c04799303d629944d0b, type: 3}
 --- !u!1 &269309906
 GameObject:
   m_ObjectHideFlags: 0
@@ -4290,39 +4489,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 729130246}
   m_CullTransparentMesh: 1
---- !u!1 &735471944
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 735471945}
-  m_Layer: 0
-  m_Name: Managers
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &735471945
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 735471944}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 39.70518, y: 23.07798, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 925403317}
-  - {fileID: 1456317357}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &743429224
 GameObject:
   m_ObjectHideFlags: 0
@@ -5195,75 +5361,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 886082057}
   m_CullTransparentMesh: 1
---- !u!1 &925403316
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 925403317}
-  - component: {fileID: 925403318}
-  m_Layer: 0
-  m_Name: DungeonGenerator
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &925403317
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 925403316}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -42.513783, y: -23.43475, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 735471945}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &925403318
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 925403316}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13d55e68e568bed478cebac2752b61f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DungeonGenerator
-  roomCount: 9
-  gridSize: 20
-  eventRoomCount: 2
-  currentFloor: 1
-  normalRoomPrefab: {fileID: 4474050308984926237, guid: 455047b7d12f15241b41c37d6d4c897b, type: 3}
-  startRoomPrefab: {fileID: 4474050308984926237, guid: 1e6f31b242c865246b19a2fc4a8a80f2, type: 3}
-  exitRoomPrefab: {fileID: 4474050308984926237, guid: d8f2b899e5705de49ba4ca16276c797b, type: 3}
-  eventRoomPrefab: {fileID: 4474050308984926237, guid: 7154686066db2c544a90d0be579f1c96, type: 3}
-  trapRoomPrefab: {fileID: 4474050308984926237, guid: 99b8963901be3e147bbc947a0b56a58e, type: 3}
-  treasureRoomPrefab: {fileID: 4474050308984926237, guid: 455047b7d12f15241b41c37d6d4c897b, type: 3}
-  roomSpacing: 40
-  autoCalculateSpacing: 0
-  generateOnStart: 1
-  gridParent: {fileID: 2016025121}
-  minTileSpacing: 3
-  playerObject: {fileID: 860721906}
-  digSpotTile: {fileID: 11400000, guid: 6030469b5d45faa4085da000fe36bca1, type: 2}
-  digSpotSpawnChance: 10
-  treasureChestPrefab: {fileID: 8093644079317161710, guid: 79cf0b19d7e468b429c2cf33248d9a67, type: 3}
-  showRoomTypeLabels: 1
-  roomLabelOffsetX: -1
-  roomLabelOffsetY: 0.5
-  showCorridorLabels: 0
-  corridorLabelOffsetY: 0.2
-  roomLabelFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &925626713
 GameObject:
   m_ObjectHideFlags: 0
@@ -7882,61 +7979,6 @@ RectTransform:
   m_AnchoredPosition: {x: 256, y: -150}
   m_SizeDelta: {x: 512, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1456317356
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1456317357}
-  - component: {fileID: 1456317358}
-  m_Layer: 0
-  m_Name: TrapRoomMazeGenerator
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1456317357
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1456317356}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -56.612953, y: 1.1742496, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 735471945}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1456317358
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1456317356}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71ac4e3f62dc63e4c8d6ee29b90aa3cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TrapRoomMazeGenerator
-  mazeWidth: 15
-  mazeHeight: 15
-  trapPrefab: {fileID: 4652139313107373167, guid: 1fd9b4c6bd5aa1e4c8f0a467bc3d1cbd, type: 3}
-  trapOffPrefab: {fileID: 5727424884913838383, guid: 3a0d0fb6410dede4fb5c17bbc79db5f1, type: 3}
-  trapAttackInterval: 2
-  maxTrapRatio: 0.3
-  safeZoneRadius: 2
-  leverPrefab: {fileID: 7575494982384084485, guid: f53d75469215d50458095129adeb40f2, type: 3}
-  treasureChestPrefab: {fileID: 6940347219486403973, guid: 883d5bfda88b652449c67ac0311a8464, type: 3}
-  treasureChance: 0.8
-  wallTilePrefab: {fileID: 7088328249393432251, guid: fbd44fb6b2590c04799303d629944d0b, type: 3}
 --- !u!1 &1467951439
 GameObject:
   m_ObjectHideFlags: 0
@@ -8896,6 +8938,40 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &1700578009
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1700578010}
+  m_Layer: 0
+  m_Name: Managers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1700578010
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1700578009}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 39.70518, y: 23.07798, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 180236431}
+  - {fileID: 263618621}
+  - {fileID: 180391843}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1722850237
 GameObject:
   m_ObjectHideFlags: 0
@@ -10752,7 +10828,7 @@ SceneRoots:
   - {fileID: 1825817961}
   - {fileID: 1478342407}
   - {fileID: 2016025121}
-  - {fileID: 735471945}
+  - {fileID: 1700578010}
   - {fileID: 934269155}
   - {fileID: 58696981}
   - {fileID: 860721903}

@@ -11,7 +11,6 @@ public class AttackDamage : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-
         if (collision.CompareTag("Monster"))
         {
             if (collision.TryGetComponent<MonsterView>(out var monster))
