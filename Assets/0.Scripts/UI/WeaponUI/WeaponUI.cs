@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,12 +12,15 @@ public class WeaponUI : MonoBehaviour
     [SerializeField] private TMP_Text text_WeaponDesc1;     // 무기 설명 텍스트1
     [SerializeField] private TMP_Text text_WeaponDesc2;     // 무기 설명 텍스트2
 
-    private WeaponData weapon;      //UI에 표시할 무기
+    private Weapon weapon;      //UI에 표시할 무기
 
     // UI로 표시할 무기가 어떤 것인지 받아옴
-    public void SetWeaponInit(WeaponData weapon)
+    public void SetWeaponInit(Weapon weapon)
     {
         this.weapon = weapon;
+
+        text_WeaponName.text = weapon.weaponName;
+        img_Weapon.sprite = weapon.weaponIcon;
 
         // todo: 무기에 관련된 정보를 이용해 UI 오브젝트에 적용하기
     }
@@ -47,7 +51,7 @@ public class WeaponUI : MonoBehaviour
     /// 무기 획득 UI창을 켜는 메서드
     /// </summary>
     /// <param name="weapon"></param>
-    public void EnableUI(WeaponData weapon)
+    public void EnableUI(Weapon weapon, Chest chest)
     {
         SetWeaponInit(weapon);
 

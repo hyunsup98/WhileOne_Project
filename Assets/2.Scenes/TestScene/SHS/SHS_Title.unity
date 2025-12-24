@@ -1495,6 +1495,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67af851fd5714324e921d8decfe832c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  <player>k__BackingField: {fileID: 0}
+  <CurrentDungeon>k__BackingField: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

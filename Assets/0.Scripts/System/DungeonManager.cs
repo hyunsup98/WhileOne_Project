@@ -4,6 +4,7 @@ using UnityEngine.Tilemaps;
 
 public class DungeonManager : MonoBehaviour
 {
+    #region 발굴 관련 변수
     [field: SerializeField] public Tile DigSpotTile { get; private set; }       // 발굴이 가능한 타일
     [field: SerializeField] public TreasureBar TreasureBarUI { get; private set; }
 
@@ -21,6 +22,13 @@ public class DungeonManager : MonoBehaviour
     public TileManager _tileManager { get; private set; }
 
     public RoomController Test;
+    #endregion
+
+    #region 상자, 무기 관련 변수
+    [field: SerializeField] public WeaponUI GetWeaponUI { get; private set; }
+    [field: SerializeField] public GameObject WeaponFailUI { get; private set; }
+    [field: SerializeField] public GameObject InteractText { get; private set; }
+    #endregion
 
     private void Awake()
     {
