@@ -2,8 +2,8 @@ using UnityEngine;
 
 /// <summary>
 /// 함정 방의 런타임 동작을 관리하는 컨트롤러.
-/// - 플레이어가 방에 진입하면 문을 잠그고 함정을 활성화(예정)
-/// - 레버가 작동되면 문을 다시 열고 함정을 비활성화(예정)
+/// - 플레이어가 방에 진입하면 문을 잠그고 함정을 활성화
+/// - 레버가 작동되면 문을 다시 열고 함정을 비활성화
 /// </summary>
 public class TrapRoomController : MonoBehaviour
 {

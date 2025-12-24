@@ -14,7 +14,7 @@ public static class DungeonRoomPlacer
         Transform parent,
         Grid unityGrid,
         int roomSpacingInCells,
-        Dictionary<RoomType, GameObject> roomPrefabs,
+        Dictionary<RoomType, GameObject[]> roomPrefabs,
         bool showRoomTypeLabels,
         float roomLabelOffsetX,
         float roomLabelOffsetY,
@@ -324,14 +324,33 @@ public static class DungeonRoomPlacer
         textMesh.offsetZ = -1f;
     }
     
-    private static GameObject GetRoomPrefab(RoomType type, Dictionary<RoomType, GameObject> roomPrefabs)
+    /// <summary>
+    /// 방 타입에 해당하는 프리팹 리스트에서 랜덤하게 하나를 선택하여 반환합니다.
+    /// </summary>
+    private static GameObject GetRoomPrefab(RoomType type, Dictionary<RoomType, GameObject[]> roomPrefabs)
     {
-        if (roomPrefabs.ContainsKey(type) && roomPrefabs[type] != null)
-            return roomPrefabs[type];
+        // 해당 타입의 프리팹 리스트가 있는지 확인
+        if (roomPrefabs.ContainsKey(type) && roomPrefabs[type] != null && roomPrefabs[type].Length > 0)
+        {
+            GameObject[] prefabs = roomPrefabs[type];
+            // null이 아닌 프리팹만 필터링
+            var validPrefabs = System.Array.FindAll(prefabs, p => p != null);
+            if (validPrefabs.Length > 0)
+            {
+                // 프리팹 리스트에서 랜덤하게 선택
+                return validPrefabs[Random.Range(0, validPrefabs.Length)];
+            }
+        }
         
         // Normal 프리팹을 기본값으로 사용
-        if (roomPrefabs.ContainsKey(RoomType.Normal))
-            return roomPrefabs[RoomType.Normal];
+        if (roomPrefabs.ContainsKey(RoomType.Normal) && roomPrefabs[RoomType.Normal] != null && roomPrefabs[RoomType.Normal].Length > 0)
+        {
+            var normalPrefabs = System.Array.FindAll(roomPrefabs[RoomType.Normal], p => p != null);
+            if (normalPrefabs.Length > 0)
+            {
+                return normalPrefabs[Random.Range(0, normalPrefabs.Length)];
+            }
+        }
         
         return null;
     }

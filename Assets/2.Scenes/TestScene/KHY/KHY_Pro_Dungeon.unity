@@ -4321,6 +4321,7 @@ Transform:
   m_Children:
   - {fileID: 925403317}
   - {fileID: 1456317357}
+  - {fileID: 1412007154}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &743429224
@@ -7692,6 +7693,87 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1 &1412007153
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1412007154}
+  - component: {fileID: 1412007155}
+  m_Layer: 0
+  m_Name: FloorRoomSetManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1412007154
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1412007153}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.28873062, y: -62.32975, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 735471945}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1412007155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1412007153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f44ec65a5f04b6e43a61f00d33adef4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FloorRoomSetManager
+  floor1Prefabs:
+    startRoomPrefabs:
+    - {fileID: 4474050308984926237, guid: 1e6f31b242c865246b19a2fc4a8a80f2, type: 3}
+    normalRoomPrefabs:
+    - {fileID: 4474050308984926237, guid: 455047b7d12f15241b41c37d6d4c897b, type: 3}
+    - {fileID: 4474050308984926237, guid: fcb80f439471d30479df03a9cf1ca5ac, type: 3}
+    - {fileID: 4474050308984926237, guid: 3d7fc53854988f345a6ec2c7a230cc6c, type: 3}
+    - {fileID: 4474050308984926237, guid: 11289224f0774bd4c93d9c923baba44b, type: 3}
+    - {fileID: 4474050308984926237, guid: 5d3744676d064ee45bdc40ec31a95ec2, type: 3}
+    - {fileID: 4474050308984926237, guid: 298435267a6c0754ebbf5947f51b3090, type: 3}
+    - {fileID: 4474050308984926237, guid: b8b26da3fabc35749859d06f207ac36e, type: 3}
+    - {fileID: 4474050308984926237, guid: 5ebf384f970393943bf0c2b790c33340, type: 3}
+    exitRoomPrefabs:
+    - {fileID: 4474050308984926237, guid: d8f2b899e5705de49ba4ca16276c797b, type: 3}
+    eventRoomPrefabs:
+    - {fileID: 4474050308984926237, guid: 7154686066db2c544a90d0be579f1c96, type: 3}
+    trapRoomPrefabs:
+    - {fileID: 4474050308984926237, guid: 99b8963901be3e147bbc947a0b56a58e, type: 3}
+    treasureRoomPrefabs:
+    - {fileID: 4474050308984926237, guid: b19713a99ee861f45aa0d0d9e58a975b, type: 3}
+    bossRoomPrefabs: []
+  floor2Prefabs:
+    startRoomPrefabs: []
+    normalRoomPrefabs: []
+    exitRoomPrefabs: []
+    eventRoomPrefabs: []
+    trapRoomPrefabs: []
+    treasureRoomPrefabs: []
+    bossRoomPrefabs: []
+  floor3Prefabs:
+    startRoomPrefabs: []
+    normalRoomPrefabs: []
+    exitRoomPrefabs: []
+    eventRoomPrefabs: []
+    trapRoomPrefabs: []
+    treasureRoomPrefabs: []
+    bossRoomPrefabs: []
 --- !u!1 &1432893470
 GameObject:
   m_ObjectHideFlags: 0

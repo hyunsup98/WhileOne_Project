@@ -137,6 +137,7 @@ GameObject:
   - component: {fileID: 1485902094766885545}
   - component: {fileID: 2859676890898842891}
   - component: {fileID: -3799354252193177213}
+  - component: {fileID: 756723972707586856}
   m_Layer: 0
   m_Name: Combat_Room_1F_A1
   m_TagString: Untagged
@@ -195,6 +196,21 @@ MonoBehaviour:
   roomHeight: 31
   tileSize: 1
   usePrefabAsIs: 1
+--- !u!114 &756723972707586856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4474050308984926237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 098f00216fa940042a63b43de2baba97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomController
+  floorTileMap: {fileID: 6052733454294142852}
+  digSpotTileMap: {fileID: 2697818354413696627}
+  afterDigTile: {fileID: 0}
 --- !u!1 &5005306266959094274
 GameObject:
   m_ObjectHideFlags: 0

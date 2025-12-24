@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 using System.Linq;
-using static FloorSetting;
+using static FloorRoomSetManager;
 
 /// <summary>
 /// 던전을 생성하는 메인 클래스
@@ -108,7 +108,7 @@ public class DungeonGenerator : MonoBehaviour
         //currentFloor = DungeonManager.Instance != null ? DungeonManager.Instance.CurrentFloor : currentFloor;
         // ㄴ DungeonManager에서 현재 층 정보 저장하는 변수 필요
 
-        FloorInfo floorInfo = FloorSetting.GetFloorInfo(currentFloor);
+        FloorInfo floorInfo = FloorRoomSetManager.GetFloorInfo(currentFloor);
 
         int roomCount = floorInfo != null ? floorInfo.Rooms.Length : 9;
 
@@ -153,16 +153,36 @@ public class DungeonGenerator : MonoBehaviour
         SetRooms(floorInfo);
         
         // 5. 방 오브젝트 생성
-        Dictionary<RoomType, GameObject> roomPrefabs = new Dictionary<RoomType, GameObject>
+        // 층별 프리팹 리스트를 우선 사용하고, 없으면 기본 프리팹을 fallback으로 사용
+        Dictionary<RoomType, GameObject[]> roomPrefabs = new Dictionary<RoomType, GameObject[]>();
+        
+        // 기본 프리팹 딕셔너리 (fallback용, 단일 프리팹을 배열로 변환)
+        Dictionary<RoomType, GameObject[]> defaultPrefabs = new Dictionary<RoomType, GameObject[]>
         {
-            { RoomType.Normal, normalRoomPrefab },
-            { RoomType.Start, startRoomPrefab },
-            { RoomType.Exit, exitRoomPrefab },
-            { RoomType.Event, eventRoomPrefab },
-            { RoomType.Trap, trapRoomPrefab },
-            { RoomType.Treasure, treasureRoomPrefab },
-            { RoomType.Boss, bossRoomPrefab }
+            { RoomType.Normal, normalRoomPrefab != null ? new[] { normalRoomPrefab } : null },
+            { RoomType.Start, startRoomPrefab != null ? new[] { startRoomPrefab } : null },
+            { RoomType.Exit, exitRoomPrefab != null ? new[] { exitRoomPrefab } : null },
+            { RoomType.Event, eventRoomPrefab != null ? new[] { eventRoomPrefab } : null },
+            { RoomType.Trap, trapRoomPrefab != null ? new[] { trapRoomPrefab } : null },
+            { RoomType.Treasure, treasureRoomPrefab != null ? new[] { treasureRoomPrefab } : null },
+            { RoomType.Boss, bossRoomPrefab != null ? new[] { bossRoomPrefab } : null }
         };
+        
+        // 층별 프리팹 리스트를 가져와서 사용 (없으면 기본 프리팹 사용)
+        if (floorInfo != null && floorInfo.FloorRoomPrefabs != null)
+        {
+            foreach (RoomType roomType in System.Enum.GetValues(typeof(RoomType)))
+            {
+                GameObject[] prefabs = FloorRoomSetManager.GetRoomPrefabs(currentFloor, roomType);
+                // 층별 프리팹 리스트가 있으면 사용, 없으면 기본 프리팹 사용
+                roomPrefabs[roomType] = (prefabs != null && prefabs.Length > 0) ? prefabs : defaultPrefabs[roomType];
+            }
+        }
+        else
+        {
+            // FloorInfo가 없으면 기본 프리팹만 사용
+            roomPrefabs = defaultPrefabs;
+        }
         
         Transform parent = gridParent != null ? gridParent : transform;
         DungeonRoomPlacer.CreateRoomObjects(

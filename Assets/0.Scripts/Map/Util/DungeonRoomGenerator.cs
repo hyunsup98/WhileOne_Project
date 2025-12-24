@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using static FloorSetting;
+using static FloorRoomSetManager;
 
 /// <summary>
 /// 던전 방 생성 알고리즘을 담당하는 클래스

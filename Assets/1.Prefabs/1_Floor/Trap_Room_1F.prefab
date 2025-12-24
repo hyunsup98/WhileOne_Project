@@ -139,6 +139,7 @@ GameObject:
   - component: {fileID: 771770488333871701}
   - component: {fileID: 3120855517842404801}
   - component: {fileID: -3680761174265730085}
+  - component: {fileID: 931586866170202716}
   m_Layer: 0
   m_Name: Trap_Room_1F
   m_TagString: Untagged
@@ -256,6 +257,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c762e5997e0018044aeb3c93f040c42a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrapRoomController
+--- !u!114 &931586866170202716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4474050308984926237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 098f00216fa940042a63b43de2baba97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomController
+  floorTileMap: {fileID: 6052733454294142852}
+  digSpotTileMap: {fileID: 2697818354413696627}
+  afterDigTile: {fileID: 0}
 --- !u!1 &5005306266959094274
 GameObject:
   m_ObjectHideFlags: 0

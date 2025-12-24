@@ -506,6 +506,7 @@ GameObject:
   - component: {fileID: 1485902094766885545}
   - component: {fileID: 2859676890898842891}
   - component: {fileID: 6051524378605965935}
+  - component: {fileID: 2524112227425039361}
   m_Layer: 0
   m_Name: Exit_Room_1F
   m_TagString: Untagged
@@ -565,6 +566,21 @@ MonoBehaviour:
   tileSize: 1
   usePrefabAsIs: 1
   exitZoneRadius: 0
+--- !u!114 &2524112227425039361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4474050308984926237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 098f00216fa940042a63b43de2baba97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomController
+  floorTileMap: {fileID: 6052733454294142852}
+  digSpotTileMap: {fileID: 1718942876602534588}
+  afterDigTile: {fileID: 0}
 --- !u!1 &5001293700545104583
 GameObject:
   m_ObjectHideFlags: 0
