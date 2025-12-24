@@ -20,4 +20,6 @@ MonoBehaviour:
   _sight: 3
   _sightAngle: 90
   _searchTime: 3
-  _actionList: 00000000
+  _actionList:
+  - {fileID: 11400000, guid: 029f8ab830018524c89bcf027b0bc96e, type: 2}
+  - {fileID: 11400000, guid: 0ab068d626c46764b9a13355190fd682, type: 2}

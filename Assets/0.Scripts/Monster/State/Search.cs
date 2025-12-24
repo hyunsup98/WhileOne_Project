@@ -11,6 +11,7 @@ public class Search : IState
     private float _searchTime;
     private float _timer;
     private MonsterView _view;
+    private Transform _searchImage;
 
 
 
@@ -21,18 +22,21 @@ public class Search : IState
         _sight = monster.Model.Sight;
         _searchTime = monster.Model.SearchTime;
         _view = monster.View;
+        _searchImage = monster.View.transform.Find("Search");
     }
 
 
     public void Enter()
     {
         _view.OnIdleAni();
+        _searchImage.gameObject.SetActive(true);
     }
 
     public void Exit()
     {
         _timer = 0f;
         _view.OnDisIdleAni();
+        _searchImage.gameObject.SetActive(false);
     }
 
     public void Update() 
@@ -43,7 +47,6 @@ public class Search : IState
 
     private void OnSearch()
     {
-
         _timer += Time.unscaledDeltaTime;
 
         Vector2 dir = _monster.Model.ChaseTarget.position - _myTransform.position;
@@ -52,48 +55,9 @@ public class Search : IState
         {
             if(_monster.OnSight())
                 _monster.Model.SetState(MonsterState.Chase);
-
-            Debug.Log("<color=brown>탐색 중</color>" + _timer);
             return;
         }
 
         _monster.Model.SetState(MonsterState.BackReturn);
     }
-
-    //private IEnumerator UpdateLOS(Vector2 start, Vector2 target)
-    //{
-    //    Vector2 dirNomlized = (target - start).normalized;
-
-    //    int layerMask = LayerMask.GetMask("Player", "Wall");
-    //    int playerLayer = LayerMask.NameToLayer("Player");
-
-    //    while (_searchTime > 0)
-    //    {
-    //        // 전방에 _maxAngle * 2의 범위 LOS 발사
-    //        for (float angle = -_maxAngle; angle <= _maxAngle; angle++)
-    //        {
-    //            Vector2 dir = Quaternion.Euler(0, 0, angle) * dirNomlized;
-
-    //            RaycastHit2D hit = Physics2D.Raycast(start, dir, _sight, layerMask);
-
-    //            Debug.DrawRay(start, dir * _sight, Color.red);
-
-    //            if (hit.collider == null)
-    //                continue;
-
-    //            if (hit.collider.gameObject.layer == playerLayer)
-    //            {
-    //                _monster.Model.SetTarget(hit.transform);
-    //                _monster.Model.SetState(MonsterState.Chase);
-    //                yield break;
-    //            }
-    //        }
-
-    //        yield return CoroutineManager.waitForSeconds(0.1f);
-    //        _searchTime--;
-    //    }
-
-    //    if (_searchTime <= 0)
-    //        _monster.Model.SetState(MonsterState.BackReturn);
-    //}
 }

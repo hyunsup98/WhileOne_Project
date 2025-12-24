@@ -21114,6 +21114,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1485902094766885545}
     m_Modifications:
+    - target: {fileID: 2673785053295469428, guid: f7b3578d53e9d8344bbf0198c98575e2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3789408753425000989, guid: f7b3578d53e9d8344bbf0198c98575e2, type: 3}
       propertyPath: m_Name
       value: Monster

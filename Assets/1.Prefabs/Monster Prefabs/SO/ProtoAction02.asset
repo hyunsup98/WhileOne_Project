@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fddde8479c6eebd49b7aebd2de460a00, type: 3}
-  m_Name: ProtoAction01
-  m_EditorClassIdentifier: Assembly-CSharp::MonsterPattern01
-  _monsterActionID: 100101
+  m_Script: {fileID: 11500000, guid: 33148fe6f2ea33d4cb584870ce0153c1, type: 3}
+  m_Name: ProtoAction02
+  m_EditorClassIdentifier: Assembly-CSharp::Pattern02SO
+  _monsterActionID: 100202
   _name: 
   _monsterID: 0
   _actionClass: 1
@@ -24,8 +24,9 @@ MonoBehaviour:
   _speedBoost: 0
   _actionResource: 
   _actionSound: 
-  _rushSpeed: 7
-  _rushDistance: 4
+  _actionRange: 2
+  _actionAngle: 60
   _chargeDelay: 1
+  _actionTime: 1.5
   _pathPreview: {fileID: 0}
-  _hitDecision: {fileID: 3913412838696352892, guid: e2e661ebf21a15d4e8b50513701a79ab, type: 3}
+  _hitDecision: {fileID: 4505344409465375032, guid: e7ea19e72c9ad964ba7b5df981f4703d, type: 3}

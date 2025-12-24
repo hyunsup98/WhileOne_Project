@@ -1,24 +1,14 @@
+using System.Collections;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
-public class MonsterPattern01 : IAction
+public class MonsterPattern01 : MonsterPattern
 {
-    private MonsterPresenter _monster;
     private Transform _myTransform;
     private Vector2 _target;
-    private float _damage;
     private float _rushSpeed;
     private float _rushDistance;
-    private float _chargeDelay;
+    private float _timer;
 
-    private float _attackTime;
-
-    private AttackEffect _attackEffect;
-    private GameObject _createdHitDecition;
-    private GameObject _hitDecision;
-    private GameObject _pathPreview;
-
-    public bool IsAction {  get; private set; }
 
     public MonsterPattern01(Pattern01SO actionData, MonsterPresenter monster)
     {
@@ -30,44 +20,37 @@ public class MonsterPattern01 : IAction
         _chargeDelay = actionData.ChargeDelay;
         _pathPreview = actionData.PathPreview;
         _hitDecision = actionData.HitDecision;
+        IsActionable = true;
     }
 
 
-    public void StartAction()
+    public override void StartAction()
     {
-        _target = _monster.Model.ChaseTarget.position;
         IsAction = true;
 
-        _createdHitDecition = GameObject.Instantiate
-            (
-            _hitDecision,
-            _myTransform.position,
-            Quaternion.identity,
-            _myTransform
-            );
-
-        _attackEffect = _createdHitDecition.GetComponent<AttackEffect>();
-        _attackEffect.OnAttack += OnCrash;
-
-        _target = (_target - (Vector2)_myTransform.position).normalized;
+        // 스킬 이펙트 오브젝트 생성
+        Vector3 target = _monster.Model.ChaseTarget.position;
+        _target = ( target - _myTransform.position ).normalized;
+        _monster.StartCoroutine(OnChargeDelay(_myTransform.position, "Pattern01"));
     }
     
-    public void OnAction()
+    public override void OnAction()
     {
-        _attackTime += Time.deltaTime;
-
-        Vector2 start = _myTransform.position;
-        int layerMask = LayerMask.GetMask("Wall");
-        RaycastHit2D hit = Physics2D.Raycast(start, _target, 0.5f, layerMask);
+        if (_isDelay)
+            return;
 
         // 타이머로 돌진 종료 판정
-        if (_attackTime >= 0.5f)
+        _timer += Time.unscaledDeltaTime;
+        if (_timer >= ( _rushDistance / _rushSpeed ))
         {
-            _attackTime = 0;
             IsAction = false;
+            return;
         }
 
         // 벽에 부딪히면 몬스터 위치 이동은 없음(애니메이션은 출력)
+        Vector2 start = _myTransform.position;
+        int layerMask = LayerMask.GetMask("Wall");
+        RaycastHit2D hit = Physics2D.Raycast(start, _target, 0.5f, layerMask);
         if (hit.collider != null)
             return;
 
@@ -75,20 +58,9 @@ public class MonsterPattern01 : IAction
         _myTransform.Translate(_target * Time.deltaTime * _rushSpeed);
     }
 
-    public void EndAction()
+    public override void EndAction()
     {
-        GameObject.Destroy(_createdHitDecition);
-        _attackEffect.Init();
-    }
-
-    // 플레이어 타격시 데미지 계산
-    private void OnCrash(Collider2D collision)
-    {
-        int playerLayer = LayerMask.NameToLayer("Player");
-        if (collision.gameObject.layer == playerLayer)
-        {
-            Player player = collision.GetComponent<Player>();
-            player.TakenDamage(_damage, _myTransform.position);
-        }
+        _timer = 0;
+        OnDisEffect();
     }
 }
