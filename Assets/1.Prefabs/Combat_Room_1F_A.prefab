@@ -21114,26 +21114,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1485902094766885545}
     m_Modifications:
-    - target: {fileID: 2673785053295469428, guid: f7b3578d53e9d8344bbf0198c98575e2, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3789408753425000989, guid: f7b3578d53e9d8344bbf0198c98575e2, type: 3}
       propertyPath: m_Name
       value: Monster
       objectReference: {fileID: 0}
     - target: {fileID: 7969065738387303571, guid: f7b3578d53e9d8344bbf0198c98575e2, type: 3}
-      propertyPath: _chaseTarget
-      value: 
-      objectReference: {fileID: 9078672956431459521, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
-    - target: {fileID: 7969065738387303571, guid: f7b3578d53e9d8344bbf0198c98575e2, type: 3}
       propertyPath: _wallTilemap
       value: 
       objectReference: {fileID: 6908162673671313679}
-    - target: {fileID: 7969065738387303571, guid: f7b3578d53e9d8344bbf0198c98575e2, type: 3}
-      propertyPath: _patrolTarget.Array.size
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 7969065738387303571, guid: f7b3578d53e9d8344bbf0198c98575e2, type: 3}
       propertyPath: '_patrolTarget.Array.data[0]'
       value: 

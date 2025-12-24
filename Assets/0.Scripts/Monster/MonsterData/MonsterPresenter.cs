@@ -48,8 +48,8 @@ public class MonsterPresenter
                 ActionFactory.Create(action, this)
                 );
 
-            Debug.Log("액션ID" + (ActionID)(action.MonsterActionID % 10));
-            Debug.Log("어떤 액션인지" + Model.ActionDict[(ActionID)(action.MonsterActionID % 10)]);
+            Debug.Log($"<color=yellow>{Model.Name}</color>" + (ActionID)(action.MonsterActionID % 10));
+            Debug.Log($"<color=Brown>{Model.Name} 액션</color>" + Model.ActionDict[(ActionID)(action.MonsterActionID % 10)]);
         }
 
 
@@ -84,12 +84,12 @@ public class MonsterPresenter
     // 몬스터 시야각에 플레이어가 들어왔는지 판단 후 LOS 발사
     public bool OnSight()
     {
-        Vector2 dir = Model.ChaseTarget.position - View.transform.position;
-        Vector2 frontal = new Vector2(View.transform.localScale.x, 0).normalized;
+        Vector2 dir = Model.ChaseTarget.position - View.MyTransform.position;
+        Vector2 frontal = new Vector2(View.MyTransform.localScale.x, 0).normalized;
 
         //LOS 검사를 위한 테스트용 레이
         Vector2 taget = dir.normalized * Model.Sight;
-        Debug.DrawRay(View.transform.position, taget, Color.blue);
+        Debug.DrawRay(View.MyTransform.position, taget, Color.blue);
         //
 
 

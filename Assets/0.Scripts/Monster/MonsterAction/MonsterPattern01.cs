@@ -13,7 +13,7 @@ public class MonsterPattern01 : MonsterPattern
     public MonsterPattern01(Pattern01SO actionData, MonsterPresenter monster)
     {
         _monster = monster;
-        _myTransform = monster.View.transform;
+        _myTransform = monster.View.MyTransform;
         _damage = actionData.ActionDamage;
         _rushDistance = actionData.RushDistance;
         _rushSpeed = actionData.RushSpeed;

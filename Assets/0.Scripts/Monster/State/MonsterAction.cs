@@ -11,7 +11,9 @@ public class MonsterAction : IState
     {
         _monster = monster;
         _view = monster.View;
-        _action = monster.Model.ActionDict[ActionID.two];
+
+        foreach(var actionDict in monster.Model.ActionDict)
+            _action = actionDict.Value;
     }
 
 

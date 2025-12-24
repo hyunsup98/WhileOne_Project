@@ -32,21 +32,6 @@ public abstract class MonsterPattern
     public abstract void EndAction();
 
 
-    // 시전 시간
-    public virtual IEnumerator OnChargeDelay(Vector2 createdPos, string aniName)
-    {
-        _isDelay = true;
-        OnAniTrigger?.Invoke("Idle");
-
-        yield return CoroutineManager.waitForSecondsRealtime(_chargeDelay);
-
-        // 시전 준비 시간이 끝나고 액션 이펙트를 생성
-        CreatedEffect(createdPos);
-        OnAniTrigger?.Invoke(aniName);
-        _isDelay = false;
-    }
-
-
     protected void CreatedEffect(Vector2 createdPos)
     {
         // 스킬 이펙트 오브젝트 생성
@@ -55,7 +40,7 @@ public abstract class MonsterPattern
             _hitDecision,
             createdPos,
             Quaternion.identity,
-            _monster.View.transform
+            _monster.View.MyTransform
             );
 
         _attackEffect = _createdHitDecition.GetComponent<AttackEffect>();
@@ -69,7 +54,7 @@ public abstract class MonsterPattern
         if (collision.gameObject.layer == playerLayer)
         {
             Player player = collision.GetComponent<Player>();
-            player.TakenDamage(_damage, _monster.View.transform.position);
+            player.TakenDamage(_damage, _monster.View.MyTransform.position);
         }
     }
 
@@ -87,5 +72,23 @@ public abstract class MonsterPattern
             _attackEffect.Init();
         GameObject.Destroy(_createdHitDecition);
         //OnCool();
+    }
+
+
+    // 시전 시간(스킬과 애니메이션 사이의 aniDelayTime은 하드코딩)
+    public virtual IEnumerator OnChargeDelay(Vector2 createdPos, string aniName, float aniDelayTime = 0f)
+    {
+        _isDelay = true;
+
+        OnAniTrigger?.Invoke("Idle");
+        yield return CoroutineManager.waitForSecondsRealtime(_chargeDelay);
+        OnAniTrigger?.Invoke(aniName);
+
+        yield return CoroutineManager.waitForSecondsRealtime(aniDelayTime);
+
+        // 시전 준비 시간이 끝나고 액션 이펙트를 생성
+        CreatedEffect(createdPos);
+
+        _isDelay = false;
     }
 }

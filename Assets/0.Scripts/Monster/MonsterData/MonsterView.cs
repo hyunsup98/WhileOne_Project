@@ -8,16 +8,23 @@ public class MonsterView : MonoBehaviour
     [SerializeField] private MonsterDataSO _monsterData;    // 몬스터 데이터 SO
     [SerializeField] private Tilemap _wallTilemap;          // 경로 탐색을 위한 타일맵
     [SerializeField] private List<Transform> _patrolTarget;
-
+    
+    public Transform MyTransform { get; private set; }
     public MonsterPresenter Presenter { get; private set; }
 
     private Animator _animator;
 
     private void Awake()
     {
-        Presenter = new MonsterPresenter
-            (_monsterData, this, _wallTilemap, _patrolTarget);
         _animator = GetComponent<Animator>();
+
+        // 특정 오브젝트의 중심값 보정을 위한 코드
+        if (transform.parent.CompareTag("Monster"))
+            MyTransform = transform.parent;
+        else
+            MyTransform = transform;
+
+        Presenter = new MonsterPresenter(_monsterData, this, _wallTilemap, _patrolTarget);
     }
 
     // 테스트용 코드
@@ -85,9 +92,9 @@ public class MonsterView : MonoBehaviour
     {
         OnTurn(target);
 
-        transform.position = Vector2.MoveTowards
+        MyTransform.position = Vector2.MoveTowards
             (
-            transform.position,
+            MyTransform.position,
             target,
             speed * Time.deltaTime
             );
@@ -96,16 +103,16 @@ public class MonsterView : MonoBehaviour
     // 타겟의 방향으로 몸을 돌리는 로직
     public void OnTurn(Vector2 target)
     {
-        Vector2 dir = target - (Vector2)transform.position;
+        Vector2 dir = target - (Vector2)MyTransform.position;
         Vector2 dirX = new Vector2(dir.x, 0f).normalized;
         if (dirX.x != 0f)
-            transform.localScale = new Vector3(dirX.x, 1f, 1f);
+            MyTransform.localScale = new Vector3(dirX.x, 1f, 1f);
     }
 
     // target방향으로 LOS를 발사했을 때, 플레이어와 직선 거리에 존재시에 true 반환
     public RaycastHit2D OnLOS(Vector2 target, float sight)
     {
-        Vector2 start = transform.position;
+        Vector2 start = MyTransform.position;
         Vector2 dir = target - start;
 
         int layerMask = LayerMask.GetMask("Wall", "Player");

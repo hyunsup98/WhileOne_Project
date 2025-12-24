@@ -6,7 +6,7 @@ public class MonsterPattern04 : MonsterPattern
     private float _acttackRange;
     private float _actionAngle;
     private float _actionTime;
-    private float _timer;  // 맥스값 하드코딩
+    private float _timer;
 
 
     public string AniTrigger { get; private set; }
@@ -14,7 +14,7 @@ public class MonsterPattern04 : MonsterPattern
     public MonsterPattern04(Pattern04SO actionData, MonsterPresenter monster)
     {
         _monster = monster;
-        _myTransform = monster.View.transform;
+        _myTransform = monster.View.MyTransform;
         _damage = actionData.ActionDamage;
         _acttackRange = actionData.ActionRange;
         _actionAngle = Mathf.Deg2Rad * actionData.ActionAngle;
@@ -34,9 +34,10 @@ public class MonsterPattern04 : MonsterPattern
 
         IsAction = true;
         // 시전 준비 후 이펙트 생성
-        Vector2 createdPos = (Vector2)_myTransform.position + (dir * 2f);
+        Vector2 createdPos = (Vector2)_myTransform.position; 
+        createdPos.x += (dir.x * 3f);
         _hitDecision.GetComponent<CircleCollider2D>().radius = _acttackRange;
-        _monster.StartCoroutine(OnChargeDelay( createdPos, "Pattern04" ));
+        _monster.StartCoroutine(OnChargeDelay( createdPos, "Pattern04", 0.75f ));
     }
 
     public override void OnAction()

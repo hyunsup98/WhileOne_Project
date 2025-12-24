@@ -13,7 +13,7 @@ public class Patrol : IState
     public Patrol(MonsterPresenter monster)
     {
         _monster = monster;
-        _myTransform = _monster.View.transform;
+        _myTransform = _monster.View.MyTransform;
         _speed = monster.Model.MoveSpeed;
         _patrolPoint = monster.Model.PatrolPoint;
     }

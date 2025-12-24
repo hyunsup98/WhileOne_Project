@@ -15,7 +15,7 @@ public class Chase : IState
     public Chase(MonsterPresenter monster)
     {
         _monster = monster;
-        _myTransform = monster.View.transform;
+        _myTransform = monster.View.MyTransform;
         _speed = monster.Model.MoveSpeed;
         _sight = monster.Model.MoveSpeed;
 

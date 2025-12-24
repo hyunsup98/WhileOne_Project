@@ -18,25 +18,29 @@ public class Search : IState
     public Search(MonsterPresenter monster)
     {
         _monster = monster;
-        _myTransform = monster.View.transform;
+        _myTransform = monster.View.MyTransform;
         _sight = monster.Model.Sight;
         _searchTime = monster.Model.SearchTime;
         _view = monster.View;
-        _searchImage = monster.View.transform.Find("Search");
+        _searchImage = monster.View.MyTransform.Find("Search");
     }
 
 
     public void Enter()
     {
         _view.OnIdleAni();
-        _searchImage.gameObject.SetActive(true);
+
+        if(_searchImage != null)
+            _searchImage.gameObject.SetActive(true);
     }
 
     public void Exit()
     {
         _timer = 0f;
         _view.OnDisIdleAni();
-        _searchImage.gameObject.SetActive(false);
+
+        if(_searchImage != null )
+            _searchImage.gameObject.SetActive(false);
     }
 
     public void Update() 
