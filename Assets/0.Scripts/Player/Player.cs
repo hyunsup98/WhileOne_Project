@@ -113,6 +113,7 @@ public class Player : MonoBehaviour
         _input = GetComponent<PlayerInput>();
         _rg2d = GetComponent<Rigidbody2D>();
         _dash = GetComponent<PlayerDash>();
+        _attackAction = GetComponent<PlayerAttack>();
         _animator = transform.GetChild(0).GetComponent<Animator>();
         _stop = transform.GetChild(0).GetComponent<MoveStopAnimation>();
 

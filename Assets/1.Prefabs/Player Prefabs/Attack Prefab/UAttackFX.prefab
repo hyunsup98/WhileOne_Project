@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 3842689698045037574}
   - component: {fileID: 5356034932284195629}
   - component: {fileID: 6005951638567933451}
-  - component: {fileID: 5030342795497215194}
   - component: {fileID: 6362913736562865675}
   - component: {fileID: 5842412300140385743}
   m_Layer: 0
@@ -129,20 +128,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12c6356459c97924ab5c489e65e597f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnimationScript
---- !u!114 &5030342795497215194
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5082914850714743240}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef3d3ec72dfa1274aa15ac5006b94ef0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TrakingPlayer
-  _standard: {fileID: 0}
-  _trans: {fileID: 0}
 --- !u!114 &6362913736562865675
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -853,7 +853,7 @@ Transform:
   m_GameObject: {fileID: 686643208}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.839, y: 0.258, z: 0}
+  m_LocalPosition: {x: -0.839, y: -1.283, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -940,18 +940,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 301703253533378218, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0.262
-      objectReference: {fileID: 0}
-    - target: {fileID: 301703253533378218, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -0.245
-      objectReference: {fileID: 0}
-    - target: {fileID: 3642252984853493166, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
-      propertyPath: m_ApplyRootMotion
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4329574107018779310, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
       propertyPath: m_Name
       value: UseShovel
@@ -960,10 +948,6 @@ PrefabInstance:
       propertyPath: test
       value: 
       objectReference: {fileID: 1514371997}
-    - target: {fileID: 8726181158408641911, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
-      propertyPath: m_Icon
-      value: 
-      objectReference: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
     - target: {fileID: 8888813578194253905, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
       propertyPath: _effect1
       value: 
@@ -1034,7 +1018,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9078672956431459521, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -1.4112962
+      value: -1.308
       objectReference: {fileID: 0}
     - target: {fileID: 9078672956431459521, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1241,11 +1225,11 @@ PrefabInstance:
       propertyPath: m_SortingOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 5030342795497215194, guid: dd4c224b2d5afe442b5310a16cb5bba9, type: 3}
+    - target: {fileID: 0}
       propertyPath: _trans
       value: 
       objectReference: {fileID: 1044938831}
-    - target: {fileID: 5030342795497215194, guid: dd4c224b2d5afe442b5310a16cb5bba9, type: 3}
+    - target: {fileID: 0}
       propertyPath: _standard
       value: 
       objectReference: {fileID: 36959325}
