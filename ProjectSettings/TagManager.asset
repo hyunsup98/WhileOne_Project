@@ -10,6 +10,7 @@ TagManager:
   - Monster
   - ExitZone
   - DoorCenterMarker
+  - Ground
   layers:
   - Default
   - TransparentFX
