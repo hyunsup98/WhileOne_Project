@@ -27,6 +27,9 @@ public class Astar
     {
         Vector2Int startCellPos = (Vector2Int)_wallTilemap.WorldToCell(start);
         Vector2Int targetCellPos = (Vector2Int)_wallTilemap.WorldToCell(target);
+        
+        if (startCellPos == targetCellPos)
+            return null;
 
         Node current = _nodeManager.GetNode(startCellPos, 0, Heuristic(startCellPos, targetCellPos));
 
@@ -79,7 +82,7 @@ public class Astar
         }
 
         Init();
-        Debug.Log("경로 탐색 실패");
+        Debug.LogWarning("경로 탐색 실패");
         return null;
     }
 
@@ -90,17 +93,22 @@ public class Astar
         List<Vector2> path = new List<Vector2>();
         Node current = targetNode;
 
+        Debug.Log("==========================");
+        Debug.Log("최적경로");
+
         while (current != null)
         {
+            if(current.Parent != null)
+                Debug.Log($"{current.Pos} -> {current.Parent.Pos}");
+
             // 타일 중앙 좌표로 변환
             path.Add(GetCellPos(current.Pos));
             current = current.Parent;
         }
 
-        path.Reverse();
+        Debug.Log("==========================");
 
-        //foreach (var a in path)
-        //    Debug.Log("최적 경로 노드: " + a);
+        path.Reverse();
 
         Init();
         return path;

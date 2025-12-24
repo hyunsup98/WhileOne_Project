@@ -1,28 +1,42 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Patrol : IState
 {
     private MonsterPresenter _monster;
     private Transform _myTransform;
     private float _speed;
-    private List<Vector2> _patrolPoint;
+    private float _patrolRange;
+    private List<Vector2> _patrolPath;
+    private Tilemap _wall;
+    private Tilemap _ground;
+    private Astar _mobAster;
+
     private int _patrolIndex;
-    private bool _isRise = true;        // 순찰인덱스 방향 true: 0 -> 끝 , false: 끝 -> 0
+    private float _pathFindCool;
+
+    Vector2 _patrolPoin;
 
     public Patrol(MonsterPresenter monster)
     {
         _monster = monster;
         _myTransform = _monster.View.MyTransform;
         _speed = monster.Model.MoveSpeed;
-        _patrolPoint = monster.Model.PatrolPoint;
+        _patrolRange = monster.Model.PatrolRange;
+        _patrolPath = monster.Model.PatrolPath;
+        _wall = monster.Model.WallTilemap;
+        _ground = monster.Model.GroundTilemap;
+        _mobAster = monster.Model.MobAstar;
+
+
+        _patrolRange = 10;
     }
 
 
     public void Enter() 
     {
         _patrolIndex = 0;
-        _isRise = true;
     }
 
     public void Exit() { }
@@ -35,26 +49,35 @@ public class Patrol : IState
 
     private void OnPatrol()
     {
-        Vector2 target = _patrolPoint[_patrolIndex];
+        if (_patrolPath == null || _patrolPath.Count <= 1)
+        {
+            if (Time.time < _pathFindCool)
+                return;
+            _pathFindCool = Time.time + 0.5f;
 
+            _patrolPoin = SetPatrolPoint(_patrolRange);
+            if(_ground.WorldToCell(_myTransform.position) == _ground.WorldToCell(_patrolPoin))
+                return;
+            
+            _patrolPath = _mobAster.Pathfinder(_myTransform.position, _patrolPoin);
+            _patrolIndex = 0;
+        }
+
+        Debug.DrawLine(_myTransform.position, _patrolPoin, Color.brown);
+
+        if (_patrolIndex >= _patrolPath.Count)
+        {
+            _patrolPath = null;
+            return;
+        }
+
+
+        Vector2 target = _patrolPath[_patrolIndex];
         _monster.View.OnMove(target, _speed);
 
-        // 최종 포인트 도달 시, 역순 <-> 정순으로 순회 방향 전환
-        if (_patrolIndex == 0)
-            _isRise = true;
-        if(_patrolIndex == _patrolPoint.Count - 1)
-            _isRise = false;
-
-
         //target 도달시, 다음 포인트 인덱스로 변경
-        if ((Vector2)_myTransform.position == target)
-        {
-            if (_isRise)
+        if (Vector2.SqrMagnitude(target - (Vector2)_myTransform.position) <= 0.5f)
                 _patrolIndex++;
-
-            if (!_isRise)
-                _patrolIndex--;
-        }
 
         UpdateLOS();
     }
@@ -65,5 +88,23 @@ public class Patrol : IState
         if (_monster.OnSight())
             _monster.Model.SetState(MonsterState.Chase);
     }
+
+    // 순찰 포인트를 찾는 메서드
+    // 나중에 리펙토링 해보자
+    private Vector3 SetPatrolPoint(float patrolRange)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            int range = (int)patrolRange;
+            int x = (int)_myTransform.position.x + Random.Range(-range, range + 1);
+            int y = (int)_myTransform.position.y + Random.Range(-range, range + 1);
+            Vector3 pos = new Vector3(x + 0.5f, y + 0.5f);
+
+            if (_ground.HasTile(_ground.WorldToCell(pos)) && !_wall.HasTile(_wall.WorldToCell(pos)))
+                return (Vector3)pos;
+        }
+        return _myTransform.position;
+    }
+
 
 }

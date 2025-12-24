@@ -17,7 +17,7 @@ public class BackReturn : IState
         _myTransform = monster.View.MyTransform;
         _speed = monster.Model.MoveSpeed;
         _astar = monster.Model.MobAstar;
-        _patrolTarget = _monster.Model.PatrolTarget;
+        //_patrolTarget = _monster.Model.PatrolTarget;
     }
 
 

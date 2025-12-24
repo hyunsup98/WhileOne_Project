@@ -21,22 +21,22 @@ public class MonsterPresenter
     // 생성자
     public MonsterPresenter
         (
-        MonsterDataSO monsterData,
+        MonsterData monsterData,
         MonsterView monsterView,
-        Tilemap wallTilmap,
-        List<Transform> patrolTarget
+        Tilemap GroundTilmap,
+        Tilemap wallTilmap
         )
     {
         View = monsterView;
-        Model = new MonsterModel(monsterData, patrolTarget);
+        Model = new MonsterModel(monsterData, View.MyTransform, GroundTilmap, wallTilmap);
         
 
         // 경로 탐색으로 순찰 포인트 초기화
         Model.MobAstar = new Astar(wallTilmap);
-        Model.PatrolPoint = Model.MobAstar.Pathfinder
+        Model.PatrolPath = Model.MobAstar.Pathfinder
             (
-            patrolTarget[0].position,
-            patrolTarget[1].position
+            View.MyTransform.position,
+            Model.PatrolPoint.position
             );
 
 
