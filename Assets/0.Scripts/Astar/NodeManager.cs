@@ -60,6 +60,12 @@ public class NodeManager
             node = new Node(cellPos, g, h, parent);
             _nodeMap[cellPos] = node;
         }
+        else if (g < node.G)
+        {
+            node.G = g;
+            node.H = h;
+            node.Parent = parent;
+        }
         return node;
     }
 

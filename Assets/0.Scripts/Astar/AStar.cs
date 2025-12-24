@@ -10,6 +10,7 @@ public class Astar
     private List<Node> _openList;
     private Dictionary<Vector2Int, Node> _openDict;
     private HashSet<Vector2Int> _closedSet;
+    private int _count;
 
     public Astar(Tilemap wallTilemap)
     {
@@ -25,6 +26,8 @@ public class Astar
     // 경로 탐색 알고리즘
     public List<Vector2> Pathfinder(Vector3 start, Vector3 target)
     {
+        Init();
+
         Vector2Int startCellPos = (Vector2Int)_wallTilemap.WorldToCell(start);
         Vector2Int targetCellPos = (Vector2Int)_wallTilemap.WorldToCell(target);
         
@@ -37,8 +40,10 @@ public class Astar
         _openDict.Add(startCellPos, current);
 
 
-        while (_openList.Count > 0)
+        while (_count < 300 && _openList.Count > 0)
         {
+            _count++;
+
             current = GetLowestFNode(_openList);
 
             // 타겟에 도달시, BuildPath로 경로 출력
@@ -81,7 +86,6 @@ public class Astar
             }
         }
 
-        Init();
         Debug.LogWarning("경로 탐색 실패");
         return null;
     }
@@ -93,24 +97,17 @@ public class Astar
         List<Vector2> path = new List<Vector2>();
         Node current = targetNode;
 
-        Debug.Log("==========================");
-        Debug.Log("최적경로");
-
         while (current != null)
         {
             if(current.Parent != null)
-                Debug.Log($"{current.Pos} -> {current.Parent.Pos}");
 
             // 타일 중앙 좌표로 변환
             path.Add(GetCellPos(current.Pos));
             current = current.Parent;
         }
 
-        Debug.Log("==========================");
-
         path.Reverse();
 
-        Init();
         return path;
     }
 
@@ -143,6 +140,7 @@ public class Astar
 
     private void Init()
     {
+        _count = 0;
         _openList.Clear();
         _openDict.Clear();
         _closedSet.Clear();

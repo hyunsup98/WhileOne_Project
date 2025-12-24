@@ -51,17 +51,21 @@ public class Patrol : IState
     {
         if (_patrolPath == null || _patrolPath.Count <= 1)
         {
+            _monster.View.OnIdleAni();
             if (Time.time < _pathFindCool)
                 return;
-            _pathFindCool = Time.time + 0.5f;
+            _pathFindCool = Time.time + 1.5f;
 
             _patrolPoin = SetPatrolPoint(_patrolRange);
-            if(_ground.WorldToCell(_myTransform.position) == _ground.WorldToCell(_patrolPoin))
-                return;
             
             _patrolPath = _mobAster.Pathfinder(_myTransform.position, _patrolPoin);
+
+            if (_patrolPath == null)
+                return;
+
             _patrolIndex = 0;
         }
+        _monster.View.OnDisIdleAni();
 
         Debug.DrawLine(_myTransform.position, _patrolPoin, Color.brown);
 
