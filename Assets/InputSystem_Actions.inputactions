@@ -1,5 +1,4 @@
 {
-    "version": 1,
     "name": "InputSystem_Actions",
     "maps": [
         {
@@ -37,7 +36,7 @@
                     "name": "Interact",
                     "type": "Button",
                     "id": "852140f2-7766-474d-8707-702459ba45f3",
-                    "expectedControlType": "",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "Hold",
                     "initialStateCheck": false
@@ -52,19 +51,19 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Dash",
+                    "name": "Jump",
                     "type": "Button",
                     "id": "f1ba0d36-48eb-4cd5-b651-1c94a6531f70",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Previous",
                     "type": "Button",
                     "id": "2776c80d-3c14-4091-8c56-d04ced07a2b0",
-                    "expectedControlType": "",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -73,7 +72,7 @@
                     "name": "Next",
                     "type": "Button",
                     "id": "b7230bb6-fc9b-4f52-8b25-f5e19cb2c2ba",
-                    "expectedControlType": "",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -82,19 +81,10 @@
                     "name": "Sprint",
                     "type": "Button",
                     "id": "641cd816-40e6-41b4-8c3d-04687c349290",
-                    "expectedControlType": "",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "Special",
-                    "type": "Value",
-                    "id": "46f7a931-cb87-4aac-9ff9-23b5f61056b3",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -391,7 +381,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Dash",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -402,7 +392,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "Dash",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -413,7 +403,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "XR",
-                    "action": "Dash",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -480,17 +470,6 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Crouch",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "1ccf4be9-c529-4d05-a18b-19747fbf4601",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Special",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -586,15 +565,6 @@
                     "type": "PassThrough",
                     "id": "9caa3d8a-6b2f-4e8e-8bad-6ede561bd9be",
                     "expectedControlType": "Quaternion",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Settings",
-                    "type": "Button",
-                    "id": "b68bb56a-8d27-4a39-bd33-86fbd4bff9e9",
-                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -1016,17 +986,6 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "3df37077-b0cd-4fbe-afb5-2ab594e0f037",
-                    "path": "<Keyboard>/escape",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Settings",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
