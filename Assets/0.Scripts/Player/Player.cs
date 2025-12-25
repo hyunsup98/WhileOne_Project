@@ -39,6 +39,7 @@ public class Player : MonoBehaviour
     [SerializeField] float time = 0.12f;
     private float _finsihTime  = 0.7f;
     private float _checkTime = 0;
+    Coroutine regen;
     
     //레이어 관련 변수
     private SortingGroup _group;
@@ -209,20 +210,25 @@ public class Player : MonoBehaviour
 
 
 
-    public void RestoreStamina()
+    IEnumerator RestoreStamina()
     {
-       if(_stamina <= 99)
+       while(_stamina < _maxStamina)
         {
-            StartCoroutine(RestoreCoroutine());
+            _stamina += 5;
+
+            _stamina = Mathf.Clamp(_stamina, 0, _maxStamina);
+
+            yield return new WaitForSeconds(2);
         }
+        regen = null;
     }
     public void UseStamina()
     {
-        if(_stamina < 50)
-        {
-            return;
-        }
         _stamina -= 50;
+        if (regen == null)
+        {
+           regen =  StartCoroutine(RestoreStamina());
+        }
     }
 
     public void MoveState(IState state)
@@ -236,20 +242,6 @@ public class Player : MonoBehaviour
         actionCurrentState?.Exit();
         actionCurrentState = state;
         actionCurrentState.Enter();
-    }
-
-    IEnumerator RestoreCoroutine()
-    {
-        while (_stamina < 100)
-        {
-            yield return _delay;
-            _stamina += 5;
-            if (_stamina > _maxStamina)
-            {
-                _stamina = _maxStamina;
-            }
-        }
-        
     }
 
     IEnumerator Blink()

@@ -10,7 +10,7 @@ public class WeaponChange : MonoBehaviour
 
     //private SO _currentWeaponData; //SO 들어갈 자리
     //Dictionary<SO, GameObject> weaponList = new(); //SO 키 값
-    //private SO slotWeapon1
+    //public SO slotWeapon1
     //private SO slotWeapon2
 
     PlayerInput _input;
@@ -45,8 +45,6 @@ public class WeaponChange : MonoBehaviour
         //SO targetData = (slotNum == 1) ? slotWeapon1 : slotWeapon2;
         //EquipWeapon(targetData);
     }
-
-
     public void ChangeWeapon()//스크립터블 오브젝트 넣는 곳)
     {
         //if(_currentWeaponData == 대충 매개변수로 받아온 변수) //스크립터블과 비교하는 곳
@@ -69,6 +67,21 @@ public class WeaponChange : MonoBehaviour
 
         //_currentWeapon.GetComponent<Weapon>
     }
+
+    //void EquipWeapon(SO data)
+    //{
+    //    if(_currentWeapon != null)
+    //    {
+    //        _currentWeapon.SetActive(false);
+    //    }
+    //    if (!weaponList.ContainsKey(data))
+    //    {
+    //        GameObject newWp = Instantiate(data.weapon, _weaponHands);
+    //        weaponList.Add(data, newWp);
+    //    }
+    //    _currentWeapon = weaponList[data];
+    //    _currentWeapon.SetActive(true);
+    //}
     private void OnDisable()
     {
         _switchWeapon1.performed -= WeaponSwitch1;

@@ -61,14 +61,17 @@ public class PlayerDash : MonoBehaviour
         }
         if (ctx.performed && ctx.ReadValue<float>() > 0.1f)
         {
-            StartCoroutine(Dash());
+            if (_player.Stamina >= 50)
+            {
+                StartCoroutine(Dash());
+            }
         }
     }
     IEnumerator Dash()
     {
-        _player.UseStamina();
         if (!_dig.IsDigging && !_player.Stop.Action)
         {
+             _player.UseStamina();
             _rd2D.linearVelocity = _playerMovement.Move.normalized * _dashForce;
             //AfterimagePool.Instance.GetObject(_test, AfterimagePool.Instance.transform);
             //blink.transform.position = transform.position;
