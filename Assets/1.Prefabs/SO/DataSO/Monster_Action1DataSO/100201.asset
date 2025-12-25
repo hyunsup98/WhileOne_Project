@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cd1e217c2945824aa535fa239ebbcc3, type: 3}
+  m_Name: 100201
+  m_EditorClassIdentifier: Assembly-CSharp::Monster_Action1DataSO
+  <actionID>k__BackingField: 100201
+  <repeatTerm>k__BackingField: 0
+  <repeatTime>k__BackingField: 1
+  <actionTime>k__BackingField: 2
+  <actionShape>k__BackingField: 1
+  <actionWidth>k__BackingField: 2
+  <actionLength>k__BackingField: 3
+  <attackBoost>k__BackingField: 0
+  <speedBoost>k__BackingField: 0
+  <pathPreviewTime>k__BackingField: 0.3
+  <pathPreviewImage_Sprite>k__BackingField: 

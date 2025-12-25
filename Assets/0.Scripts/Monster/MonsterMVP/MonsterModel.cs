@@ -28,7 +28,7 @@ public class MonsterModel
     public Dictionary<MonsterState, IState> StateList { get; set; }
 
 
-    public MonsterModel(MonsterDataSO monsterData, List<Transform> patrolTarget)
+    public MonsterModel(MonsterData monsterData, List<Transform> patrolTarget)
     {
         _hp = monsterData.Hp;
         MonsterID = monsterData.MonsterID;

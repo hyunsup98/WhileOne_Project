@@ -1,0 +1,5 @@
+﻿함정 ID,함정 이름,함정 설명,함정 공격 대미지,"함정 공격 주기(공격 쿨다운 개념, 해당 시간마다 1대씩 때린다)",함정 모델 리소스경로,함정 이동 여부,함정 이동 속도
+trapID,trapName,trapDesc,trapAttackDamage,trapAttackInterval,trapResourcePath_Sprite,isTrapMove,trapSpeed
+int,string,string,float,float,string,bool,int
+1001,뾰족한 가시,땅바닥에 배치된 날카로운 가시이다.,10,0.5,,FALSE,0
+1002,원형 톱날,움직이는 원형 톱날이다.,5,1,,TRUE,5

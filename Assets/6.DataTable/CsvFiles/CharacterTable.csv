@@ -1,0 +1,4 @@
+﻿캐릭터ID,캐릭터HP,캐릭터ATK,캐릭터 스테미나,스테미나 재생,캐릭터 이동속도,캐릭터 공격속도,캐릭터 모델링리소스
+characterID,characterHP,characterATK,stamina,staminaRecovery,characterSpeed,attackSpeed,characterModelPath_Sprite
+string,float,float,float,float,float,float,string
+Character_001,100,0,100,5,5,0,

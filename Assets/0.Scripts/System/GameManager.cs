@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -66,10 +67,13 @@ public class GameManager : Singleton<GameManager>
         {
             _interactObj = value;
 
-            if(CurrentDungeon != null && CurrentDungeon.InteractText != null)
+            if(CurrentDungeon != null && CurrentDungeon.InteractImg != null)
             {
                 // _interactObj에 값이 있으면 상호작용 ui 키고, 값이 없으면 (null이면) 끄기
-                CurrentDungeon.InteractText.SetActive(_interactObj != null);
+                if(_interactObj != null)
+                    CurrentDungeon.SetPosInteractImg(InteractObj.Pos + new Vector3(0f, InteractObj.YOffset, 0f));
+                else
+                    CurrentDungeon.InteractImg.SetActive(false);
             }
         }
     }

@@ -24,7 +24,7 @@ public class MonsterPresenter
     // »ý¼ºÀÚ
     public MonsterPresenter
         (
-        MonsterDataSO monsterData,
+        MonsterData monsterData,
         MonsterView monsterView,
         Tilemap wallTilmap,
         List<Transform> patrolTarget

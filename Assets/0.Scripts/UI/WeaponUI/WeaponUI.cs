@@ -5,24 +5,28 @@ using UnityEngine.UI;
 
 public class WeaponUI : MonoBehaviour
 {
-    [SerializeField] private GameObject panel_WeaponUI;     // 무기 획득 UI 게임 오브젝트
+    [SerializeField] private GameObject panel_GainWeaponUI;     // 무기 획득 UI 게임 오브젝트
+    [SerializeField] private GameObject panel_FailWeaponUI;     // 무기 비획득 UI 게임 오브젝트
 
     [SerializeField] private TMP_Text text_WeaponName;      // 무기 이름 텍스트
     [SerializeField] private Image img_Weapon;              // 무기 아이콘 이미지
     [SerializeField] private TMP_Text text_WeaponDesc1;     // 무기 설명 텍스트1
     [SerializeField] private TMP_Text text_WeaponDesc2;     // 무기 설명 텍스트2
 
-    private Weapon weapon;      //UI에 표시할 무기
+    private Weapon weapon;      // UI에 표시할 무기
+    private Chest chest;        // 가장 최근에 열었던 상자
+
+    public void DisableUI(GameObject obj) => obj.SetActive(false);
 
     // UI로 표시할 무기가 어떤 것인지 받아옴
     public void SetWeaponInit(Weapon weapon)
     {
         this.weapon = weapon;
 
-        text_WeaponName.text = weapon.weaponName;
-        img_Weapon.sprite = weapon.weaponIcon;
-
-        // todo: 무기에 관련된 정보를 이용해 UI 오브젝트에 적용하기
+        text_WeaponName.text = weapon.WeaponData.weapon_Name;
+        img_Weapon.sprite = weapon.WeaponData.weaponResourcePath_Sprite;
+        text_WeaponDesc1.text = $"공격력: {weapon.WeaponData.weaponAttack1Damage}" +
+            $"\n공격속도: {weapon.WeaponData.weaponAttack1Speed}";
     }
 
     /// <summary>
@@ -31,8 +35,8 @@ public class WeaponUI : MonoBehaviour
     /// </summary>
     public void OnClick_GetWeapon()
     {
-        // todo: 플레이어에 현재 weapon 장착 후 창 닫기
-
+        // todo: 플레이어에 현재 weapon 장착, weapon.InitData();
+        chest.ChestClose(ChestState.OpenedTaken);
         DisableUI();
     }
 
@@ -42,8 +46,9 @@ public class WeaponUI : MonoBehaviour
     /// </summary>
     public void OnClick_LeaveWeapon()
     {
-        // todo: 상자에 무기를 둔 상태로 창 닫기
-
+        // 상자에 무기를 둔 상태로 창 닫기
+        WeaponPool.Instance.TakeObject(weapon);
+        chest.ChestClose(ChestState.OpenedLeft);
         DisableUI();
     }
 
@@ -51,11 +56,17 @@ public class WeaponUI : MonoBehaviour
     /// 무기 획득 UI창을 켜는 메서드
     /// </summary>
     /// <param name="weapon"></param>
-    public void EnableUI(Weapon weapon, Chest chest)
+    public void EnableGainUI(Weapon weapon, Chest chest)
     {
         SetWeaponInit(weapon);
+        this.chest = chest;
 
-        panel_WeaponUI.SetActive(true);
+        panel_GainWeaponUI.SetActive(true);
+    }
+
+    public void EnableFailUI()
+    {
+        panel_FailWeaponUI.SetActive(true);
     }
 
     /// <summary>
@@ -65,8 +76,9 @@ public class WeaponUI : MonoBehaviour
     /// </summary>
     private void DisableUI()
     {
-        panel_WeaponUI.SetActive(false);
+        panel_GainWeaponUI.SetActive(false);
 
+        chest = null;
         weapon = null;
 
         text_WeaponName.text = string.Empty;

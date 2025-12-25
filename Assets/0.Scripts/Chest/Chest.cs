@@ -16,9 +16,9 @@ public class Chest : MonoBehaviour, IInteractable
 
     private ChestState chestState;
 
-    #region 테스트용, 나중에 지울 변수들
-    public Weapon[] weapons;
-    #endregion
+    [field: SerializeField] public float YOffset { get; set; } = 1.5f;      //인터페이스 필드 → 상호작용 이미지 위치에 더할 오프셋
+
+    public Vector3 Pos => transform.position;           // 인터페이스 필드 → 상호작용 이미지 위치 세팅을 위한 오브젝트 위치 좌표
 
     private void Awake()
     {
@@ -38,20 +38,25 @@ public class Chest : MonoBehaviour, IInteractable
         GameManager.Instance.InteractObj = null;
         _animator.SetBool("isOpen", true);
 
-        if (weapon == null)
+        if(chestState == ChestState.Closed)
+        {
+            // 무기 랜덤 소환
             SetWeapon();
+        }
 
+        // 무기가 랜덤으로 소환됐으면, 이미 상자에 무기가 있을 때
         if (weapon != null)
         {
             // 아직 무기를 들고가지 않았으므로 OpenedLeft 상태
             chestState = ChestState.OpenedLeft;
-            GameManager.Instance.CurrentDungeon.GetWeaponUI.EnableUI(weapon, this);
+            GameManager.Instance.CurrentDungeon.WeaponUI.EnableGainUI(weapon, this);
         }
+        // 꽝이 떠서 무기가 안뽑혔으면 or 
         else
         {
             // 무기가 없으므로 OpenedTaken 상태
             chestState = ChestState.OpenedTaken;
-            GameManager.Instance.CurrentDungeon.WeaponFailUI.SetActive(true);
+            GameManager.Instance.CurrentDungeon.WeaponUI.EnableFailUI();
         }
     }
 
@@ -68,7 +73,7 @@ public class Chest : MonoBehaviour, IInteractable
                 break;
 
             case ChestState.OpenedTaken:
-                // 무기를 오브젝트 풀로 집어넣어줌
+                weapon = null;
                 break;
         }
     }
@@ -78,34 +83,12 @@ public class Chest : MonoBehaviour, IInteractable
     /// </summary>
     private void SetWeapon()
     {
-        int percentSum = weapons.Length * 10;
         int rand = Random.Range(0, 100);
 
-        if (rand < percentSum)
-        {
-            int weaponPercent = 0;
-
-            foreach (var w in weapons)
-            {
-                weaponPercent += 10;
-            }
-
-            // 01 23 45 67 89  1011
-            // 12 34 56 78 910 1112
-            int weaponRand = Random.Range(0, weaponPercent);
-
-            int index = 0;
-            foreach (var w in weapons)
-            {
-                index += 10;
-
-                if (index > weaponRand)
-                {
-                    weapon = w;
-                    break;
-                }
-            }
-        }
+        if (rand < 10)
+            weapon = null;
+        else
+            weapon = DataManager.Instance.WeaponData.GetRandomWeapon();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

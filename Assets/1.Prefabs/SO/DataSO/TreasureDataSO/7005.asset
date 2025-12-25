@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03f96dd45c95f2a4fb952444f92233fe, type: 3}
+  m_Name: 7005
+  m_EditorClassIdentifier: Assembly-CSharp::TreasureDataSO
+  <treasureID>k__BackingField: 7005
+  <treasure_Name>k__BackingField: "<color=#5BB5FF>\uC545\uADC0\uC758 \uBFD4</color>"
+  <treasure_Desc>k__BackingField: "<color=#FF7F00>\uC5B4\uB290 \uC545\uB9C8\uC758
+    \uBFD4\uCC98\uB7FC \uBCF4\uC778\uB2E4.\\n \uC0AC\uC545\uD55C \uD798\uC774 \uB290\uAEF4\uC9C4\uB2E4.</color>"
+  <treasureTier>k__BackingField: 2
+  <isPowerUp>k__BackingField: 1
+  <damageBoost>k__BackingField: 2
+  <treasureResourcePath_Sprite>k__BackingField: {fileID: 21300000, guid: 84804a26cb0a2452c88dcaa7f727c717, type: 3}
+  <treasureIconPath_Sprite>k__BackingField: {fileID: 21300000, guid: 84804a26cb0a2452c88dcaa7f727c717, type: 3}

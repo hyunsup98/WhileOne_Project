@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class MonsterView : MonoBehaviour
 {
-    [SerializeField] private MonsterDataSO _monsterData;    // 몬스터 데이터 SO
+    [SerializeField] private MonsterData _monsterData;    // 몬스터 데이터 SO
     [SerializeField] private Tilemap _wallTilemap;          // 경로 탐색을 위한 타일맵
     [SerializeField] private List<Transform> _patrolTarget;
 

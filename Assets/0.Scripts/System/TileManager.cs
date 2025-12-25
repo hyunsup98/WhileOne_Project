@@ -51,8 +51,8 @@ public class TileManager
             _dungeonManager.CurrentRoom.DigSpotTileMap.SetTile(cellPos, null);
             _dungeonManager.CurrentRoom.FloorTileMap.SetTile(cellPos, _dungeonManager.CurrentRoom.AfterDigTile);
 
-            //º¸¹° È¹µæ
-            _dungeonManager.TreasureBarUI.AddTreasure(DataManager.Instance.PickTreasure());
+            // todo: º¸¹° È¹µæ ±â´É
+            // _dungeonManager.TreasureBarUI.AddTreasure(DataManager.Instance.PickTreasure());
         }
         // ¶¥À» ÆÈ ¼ö ¾øÀ» ¶§
         else
