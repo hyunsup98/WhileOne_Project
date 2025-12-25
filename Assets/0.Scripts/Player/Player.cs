@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Player : MonoBehaviour
 {
@@ -13,12 +14,9 @@ public class Player : MonoBehaviour
     [SerializeField] private int _attack = 5;
     [SerializeField] private int _attackSpeed = 4;
 
-    [SerializeField] private Rigidbody2D _rg2d;
-
     private float _hp;
     private float _stamina;
-
-    private bool _isDamage;
+    
 
     PlayerInput _input;
     InputActionMap _actionMap;
@@ -35,14 +33,11 @@ public class Player : MonoBehaviour
 
     //코루틴 변수
     private WaitForSeconds _delay;
-    private WaitForSeconds _blinkTime;
-    [SerializeField] float time = 0.12f;
     private float _finsihTime  = 0.7f;
     private float _checkTime = 0;
     Coroutine regen;
     
-    //레이어 관련 변수
-    private SortingGroup _group;
+    
 
     //상태에서 사용할 스크립트
     [SerializeField] private PlayerAttack _attackAction;
@@ -58,7 +53,7 @@ public class Player : MonoBehaviour
     public int MoveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }
     public int Attack => _attack;
     public int AttackSpeed => _attackSpeed;
-    public bool IsDamaged { get { return _isDamage; } set { _isDamage = value; } }
+    
     public PlayerInput Playerinput
     {
         get { return _input; }
@@ -112,7 +107,6 @@ public class Player : MonoBehaviour
         _playerMove = GetComponent<PlayerMovement>();
         _playerDig = GetComponent<PlayerDig>();
         _input = GetComponent<PlayerInput>();
-        _rg2d = GetComponent<Rigidbody2D>();
         _dash = GetComponent<PlayerDash>();
         _attackAction = GetComponent<PlayerAttack>();
         _animator = transform.GetChild(0).GetComponent<Animator>();
@@ -128,9 +122,7 @@ public class Player : MonoBehaviour
         ActionState(new ActionIdleState(this));
 
         _delay = new WaitForSeconds(5f);
-        _blinkTime = new WaitForSeconds(time);
-
-        _group = transform.GetChild(0).GetComponent<SortingGroup>();
+       
         RestoreStamina();
     }
 
@@ -177,7 +169,7 @@ public class Player : MonoBehaviour
         //    TakenDamage(10, Vector2.zero);
         //}
     }
-
+    
     void PlayerDir()
     {
         //마우스 좌표값을 월드 좌표값으로 변환
@@ -200,16 +192,6 @@ public class Player : MonoBehaviour
             transform.localScale = new Vector3(-1, 1, 1);
         }
     }
-    public void TakenDamage(float damage, Vector2 target)
-    {
-        IsDamaged = true;
-        ChangedHealth -= damage;
-        StartCoroutine(KnockBack(target));
-        //StartCoroutine(Blink());
-    }
-
-
-
     IEnumerator RestoreStamina()
     {
        while(_stamina < _maxStamina)
@@ -243,39 +225,6 @@ public class Player : MonoBehaviour
         actionCurrentState = state;
         actionCurrentState.Enter();
     }
-
-    IEnumerator Blink()
-    {
-        _checkTime = 0;
-        gameObject.layer = LayerMask.NameToLayer("PlayerDamage");
-       
-        while (_finsihTime>_checkTime)
-        {
-            _group.sortingOrder = 0;
-
-            yield return _blinkTime;
-
-            _group.sortingOrder = 3;
-
-            _checkTime += time;
-
-            yield return _blinkTime;
-        }
-        gameObject.layer = LayerMask.NameToLayer("Player");
-        _isDamage = false;
-        yield return null;
-
-    }
-    IEnumerator KnockBack(Vector2 target)
-    {
-        int dirx = transform.position.x - target.x > 0 ? 1 : -1;
-        int diry = transform.position.y - target.y > 0 ? 1 : -1;
-        _rg2d.linearVelocityX = dirx * 1f;
-        _rg2d.linearVelocityY = diry * 1f;
-        yield return new WaitForSeconds(0.5f);
-        _rg2d.linearVelocity = Vector2.zero;
-    }
-
     private void OnDisable()
     {
         GameManager.Instance.player = null;

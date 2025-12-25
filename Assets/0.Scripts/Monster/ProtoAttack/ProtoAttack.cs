@@ -78,7 +78,7 @@ public class ProtoAttack : IAttack
 
         if (collision.gameObject.layer == playerLayer)
         {
-            Player player = collision.GetComponent<Player>();
+            PlayerDamage player = collision.GetComponent<PlayerDamage>();
             player.TakenDamage(_monster.Att, _myTransform.position);
         }
     }

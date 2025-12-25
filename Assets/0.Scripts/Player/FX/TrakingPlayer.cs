@@ -18,7 +18,7 @@ public class TrakingPlayer : MonoBehaviour
            _attackFxInstance = Instantiate(_attackFX);
            _attackFxInstance.SetActive(false);
         }
-        _rend = _attackFxInstance.GetComponentInChildren<SpriteRenderer>();
+        _rend = _attackFxInstance.GetComponentInChildren<SpriteRenderer>(true);
     }
 
     public void PlayEffect()

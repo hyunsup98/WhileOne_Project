@@ -21,10 +21,7 @@ public class DamageState : IState
 
     public void Update()
     {
-        if(_player.IsDamaged == false)
-        {
-            _player.ActionState(new ActionIdleState(_player));
-        }
+        
     }
 }
 
