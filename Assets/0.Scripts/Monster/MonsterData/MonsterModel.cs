@@ -22,8 +22,8 @@ public class MonsterModel
     public float SightAngle { get; set; }
     public float SearchTime { get; set; }
     public float PatrolRange { get; set; } // 현재 미할당
-    public Dictionary<ActionID, MonsterPattern> ActionDict { get; set; } // 몬스터 행동 목록
     public Transform PatrolPoint {  get; set; }  // 순찰 할 지점 저장
+    public Dictionary<ActionID, MonsterPattern> ActionDict { get; set; } // 몬스터 행동 목록
 
 
     // 내부 로직에서 사용되는 필드
@@ -46,6 +46,7 @@ public class MonsterModel
         Sight = monsterData.Sight;
         SightAngle = Mathf.Cos(monsterData.SightAngle * Mathf.Deg2Rad);
         SearchTime = monsterData.SearchTime;
+        PatrolRange = monsterData.PatrolRange;
         PatrolPoint = transform;
 
         GroundTilemap = ground;

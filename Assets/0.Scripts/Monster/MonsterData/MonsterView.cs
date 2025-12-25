@@ -40,34 +40,48 @@ public class MonsterView : MonoBehaviour
     }
 
     #region 애니메이션 출력
-    public void OnActionAni(string action)
+    public void OnPlayAni(string aniName)
     {
-        switch (action)
+        switch (aniName)
         {
             case "Idle":
                 _animator.SetBool("Idle", true);
                 break;
+
+            case "Hurt":
+                _animator.SetTrigger("Hurt");
+                break;
+
+            case "Death":
+                _animator.SetBool("Death", true);
+                break;
+
             case "Pattern01":
                 _animator.SetTrigger("Pattern01");
                 break;
+
             case "Pattern04":
                 _animator.SetTrigger("Pattern04");
                 break;
+            case "Pattern05":
+                _animator.SetTrigger("Pattern05");
+                break;
+
             default:
-                Debug.Log("출력할 애니메이션 없음");
+                Debug.LogWarning("출력할 애니메이션 없음");
                 break;
         }
     }
 
-    public void OnDisActionAni(string action)
+    public void OnStopAni(string aniName)
     {
-        switch (action)
+        switch (aniName)
         {
             case "Idle":
                 _animator.SetBool("Idle", false);
                 break;
             default:
-                Debug.Log("출력할 애니메이션 없음");
+                Debug.LogWarning("출력할 애니메이션 없음");
                 break;
         }
     }
@@ -123,6 +137,10 @@ public class MonsterView : MonoBehaviour
     public Tilemap GetTilemap(string tag)
     {
         Transform parent = transform.parent;
+
+        // 몬스터 중심축이 다른 오브젝트의 경우 부모의 부모의 정보를 가져온다.
+        if(parent.CompareTag("Monster"))
+            parent = parent.parent;
 
         foreach (Transform child in parent)
         {

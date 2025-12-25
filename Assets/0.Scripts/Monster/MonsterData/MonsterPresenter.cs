@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 
 
 
-public class MonsterPresenter
+public class MonsterPresenter : IAnimationable
 {
 
     public MonsterModel Model { get; private set; }  // 현재 몬스터 데이터 보관한 Model
@@ -139,4 +139,7 @@ public class MonsterPresenter
     }
 
     public void StartCoroutine(IEnumerator coroutine) => View.StartCoroutine(coroutine);
+
+    public void OnPlayAni(string animationName) => View.OnPlayAni(animationName);
+    public void OnStopAni(string animationName) => View.OnStopAni(animationName);
 }

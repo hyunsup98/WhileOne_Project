@@ -6,7 +6,6 @@ public class MonsterPattern04 : MonsterPattern
     private float _acttackRange;
     private float _actionAngle;
     private float _actionTime;
-    private float _timer;
 
 
     public string AniTrigger { get; private set; }
@@ -45,7 +44,7 @@ public class MonsterPattern04 : MonsterPattern
         if (_isDelay)
             return;
 
-        _timer += Time.unscaledDeltaTime;
+        _timer += Time.deltaTime;
         if( _timer > _actionTime )
         { 
             IsAction = false;
@@ -53,6 +52,13 @@ public class MonsterPattern04 : MonsterPattern
         }
     }
 
+    public override void EndAction()
+    {
+        _timer = 0;
+        OnDisEffect();
+    }
+
+    // 내적을 통한 몬스터 공격 모션 실행 여부
     private bool IsCalculteDot(Vector2 dir)
     {
         Vector2 dirX = new Vector2(dir.normalized.x, 0);
@@ -61,11 +67,5 @@ public class MonsterPattern04 : MonsterPattern
             return false;
 
         return true;
-    }
-
-    public override void EndAction()
-    {
-        _timer = 0;
-        OnDisEffect();
     }
 }

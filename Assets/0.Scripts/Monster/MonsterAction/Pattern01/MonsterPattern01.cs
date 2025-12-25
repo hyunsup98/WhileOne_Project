@@ -3,24 +3,24 @@ using UnityEngine;
 
 public class MonsterPattern01 : MonsterPattern
 {
-    private Transform _myTransform;
-    private Vector2 _target;
     private float _rushSpeed;
     private float _rushDistance;
-    private float _timer;
 
+    private Vector2 _target;
+    private Transform _myTransform;
 
     public MonsterPattern01(Pattern01SO actionData, MonsterPresenter monster)
     {
         _monster = monster;
         _myTransform = monster.View.MyTransform;
         _damage = actionData.ActionDamage;
-        _rushDistance = actionData.RushDistance;
-        _rushSpeed = actionData.RushSpeed;
         _chargeDelay = actionData.ChargeDelay;
         _pathPreview = actionData.PathPreview;
         _hitDecision = actionData.HitDecision;
         IsActionable = true;
+
+        _rushDistance = actionData.RushDistance;
+        _rushSpeed = actionData.RushSpeed;
     }
 
 
@@ -40,7 +40,7 @@ public class MonsterPattern01 : MonsterPattern
             return;
 
         // 타이머로 돌진 종료 판정
-        _timer += Time.unscaledDeltaTime;
+        _timer += Time.deltaTime;
         if (_timer >= ( _rushDistance / _rushSpeed ))
         {
             IsAction = false;

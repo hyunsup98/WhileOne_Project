@@ -19,7 +19,7 @@ public class MonsterAction : IState
 
     public void Enter()
     {
-        _action.OnAniTrigger += _view.OnActionAni;
+        _action.OnAniTrigger += _view.OnPlayAni;
         _action.StartAction();
     }
 
@@ -27,7 +27,7 @@ public class MonsterAction : IState
     {
         //_isAttackStart = false;
         _action.EndAction();
-        _action.OnAniTrigger -= _view.OnActionAni;
+        _action.OnAniTrigger -= _view.OnPlayAni;
     }
 
     public void Update()
