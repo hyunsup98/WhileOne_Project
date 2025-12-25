@@ -40,7 +40,7 @@ public class Player : MonoBehaviour
     
 
     //상태에서 사용할 스크립트
-    [SerializeField] private PlayerAttack _attackAction;
+    private PlayerAttack _attackAction;
     PlayerMovement _playerMove;
     PlayerDig _playerDig;
     PlayerDash _dash;
@@ -109,8 +109,8 @@ public class Player : MonoBehaviour
         _input = GetComponent<PlayerInput>();
         _dash = GetComponent<PlayerDash>();
         _attackAction = GetComponent<PlayerAttack>();
-        _animator = transform.GetChild(0).GetComponent<Animator>();
-        _stop = transform.GetChild(0).GetComponent<MoveStopAnimation>();
+        _animator = GetComponentInChildren<Animator>();
+        _stop = GetComponentInChildren<MoveStopAnimation>();
 
     }
     void Start()

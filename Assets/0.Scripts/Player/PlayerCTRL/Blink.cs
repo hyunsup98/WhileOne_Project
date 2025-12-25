@@ -11,7 +11,7 @@ public class Blink : MonoBehaviour
     private void Awake()
     {
         _player = transform.parent.GetComponent<Player>();
-        allRender = GetComponentsInChildren<SpriteRenderer>();
+        
         Debug.Log(allRender);
     }
 

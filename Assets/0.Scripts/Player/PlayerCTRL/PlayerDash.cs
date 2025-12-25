@@ -15,7 +15,7 @@ public class PlayerDash : MonoBehaviour
     [SerializeField] private float _dashForce = 10; //대쉬 힘
     [SerializeField] private float _dashTime = 0.1f; //코루틴에서 사용할 대쉬 지속 시간
 
-    [SerializeField] Blink _test;
+    //[SerializeField] Blink _test;
     TrailRenderer _trail;
 
     bool _isDash;

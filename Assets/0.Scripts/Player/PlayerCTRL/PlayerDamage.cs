@@ -16,6 +16,10 @@ public class PlayerDamage : MonoBehaviour
     private WaitForSeconds _blinkTime;
     [SerializeField] float time = 0.12f;
     private bool _isDamage;
+    private bool _isCoroutine;
+
+    SpriteRenderer[] allRender;
+    float alpha = 1f;
 
     public bool IsDamaged { get { return _isDamage; } set { _isDamage = value; } }
 
@@ -26,6 +30,7 @@ public class PlayerDamage : MonoBehaviour
     }
     private void Start()
     {
+        allRender = GetComponentsInChildren<SpriteRenderer>();
         _blinkTime = new WaitForSeconds(time);
         _group = transform.GetChild(0).GetComponent<SortingGroup>();
     }
@@ -34,28 +39,48 @@ public class PlayerDamage : MonoBehaviour
         IsDamaged = true;
         _player.ChangedHealth -= damage;
         StartCoroutine(KnockBack(target));
-        StartCoroutine(Blink());
+        if(_isCoroutine == false)
+        {
+            StartCoroutine(Blink());
+        }
     }
     IEnumerator Blink()
     {
-        _checkTime = 0;
+        //_checkTime = 0;
         gameObject.layer = LayerMask.NameToLayer("PlayerDamage");
+        //while (_finsihTime > _checkTime)
+        //{
+        //    _group.sortingOrder = 0;
 
+        //    yield return _blinkTime;
+
+        //    _group.sortingOrder = 3;
+
+        //    yield return _blinkTime;
+        //}
+        _isCoroutine = true;
         while (_finsihTime > _checkTime)
         {
-            _group.sortingOrder = 0;
-
-            yield return _blinkTime;
-
-            _group.sortingOrder = 3;
-
+            float alpha = (allRender[0].color.a == 1f) ? 0.5f : 1f;
+            foreach (var sr in allRender)
+            {
+            Color c = sr.color;
+            c.a = alpha;
+            sr.color = c;
+            }
+            yield return new WaitForSeconds(0.12f);
             _checkTime += time;
-
-            yield return _blinkTime;
+        }
+        foreach (var sr in allRender)
+        {
+            Color c = sr.color;
+            c.a = 1f;
+            sr.color = c;
         }
         gameObject.layer = LayerMask.NameToLayer("Player");
-        _isDamage = false;
-        yield return null;
+        //_isDamage = false;
+        //yield return null;
+        _isCoroutine = false;
 
     }
     IEnumerator KnockBack(Vector2 target)
@@ -66,5 +91,9 @@ public class PlayerDamage : MonoBehaviour
         _rg2d.linearVelocityY = diry * 1f;
         yield return new WaitForSeconds(0.5f);
         _rg2d.linearVelocity = Vector2.zero;
+    }
+    private void OnDisable()
+    {
+        StopAllCoroutines();
     }
 }
