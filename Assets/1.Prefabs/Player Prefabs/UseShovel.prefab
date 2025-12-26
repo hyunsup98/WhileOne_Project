@@ -5308,6 +5308,7 @@ MonoBehaviour:
   _moveSpeed: 5
   _attack: 5
   _attackSpeed: 10
+  <GetDamage>k__BackingField: {fileID: 2145774435355405310}
 --- !u!114 &4875647573395373011
 MonoBehaviour:
   m_ObjectHideFlags: 0

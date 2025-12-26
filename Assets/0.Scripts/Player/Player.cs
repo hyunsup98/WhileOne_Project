@@ -36,8 +36,8 @@ public class Player : MonoBehaviour
     private float _finsihTime  = 0.7f;
     private float _checkTime = 0;
     Coroutine regen;
-    
-    
+
+    [field: SerializeField] public PlayerDamage GetDamage { get; private set; }
 
     //상태에서 사용할 스크립트
     private PlayerAttack _attackAction;

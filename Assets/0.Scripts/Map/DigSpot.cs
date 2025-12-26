@@ -72,7 +72,7 @@ public class DigSpot : Interactable
                 float damagePercent = roomController.GetFakeDamagePercent(); // 예: 10 = 10%
                 Debug.Log($"[DigSpot] 플레이어 HP {damagePercent}% 감소.");
                 //playerController.AddHpPercent(-damagePercent);
-                player.TakenDamage(damagePercent, new Vector2(0,0));
+                player.GetDamage.TakenDamage(damagePercent, new Vector2(0,0));
             }
         }
 

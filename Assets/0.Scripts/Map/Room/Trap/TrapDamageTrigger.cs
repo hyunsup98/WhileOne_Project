@@ -29,7 +29,7 @@ public class TrapDamageTrigger : MonoBehaviour
     private Player currentPlayer = null;
     private bool hasDamagedInCurrentAnimationCycle = false; // 현재 애니메이션 사이클에서 데미지를 줬는지
     private float lastAnimationNormalizedTime = -1f; // 마지막 체크한 애니메이션 정규화 시간
-    
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -98,10 +98,10 @@ public class TrapDamageTrigger : MonoBehaviour
         if (isPlayerInTrigger && currentPlayer != null)
         {
             // 플레이어가 무적 상태면 데미지 주지 않음
-            if (currentPlayer.IsDamaged)
-            {
-                return;
-            }
+            ////if (currentPlayer.IsDamaged)
+            //{
+            //    return;
+            //}
             
             // 쿨다운 체크
             float timeSinceLastDamage = Time.time - lastDamageTime;
@@ -238,7 +238,7 @@ public class TrapDamageTrigger : MonoBehaviour
         }
         
         // 플레이어가 무적 상태면 데미지 주지 않음
-        if (currentPlayer.IsDamaged)
+        if (currentPlayer.GetDamage.IsDamaged)
         {
             return;
         }
@@ -246,7 +246,7 @@ public class TrapDamageTrigger : MonoBehaviour
         // Player.TakenDamage 호출
         // 플레이어의 최대 체력의 10% 데미지 적용
         float damage = Mathf.Max(1f, currentPlayer.MaxHp * 0.1f);
-        currentPlayer.TakenDamage(damage, transform.position);
+        currentPlayer.GetDamage.TakenDamage(damage, transform.position);
         lastDamageTime = Time.time;
         
         Debug.Log($"[TrapDamageTrigger] 플레이어에게 데미지 {damage} 적용 - 함정: {gameObject.name}, 시간: {Time.time:F2}");

@@ -56,7 +56,7 @@ public abstract class MonsterPattern
         if (collision.gameObject.layer == playerLayer)
         {
             Player player = collision.GetComponent<Player>();
-            player.TakenDamage(_damage, _monster.View.MyTransform.position);
+            player.GetDamage.TakenDamage(_damage, _monster.View.MyTransform.position);
         }
     }
 

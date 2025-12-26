@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -14,14 +15,16 @@ public class PlayerDamage : MonoBehaviour
     private float _finsihTime = 0.7f;
     private float _checkTime = 0;
     private WaitForSeconds _blinkTime;
-    [SerializeField] float time = 0.12f;
     private bool _isDamage;
     private bool _isCoroutine;
+    [SerializeField] float time = 0.12f;
 
     SpriteRenderer[] allRender;
     float alpha = 1f;
 
     public bool IsDamaged { get { return _isDamage; } set { _isDamage = value; } }
+     
+    
 
     private void Awake()
     {
