@@ -48,7 +48,7 @@ public class Chase : IState
         if (Vector3.SqrMagnitude(dir) <= _ationTrigger)
         {
             _monster.Model.SetState(MonsterState.Attack);
-            Debug.LogWarning("<color=red>공격실행</color>");
+            Debug.LogWarning("<color=red>공격실행</color>(공격시야각 없을시 공격모션X");
             return;
         }
 

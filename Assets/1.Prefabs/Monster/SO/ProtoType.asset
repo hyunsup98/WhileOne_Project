@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9bf9f8e3f0914104094306df9f1db51a, type: 3}
-  m_Name: Boss
+  m_Name: ProtoType
   m_EditorClassIdentifier: Assembly-CSharp::MonsterDataSO
   _monsterID: 0
-  _name: "\uBCF4\uC2A4"
+  _name: "\uD504\uB85C\uD1A0\uD0C0\uC785"
   _tier: 0
   _hp: 100
-  _moveSpeed: 4
-  _sight: 5
+  _moveSpeed: 2.5
+  _sight: 3
   _sightAngle: 90
   _searchTime: 3
+  _patrolRange: 10
   _actionList:
-  - {fileID: 11400000, guid: 0ab068d626c46764b9a13355190fd682, type: 2}
+  - {fileID: 11400000, guid: 029f8ab830018524c89bcf027b0bc96e, type: 2}

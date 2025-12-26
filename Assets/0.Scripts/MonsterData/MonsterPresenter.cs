@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 
 
 
-public class MonsterPresenter
+public class MonsterPresenter : IAnimationable
 {
 
     public MonsterModel Model { get; private set; }  // 현재 몬스터 데이터 보관한 Model
@@ -21,22 +21,22 @@ public class MonsterPresenter
     // 생성자
     public MonsterPresenter
         (
-        MonsterDataSO monsterData,
+        MonsterData monsterData,
         MonsterView monsterView,
-        Tilemap wallTilmap,
-        List<Transform> patrolTarget
+        Tilemap GroundTilmap,
+        Tilemap wallTilmap
         )
     {
         View = monsterView;
-        Model = new MonsterModel(monsterData, patrolTarget);
+        Model = new MonsterModel(monsterData, View.MyTransform, GroundTilmap, wallTilmap);
         
 
         // 경로 탐색으로 순찰 포인트 초기화
         Model.MobAstar = new Astar(wallTilmap);
-        Model.PatrolPoint = Model.MobAstar.Pathfinder
+        Model.PatrolPath = Model.MobAstar.Pathfinder
             (
-            patrolTarget[0].position,
-            patrolTarget[1].position
+            View.MyTransform.position,
+            Model.PatrolPoint.position
             );
 
 
@@ -139,4 +139,7 @@ public class MonsterPresenter
     }
 
     public void StartCoroutine(IEnumerator coroutine) => View.StartCoroutine(coroutine);
+
+    public void OnPlayAni(string animationName) => View.OnPlayAni(animationName);
+    public void OnStopAni(string animationName) => View.OnStopAni(animationName);
 }
