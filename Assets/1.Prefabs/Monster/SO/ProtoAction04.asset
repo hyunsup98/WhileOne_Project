@@ -29,4 +29,4 @@ MonoBehaviour:
   _chargeDelay: 1
   _actionTime: 1.5
   _pathPreview: {fileID: 0}
-  _hitDecision: {fileID: 8987226576481427747, guid: 8b4e528931915b94ab50ce5e0a4bad94, type: 3}
+  _hitDecision: {fileID: 3691471052091744918, guid: 61eef9906e581a84fbc1d47c3d3c2bec, type: 3}
