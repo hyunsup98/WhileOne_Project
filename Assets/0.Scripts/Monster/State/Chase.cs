@@ -25,6 +25,7 @@ public class Chase : IState
 
     public void Enter() 
     {
+        _monster.OnStopAni("Idle");
         _target = _monster.Model.ChaseTarget;
     }
 

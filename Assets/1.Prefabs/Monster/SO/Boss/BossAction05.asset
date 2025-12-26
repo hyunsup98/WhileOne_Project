@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a80e893e4c9fd74da77404668d9851a, type: 3}
+  m_Name: BossAction05
+  m_EditorClassIdentifier: Assembly-CSharp::Pattern05SO
+  _monsterActionID: 100205
+  _name: 
+  _monsterID: 0
+  _actionClass: 1
+  _actionCondition: 0
+  _actionType: 1
+  _actionDamage: 25
+  _actionCoolTime: 0
+  _attackBoost: 0
+  _speedBoost: 0
+  _actionResource: 
+  _actionSound: 
+  _actionRange: 2
+  _actionAngle: 60
+  _beforeDelay: 1
+  _afterDelay: 2
+  _actionStopTime: 5
+  _createdEffectDistance: 4
+  _createdEffectTime: 0.75
+  _fallingStartTime: 0
+  _fallingFrequency: 0
+  _fallingCycle: 0.3
+  _fallingDestroyTime: 2
+  _fallingObject: {fileID: 4085769273580591424, guid: 64e5837f95763214aaf48327be836218, type: 3}
+  _pathPreview: {fileID: 0}
+  _hitDecision: {fileID: 6950578856257754361, guid: 8815caeb84d97394d8360c81924e06b4, type: 3}

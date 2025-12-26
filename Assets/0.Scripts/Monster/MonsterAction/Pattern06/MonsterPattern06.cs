@@ -1,0 +1,150 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Tilemaps;
+
+public class MonsterPattern06 : MonsterPattern
+{
+    private Tilemap _wallTilemap;
+    private float _startFallingTime;
+    private float _fallingCount;
+    private float _fallingCycle;
+    private float _fallingFrequency;
+    private float _fallingRange;
+    private float _actionStopTime;
+
+    private GameObject _fallingObjectPrefab;
+
+    private Vector2 _mapCenterPos;
+    private Transform _myTransform;
+    private List<GameObject> _fallingObjects;
+
+    public string AniTrigger { get; private set; }
+
+    public MonsterPattern06(Pattern06SO actionData, MonsterPresenter monster)
+    {
+        _monster = monster;
+        _ani = monster;
+        _damage = actionData.ActionDamage;
+        _beforeDelay = actionData.BeforeDelay;
+        _afterDelay = actionData.AfterDelay;
+        _maxCoolTime = actionData.ActionCoolTime;
+        _hitDecision = actionData.HitDecision;
+
+        _wallTilemap = monster.Model.WallTilemap;
+        _myTransform = _monster.View.MyTransform;
+
+        _startFallingTime = actionData.StartFallingTime;
+        _fallingCount = actionData.FallingCount;
+        _fallingFrequency = actionData.FallingFrequency;
+        _fallingCycle = actionData.FallingCycle;
+        _fallingRange = actionData.FallingRange;
+        _actionStopTime = actionData.ActionStopTime;
+        _fallingObjectPrefab = actionData.FallingObjectPrefab;
+        _fallingObjects = new List<GameObject>();
+    }
+
+    public override void StartAction()
+    {
+        IsAction = true;
+        _isDelay = true;
+        _ani.OnPlayAni("Idle");
+        _mapCenterPos = GetMapCenter().position;
+
+        float timer = _beforeDelay;
+        OnDelayAndStart(OnTeleport, timer);
+
+        timer += _startFallingTime;
+
+        OnDelayAndStart(() => _monster.StartCoroutine(CreateFallingObject()), timer);
+    }
+
+    public override void OnAction()
+    {
+    }
+
+
+    public override void EndAction()
+    {
+        _myTransform.GetComponentInChildren<Collider2D>().enabled = true;
+        _timer = 0;
+        Init();
+    }
+
+
+    private void OnDelayAndStart(Action action, float delay) =>
+        _monster.StartCoroutine(OnDelay(action, delay));
+
+    // 맵 중앙을 찾는 메서드
+    private Transform GetMapCenter()
+    {
+        Transform parent = _myTransform.parent;
+        if (parent.CompareTag("Monster"))
+            parent = parent.parent;
+
+        foreach (Transform child in parent)
+        {
+            if (child.CompareTag("RoomCenterMarker"))
+                return child;
+        }
+
+        Debug.LogError("맵 중앙을 찾지 못했습니다.");
+        return null;
+    }
+
+    // 중앙으로 텔레포트 이동하는 메서드
+    private void OnTeleport()
+    {
+        _myTransform.GetComponentInChildren<Collider2D>().enabled = false;
+        _myTransform.position = _mapCenterPos;
+        _ani.OnPlayAni("Pattern06Start");
+    }
+
+
+    // 랜덤 위치에 낙하물 생성 메서드
+    private IEnumerator CreateFallingObject()
+    {
+        for (int i = 0; i < _fallingCycle; i++)
+        {
+            int safeCount = 0;
+            for (int j = 0; j < _fallingCount; j++)
+            {
+                if (safeCount == 100)
+                {
+                    Debug.LogWarning("생성체 생성 범위가 좁습니다.");
+                    break;
+                }
+
+                float x = _mapCenterPos.x + UnityEngine.Random.Range(-_fallingRange, _fallingRange + 1);
+                float y = _mapCenterPos.y + UnityEngine.Random.Range(-_fallingRange, _fallingRange + 1);
+
+                Vector2 createPos = new Vector2(x, y);
+                if (_wallTilemap.HasTile(_wallTilemap.WorldToCell(createPos)))
+                {
+                    safeCount++;
+                    j--;
+                    continue;
+                }
+
+                GameObject obj = GameObject.Instantiate(
+                _fallingObjectPrefab,
+                new Vector2(createPos.x, createPos.y),
+                Quaternion.identity,
+                _myTransform
+                );
+
+                _fallingObjects.Add(obj);
+            }
+
+            yield return CoroutineManager.waitForSeconds(_fallingFrequency);
+
+            foreach(var obj in _fallingObjects)
+                GameObject.Destroy(obj);
+        }
+
+        _ani.OnPlayAni("Pattern06End");
+        yield return CoroutineManager.waitForSeconds(_actionStopTime);
+        IsAction = false;
+    }
+}
