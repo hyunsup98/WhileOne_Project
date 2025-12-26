@@ -1493,7 +1493,7 @@ GameObject:
   - component: {fileID: 2145774435355405310}
   m_Layer: 8
   m_Name: Collider
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1544,7 +1544,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -2172,9 +2172,9 @@ GameObject:
   - component: {fileID: 808456578035544522}
   - component: {fileID: 8009744367677018761}
   - component: {fileID: 785637017083249820}
-  m_Layer: 11
+  m_Layer: 8
   m_Name: UseShovel
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5321,7 +5321,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerDig
   _isDigging: 0
-  test: {fileID: 9204005820206987568}
+  test: {fileID: 0}
   offSet: 0.5
   pivotTrans: {fileID: 4703368205314125819}
   tileCursor: {fileID: 3658747494255264244}
@@ -5393,7 +5393,7 @@ BoxCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 8716ba90e3b1232449ceceed101dba8a, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -5571,7 +5571,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
@@ -8726,10 +8726,5 @@ SpriteRenderer:
 --- !u!4 &8121034346171974544 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5889513552943426366, guid: 682cfaa39fdab174f9284398ca302175, type: 3}
-  m_PrefabInstance: {fileID: 2380280954177022126}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &9204005820206987568 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6823875298443514270, guid: 682cfaa39fdab174f9284398ca302175, type: 3}
   m_PrefabInstance: {fileID: 2380280954177022126}
   m_PrefabAsset: {fileID: 0}
