@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/1.Prefabs/2_Floor.meta
 guid: 8f0b8b2d603b48b4f8613f978100fff4
+========
+guid: 88641bc0a34128a469babbd4bd47020f
+>>>>>>>> 251223_Player:Assets/9.GitIgnore/Layer Lab.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

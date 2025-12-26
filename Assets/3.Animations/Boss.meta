@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/3.Animations/Boss.meta
 guid: 234a565b6affc8c469ca9185f943befc
+========
+guid: 437ddbb9b3d3f564983b4ff0aefaf59c
+>>>>>>>> 251223_Player:Assets/9.GitIgnore/StateEffect.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

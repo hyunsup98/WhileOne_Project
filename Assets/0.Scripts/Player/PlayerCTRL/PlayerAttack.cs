@@ -6,6 +6,7 @@ public class PlayerAttack : MonoBehaviour
 {
     private Player _player;
     private PlayerDig _dig;
+    private TrakingPlayer _traking;
 
     //플레이어 인풋 관련
     private PlayerInput _input;
@@ -13,8 +14,8 @@ public class PlayerAttack : MonoBehaviour
     private InputAction _attackAtion;
 
     //게임오브젝트 이펙트 관련
-    [SerializeField] private GameObject _effect1;
-    [SerializeField] private GameObject _effect2;
+    //[SerializeField] private GameObject _effect1;
+    //[SerializeField] private GameObject _effect2;
 
     bool _timer = false;
     float _attSpeed;
@@ -22,8 +23,8 @@ public class PlayerAttack : MonoBehaviour
     bool _isEffect1 = true; //그냥 토글용 변수
     private bool isUse;
 
-    public GameObject Effect1 => _effect1;
-    public GameObject Effect2 => _effect2;
+    //public GameObject Effect1 => _effect1;
+    //public GameObject Effect2 => _effect2;
     public bool IsAttacking => _isAttacking;
 
     private void Awake()
@@ -32,13 +33,11 @@ public class PlayerAttack : MonoBehaviour
     }
     void inIt()
     {
-        _player = transform.root.GetComponent<Player>();
+        _player = GetComponent<Player>();
 
-        _input = transform.root.GetComponent<PlayerInput>();  //최상위 부모의 플레이어 인풋 컴포넌트
+        _input = GetComponent<PlayerInput>();  //최상위 부모의 플레이어 인풋 컴포넌트
 
-        //_effect1 = transform.GetChild(0).gameObject; //자식 이펙트
-
-        //_effect2 = transform.GetChild(1).gameObject; //자식 이펙트
+        _traking = GetComponentInChildren<TrakingPlayer>();
     }
     void Start()
     {
@@ -58,6 +57,8 @@ public class PlayerAttack : MonoBehaviour
         };
 
         _dig = _player.PlayerDig;
+
+       
     }
     private void Attaking(InputAction.CallbackContext ctx)
     {
@@ -74,17 +75,7 @@ public class PlayerAttack : MonoBehaviour
 
             _isAttacking = true; //공격 트리거용 변수
 
-            if (_isEffect1) //첫번째 이펙트 위에서 아래로 쓸기
-            {
-                Effect1.SetActive(true);
-                _isEffect1 = false;
-
-            }
-            else //두번째 이펙트 아래에서 위로 쓸기
-            {
-                Effect2.SetActive(true);
-                _isEffect1 = true;
-            }
+            _traking.PlayEffect();
 
             _timer = true;
            
