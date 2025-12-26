@@ -35,7 +35,8 @@ public class MonsterPattern04 : MonsterPattern
         // 시전 준비 후 이펙트 생성
         Vector2 createdPos = (Vector2)_myTransform.position; 
         createdPos.x += (dir.x * 3f);
-        _hitDecision.GetComponent<CircleCollider2D>().radius = _acttackRange;
+
+        _hitDecision.GetComponentInChildren<CircleCollider2D>().radius = _acttackRange;
         _monster.StartCoroutine(OnChargeDelay( createdPos, "Pattern04", 0.75f ));
     }
 
@@ -68,4 +69,5 @@ public class MonsterPattern04 : MonsterPattern
 
         return true;
     }
+
 }

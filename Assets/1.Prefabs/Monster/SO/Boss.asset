@@ -22,4 +22,4 @@ MonoBehaviour:
   _searchTime: 3
   _patrolRange: 3
   _actionList:
-  - {fileID: 11400000, guid: 519cef2591fbab348b47262ef8e1bab2, type: 2}
+  - {fileID: 11400000, guid: 0ab068d626c46764b9a13355190fd682, type: 2}
