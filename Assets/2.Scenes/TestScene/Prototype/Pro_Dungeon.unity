@@ -4545,12 +4545,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: UseShovel
       objectReference: {fileID: 0}
-    - target: {fileID: 4329574107018779310, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
-      propertyPath: m_Layer
-      value: 11
-      objectReference: {fileID: 0}
     - target: {fileID: 6090921389041934258, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
-      propertyPath: <GetDamage>k__BackingField
+      propertyPath: <Player_WeaponChange>k__BackingField
       value: 
       objectReference: {fileID: 860721904}
     - target: {fileID: 9078672956431459521, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
@@ -4600,15 +4596,15 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
 --- !u!114 &860721904 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2145774435355405310, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
+  m_CorrespondingSourceObject: {fileID: 3496470623769560657, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
   m_PrefabInstance: {fileID: 860721903}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 860721906}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e96f8ce81bfb5a4890a6c28aeca52c9, type: 3}
+  m_Script: {fileID: 11500000, guid: a6d13a7b7465926408516849f11fed13, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerDamage
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponChange
 --- !u!4 &860721905 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9078672956431459521, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}

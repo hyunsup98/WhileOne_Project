@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Chest
   _renderer: {fileID: 6085956882463983611}
   _animator: {fileID: 8120128488138901461}
-  dropWeaponPer: 20
+  dropWeaponPer: 90
   <YOffset>k__BackingField: 1.5
 --- !u!212 &6085956882463983611
 SpriteRenderer:
@@ -97,7 +97,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_Sprite: {fileID: -1055878839, guid: d83b757df2038e142996901983f7757d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

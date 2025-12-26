@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class AttackDamage : MonoBehaviour
@@ -16,6 +17,19 @@ public class AttackDamage : MonoBehaviour
             if (collision.TryGetComponent<MonsterView>(out var monster))
             {
                 monster.Presenter.OnHit(25f);
+
+                if(GameManager.Instance.player != null)
+                {
+                    WeaponChange weapon = GameManager.Instance.player.Player_WeaponChange;
+
+                    if(weapon.currentweapon == weapon._slotWeapon2)
+                    {
+                        weapon._slotWeapon2.ReduceDurability(1);
+
+                        if (weapon._slotWeapon2.Durability <= 0)
+                            weapon._slotWeapon2 = weapon.currentweapon = null;
+                    }
+                }
             }
         }
     }

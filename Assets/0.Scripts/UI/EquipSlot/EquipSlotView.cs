@@ -23,9 +23,9 @@ public class EquipSlotView : MonoBehaviour
     }
 
     // 서브 무기 슬롯에 연결된 내구도 바 변경
-    public void ChangeSubWeaponDurability()
+    public void ChangeSubWeaponDurability(int currentDurability, int maxDurability)
     {
-        _subWeaponSlot.ChangeDurability();
+        _subWeaponSlot.ChangeDurability(currentDurability, maxDurability);
     }
 
     // 1, 2 키보드 키를 통해 선택된 무기 장착 슬롯의 색상 변경

@@ -261,7 +261,7 @@ public class TrapDamageTrigger : MonoBehaviour
         Debug.Log($"[TrapDamageTrigger] OnTriggerEnter2D - other: {other.name}, layer: {other.gameObject.layer}, playerLayer: {playerLayer.value}");
         
         // 플레이어 레이어 확인
-        if ((playerLayer.value & (1 << other.gameObject.layer)) != 0)
+        if(other.CompareTag("Player"))
         {
             Player player = other.GetComponent<Player>();
             if (player != null)
@@ -284,7 +284,7 @@ public class TrapDamageTrigger : MonoBehaviour
     private void OnTriggerStay2D(Collider2D other)
     {
         // 플레이어 레이어 확인
-        if ((playerLayer.value & (1 << other.gameObject.layer)) != 0)
+        if(other.CompareTag("Player"))
         {
             Player player = other.GetComponent<Player>();
             if (player != null)
@@ -298,7 +298,7 @@ public class TrapDamageTrigger : MonoBehaviour
     private void OnTriggerExit2D(Collider2D other)
     {
         // 플레이어 레이어 확인
-        if ((playerLayer.value & (1 << other.gameObject.layer)) != 0)
+        if(other.CompareTag("Player"))
         {
             Player player = other.GetComponent<Player>();
             if (player != null && player == currentPlayer)

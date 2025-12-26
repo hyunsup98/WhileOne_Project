@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,6 +18,9 @@ public class PlayerAttack : MonoBehaviour
     //[SerializeField] private GameObject _effect1;
     //[SerializeField] private GameObject _effect2;
 
+    // 이벤트 관련 변수
+    public event Action<int> _onSubWeaponAttack;        // 서브 무기로 쳤을 때 내구도 넘겨주기
+
     bool _timer = false;
     float _attSpeed;
     private bool _isAttacking = false;
@@ -31,6 +35,7 @@ public class PlayerAttack : MonoBehaviour
     {
         inIt();
     }
+
     void inIt()
     {
         _player = GetComponent<Player>();

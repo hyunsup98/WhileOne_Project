@@ -96,6 +96,8 @@ public class Player : MonoBehaviour
         set { _animator = value; }
     }
 
+    [field: SerializeField] public WeaponChange Player_WeaponChange { get; private set; }
+
     private void Awake()
     {
         Component();
@@ -206,6 +208,7 @@ public class Player : MonoBehaviour
     public void UseStamina()
     {
         _stamina -= 50;
+        _onStaminaChanged?.Invoke(_maxStamina, _stamina);
         if (regen == null)
         {
            regen =  StartCoroutine(RestoreStamina());

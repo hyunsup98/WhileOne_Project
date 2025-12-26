@@ -1,10 +1,18 @@
+using System;
 using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
     [SerializeField] private int _keyId;                     // 무기 데이터베이스 SO에서 데이터를 가져오기 위해 필요한 ID
     [SerializeField] private SpriteRenderer _renderer;
+
     public WeaponDataSO WeaponData { get; private set; }    // 실제 무기 데이터
+
+    #region 변하는 무기 데이터 변수들
+    public int Durability { get; private set; }     // 무기 내구도
+    #endregion
+
+    public event Action<int, int> onDurabilityChanged;
 
     public void SetWeaponData(WeaponDataSO weaponData) => WeaponData = weaponData;
 
@@ -31,10 +39,28 @@ public class Weapon : MonoBehaviour
     {
         if (data == null) return;
 
-
-
-        WeaponData = Instantiate(data);
+        WeaponData = data;
         _keyId = WeaponData.weaponID;
+        Durability = WeaponData.weaponDurability;
         _renderer.sprite = WeaponData.weaponResourcePath_Sprite;
+
+        onDurabilityChanged?.Invoke(Durability, WeaponData.weaponDurability);
+    }
+
+    /// <summary>
+    /// 내구도 감소
+    /// </summary>
+    /// <param name="amount"> 내구도 감소 수치 </param>
+    public void ReduceDurability(int amount)
+    {
+        Durability -= amount;
+
+        onDurabilityChanged?.Invoke(Durability, WeaponData.weaponDurability);
+
+        if (Durability <= 0)
+        {
+            // 내구도가 다 떨어지면 무기 제거
+            WeaponPool.Instance.TakeObject(this);
+        }
     }
 }

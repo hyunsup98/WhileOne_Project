@@ -13,15 +13,26 @@ public class WeaponChange : MonoBehaviour
     //public SO slotWeapon1
     //private SO slotWeapon2
 
+    public Weapon currentweapon;
+    private Dictionary<Weapon, GameObject> weaponList = new();
+
+    private Weapon _slotWeapon1;        // 메인 무기 → 삽(변경될 일 없음)
+    public Weapon _slotWeapon2;         // 서브 무기 → 다양한 무기(변경됨)
+
     PlayerInput _input;
     InputActionMap _inputActionMap;
     InputAction _switchWeapon1;
     InputAction _switchWeapon2;
     Player _player;
 
+    public event Action<int> onSwapWeapon;          // 무기 스왑 이벤트
+    public event Action<Weapon> onWeaponChanged;    // 무기 변경 이벤트
+
 
     private void Start()
     {
+        _player = GetComponent<Player>();
+
         _input = _player.Playerinput;
         _inputActionMap = _input.actions.FindActionMap("Player");
         _switchWeapon1 = _inputActionMap.FindAction("Previous");
@@ -35,8 +46,12 @@ public class WeaponChange : MonoBehaviour
     {
         SwitchSlot(1);
     }
+
     private void WeaponSwitch2(InputAction.CallbackContext ctx)
     {
+        // 서브 무기에 무기가 없을 경우 무시
+        if (_slotWeapon2 == null) return;
+
         SwitchSlot(2);
     }
 
@@ -44,16 +59,23 @@ public class WeaponChange : MonoBehaviour
     {
         //SO targetData = (slotNum == 1) ? slotWeapon1 : slotWeapon2;
         //EquipWeapon(targetData);
+
+        onSwapWeapon?.Invoke(slotNum);
     }
-    public void ChangeWeapon()//스크립터블 오브젝트 넣는 곳)
+
+    public void ChangeWeapon(Weapon weapon)//스크립터블 오브젝트 넣는 곳)
     {
         //if(_currentWeaponData == 대충 매개변수로 받아온 변수) //스크립터블과 비교하는 곳
         //return;
 
-        if(_currentWeapon != null) //만약 기존에 데이터가 있다면 
+        _slotWeapon2 = weapon;
+
+        if(_currentWeapon != null) //만약 기존에 데이터가 있다면
         {
             _currentWeapon.SetActive(false); //해당 데이터는 비활성화
         }
+
+        onWeaponChanged?.Invoke(_slotWeapon2);
 
         //if(!weaponeList.Contains(대충 매개변수로 받아온 변수))
         //{

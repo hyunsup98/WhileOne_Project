@@ -1,5 +1,4 @@
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -37,6 +36,7 @@ public class WeaponUI : MonoBehaviour
     {
         // todo: 플레이어에 현재 weapon 장착, weapon.InitData();
         chest.ChestClose(ChestState.OpenedTaken);
+        GameManager.Instance.player.Player_WeaponChange.ChangeWeapon(weapon);
         DisableUI();
     }
 

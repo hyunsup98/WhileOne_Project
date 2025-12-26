@@ -50,7 +50,7 @@ public class EquipSlot : MonoBehaviour
             // 내구도 바가 꺼져있다면 켜주고 수치 적용
             if (!_durability.activeSelf)
                 _durability.SetActive(true);
-            ChangeDurability();
+            ChangeDurability(weapon.Durability, weapon.WeaponData.weaponDurability);
 
         }
     }
@@ -65,11 +65,11 @@ public class EquipSlot : MonoBehaviour
         _weaponToggle.isOn = true;
     }
 
-    public void ChangeDurability()
+    public void ChangeDurability(int currentDurability, int maxDurability)
     {
         if (_durabilityBar == null || weapon == null || _durability == null) return;
 
-        _durabilityBar.fillAmount = (float)weapon.WeaponData.weaponDurability / DataManager.Instance.WeaponData.WeaponDatabase[weapon.WeaponData.weaponID].weaponDurability;
+        _durabilityBar.fillAmount = (float)currentDurability / maxDurability;
     }
 
     /// <summary>
