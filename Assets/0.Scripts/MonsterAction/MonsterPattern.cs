@@ -93,4 +93,10 @@ public abstract class MonsterPattern
 
         _isDelay = false;
     }
+
+    protected IEnumerator OnDelay(Action action, float delayTime)
+    {
+        yield return CoroutineManager.waitForSeconds(delayTime);
+        action?.Invoke();
+    }
 }
