@@ -461,6 +461,7 @@ public class DungeonGenerator : MonoBehaviour
         if (startRoom == null || startRoom.roomObject == null)
         {
             Debug.LogWarning("시작 방 정보가 없어 플레이어를 이동할 수 없습니다.");
+            GenerateDungeon();
             return;
         }
         
