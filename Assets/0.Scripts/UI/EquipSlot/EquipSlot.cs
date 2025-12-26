@@ -1,7 +1,8 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class EquipSlot : MonoBehaviour
+public class EquipSlot : Slot
 {
     [Header("무기 장착 슬롯 변수")]
     [SerializeField] private Toggle _weaponToggle;      // 현재 무기가 장착되어 있는지 판단할 토글
@@ -14,12 +15,30 @@ public class EquipSlot : MonoBehaviour
 
     [Header("선택된 슬롯에 적용해줄 색상")]
     [SerializeField] private Color _selectColor;        // 현재 무기가 선택되었을 때 변경해줄 색상
+    private Color _mouseEnterColor = new Color(255f, 255f, 255f);
+    private Color _mouseExitColor = new Color(200f, 200f, 200f);
+
 
     private Weapon weapon;
 
     private void Awake()
     {
         ChangeIcon(weapon);
+    }
+
+    // 마우스가 슬롯에 올라갔을 때
+    public override void OnPointerEnter(PointerEventData eventData)
+    {
+        if (weapon == null) return;
+
+        _frameImg.color = _mouseEnterColor;
+        GameManager.Instance.CurrentDungeon.WeaponTooltip.ShowTooltip(weapon);
+    }
+
+    public override void OnPointerExit(PointerEventData eventData)
+    {
+        _frameImg.color = _mouseExitColor;
+        GameManager.Instance.CurrentDungeon.WeaponTooltip.HideTooltip();
     }
 
     /// <summary>

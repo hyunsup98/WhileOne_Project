@@ -23,9 +23,12 @@ public class DungeonManager : MonoBehaviour
     #endregion
 
     #region 상자, 무기 관련 변수
-    [field: SerializeField] public WeaponUI WeaponUI { get; private set; }
-    [field: SerializeField] public GameObject InteractImg { get; private set; }
+    [field: SerializeField] public WeaponUI WeaponUI { get; private set; }              // 무기 획득 UI
+    [field: SerializeField] public GameObject InteractImg { get; private set; }         // 상호작용 키 이미지
     #endregion
+
+    [field: SerializeField] public WeaponTooltip WeaponTooltip { get; private set; }        // 무기 툴팁
+    [field: SerializeField] public TreasureTooltip TreasureTooltip { get; private set; }    // 보물 툴팁
 
     private void Awake()
     {

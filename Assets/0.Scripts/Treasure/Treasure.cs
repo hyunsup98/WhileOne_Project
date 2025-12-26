@@ -10,7 +10,7 @@ public enum TreasureType
 /// <summary>
 /// 보물 클래스
 /// </summary>
-public class Treasure : MonoBehaviour
+public class Treasure
 {
     private TreasureDataSO _treasureDataSO;
     public TreasureDataSO TreasureData
