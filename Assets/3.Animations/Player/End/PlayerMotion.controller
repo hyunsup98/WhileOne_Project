@@ -50,32 +50,6 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
---- !u!1102 &-7443553731369905423
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: sting
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: b34a0c64f33a5b742adf8b6ba999040f, type: 2}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
 --- !u!1102 &-4628994504728087347
 AnimatorState:
   serializedVersion: 6
@@ -100,7 +74,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 5187132de96c18244b62b7d6e2580323, type: 2}
+  m_Motion: {fileID: 7400000, guid: 17a5131dbcfcbb84c9cf181e9edca983, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -145,22 +119,19 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 5677748414759869030}
-    m_Position: {x: 300, y: 190, z: 0}
+    m_Position: {x: 300, y: 200, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -4628994504728087347}
     m_Position: {x: 300, y: 0, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1462309911096649878}
-    m_Position: {x: 520, y: 450, z: 0}
+    m_Position: {x: 640, y: 440, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 8739065549781850774}
     m_Position: {x: 970, y: 0, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 6172002122938704921}
     m_Position: {x: 940, y: 190, z: 0}
-  - serializedVersion: 1
-    m_State: {fileID: -7443553731369905423}
-    m_Position: {x: 220, y: 320, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []

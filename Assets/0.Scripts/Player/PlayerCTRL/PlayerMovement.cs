@@ -52,7 +52,7 @@ public class PlayerMovement : MonoBehaviour
     void OnMove(InputAction.CallbackContext ctx)
     {
         _dir = ctx.ReadValue<Vector2>();
-        Move = new Vector3(_dir.x, _dir.y, 0).normalized;
+        Move = (Vector3)_dir.normalized;
     }
     private void OnStopped(InputAction.CallbackContext ctx)
     {

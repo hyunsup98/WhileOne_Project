@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Player : MonoBehaviour
 {
@@ -13,12 +14,9 @@ public class Player : MonoBehaviour
     [SerializeField] private int _attack = 5;
     [SerializeField] private int _attackSpeed = 4;
 
-    [SerializeField] private Rigidbody2D _rg2d;
-
     private float _hp;
     private float _stamina;
-
-    private bool _isDamage;
+    
 
     PlayerInput _input;
     InputActionMap _actionMap;
@@ -35,16 +33,14 @@ public class Player : MonoBehaviour
 
     //코루틴 변수
     private WaitForSeconds _delay;
-    private WaitForSeconds _blinkTime;
-    [SerializeField] float time = 0.12f;
     private float _finsihTime  = 0.7f;
     private float _checkTime = 0;
+    Coroutine regen;
     
-    //레이어 관련 변수
-    private SortingGroup _group;
+    
 
     //상태에서 사용할 스크립트
-    [SerializeField] private PlayerAttack _attackAction;
+    private PlayerAttack _attackAction;
     PlayerMovement _playerMove;
     PlayerDig _playerDig;
     PlayerDash _dash;
@@ -53,12 +49,11 @@ public class Player : MonoBehaviour
 
     //외부에서 사용할 프로퍼티
     public float Hp => _hp;
-    public float MaxHp => _maxHp; // 잠시만추가할게요
-    public float Stamina => _stamina;
+    public float Stamina { get { return _stamina; } set { _stamina = value; } }
     public int MoveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }
     public int Attack => _attack;
     public int AttackSpeed => _attackSpeed;
-    public bool IsDamaged { get { return _isDamage; } set { _isDamage = value; } }
+    
     public PlayerInput Playerinput
     {
         get { return _input; }
@@ -112,10 +107,10 @@ public class Player : MonoBehaviour
         _playerMove = GetComponent<PlayerMovement>();
         _playerDig = GetComponent<PlayerDig>();
         _input = GetComponent<PlayerInput>();
-        _rg2d = GetComponent<Rigidbody2D>();
         _dash = GetComponent<PlayerDash>();
-        _animator = transform.GetChild(0).GetComponent<Animator>();
-        _stop = transform.GetChild(0).GetComponent<MoveStopAnimation>();
+        _attackAction = GetComponent<PlayerAttack>();
+        _animator = GetComponentInChildren<Animator>();
+        _stop = GetComponentInChildren<MoveStopAnimation>();
 
     }
     void Start()
@@ -126,12 +121,9 @@ public class Player : MonoBehaviour
         MoveState(new IdleState(this));
         ActionState(new ActionIdleState(this));
 
-        _delay = new WaitForSeconds(1f);
-        _blinkTime = new WaitForSeconds(time);
-
-        _group = transform.GetChild(0).GetComponent<SortingGroup>();
-
-        StartCoroutine(Blink());
+        _delay = new WaitForSeconds(5f);
+       
+        RestoreStamina();
     }
 
     public float ChangedHealth
@@ -158,9 +150,9 @@ public class Player : MonoBehaviour
         private set
         {
             _stamina = Mathf.Clamp(value, 0, _maxStamina);
-            if(_stamina <= 0)
+            if(_stamina >= 0f)
             {
-                _onHpChanged?.Invoke(_maxStamina, ChangedStamina);
+                _onStaminaChanged?.Invoke(_maxStamina, ChangedStamina);
             }
         }
            
@@ -171,12 +163,13 @@ public class Player : MonoBehaviour
         moveCurrentState?.Update();
         actionCurrentState?.Update();
 
+        Debug.Log(Stamina);
         //if(Keyboard.current.qKey.wasPressedThisFrame)
         //{
         //    TakenDamage(10, Vector2.zero);
         //}
     }
-
+    
     void PlayerDir()
     {
         //마우스 좌표값을 월드 좌표값으로 변환
@@ -189,38 +182,35 @@ public class Player : MonoBehaviour
 
         if (angleZ > 90 || angleZ < -90)
         {
+            //transform.localRotation =new Quaternion(0,0,0,0);
             transform.localScale = new Vector3(1, 1, 1);
         }
         //캐릭터를 기준으로 마우스가 오른쪽으로 넘어가면 캐릭터 방향 변경
         else
         {
+            //transform.localRotation = new Quaternion(0, 180, 0, 0);
             transform.localScale = new Vector3(-1, 1, 1);
         }
     }
-    public void TakenDamage(float damage, Vector2 target)
+    IEnumerator RestoreStamina()
     {
-        IsDamaged = true;
-        ChangedHealth -= damage;
-        StartCoroutine(KnockBack(target));
-        //StartCoroutine(Blink());
-    }
-
-
-
-    public void RestoreStamina()
-    {
-       if(_stamina <= 99)
+       while(_stamina < _maxStamina)
         {
-            StartCoroutine(RestoreCoroutine());
+            _stamina += 5;
+
+            _stamina = Mathf.Clamp(_stamina, 0, _maxStamina);
+
+            yield return new WaitForSeconds(2);
         }
+        regen = null;
     }
     public void UseStamina()
     {
-        if(_stamina < 50)
-        {
-            return;
-        }
         _stamina -= 50;
+        if (regen == null)
+        {
+           regen =  StartCoroutine(RestoreStamina());
+        }
     }
 
     public void MoveState(IState state)
@@ -235,45 +225,6 @@ public class Player : MonoBehaviour
         actionCurrentState = state;
         actionCurrentState.Enter();
     }
-
-    IEnumerator RestoreCoroutine()
-    {
-        yield return _delay;
-        _stamina += 5;
-    }
-
-    IEnumerator Blink()
-    {
-        _checkTime = 0;
-        gameObject.layer = LayerMask.NameToLayer("PlayerDamage");
-       
-        while (_finsihTime>_checkTime)
-        {
-            _group.sortingOrder = 0;
-
-            yield return _blinkTime;
-
-            _group.sortingOrder = 3;
-
-            _checkTime += time;
-
-            yield return _blinkTime;
-        }
-        gameObject.layer = LayerMask.NameToLayer("Player");
-        _isDamage = false;
-        yield return null;
-
-    }
-    IEnumerator KnockBack(Vector2 target)
-    {
-        int dirx = transform.position.x - target.x > 0 ? 1 : -1;
-        int diry = transform.position.y - target.y > 0 ? 1 : -1;
-        _rg2d.linearVelocityX = dirx * 1f;
-        _rg2d.linearVelocityY = diry * 1f;
-        yield return new WaitForSeconds(0.5f);
-        _rg2d.linearVelocity = Vector2.zero;
-    }
-
     private void OnDisable()
     {
         GameManager.Instance.player = null;
