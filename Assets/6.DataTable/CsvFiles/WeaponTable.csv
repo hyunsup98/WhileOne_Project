@@ -1,0 +1,23 @@
+﻿무기 ID,무기 이름,무기 설명,"무기 등급(1-일반, 2-고급)",무기 공격1 평균 대미지,무기 공격1 최소 대미지,무기 공격1 최대 대미지,무기 공격1 공격속도(ex. 2 = 2초당 1대),무기 이동속도 증가량,무기 스태미너 회복증가량,무기 공격1 모델 리소스 경로,무기 특수기능 평균 대미지,무기 특수스킬 최소 대미지,무기 특수스킬 최대 대미지,무기 특수스킬 공격속도,무기 특수스킬 쿨다운,무기 특수스킬 스태미나 소모량,무기 특수스킬 모델 리소스 경로,무기 모델 리소스 경로,무기 내구도,해당 무기 드랍률
+weaponID,weapon_Name,weapon_Desc,weaponTier,weaponAttack1Damage,weaponAttack1MinDamage,weaponAttack1MaxDamage,weaponAttack1Speed,weaponMoveSpeed,weaponStaminaRecovery,weaponAttack1ModelPath_Sprite,weaponAttack2Damage,weaponAttack2MinDamage,weaponAttack2MaxDamage,weaponAttack2Speed,weaponAttack2Cooldown,weaponAttack2Stamina,weaponAttack2ModelPath_Sprite,weaponResourcePath_Sprite,weaponDurability,weaponDropRate
+int,string,string,string,float,float,float,float,float,float,string,float,float,float,float,float,float,string,string,int,int
+4001,Common_Weapon_Name_Text_001,Common_Weapon_Desc_Text_001,1,10,8,12,1,,,,,,,,,,,,99999,
+4002,Common_Weapon_Name_Text_002,Common_Weapon_Desc_Text_002,1,20,15,25,4,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/0_Sword/Sword_3,24,2
+4003,Common_Weapon_Name_Text_003,Common_Weapon_Desc_Text_003,1,16,14,18,1.4,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/2_Axe/AxeLong1,20,2
+4004,Common_Weapon_Name_Text_004,Common_Weapon_Desc_Text_004,1,14,12,16,1.2,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/4_Spear/Spear_1,18,2
+4005,Common_Weapon_Name_Text_005,Common_Weapon_Desc_Text_005,1,8,8,8,0.8,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/7_Shield/WoodShield4,17,2
+4006,Common_Weapon_Name_Text_006,Common_Weapon_Desc_Text_006,1,15,13,17,1.6,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Ver300/0_Unit/0_Sprite/8_Weapons/8_Mace/New_Weapon_07,18,2
+4007,Common_Weapon_Name_Text_007,Common_Weapon_Desc_Text_007,1,6,5,7,0.4,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/RetroHeroes/0_Unit/0_Sprite/6_Weapons/7_Dagger/Weapon_Rogue_2,20,2
+4008,Common_Weapon_Name_Text_008,Common_Weapon_Desc_Text_008,1,5,1,9,0.7,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Ver300/0_Unit/0_Sprite/8_Weapons/5_Wand/New_Weapon_03,8,2
+4009,Common_Weapon_Name_Text_009,Common_Weapon_Desc_Text_009,1,13,9,17,1.8,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Ver300/0_Unit/0_Sprite/8_Weapons/1_Spear/New_Weapon_09,16,2
+4010,Common_Weapon_Name_Text_010,Common_Weapon_Desc_Text_010,1,14,12,16,1.5,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Ver300/0_Unit/0_Sprite/8_Weapons/0_Sword/New_Weapon_06,22,2
+4011,Common_Weapon_Name_Text_011,Common_Weapon_Desc_Text_011,1,15,10,20,1.4,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Ver300/0_Unit/0_Sprite/8_Weapons/0_Sword/New_Weapon_17,20,2
+4012,Common_Weapon_Name_Text_012,Common_Weapon_Desc_Text_012,1,18,16,20,1.3,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Ver300/0_Unit/0_Sprite/8_Weapons/0_Sword/New_Weapon_01,24,2
+4013,Common_Weapon_Name_Text_013,Common_Weapon_Desc_Text_013,1,24,18,30,1.7,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/RetroHeroes/0_Unit/0_Sprite/6_Weapons/0_Sword/Weapon_Knight_2,26,2
+4014,Common_Weapon_Name_Text_014,Common_Weapon_Desc_Text_014,1,20,19,21,1.3,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/RetroHeroes/0_Unit/0_Sprite/6_Weapons/0_Sword/Weapon_Knight_1,22,2
+4015,Common_Weapon_Name_Text_015,Common_Weapon_Desc_Text_015,1,22,19,25,1,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Ver300/0_Unit/0_Sprite/8_Weapons/1_Spear/New_Weapon_16,26,2
+5001,Common_Weapon_Name_Text_016,Common_Weapon_Desc_Text_016,2,25,23,27,1.8,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/0_Sword/Sword_5,25,2
+5002,Common_Weapon_Name_Text_017,Common_Weapon_Desc_Text_017,2,18,16,20,2,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/3_Shield/Shield_1,36,2
+5003,Common_Weapon_Name_Text_018,Common_Weapon_Desc_Text_018,2,24,24,24,3,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/6_Hammer/F_SR_Hammer,24,2
+5004,Common_Weapon_Name_Text_019,Common_Weapon_Desc_Text_019,2,27,20,34,2.2,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Ver300/0_Unit/0_Sprite/8_Weapons/1_Spear/New_Weapon_13,26,2
+5005,Common_Weapon_Name_Text_020,Common_Weapon_Desc_Text_020,2,28,27,29,1.6,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/2_Axe/AxeNormal1,27,2

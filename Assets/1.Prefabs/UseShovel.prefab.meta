@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/1.Prefabs/UseShovel.prefab.meta
 guid: 2942dcaa47ac90940aae3ea19438704a
+========
+guid: f9a47cbb22edd3a45a78a4383cd82aba
+>>>>>>>> 251223_BoxWeapon:Assets/1.Prefabs/Weapon/Weapon.prefab.meta
 PrefabImporter:
   externalObjects: {}
   userData: 

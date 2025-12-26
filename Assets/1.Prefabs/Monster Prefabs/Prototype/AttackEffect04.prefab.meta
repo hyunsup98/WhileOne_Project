@@ -1,5 +1,9 @@
 fileFormatVersion: 2
-guid: e7ea19e72c9ad964ba7b5df981f4703d
+<<<<<<<< HEAD:Assets/1.Prefabs/Monster Prefabs/Prototype/AttackEffect04.prefab.meta
+guid: 4a300a85f81a7a94db8bfd7f2d2545bd
+========
+guid: cebb4cb317eb5be4c844656d77c2d61f
+>>>>>>>> 251223_BoxWeapon:Assets/1.Prefabs/UI/WeaponSlot/WeaponSlot.prefab.meta
 PrefabImporter:
   externalObjects: {}
   userData: 

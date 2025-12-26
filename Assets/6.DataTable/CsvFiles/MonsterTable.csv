@@ -1,0 +1,8 @@
+﻿몬스터ID,몬스터 이름,몬스터 등급,몬스터 HP,몬스터 이동속도,몬스터 시야,몬스터 행동01,몬스터 행동02,몬스터 행동03,몬스터 행동04,몬스터 행동05,몬스터 행동06,몬스터 행동07,몬스터 모델 리소스
+monsterID,monsterName,tier,hp,monsterSpeed,sight,action1,action2,action3,action4,action5,action6,action7,monsterModelPath_Sprite
+int,string,int,float,float,float,int,int,int,int,int,int,int,string
+1001,스켈레톤,1,80,5,8,100101,,,,,,,
+1002,고블린,1,100,5,8,100201,,,,,,,
+1003,스파이더,1,120,5,10,100301,,,,,,,
+2001,고스트,2,9999,4,10,200101,200102,200103,,,,,
+3001,허무의 황제,3,10000,4,100,300101,,,300104,300105,300106,,

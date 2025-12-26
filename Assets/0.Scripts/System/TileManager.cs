@@ -1,7 +1,4 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Tilemaps;
 
 /// <summary>
 /// 타일 조건 체크 관련 기능을 담당하는 클래스
@@ -51,8 +48,7 @@ public class TileManager
             _dungeonManager.CurrentRoom.DigSpotTileMap.SetTile(cellPos, null);
             _dungeonManager.CurrentRoom.FloorTileMap.SetTile(cellPos, _dungeonManager.CurrentRoom.AfterDigTile);
 
-            //보물 획득
-            _dungeonManager.TreasureBarUI.AddTreasure(DataManager.Instance.PickTreasure());
+            _dungeonManager.TreasureBarUI.AddTreasure(DataManager.Instance.TreasureData.PickTreasure());
         }
         // 땅을 팔 수 없을 때
         else

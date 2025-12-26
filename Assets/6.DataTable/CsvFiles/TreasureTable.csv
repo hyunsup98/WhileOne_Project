@@ -1,0 +1,24 @@
+﻿보물 ID,보물 이름,보물 설명,"보물 티어 일반 1, 고급2",캐릭터 파워업 여부,공격력 증가율 (단위 : +2),보물 모델 리소스,해당 Treasure_Icon 파일경로
+treasureID,treasure_Name,treasure_Desc,treasureTier,isPowerUp,damageBoost,treasureResourcePath_Sprite,treasureIconPath_Sprite
+int,string,string,int,bool,int,string,string
+6001,Common_Treasure_Name_Text_001,Common_Treasure_Desc_Text_001,1,FALSE,0,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Book/book_003,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Book/book_003
+6002,Common_Treasure_Name_Text_002,Common_Treasure_Desc_Text_002,1,FALSE,0,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/EtcItem/etcitem_002,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Etcitem/etcitem_002
+6003,Common_Treasure_Name_Text_003,Common_Treasure_Desc_Text_003,1,FALSE,0,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/EtcItem/etcitem_006,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Etcitem/etcitem_006
+6004,Common_Treasure_Name_Text_004,Common_Treasure_Desc_Text_004,1,FALSE,0,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Food/food_019,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Food/food_019
+6005,Common_Treasure_Name_Text_005,Common_Treasure_Desc_Text_005,1,FALSE,0,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Food/food_008,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Food/food_008
+6006,Common_Treasure_Name_Text_006,Common_Treasure_Desc_Text_006,1,FALSE,0,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Food/food_006,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Food/food_006
+6007,Common_Treasure_Name_Text_007,Common_Treasure_Desc_Text_007,1,FALSE,0,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Ore/ore_003,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Ore/ore_003
+6008,Common_Treasure_Name_Text_008,Common_Treasure_Desc_Text_008,1,FALSE,0,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Ore/ore_007,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Ore/ore_007
+6009,Common_Treasure_Name_Text_009,Common_Treasure_Desc_Text_009,1,FALSE,0,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Ore/ore_014,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Ore/ore_014
+6010,Common_Treasure_Name_Text_010,Common_Treasure_Desc_Text_010,1,FALSE,0,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Ore/ore_020,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Ore/ore_020
+6011,Common_Treasure_Name_Text_011,Common_Treasure_Desc_Text_011,1,FALSE,0,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Ore/ore_009,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Ore/ore_009
+6012,Common_Treasure_Name_Text_012,Common_Treasure_Desc_Text_012,1,FALSE,0,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Ore/ore_012,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Ore/ore_012
+6013,Common_Treasure_Name_Text_013,Common_Treasure_Desc_Text_013,1,FALSE,0,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Plants/plants_009,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Plants/plants_009
+6014,Common_Treasure_Name_Text_014,Common_Treasure_Desc_Text_014,1,FALSE,0,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Seal/seal_008,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Seal/seal_008
+6015,Common_Treasure_Name_Text_015,Common_Treasure_Desc_Text_015,1,FALSE,0,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Seal/seal_004,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Seal/seal_004
+7001,Common_Treasure_Name_Text_016,Common_Treasure_Desc_Text_016,2,TRUE,2,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Postion/postion_015,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Postion/postion_015
+7002,Common_Treasure_Name_Text_017,Common_Treasure_Desc_Text_017,2,TRUE,2,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Shield/shield_022,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Shield/shield_022
+7003,Common_Treasure_Name_Text_018,Common_Treasure_Desc_Text_018,2,TRUE,2,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Sword/sword_022,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Sword/sword_022
+7004,Common_Treasure_Name_Text_019,Common_Treasure_Desc_Text_019,2,TRUE,2,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Material/material_018,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Material/material_018
+7005,Common_Treasure_Name_Text_020,Common_Treasure_Desc_Text_020,2,TRUE,2,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Material/material_017,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Material/material_017
+9001,Common_Treasure_Name_Text_021,Common_Treasure_Desc_Text_021,4,FALSE,0,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Material/material_026,Assets/9.GitIgnore/Layer Lab/2D Pixel-RPGIcon/Icons/Material/material_026

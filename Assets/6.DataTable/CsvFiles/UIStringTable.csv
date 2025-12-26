@@ -1,0 +1,45 @@
+﻿스트링자료이름,국문
+stringResourceID,ko
+string,string
+Start_Text,<color=#FFFFFF>게임 시작</color>
+End_Text,<color=#FFFFFF>게임 종료</color>
+Floor_Text,<color=#FFFFFF>B{0}층</color>
+Sound_All_Text,<color=#FFFFFF>전체 볼륨</color>
+Sound_BGM_Text,<color=#FFFFFF>BGM</color>
+Sound_SFX_Text,<color=#FFFFFF>효과음</color>
+Manual_Text,<color=#FFFFFF>조작설명</color>
+Weapon_Attack1_Damage_Text,<color=#FFFFFF>공격력 + </color>
+Weapon_Attack1_Speed_Text,<color=#FFFFFF>초당 공격속도 + </color>
+Weapon_Attack2_Damage_Text,<color=#FFFFFF>스킬 공격력 + </color>
+Weapon_Attack2_Speed_Text,<color=#FFFFFF>스킬 초당 공격속도 + </color>
+Weapon_Attack2_Cooldown_Text,<color=#FFFFFF>스킬 쿨다운 + </color>
+Weapon_Attack2_Stamina_Text,<color=#FFFFFF>스킬 스테미나 소모량 + </color>
+End_Warning_Text,<color=#FFFFFF>모든 진행상황이 초기화됩니다\n게임을 종료 하시겠습니까? </color>
+Move_Text1,<color=#000000>W A S D </color>
+Interact_Text1,<color=#000000>E</color>
+Shovel_Text1,<color=#000000>1</color>
+Weapon_Text1,<color=#000000>2</color>
+Avoid_Text1,<color=#000000>Space</color>
+Pause_Text1,<color=#000000>Esc</color>
+mAttack_Text1,<color=#000000>마우스 우클릭</color>
+mDig_Text1,<color=#000000>마우스 좌클릭</color>
+Move_Text2,<color=#000000>이동</color>
+Interact_Text2,<color=#000000>상호작용</color>
+Shovel_Text2,<color=#000000>삽</color>
+Weapon_Text2,<color=#000000>무기</color>
+Avoid_Text2,<color=#000000>회피</color>
+Pause_Text2,<color=#000000>설정</color>
+mAttack_Text2,<color=#000000>공격</color>
+mDig_Text2,<color=#000000>삽 - 발굴\n(홀드 - 조준)\n무기 - 스킬</color>
+Weapon_Get_Warning_Text,<color=#FF0000>획득 시 기존의 무기는 파괴됩니다</color>
+Weapon_Get_Back_Text,<color=#FFFFFF>돌려놓기</color>
+Weapon_Get_Text,<color=#FFFFFF>획득하기</color>
+Weapon_UnGet_Text,<color=#FFFFFF>기대는 허사였다</color>
+Weapon_UnGet_in_Text,<color=#FFFFFF>남아있는 것은 공허뿐이다</color>
+Dead_End_Text,<color=#FFFFFF>데드 엔딩</color>
+Dead_End_in_Text,<color=#FFFFFF>유적에 영원히 남게 되었다</color>
+Loading_Text,<color=#FFFFFF>로딩 중...</color>
+Character_HP_Text,<color=#FFFFFF>HP + </color>
+Stamina_Text,<color=#FFFFFF>스테미나 + </color>
+Stamina_Recovery_Text,<color=#FFFFFF>스테미나 재생속도 + </color>
+Character_Speed_Text,<color=#FFFFFF>이동속도 + </color>

@@ -1,5 +1,7 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 //게임 상태
@@ -57,6 +59,27 @@ public class GameManager : Singleton<GameManager>
     [field: SerializeField] public Player player { get; set; }                      // [던전 씬에서만 값이 존재]현재 씬에 존재하는 플레이어를 참조하는 변수
     [field: SerializeField] public DungeonManager CurrentDungeon { get; set; }      // [던전 씬에서만 값이 존재]현재 씬에 존재하는 던전을 관리하는 매니저
 
+    private IInteractable _interactObj;
+    public IInteractable InteractObj
+    {
+        get { return _interactObj; }
+        set
+        {
+            _interactObj = value;
+
+            if(CurrentDungeon != null && CurrentDungeon.InteractImg != null)
+            {
+                // _interactObj에 값이 있으면 상호작용 ui 키고, 값이 없으면 (null이면) 끄기
+                if(_interactObj != null)
+                    CurrentDungeon.SetPosInteractImg(InteractObj.Pos + new Vector3(0f, InteractObj.YOffset, 0f));
+                else
+                    CurrentDungeon.InteractImg.SetActive(false);
+            }
+        }
+    }
+
+    public void InitToSceneChanged(Scene scene, LoadSceneMode mode) => InteractObj = null;
+
     //게임 상태를 변경하는 메서드
     public void SetGameState(GameState state) => _currentGameState = state;
 
@@ -65,5 +88,24 @@ public class GameManager : Singleton<GameManager>
         base.Awake();
 
         _CurrentGameState = GameState.Title;
+
+        SceneManager.sceneLoaded += InitToSceneChanged;
+
+        #region Input System 연결
+        OnInteractKey();
+        #endregion
     }
+
+    #region Input System 정의
+    private void OnInteractKey()
+    {
+        InputSystem.actions["Interactable"].started += ctx =>
+        {
+            if (InteractObj != null)
+            {
+                InteractObj.OnInteract();
+            }
+        };
+    }
+    #endregion
 }

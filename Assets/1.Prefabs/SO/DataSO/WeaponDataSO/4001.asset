@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ada813e1c250430498a1dabe3b76679d, type: 3}
+  m_Name: 4001
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponDataSO
+  <weaponID>k__BackingField: 4001
+  <weapon_Name>k__BackingField: "<color=#FFFFFF>\uC0BD</color>"
+  <weapon_Desc>k__BackingField: "<color=#FF7F00>\uD3C9\uBC94\uD55C \uC0BD\uC774\uB2E4.\\n
+    \uC790\uC138\uD55C \uC124\uBA85\uC740 \uC0DD\uB7B5\uD55C\uB2E4.</color>"
+  <weaponTier>k__BackingField: 1
+  <weaponAttack1Damage>k__BackingField: 10
+  <weaponAttack1MinDamage>k__BackingField: 8
+  <weaponAttack1MaxDamage>k__BackingField: 12
+  <weaponAttack1Speed>k__BackingField: 1
+  <weaponMoveSpeed>k__BackingField: 0
+  <weaponStaminaRecovery>k__BackingField: 0
+  <weaponAttack1ModelPath_Sprite>k__BackingField: {fileID: 0}
+  <weaponAttack2Damage>k__BackingField: 0
+  <weaponAttack2MinDamage>k__BackingField: 0
+  <weaponAttack2MaxDamage>k__BackingField: 0
+  <weaponAttack2Speed>k__BackingField: 0
+  <weaponAttack2Cooldown>k__BackingField: 0
+  <weaponAttack2Stamina>k__BackingField: 0
+  <weaponAttack2ModelPath_Sprite>k__BackingField: {fileID: 0}
+  <weaponResourcePath_Sprite>k__BackingField: {fileID: 0}
+  <weaponDurability>k__BackingField: 99999
+  <weaponDropRate>k__BackingField: 0

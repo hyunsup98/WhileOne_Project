@@ -1,5 +1,9 @@
 fileFormatVersion: 2
-guid: 03f28d86d77c76247838c0920d558a51
+<<<<<<<< HEAD:Assets/1.Prefabs/Monster Prefabs/Boss/Boss.prefab.meta
+guid: 7e2228b7f1e348e449420fa426df6a3f
+========
+guid: cd588efc0cf63cf4f9accc10457df064
+>>>>>>>> 251223_BoxWeapon:Assets/1.Prefabs/Interactable_Object/Chest.prefab.meta
 PrefabImporter:
   externalObjects: {}
   userData: 
