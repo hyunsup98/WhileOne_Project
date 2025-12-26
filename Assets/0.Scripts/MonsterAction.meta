@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/0.Scripts/Monster/MonsterAction.meta
 guid: be5a62be9496f444d854f30e4fb213a1
+========
+guid: bdf86115040f08046a8b72a084bcce0c
+>>>>>>>> 251223_Player:Assets/9.GitIgnore/Undead executioner.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

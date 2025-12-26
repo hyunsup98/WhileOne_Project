@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class WeaponRotation : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class WeaponRotation : MonoBehaviour
 
     void Update()
     {
-       
+
         //마우스 좌표값을 월드 좌표값으로 변환
         _mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 
@@ -30,26 +31,30 @@ public class WeaponRotation : MonoBehaviour
 
 
         transform.rotation = Quaternion.Euler(0, 0, currentAngle - 90); //위의 값을 바탕으로 무기 회전
-
-
-
+        
         // 트랜스폼 회전 값을 최대, 최소 값을 둬서 제한을 넘어가지 못하게 만들어 줌
-
-        if (transform.rotation.eulerAngles.z >= max && transform.rotation.eulerAngles.z <= 255)
+        if (transform.root.localScale.x == 1)
         {
-            if (transform.rotation.eulerAngles.z >= 180)
+            if (transform.rotation.eulerAngles.z >= max)
             {
-                transform.rotation = Quaternion.Euler(0, 0, max - 180);
-            }
-            else
                 transform.rotation = Quaternion.Euler(0, 0, max);
-
-
+            }
+            else if (transform.rotation.eulerAngles.z <= min)
+            {
+                transform.rotation = Quaternion.Euler(0, 0, min);
+            }
         }
-        else if (transform.rotation.eulerAngles.z <= min && transform.rotation.eulerAngles.z > 255)
+        else if (transform.root.localScale.x == -1)
         {
-            transform.rotation = Quaternion.Euler(0, 0, min);
+            if (transform.rotation.eulerAngles.z >= 350)
+            {
+                transform.rotation = Quaternion.Euler(0, 0, 350);
+            }
+            else if (transform.rotation.eulerAngles.z <= 280)
+            {
+                transform.rotation = Quaternion.Euler(0, 0, 280);
+            }
         }
-       
+
     }
 }

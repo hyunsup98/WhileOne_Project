@@ -7,29 +7,34 @@ public class Blink : MonoBehaviour
     Player _player;
     SpriteRenderer[] allRender;
 
-    float alpha = 1f;
+    float alpha = 100f;
     private void Awake()
     {
         _player = transform.parent.GetComponent<Player>();
-        allRender = GetComponentsInChildren<SpriteRenderer>();
+        
+        Debug.Log(allRender);
     }
 
     private void OnEnable()
     {
+        alpha = 1f;
         StartCoroutine(AP());
     }
-
+    void Update()
+    {
+        alpha -= 0.2f * Time.deltaTime;
+    }
 
     IEnumerator AP()
     {
-        alpha -= 2f * Time.deltaTime;
+       
+        yield return new WaitForSeconds(0.2f);
         foreach(var sr in allRender)
         {
             Color c = sr.color;
             c.a = alpha;
             sr.color = c;
         }
-         yield return new WaitForSeconds(0.5f);
     }
 
 }
