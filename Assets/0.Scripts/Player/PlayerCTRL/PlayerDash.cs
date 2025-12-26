@@ -12,7 +12,7 @@ public class PlayerDash : MonoBehaviour
     InputAction _dash;
     Rigidbody2D _rd2D;
 
-    [SerializeField] private float _dashForce = 10; //대쉬 힘
+    [SerializeField] private float _dashForce = 50; //대쉬 힘
     [SerializeField] private float _dashTime = 0.1f; //코루틴에서 사용할 대쉬 지속 시간
 
     //[SerializeField] Blink _test;
@@ -55,13 +55,17 @@ public class PlayerDash : MonoBehaviour
     private void OnDash(InputAction.CallbackContext ctx)
     {
         Debug.Log(ctx.phase);
-        if (_player.Stamina <= 0)
+        if (_isDash)
+        {
+            return;
+        }
+        if (_player.Stamina <= 0  )
         {
             return;
         }
         if (ctx.performed && ctx.ReadValue<float>() > 0.1f)
         {
-            if (_player.Stamina >= 50)
+            if (_player.Stamina >= 50 && _playerMovement.Move != Vector3.zero)
             {
                 StartCoroutine(Dash());
             }
@@ -69,18 +73,24 @@ public class PlayerDash : MonoBehaviour
     }
     IEnumerator Dash()
     {
+        _isDash = true;
         if (!_dig.IsDigging && !_player.Stop.Action)
         {
-             _player.UseStamina();
+            _player.UseStamina();
             _rd2D.linearVelocity = _playerMovement.Move.normalized * _dashForce;
             //AfterimagePool.Instance.GetObject(_test, AfterimagePool.Instance.transform);
             //blink.transform.position = transform.position;
             yield return new WaitForSeconds(_dashTime);
             //AfterimagePool.Instance.TakeObject(blink);
             _rd2D.linearVelocity = Vector2.zero;
-
+            _isDash = false;
+            float dashDelay = 0.2f;
+            yield return new WaitForSeconds(dashDelay);
         }
-
+        else
+        {
+            _isDash = false;
+        }
     }
     private void OnDisable()
     {

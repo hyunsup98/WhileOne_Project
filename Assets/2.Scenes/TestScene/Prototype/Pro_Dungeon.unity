@@ -1142,11 +1142,14 @@ MonoBehaviour:
   bossRoomPrefab: {fileID: 4474050308984926237, guid: 455047b7d12f15241b41c37d6d4c897b, type: 3}
   corridorPrefabHorizontal: {fileID: 4474050308984926237, guid: b734ba1dbdbe92a4390eca47755692b1, type: 3}
   corridorPrefabVertical: {fileID: 4474050308984926237, guid: b9f4e3586b4c1714d87d78ecdc378ad7, type: 3}
+  corridorPrefabT: {fileID: 0}
   corridorPrefabCross: {fileID: 4474050308984926237, guid: 5c36556847c98ad40a72d5b28379f9a9, type: 3}
   branchProbability: 40
   maxBranchCount: 3
   roomSpacingInCells: 40
   autoCalculateSpacing: 1
+  minCorridorLengthInCells: 4
+  autoAdjustSpacingForCorridors: 1
   generateOnStart: 1
   gridParent: {fileID: 2016025121}
   minTileSpacing: 3
@@ -5144,14 +5147,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: UseShovel
       objectReference: {fileID: 0}
-    - target: {fileID: 4329574107018779310, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
-      propertyPath: m_Layer
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 6090921389041934258, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
-      propertyPath: <GetDamage>k__BackingField
-      value: 
-      objectReference: {fileID: 860721904}
     - target: {fileID: 9078672956431459521, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -5197,17 +5192,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
---- !u!114 &860721904 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2145774435355405310, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
-  m_PrefabInstance: {fileID: 860721903}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e96f8ce81bfb5a4890a6c28aeca52c9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerDamage
 --- !u!4 &860721905 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9078672956431459521, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}

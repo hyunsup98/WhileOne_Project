@@ -27,19 +27,19 @@ public class TrakingPlayer : MonoBehaviour
         Vector3 _mouse = Mouse.current.position.ReadValue();
         float distanceToCamera = Mathf.Abs(Camera.main.transform.position.z);
         _mousePosition = Camera.main.ScreenToWorldPoint(new (_mouse.x, _mouse.y, distanceToCamera));
-        _mousePosition.z = 0f;
+        //_mousePosition.z = 0f;
 
         Vector2 dir = (_mousePosition - transform.position).normalized;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         if (transform.localScale.x > 0)
         {
-            _attackFxInstance.transform.position = transform.position - new Vector3(0,0.4f);
+            _attackFxInstance.transform.position = transform.position +(Vector3)(dir);
             _attackFxInstance.transform.rotation = Quaternion.Euler(0, 0, angle + 90f);
             _rend.flipX = true;
         }
         else
         {
-            _attackFxInstance.transform.position = transform.position - new Vector3(0, 0.4f);
+            _attackFxInstance.transform.position = transform.position + (Vector3)(dir);
             _attackFxInstance.transform.rotation = Quaternion.Euler(0, 0, angle + 90f);
             _rend.flipX = false;
         }

@@ -28,7 +28,7 @@ public class PlayerDamage : MonoBehaviour
 
     private void Awake()
     {
-        _rg2d = transform.root.GetComponent<Rigidbody2D>();
+        _rg2d = GetComponentInParent<Rigidbody2D>();
         _player = transform.root.GetComponent<Player>();
     }
     private void Start()
