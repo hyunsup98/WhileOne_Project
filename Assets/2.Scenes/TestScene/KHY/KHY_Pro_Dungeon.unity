@@ -3688,7 +3688,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7755294038eaab419b04bcb54367014, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponUI
-  panel_WeaponUI: {fileID: 719876673}
+  panel_GainWeaponUI: {fileID: 0}
+  panel_FailWeaponUI: {fileID: 0}
   text_WeaponName: {fileID: 519123176}
   img_Weapon: {fileID: 1534860406}
   text_WeaponDesc1: {fileID: 1699412742}
@@ -5062,7 +5063,7 @@ PrefabInstance:
     - target: {fileID: 6090921389041934258, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
       propertyPath: _rg2d
       value: 
-      objectReference: {fileID: 860721907}
+      objectReference: {fileID: 0}
     - target: {fileID: 6090921389041934258, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
       propertyPath: _moveSpeed
       value: 5
@@ -5172,19 +5173,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8034917253205404317, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
   m_PrefabInstance: {fileID: 860721903}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &860721905 stripped
-RectTransform:
+--- !u!4 &860721905 stripped
+Transform:
   m_CorrespondingSourceObject: {fileID: 9078672956431459521, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
   m_PrefabInstance: {fileID: 860721903}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &860721906 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4329574107018779310, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
-  m_PrefabInstance: {fileID: 860721903}
-  m_PrefabAsset: {fileID: 0}
---- !u!50 &860721907 stripped
-Rigidbody2D:
-  m_CorrespondingSourceObject: {fileID: 6098639447216804011, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
   m_PrefabInstance: {fileID: 860721903}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &860721908
@@ -8016,7 +8012,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DungeonManager
   <DigSpotTile>k__BackingField: {fileID: 11400000, guid: 6030469b5d45faa4085da000fe36bca1, type: 2}
   <TreasureBarUI>k__BackingField: {fileID: 1800779028}
-  Test: {fileID: 0}
+  <WeaponUI>k__BackingField: {fileID: 0}
+  <InteractImg>k__BackingField: {fileID: 0}
 --- !u!1 &1519240353
 GameObject:
   m_ObjectHideFlags: 0
@@ -9451,7 +9448,7 @@ MonoBehaviour:
   bossRoomPrefab: {fileID: 4474050308984926237, guid: 455047b7d12f15241b41c37d6d4c897b, type: 3}
   corridorPrefabHorizontal: {fileID: 4474050308984926237, guid: b734ba1dbdbe92a4390eca47755692b1, type: 3}
   corridorPrefabVertical: {fileID: 4474050308984926237, guid: b9f4e3586b4c1714d87d78ecdc378ad7, type: 3}
-  corridorPrefabT: {fileID: 4474050308984926237, guid: f88820915a5731d4187635c11aab76da, type: 3}
+  corridorPrefabT: {fileID: 0}
   corridorPrefabCross: {fileID: 4474050308984926237, guid: 5c36556847c98ad40a72d5b28379f9a9, type: 3}
   branchProbability: 40
   maxBranchCount: 3
