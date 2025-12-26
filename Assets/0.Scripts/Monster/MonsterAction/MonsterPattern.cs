@@ -4,23 +4,25 @@ using UnityEngine;
 
 public abstract class MonsterPattern
 {
-
     protected MonsterPresenter _monster;
+    protected IAnimationable _ani;
     protected float _damage;
     protected float _chargeDelay;
-    protected bool _isDelay;
     protected float _coolTime;
-
-    protected AttackEffect _attackEffect;
-    protected GameObject _createdHitDecition;
     protected GameObject _hitDecision;
     protected GameObject _pathPreview;
 
-    public event Action<string> OnAniTrigger;
+    protected GameObject _createdHitDecition;
+    protected AttackEffect _attackEffect;
+    protected bool _isDelay;
+    protected float _timer;
+
+
     // 몬스터 행동을 수행여부 판단
     public bool IsAction { get; protected set; }
-    public bool IsActionable { get; protected set; }      // 제거해도 될 것 같음
+    public bool IsActionable { get; protected set; }     // 제거해도 될 것 같음
 
+    public event Action<string> OnAniTrigger;
 
     // 몬스터 행동 시작시, 1번 호출
     public abstract void StartAction();

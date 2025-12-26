@@ -2,20 +2,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "MonsterDataSO", menuName = "MonsterSO/MonsterDataSO")]
-public class MonsterDataSO : ScriptableObject
+public class MonsterData : ScriptableObject
 {
     [Header("몬스터 기본 정보")]
 
     [SerializeField] private int _monsterID;
     [SerializeField] private string _name;
     [SerializeField] private int _tier;
-    [SerializeField] private float _hp;
-    [SerializeField] private float _moveSpeed;
+    [SerializeField] private float _hp = 100;
+    [SerializeField] private float _moveSpeed = 4;
     [SerializeField] private float _sight = 5;
 
     [Header("프로그래밍 중 추가한 필드값")]
     [SerializeField] private float _sightAngle = 90;
     [SerializeField] private float _searchTime = 3f;
+    [SerializeField] private float _patrolRange = 5;
 
 
     [Tooltip("몬스터의 행동 리스트")]
@@ -31,6 +32,7 @@ public class MonsterDataSO : ScriptableObject
     public float Sight => _sight;
     public float SightAngle => _sightAngle;
     public float SearchTime => _searchTime;
+    public float PatrolRange => _patrolRange;
 
     public List<MonsterActionSO> ActionList => _actionList;
 }

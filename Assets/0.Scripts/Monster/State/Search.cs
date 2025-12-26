@@ -51,7 +51,7 @@ public class Search : IState
 
     private void OnSearch()
     {
-        _timer += Time.unscaledDeltaTime;
+        _timer += Time.deltaTime;
 
         Vector2 dir = _monster.Model.ChaseTarget.position - _myTransform.position;
         Debug.DrawRay(_myTransform.position, dir.normalized * _sight, Color.brown);
@@ -62,6 +62,6 @@ public class Search : IState
             return;
         }
 
-        _monster.Model.SetState(MonsterState.BackReturn);
+        _monster.Model.SetState(MonsterState.Patrol);
     }
 }

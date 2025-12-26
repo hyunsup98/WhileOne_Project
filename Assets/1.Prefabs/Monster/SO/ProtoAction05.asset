@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a80e893e4c9fd74da77404668d9851a, type: 3}
+  m_Name: ProtoAction05
+  m_EditorClassIdentifier: Assembly-CSharp::Pattern05SO
+  _monsterActionID: 100205
+  _name: 
+  _monsterID: 0
+  _actionClass: 1
+  _actionCondition: 0
+  _actionType: 1
+  _actionDamage: 25
+  _actionCoolTime: 0
+  _attackBoost: 0
+  _speedBoost: 0
+  _actionResource: 
+  _actionSound: 
+  _actionRange: 2
+  _actionAngle: 60
+  _chargeDelay: 1
+  _actionTime: 10
+  _fallingCount: 5
+  _fallingCycle: 0.3
+  _fallingSpeed: 3
+  _fallingHeight: 3
+  _fallingObject: {fileID: 117392413932341535, guid: 561ff3b7cad855942bdae2298963612f, type: 3}
+  _pathPreview: {fileID: 0}
+  _hitDecision: {fileID: 4505344409465375032, guid: c64df7826ce69f8498397a1a6c8630a0, type: 3}

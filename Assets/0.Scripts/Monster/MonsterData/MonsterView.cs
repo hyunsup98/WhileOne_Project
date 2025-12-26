@@ -5,9 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class MonsterView : MonoBehaviour
 {
-    [SerializeField] private MonsterDataSO _monsterData;    // 몬스터 데이터 SO
-    [SerializeField] private Tilemap _wallTilemap;          // 경로 탐색을 위한 타일맵
-    [SerializeField] private List<Transform> _patrolTarget;
+    [SerializeField] private MonsterData _monsterData;    // 몬스터 데이터 SO
     
     public Transform MyTransform { get; private set; }
     public MonsterPresenter Presenter { get; private set; }
@@ -23,14 +21,12 @@ public class MonsterView : MonoBehaviour
             MyTransform = transform.parent;
         else
             MyTransform = transform;
+        
+        // 순찰 지점 갱신을 위한 타일맵 정보
+        Tilemap groundTilemap = GetTilemap("Ground");
+        Tilemap wallTilemap = GetTilemap("Wall");
 
-        Presenter = new MonsterPresenter(_monsterData, this, _wallTilemap, _patrolTarget);
-    }
-
-    // 테스트용 코드
-    public void OnTest()
-    {
-        Presenter.OnHit(15);
+        Presenter = new MonsterPresenter(_monsterData, this, groundTilemap, wallTilemap);
     }
 
     private void Start()
@@ -44,34 +40,48 @@ public class MonsterView : MonoBehaviour
     }
 
     #region 애니메이션 출력
-    public void OnActionAni(string action)
+    public void OnPlayAni(string aniName)
     {
-        switch (action)
+        switch (aniName)
         {
             case "Idle":
                 _animator.SetBool("Idle", true);
                 break;
+
+            case "Hurt":
+                _animator.SetTrigger("Hurt");
+                break;
+
+            case "Death":
+                _animator.SetBool("Death", true);
+                break;
+
             case "Pattern01":
                 _animator.SetTrigger("Pattern01");
                 break;
+
             case "Pattern04":
                 _animator.SetTrigger("Pattern04");
                 break;
+            case "Pattern05":
+                _animator.SetTrigger("Pattern05");
+                break;
+
             default:
-                Debug.Log("출력할 애니메이션 없음");
+                Debug.LogWarning("출력할 애니메이션 없음");
                 break;
         }
     }
 
-    public void OnDisActionAni(string action)
+    public void OnStopAni(string aniName)
     {
-        switch (action)
+        switch (aniName)
         {
             case "Idle":
                 _animator.SetBool("Idle", false);
                 break;
             default:
-                Debug.Log("출력할 애니메이션 없음");
+                Debug.LogWarning("출력할 애니메이션 없음");
                 break;
         }
     }
@@ -123,5 +133,21 @@ public class MonsterView : MonoBehaviour
 
     public void RequestDestroy(float delay) => Destroy(gameObject, delay);
 
+    // 형제 오브젝트 중에서 특정 타일맵을 반환하는 메서드
+    public Tilemap GetTilemap(string tag)
+    {
+        Transform parent = transform.parent;
 
+        // 몬스터 중심축이 다른 오브젝트의 경우 부모의 부모의 정보를 가져온다.
+        if(parent.CompareTag("Monster"))
+            parent = parent.parent;
+
+        foreach (Transform child in parent)
+        {
+            if (child.CompareTag(tag))
+                return child.GetComponent<Tilemap>();
+        }
+
+        return null;
+    }
 }
