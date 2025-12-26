@@ -25,7 +25,7 @@ public class PlayerDamage : MonoBehaviour
 
     private void Awake()
     {
-        _rg2d = GetComponent<Rigidbody2D>();
+        _rg2d = transform.root.GetComponent<Rigidbody2D>();
         _player = transform.root.GetComponent<Player>();
     }
     private void Start()
@@ -61,7 +61,7 @@ public class PlayerDamage : MonoBehaviour
         _isCoroutine = true;
         while (_finsihTime > _checkTime)
         {
-            float alpha = (allRender[0].color.a == 1f) ? 0.5f : 1f;
+            alpha = (allRender[0].color.a == 1f) ? 0.5f : 1f;
             foreach (var sr in allRender)
             {
             Color c = sr.color;

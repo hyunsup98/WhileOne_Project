@@ -49,6 +49,7 @@ public class Player : MonoBehaviour
 
     //외부에서 사용할 프로퍼티
     public float Hp => _hp;
+    public float MaxHp => _maxHp;
     public float Stamina { get { return _stamina; } set { _stamina = value; } }
     public int MoveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }
     public int Attack => _attack;
@@ -122,8 +123,6 @@ public class Player : MonoBehaviour
         ActionState(new ActionIdleState(this));
 
         _delay = new WaitForSeconds(5f);
-       
-        RestoreStamina();
     }
 
     public float ChangedHealth
