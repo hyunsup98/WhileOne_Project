@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 192908246285649683}
   - component: {fileID: 8435631357481589626}
   - component: {fileID: 8547146005951665395}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Wall_Collider
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8703,7 +8703,17 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7602114303707580830}
+  - {fileID: 3725286826287986440}
+  - {fileID: 2459582640139891441}
+  - {fileID: 6477517648369069189}
+  - {fileID: 397727858487391877}
+  - {fileID: 8300826246506340436}
+  - {fileID: 4727863904973932522}
+  - {fileID: 3712137728239780336}
+  - {fileID: 8505497274080202303}
+  - {fileID: 4985308790578002220}
   m_Father: {fileID: 5507768062336292815}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1839735485 &6330321996984790532
@@ -8888,7 +8898,7 @@ GameObject:
   - component: {fileID: 2862883119913870553}
   m_Layer: 0
   m_Name: Ground
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -69026,3 +69036,663 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!1001 &316593201531553691
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7134517958827711943}
+    m_Modifications:
+    - target: {fileID: 7918701952853052933, guid: a1cfcf35136451e4ca383dfe7ba8a164, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7918701952853052933, guid: a1cfcf35136451e4ca383dfe7ba8a164, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 11.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7918701952853052933, guid: a1cfcf35136451e4ca383dfe7ba8a164, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7918701952853052933, guid: a1cfcf35136451e4ca383dfe7ba8a164, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7918701952853052933, guid: a1cfcf35136451e4ca383dfe7ba8a164, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7918701952853052933, guid: a1cfcf35136451e4ca383dfe7ba8a164, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7918701952853052933, guid: a1cfcf35136451e4ca383dfe7ba8a164, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7918701952853052933, guid: a1cfcf35136451e4ca383dfe7ba8a164, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7918701952853052933, guid: a1cfcf35136451e4ca383dfe7ba8a164, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7918701952853052933, guid: a1cfcf35136451e4ca383dfe7ba8a164, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8530494505490153989, guid: a1cfcf35136451e4ca383dfe7ba8a164, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8744226758595797715, guid: a1cfcf35136451e4ca383dfe7ba8a164, type: 3}
+      propertyPath: m_Name
+      value: atlas-props-old prison_48
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a1cfcf35136451e4ca383dfe7ba8a164, type: 3}
+--- !u!4 &7602114303707580830 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7918701952853052933, guid: a1cfcf35136451e4ca383dfe7ba8a164, type: 3}
+  m_PrefabInstance: {fileID: 316593201531553691}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1019198821536832674
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7134517958827711943}
+    m_Modifications:
+    - target: {fileID: 748441965353910152, guid: 71e3e25e3537a314199caa101c6d016d, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1191655267961601423, guid: 71e3e25e3537a314199caa101c6d016d, type: 3}
+      propertyPath: m_Name
+      value: atlas-props-old prison_37
+      objectReference: {fileID: 0}
+    - target: {fileID: 9013566047488113910, guid: 71e3e25e3537a314199caa101c6d016d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 24.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9013566047488113910, guid: 71e3e25e3537a314199caa101c6d016d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9013566047488113910, guid: 71e3e25e3537a314199caa101c6d016d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9013566047488113910, guid: 71e3e25e3537a314199caa101c6d016d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9013566047488113910, guid: 71e3e25e3537a314199caa101c6d016d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9013566047488113910, guid: 71e3e25e3537a314199caa101c6d016d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9013566047488113910, guid: 71e3e25e3537a314199caa101c6d016d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9013566047488113910, guid: 71e3e25e3537a314199caa101c6d016d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9013566047488113910, guid: 71e3e25e3537a314199caa101c6d016d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9013566047488113910, guid: 71e3e25e3537a314199caa101c6d016d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 71e3e25e3537a314199caa101c6d016d, type: 3}
+--- !u!4 &8300826246506340436 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9013566047488113910, guid: 71e3e25e3537a314199caa101c6d016d, type: 3}
+  m_PrefabInstance: {fileID: 1019198821536832674}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1176892687093100512
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7134517958827711943}
+    m_Modifications:
+    - target: {fileID: 1400134820248989577, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580844273020612112, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 7.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580844273020612112, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -18.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580844273020612112, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580844273020612112, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580844273020612112, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580844273020612112, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580844273020612112, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580844273020612112, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580844273020612112, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580844273020612112, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3465030114055529401, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_Name
+      value: atlas-props-old prison_3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+--- !u!4 &3712137728239780336 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2580844273020612112, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+  m_PrefabInstance: {fileID: 1176892687093100512}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1318930963172809810
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7134517958827711943}
+    m_Modifications:
+    - target: {fileID: 1058675828816221868, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2930342992364961575, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_Name
+      value: atlas-props-old prison_33
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296761631370470782, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296761631370470782, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 24.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296761631370470782, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296761631370470782, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296761631370470782, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296761631370470782, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296761631370470782, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296761631370470782, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296761631370470782, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296761631370470782, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+--- !u!4 &4985308790578002220 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6296761631370470782, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+  m_PrefabInstance: {fileID: 1318930963172809810}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2279876046521246174
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7134517958827711943}
+    m_Modifications:
+    - target: {fileID: 4821745589318274036, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5064153556069551451, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 12.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5064153556069551451, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5064153556069551451, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5064153556069551451, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5064153556069551451, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5064153556069551451, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5064153556069551451, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5064153556069551451, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5064153556069551451, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5064153556069551451, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8065084460154218392, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_Name
+      value: atlas-props-old prison_26
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+--- !u!4 &6477517648369069189 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5064153556069551451, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+  m_PrefabInstance: {fileID: 2279876046521246174}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2408035895451052865
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7134517958827711943}
+    m_Modifications:
+    - target: {fileID: 1058675828816221868, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2930342992364961575, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_Name
+      value: atlas-props-old prison_33
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296761631370470782, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -9.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296761631370470782, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 5.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296761631370470782, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296761631370470782, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296761631370470782, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296761631370470782, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296761631370470782, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296761631370470782, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296761631370470782, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296761631370470782, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+--- !u!4 &8505497274080202303 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6296761631370470782, guid: a0e05abbb8733334ba9f0cf3367f8bd0, type: 3}
+  m_PrefabInstance: {fileID: 2408035895451052865}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2495086896092591327
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7134517958827711943}
+    m_Modifications:
+    - target: {fileID: 1100086703666214309, guid: 2c25893e4fe3fd44c825b8f5cf264452, type: 3}
+      propertyPath: m_Name
+      value: atlas-props-old prison_49 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1230244584433566679, guid: 2c25893e4fe3fd44c825b8f5cf264452, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 17.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1230244584433566679, guid: 2c25893e4fe3fd44c825b8f5cf264452, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 11.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1230244584433566679, guid: 2c25893e4fe3fd44c825b8f5cf264452, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1230244584433566679, guid: 2c25893e4fe3fd44c825b8f5cf264452, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1230244584433566679, guid: 2c25893e4fe3fd44c825b8f5cf264452, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1230244584433566679, guid: 2c25893e4fe3fd44c825b8f5cf264452, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1230244584433566679, guid: 2c25893e4fe3fd44c825b8f5cf264452, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1230244584433566679, guid: 2c25893e4fe3fd44c825b8f5cf264452, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1230244584433566679, guid: 2c25893e4fe3fd44c825b8f5cf264452, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1230244584433566679, guid: 2c25893e4fe3fd44c825b8f5cf264452, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8607239752760988425, guid: 2c25893e4fe3fd44c825b8f5cf264452, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2c25893e4fe3fd44c825b8f5cf264452, type: 3}
+--- !u!4 &3725286826287986440 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1230244584433566679, guid: 2c25893e4fe3fd44c825b8f5cf264452, type: 3}
+  m_PrefabInstance: {fileID: 2495086896092591327}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3574571029077063253
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7134517958827711943}
+    m_Modifications:
+    - target: {fileID: 3755560120833048784, guid: 997aa10dde5614248a5445676a59a666, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 24.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3755560120833048784, guid: 997aa10dde5614248a5445676a59a666, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 16.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3755560120833048784, guid: 997aa10dde5614248a5445676a59a666, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3755560120833048784, guid: 997aa10dde5614248a5445676a59a666, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3755560120833048784, guid: 997aa10dde5614248a5445676a59a666, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3755560120833048784, guid: 997aa10dde5614248a5445676a59a666, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3755560120833048784, guid: 997aa10dde5614248a5445676a59a666, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3755560120833048784, guid: 997aa10dde5614248a5445676a59a666, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3755560120833048784, guid: 997aa10dde5614248a5445676a59a666, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3755560120833048784, guid: 997aa10dde5614248a5445676a59a666, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4407116148112110249, guid: 997aa10dde5614248a5445676a59a666, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6328670869452872718, guid: 997aa10dde5614248a5445676a59a666, type: 3}
+      propertyPath: m_Name
+      value: atlas-props-old prison_8
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 997aa10dde5614248a5445676a59a666, type: 3}
+--- !u!4 &397727858487391877 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3755560120833048784, guid: 997aa10dde5614248a5445676a59a666, type: 3}
+  m_PrefabInstance: {fileID: 3574571029077063253}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7083527921735985658
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7134517958827711943}
+    m_Modifications:
+    - target: {fileID: 1400134820248989577, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580844273020612112, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 32.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580844273020612112, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -10.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580844273020612112, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580844273020612112, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580844273020612112, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580844273020612112, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580844273020612112, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580844273020612112, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580844273020612112, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580844273020612112, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3465030114055529401, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+      propertyPath: m_Name
+      value: atlas-props-old prison_3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+--- !u!4 &4727863904973932522 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2580844273020612112, guid: a311e55d2c08b104ea17d43bd73cf84c, type: 3}
+  m_PrefabInstance: {fileID: 7083527921735985658}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7234273817245253546
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7134517958827711943}
+    m_Modifications:
+    - target: {fileID: 4821745589318274036, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5064153556069551451, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 6.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5064153556069551451, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 9.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5064153556069551451, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5064153556069551451, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5064153556069551451, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5064153556069551451, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5064153556069551451, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5064153556069551451, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5064153556069551451, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5064153556069551451, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8065084460154218392, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+      propertyPath: m_Name
+      value: atlas-props-old prison_26
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+--- !u!4 &2459582640139891441 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5064153556069551451, guid: 1c699afcfd9cdce45a07c4358164dd80, type: 3}
+  m_PrefabInstance: {fileID: 7234273817245253546}
+  m_PrefabAsset: {fileID: 0}

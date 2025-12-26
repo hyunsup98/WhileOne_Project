@@ -42,8 +42,10 @@ public class DungeonGenerator : MonoBehaviour
     private GameObject corridorPrefabHorizontal; // 가로 복도 프리펩 (좌우 연결)
     [SerializeField] [Tooltip("세로 복도 프리팹 (상하 연결용, Corridor_V)")]
     private GameObject corridorPrefabVertical; // 세로 복도 프리펩 (상하 연결)
-    [SerializeField] [Tooltip("교차로 복도 프리팹 (4방향 연결용, Corridor_Cross, 없으면 일반 복도 사용)")]
-    private GameObject corridorPrefabCross; // 교차로 복도 프리팹 (4방향 연결)
+    [SerializeField] [Tooltip("T자형 교차로 프리팹 (3방향 연결용, Corridor_T)")]
+    private GameObject corridorPrefabT; // T자형 교차로 프리팹 (3방향)
+    [SerializeField] [Tooltip("+자형 교차로 프리팹 (4방향 연결용, Corridor_Cross)")]
+    private GameObject corridorPrefabCross; // +자형 교차로 프리팹 (4방향)
     
     [Header("Generation Settings")]
     [SerializeField] [Tooltip("방 생성 시 여러 방향으로 분기할 확률 (0~100%, 높을수록 더 많은 분기)")]
@@ -57,6 +59,11 @@ public class DungeonGenerator : MonoBehaviour
     private int roomSpacingInCells = 12; // 방 간격 (칸 수, 4의 배수)
     [SerializeField] [Tooltip("roomSize와 corridorLength를 기반으로 방 간격을 자동 계산할지 여부")]
     private bool autoCalculateSpacing = true; // roomSize와 corridorLength로 자동 계산
+    [SerializeField] [Tooltip("복도 최소 길이 (칸 수, 기본값: 4칸)")]
+    [Range(1, 20)]
+    private int minCorridorLengthInCells = 4; // 복도 최소 길이 (칸 수)
+    [SerializeField] [Tooltip("복도 최소 길이를 보장하기 위해 방 간격을 자동 조정할지 여부")]
+    private bool autoAdjustSpacingForCorridors = true; // 복도 최소 길이 보장을 위한 자동 조정
     [SerializeField] [Tooltip("시작 시 자동으로 던전을 생성할지 여부")]
     private bool generateOnStart = true;
     [SerializeField] [Tooltip("던전 오브젝트들의 부모가 될 Grid Transform (없으면 자동으로 찾거나 생성)")]
@@ -185,14 +192,143 @@ public class DungeonGenerator : MonoBehaviour
         }
         
         Transform parent = gridParent != null ? gridParent : transform;
-        DungeonRoomPlacer.CreateRoomObjects(
-            dungeonGrid, parent, unityGrid, roomSpacingInCells, roomPrefabs,
-            showRoomTypeLabels, roomLabelOffsetX, roomLabelOffsetY, resolvedCellSize);
         
-        // 6. 복도 생성
-        DungeonCorridorGenerator.CreateCorridors(
-            dungeonGrid, parent, unityGrid,
-            corridorPrefabHorizontal, corridorPrefabVertical, corridorPrefabCross);
+        // 5-1. 방 배치 및 복도 최소 길이 검증 (반복 조정)
+        int maxAdjustmentAttempts = 10; // 최대 조정 시도 횟수
+        int adjustmentAttempt = 0;
+        bool allCorridorsValid = false;
+        
+        while (!allCorridorsValid && adjustmentAttempt < maxAdjustmentAttempts)
+        {
+            // 방 오브젝트 생성
+            DungeonRoomPlacer.CreateRoomObjects(
+                dungeonGrid, parent, unityGrid, roomSpacingInCells, roomPrefabs,
+                showRoomTypeLabels, roomLabelOffsetX, roomLabelOffsetY, resolvedCellSize);
+            
+            // 방 겹침 검증
+            bool hasRoomOverlap = DungeonCorridorValidator.ValidateRoomOverlaps(
+                dungeonGrid, out List<string> overlappingRooms);
+            
+            if (hasRoomOverlap && adjustmentAttempt < maxAdjustmentAttempts - 1)
+            {
+                Debug.LogWarning($"[DungeonGenerator] 방 겹침 감지. 방 배치를 재시도합니다. (시도 {adjustmentAttempt + 1}/{maxAdjustmentAttempts})");
+                foreach (string overlap in overlappingRooms)
+                {
+                    Debug.LogWarning($"[DungeonGenerator] - {overlap}");
+                }
+                
+                // 방 간격 증가 (4칸 단위로 증가)
+                int oldSpacing = roomSpacingInCells;
+                roomSpacingInCells += 4;
+                
+                Debug.LogWarning($"[DungeonGenerator] 방 간격을 {oldSpacing}칸에서 {roomSpacingInCells}칸으로 증가시킵니다.");
+                
+                // 기존 방 오브젝트 제거
+                ClearRoomObjects(parent);
+                
+                adjustmentAttempt++;
+                continue;
+            }
+            else if (hasRoomOverlap)
+            {
+                Debug.LogWarning($"[DungeonGenerator] 방 겹침이 남아있지만 최대 조정 시도 횟수({maxAdjustmentAttempts})에 도달했습니다.");
+            }
+            
+            // 복도 최소 길이 검증
+            if (autoAdjustSpacingForCorridors)
+            {
+                float minCorridorLength = minCorridorLengthInCells * resolvedCellSize;
+                bool needsAdjustment = DungeonCorridorValidator.ValidateCorridorLengths(
+                    dungeonGrid, unityGrid, minCorridorLength, out float minActualLength);
+                
+                if (needsAdjustment && adjustmentAttempt < maxAdjustmentAttempts - 1)
+                {
+                    // 방 간격 증가 (4칸 단위로 증가)
+                    int oldSpacing = roomSpacingInCells;
+                    roomSpacingInCells += 4;
+                    
+                    Debug.LogWarning($"[DungeonGenerator] 복도 최소 길이({minCorridorLengthInCells}칸) 미만 감지. " +
+                        $"현재 최소 복도 길이: {minActualLength / resolvedCellSize:F2}칸. " +
+                        $"방 간격을 {oldSpacing}칸에서 {roomSpacingInCells}칸으로 증가시킵니다. (시도 {adjustmentAttempt + 1}/{maxAdjustmentAttempts})");
+                    
+                    // 기존 방 오브젝트 제거
+                    ClearRoomObjects(parent);
+                    
+                    adjustmentAttempt++;
+                    continue;
+                }
+                else if (needsAdjustment)
+                {
+                    Debug.LogWarning($"[DungeonGenerator] 복도 최소 길이 보장 실패. 최대 조정 시도 횟수({maxAdjustmentAttempts})에 도달했습니다.");
+                }
+            }
+            
+            allCorridorsValid = true;
+        }
+        
+        // 6. 복도 생성 및 검증 (반복 조정)
+        int maxCorridorAttempts = 10;
+        int corridorAttempt = 0;
+        bool corridorsPlacedCorrectly = false;
+        
+        while (!corridorsPlacedCorrectly && corridorAttempt < maxCorridorAttempts)
+        {
+            // 기존 복도 제거 (재시도 시)
+            if (corridorAttempt > 0)
+            {
+                ClearCorridors(parent);
+            }
+            
+            // 복도 생성
+            DungeonCorridorGenerator.CreateCorridors(
+                dungeonGrid, parent, unityGrid,
+                corridorPrefabHorizontal, corridorPrefabVertical, corridorPrefabT, corridorPrefabCross);
+            
+            // 복도 배치 검증
+            bool hasCorridorProblems = DungeonCorridorValidator.ValidateCorridorPlacement(
+                dungeonGrid, unityGrid, roomSpacingInCells, out List<string> problematicCorridors, 2.0f);
+            
+            if (hasCorridorProblems && corridorAttempt < maxCorridorAttempts - 1)
+            {
+                Debug.LogWarning($"[DungeonGenerator] 복도 배치 문제 감지. 던전 구조를 재생성합니다. (시도 {corridorAttempt + 1}/{maxCorridorAttempts})");
+                foreach (string problem in problematicCorridors)
+                {
+                    Debug.LogWarning($"[DungeonGenerator] - {problem}");
+                }
+                
+                // 모든 오브젝트 제거
+                ClearRoomObjects(parent);
+                ClearCorridors(parent);
+                
+                // 방 간격 증가 (재시도 시)
+                if (corridorAttempt > 0)
+                {
+                    int oldSpacing = roomSpacingInCells;
+                    roomSpacingInCells += 4;
+                    Debug.Log($"[DungeonGenerator] 방 간격을 {oldSpacing}칸에서 {roomSpacingInCells}칸으로 증가시킵니다.");
+                }
+                
+                // 그리드 구조 재생성
+                dungeonGrid = new DungeonGrid(gridSize);
+                DungeonRoomGenerator.GenerateRooms(dungeonGrid, roomCount, branchProbability, maxBranchCount);
+                DungeonRoomGenerator.EnsureAdjacentDoorsConnected(dungeonGrid);
+                SetRooms(floorInfo);
+                
+                // 방 배치 재시도
+                DungeonRoomPlacer.CreateRoomObjects(
+                    dungeonGrid, parent, unityGrid, roomSpacingInCells, roomPrefabs,
+                    showRoomTypeLabels, roomLabelOffsetX, roomLabelOffsetY, resolvedCellSize);
+                
+                corridorAttempt++;
+                continue;
+            }
+            else if (hasCorridorProblems)
+            {
+                Debug.LogWarning($"[DungeonGenerator] 복도 배치 문제가 남아있지만 최대 시도 횟수({maxCorridorAttempts})에 도달했습니다.");
+            }
+            
+            corridorsPlacedCorrectly = true;
+        }
 
         // 7. DoorSpace/NoDoor 갱신
         RefreshAllDoorStates();
@@ -325,6 +461,7 @@ public class DungeonGenerator : MonoBehaviour
         if (startRoom == null || startRoom.roomObject == null)
         {
             Debug.LogWarning("시작 방 정보가 없어 플레이어를 이동할 수 없습니다.");
+            GenerateDungeon();
             return;
         }
         
@@ -358,6 +495,73 @@ public class DungeonGenerator : MonoBehaviour
         }
         
         dungeonGrid = null;
+    }
+    
+    /// <summary>
+    /// 방 오브젝트만 제거합니다 (복도는 유지).
+    /// </summary>
+    private void ClearRoomObjects(Transform parent)
+    {
+        if (parent == null) return;
+        
+        // 모든 방 오브젝트 찾아서 제거
+        List<GameObject> roomsToDestroy = new List<GameObject>();
+        foreach (var position in dungeonGrid.GetAllPositions())
+        {
+            Room room = dungeonGrid.GetRoom(position);
+            if (room != null && room.roomObject != null)
+            {
+                roomsToDestroy.Add(room.roomObject);
+                room.roomObject = null; // 참조 제거
+            }
+        }
+        
+        // 방 오브젝트 제거
+        foreach (GameObject roomObj in roomsToDestroy)
+        {
+            if (roomObj != null)
+            {
+                DestroyImmediate(roomObj);
+            }
+        }
+    }
+    
+    /// <summary>
+    /// 복도 오브젝트만 제거합니다 (방은 유지).
+    /// </summary>
+    private void ClearCorridors(Transform parent)
+    {
+        if (parent == null) return;
+        
+        // 모든 복도 오브젝트 찾아서 제거 (Corridor 태그 또는 이름으로 찾기)
+        List<GameObject> corridorsToDestroy = new List<GameObject>();
+        
+        // 부모의 모든 자식 오브젝트 확인
+        for (int i = parent.childCount - 1; i >= 0; i--)
+        {
+            Transform child = parent.GetChild(i);
+            if (child == null) continue;
+            
+            // 복도 관련 오브젝트인지 확인 (이름에 "Corridor" 또는 "교차로" 포함)
+            string childName = child.name.ToLower();
+            if (childName.Contains("corridor") || childName.Contains("교차로") || 
+                childName.Contains("clone") && (childName.Contains("h") || childName.Contains("v") || 
+                childName.Contains("t") || childName.Contains("cross")))
+            {
+                corridorsToDestroy.Add(child.gameObject);
+            }
+        }
+        
+        // 복도 오브젝트 제거
+        foreach (GameObject corridorObj in corridorsToDestroy)
+        {
+            if (corridorObj != null)
+            {
+                DestroyImmediate(corridorObj);
+            }
+        }
+        
+        Debug.Log($"[DungeonGenerator] 복도 {corridorsToDestroy.Count}개 제거 완료");
     }
 }
 

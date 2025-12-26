@@ -77,6 +77,9 @@ public static class DungeonRoomPlacer
             }
         }
         
+        // 모든 방을 먼저 생성 (임시 위치)
+        Dictionary<Vector2Int, GameObject> tempRoomObjects = new Dictionary<Vector2Int, GameObject>();
+        
         foreach (var position in dungeonGrid.GetAllPositions())
         {
             Room room = dungeonGrid.GetRoom(position);
@@ -89,8 +92,6 @@ public static class DungeonRoomPlacer
                 continue;
             }
             
-            Vector2 currentRoomSize = roomSizes[position];
-            
             // 십자 규격 정렬: 같은 행/열의 방들이 정확히 같은 x/y 좌표를 가지도록
             Vector3 targetRoomCenterPos = new Vector3(
                 colXPositions[position.x],  // 같은 열(x)의 방들은 모두 같은 X 좌표
@@ -98,21 +99,155 @@ public static class DungeonRoomPlacer
                 0f
             );
             
-            // 충돌 검사: 같은 행/열이 아닌 방들과의 충돌만 확인 (같은 행/열은 이미 정렬됨)
-            targetRoomCenterPos = AdjustRoomPositionForCollisionAligned(
-                position, targetRoomCenterPos, currentRoomSize, roomPositions, roomSizes, 
-                cellSize, roomSpacingInCells, colXPositions, rowYPositions);
-            
             // Grid 하위에 생성 (임시 위치)
             GameObject roomObj = Object.Instantiate(prefab, targetRoomCenterPos, Quaternion.identity, parent);
             
             // RoomCenterMarker를 기준으로 위치 조정
-            // RoomCenterMarker가 targetRoomCenterPos에 오도록 전체 방을 오프셋 조정
             AlignRoomToGridCenter(roomObj, targetRoomCenterPos);
             
-            // RoomCenterMarker의 최종 위치를 저장 (다음 방 배치 시 참조용)
+            // RoomCenterMarker의 최종 위치를 저장
             Vector3 finalRoomCenterPos = DungeonRoomHelper.GetRoomWorldCenter(roomObj);
             roomPositions[position] = finalRoomCenterPos;
+            tempRoomObjects[position] = roomObj;
+        }
+        
+        // 충돌 검사 및 조정 (반복적으로 모든 충돌 해결)
+        // 십자 규격 정렬을 유지하면서 충돌을 해결하는 것은 복잡하므로,
+        // 같은 행/열이 아닌 방들만 충돌 검사하고, 같은 행/열은 roomSpacingInCells로 이미 간격이 확보되어 있다고 가정
+        int maxIterations = 10;
+        for (int iteration = 0; iteration < maxIterations; iteration++)
+        {
+            bool hasCollision = false;
+            
+            // 모든 방 쌍에 대해 충돌 검사 (같은 행/열이 아닌 경우만)
+            var positionsList = new List<Vector2Int>(dungeonGrid.GetAllPositions());
+            
+            for (int i = 0; i < positionsList.Count; i++)
+            {
+                Vector2Int position1 = positionsList[i];
+                if (!tempRoomObjects.ContainsKey(position1) || !roomSizes.ContainsKey(position1)) continue;
+                
+                Vector2 size1 = roomSizes[position1];
+                Vector3 pos1 = roomPositions[position1];
+                float halfWidth1 = size1.x * 0.5f;
+                float halfHeight1 = size1.y * 0.5f;
+                
+                for (int j = i + 1; j < positionsList.Count; j++)
+                {
+                    Vector2Int position2 = positionsList[j];
+                    if (!tempRoomObjects.ContainsKey(position2) || !roomSizes.ContainsKey(position2)) continue;
+                    
+                    // 같은 행 또는 열에 있는 방은 건너뛰기 (이미 정렬되어 있고 충돌하지 않음)
+                    if (position1.x == position2.x || position1.y == position2.y) continue;
+                    
+                    Vector2 size2 = roomSizes[position2];
+                    Vector3 pos2 = roomPositions[position2];
+                    float halfWidth2 = size2.x * 0.5f;
+                    float halfHeight2 = size2.y * 0.5f;
+                    
+                    // 두 방 사이의 거리
+                    float dx = Mathf.Abs(pos1.x - pos2.x);
+                    float dy = Mathf.Abs(pos1.y - pos2.y);
+                    
+                    // 최소 간격 (복도 간격 포함)
+                    float corridorSpacing = roomSpacingInCells * cellSize;
+                    float minRequiredX = halfWidth1 + halfWidth2 + corridorSpacing;
+                    float minRequiredY = halfHeight1 + halfHeight2 + corridorSpacing;
+                    
+                    // 경계 상자 겹침 확인
+                    bool xOverlap = dx < (halfWidth1 + halfWidth2);
+                    bool yOverlap = dy < (halfHeight1 + halfHeight2);
+                    
+                    if (xOverlap && yOverlap)
+                    {
+                        hasCollision = true;
+                        
+                        // X축과 Y축 중 더 큰 겹침을 해결
+                        float xGap = (halfWidth1 + halfWidth2) - dx;
+                        float yGap = (halfHeight1 + halfHeight2) - dy;
+                        
+                        // 최대 이동 거리 제한 (한 번에 너무 많이 이동하지 않도록)
+                        float maxPush = roomSpacingInCells * cellSize * 0.5f; // 최대 roomSpacingInCells의 절반만 이동
+                        
+                        if (xGap >= yGap)
+                        {
+                            // X축으로 분리
+                            float pushX = Mathf.Min(minRequiredX - dx, maxPush);
+                            float pushXInCells = Mathf.Ceil(pushX / cellSize);
+                            float direction = pos2.x > pos1.x ? 1 : -1;
+                            
+                            // 같은 열의 모든 방 이동
+                            int col = position1.x;
+                            if (colXPositions.ContainsKey(col))
+                            {
+                                colXPositions[col] -= direction * pushXInCells * cellSize;
+                                
+                                // 같은 열의 모든 방 위치 업데이트
+                                foreach (var sameColPos in dungeonGrid.GetAllPositions())
+                                {
+                                    if (sameColPos.x == col && tempRoomObjects.ContainsKey(sameColPos))
+                                    {
+                                        GameObject sameColRoom = tempRoomObjects[sameColPos];
+                                        Vector3 newPos = new Vector3(colXPositions[col], roomPositions[sameColPos].y, 0f);
+                                        AlignRoomToGridCenter(sameColRoom, newPos);
+                                        roomPositions[sameColPos] = DungeonRoomHelper.GetRoomWorldCenter(sameColRoom);
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // Y축으로 분리
+                            float pushY = Mathf.Min(minRequiredY - dy, maxPush);
+                            float pushYInCells = Mathf.Ceil(pushY / cellSize);
+                            float direction = pos2.y > pos1.y ? 1 : -1;
+                            
+                            // 같은 행의 모든 방 이동
+                            int row = position1.y;
+                            if (rowYPositions.ContainsKey(row))
+                            {
+                                rowYPositions[row] -= direction * pushYInCells * cellSize;
+                                
+                                // 같은 행의 모든 방 위치 업데이트
+                                foreach (var sameRowPos in dungeonGrid.GetAllPositions())
+                                {
+                                    if (sameRowPos.y == row && tempRoomObjects.ContainsKey(sameRowPos))
+                                    {
+                                        GameObject sameRowRoom = tempRoomObjects[sameRowPos];
+                                        Vector3 newPos = new Vector3(roomPositions[sameRowPos].x, rowYPositions[row], 0f);
+                                        AlignRoomToGridCenter(sameRowRoom, newPos);
+                                        roomPositions[sameRowPos] = DungeonRoomHelper.GetRoomWorldCenter(sameRowRoom);
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // 위치 업데이트 후 다시 검사
+                        pos1 = roomPositions[position1];
+                    }
+                }
+            }
+            
+            if (!hasCollision)
+            {
+                Debug.Log($"[DungeonRoomPlacer] 모든 충돌 해결 완료 (반복 횟수: {iteration + 1})");
+                break;
+            }
+            
+            if (iteration == maxIterations - 1)
+            {
+                Debug.LogWarning($"[DungeonRoomPlacer] 최대 반복 횟수({maxIterations})에 도달했지만 일부 충돌이 남아있을 수 있습니다.");
+            }
+        }
+        
+        // 최종 위치로 방 설정 및 초기화
+        foreach (var kvp in tempRoomObjects)
+        {
+            Vector2Int position = kvp.Key;
+            GameObject roomObj = kvp.Value;
+            Room room = dungeonGrid.GetRoom(position);
+            
+            if (room == null) continue;
             
             room.roomObject = roomObj;
             
@@ -121,7 +256,7 @@ public static class DungeonRoomPlacer
             if (roomScript != null)
             {
                 roomScript.InitializeRoom(room);
-                roomScript.RefreshDoorStates(); // 생성 직후 문/NoDoor 상태 재정렬
+                roomScript.RefreshDoorStates();
             }
             else
             {
@@ -131,7 +266,6 @@ public static class DungeonRoomPlacer
             // 방 타입 텍스트 표시
             if (showRoomTypeLabels)
             {
-                // 실제 방 중심(가능하면 RoomCenterMarker 기준)을 사용
                 Vector3 center = DungeonRoomHelper.GetRoomWorldCenter(roomObj);
                 CreateRoomTypeLabel(roomObj, room.roomType, center, roomLabelOffsetX, roomLabelOffsetY);
             }
@@ -184,9 +318,19 @@ public static class DungeonRoomPlacer
             float dx = Mathf.Abs(adjustedX - existingRoomCenterPos.x);
             float dy = Mathf.Abs(adjustedY - existingRoomCenterPos.y);
             
-            // X축 충돌 검사: 대각선 상의 방과 충돌하는 경우 X축으로 밀어내기
+            // 방 겹침 방지: 두 방의 경계 상자(Bounding Box)가 겹치지 않도록 확인
+            // X축과 Y축 모두에서 최소 간격 확보 필요
+            
+            // X축 최소 간격: 두 방의 반폭 합 + 복도 간격
             float minRequiredX = currentHalfWidth + existingHalfWidth + corridorSpacing;
-            if (dx < minRequiredX && dy < currentHalfHeight + existingHalfHeight)
+            // Y축 최소 간격: 두 방의 반높이 합 + 복도 간격
+            float minRequiredY = currentHalfHeight + existingHalfHeight + corridorSpacing;
+            
+            // X축 충돌 검사: X축 거리가 부족하고 Y축에서도 겹칠 가능성이 있는 경우
+            bool xCollision = dx < minRequiredX;
+            bool yOverlap = dy < (currentHalfHeight + existingHalfHeight);
+            
+            if (xCollision && yOverlap)
             {
                 // X축으로 충분히 밀어내기 (Grid 셀 단위로, 같은 열 정렬 유지)
                 float pushX = minRequiredX - dx;
@@ -199,11 +343,16 @@ public static class DungeonRoomPlacer
                 
                 // 열의 X 좌표 업데이트 (같은 열의 모든 방이 함께 이동)
                 colXPositions[currentPos.x] = adjustedX;
+                
+                // X축 조정 후 거리 재계산
+                dx = Mathf.Abs(adjustedX - existingRoomCenterPos.x);
             }
             
-            // Y축 충돌 검사: 대각선 상의 방과 충돌하는 경우 Y축으로 밀어내기
-            float minRequiredY = currentHalfHeight + existingHalfHeight + corridorSpacing;
-            if (dy < minRequiredY && dx < currentHalfWidth + existingHalfWidth)
+            // Y축 충돌 검사: Y축 거리가 부족하고 X축에서도 겹칠 가능성이 있는 경우
+            bool yCollision = dy < minRequiredY;
+            bool xOverlap = dx < (currentHalfWidth + existingHalfWidth);
+            
+            if (yCollision && xOverlap)
             {
                 // Y축으로 충분히 밀어내기 (Grid 셀 단위로, 같은 행 정렬 유지)
                 float pushY = minRequiredY - dy;
