@@ -576,6 +576,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Interactable",
+                    "type": "Button",
+                    "id": "0b19015f-b29d-4c57-b197-e430f99300f8",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1005,6 +1014,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Settings",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7a3d88b1-44e4-4c25-88db-58f94b59da37",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interactable",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
