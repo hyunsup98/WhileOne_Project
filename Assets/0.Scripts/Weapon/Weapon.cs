@@ -33,7 +33,7 @@ public class Weapon : MonoBehaviour
 
 
 
-        // WeaponData = Instantiate(data);
+        WeaponData = Instantiate(data);
         _keyId = WeaponData.weaponID;
         _renderer.sprite = WeaponData.weaponResourcePath_Sprite;
     }
