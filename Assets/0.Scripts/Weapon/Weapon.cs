@@ -4,7 +4,9 @@ public class Weapon : MonoBehaviour
 {
     [SerializeField] private int _keyId;                     // 무기 데이터베이스 SO에서 데이터를 가져오기 위해 필요한 ID
     [SerializeField] private SpriteRenderer _renderer;
-    public WeaponDataSO WeaponData { get; set; }    // 실제 무기 데이터
+    public WeaponDataSO WeaponData { get; private set; }    // 실제 무기 데이터
+
+    public void SetWeaponData(WeaponDataSO weaponData) => WeaponData = weaponData;
 
     private void Awake()
     {
@@ -29,8 +31,10 @@ public class Weapon : MonoBehaviour
     {
         if (data == null) return;
 
-        _keyId = data.weaponID;
-        WeaponData = data;
+
+
+        // WeaponData = Instantiate(data);
+        _keyId = WeaponData.weaponID;
         _renderer.sprite = WeaponData.weaponResourcePath_Sprite;
     }
 }

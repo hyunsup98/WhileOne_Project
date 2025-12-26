@@ -30,7 +30,7 @@ public class DataManager_Weapon : MonoBehaviour
 
             if(index > rand)
             {
-                weapon.WeaponData = WeaponDatabase.datas[i];
+                weapon.SetWeaponData(WeaponDatabase.datas[i]);
                 break;
             }
         }

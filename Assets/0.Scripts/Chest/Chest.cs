@@ -9,14 +9,19 @@ public enum ChestState
 
 public class Chest : MonoBehaviour, IInteractable
 {
+    [Header("컴포넌트")]
     [SerializeField] private SpriteRenderer _renderer;
     [SerializeField] private Animator _animator;
+
+    [Header("무기가 드랍되는 퍼센트")]
+    [Range(0, 100)]
+    [SerializeField] private int dropWeaponPer;
 
     private Weapon weapon;
 
     private ChestState chestState;
 
-    [field: SerializeField] public float YOffset { get; set; } = 1.5f;      //인터페이스 필드 → 상호작용 이미지 위치에 더할 오프셋
+    [field: SerializeField] public float YOffset { get; set; } = 1.5f;      //인터페이스 필드 → 상호작용 키 이미지 위치에 더할 오프셋
 
     public Vector3 Pos => transform.position;           // 인터페이스 필드 → 상호작용 이미지 위치 세팅을 위한 오브젝트 위치 좌표
 
@@ -85,10 +90,10 @@ public class Chest : MonoBehaviour, IInteractable
     {
         int rand = Random.Range(0, 100);
 
-        if (rand < 10)
-            weapon = null;
-        else
+        if (rand < dropWeaponPer)
             weapon = DataManager.Instance.WeaponData.GetRandomWeapon();
+        else
+            weapon = null;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

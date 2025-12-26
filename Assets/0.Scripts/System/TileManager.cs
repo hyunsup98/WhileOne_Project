@@ -1,7 +1,4 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Tilemaps;
 
 /// <summary>
 /// 타일 조건 체크 관련 기능을 담당하는 클래스

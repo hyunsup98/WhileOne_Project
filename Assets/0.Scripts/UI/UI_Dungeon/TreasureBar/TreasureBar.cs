@@ -10,7 +10,7 @@ public class TreasureBar : MonoBehaviour
     public void AddTreasure(Treasure treasure)
     {
         var slot = Instantiate(_treasureSlot, _contentTrans);
-        slot.SetIcon(treasure.icon);
+        slot.SetIcon(treasure);
         slot.transform.SetAsFirstSibling();
     }
 }

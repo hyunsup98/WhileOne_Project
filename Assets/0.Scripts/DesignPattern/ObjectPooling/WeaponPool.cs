@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class WeaponPool : ObjectPools<Weapon>
+public class WeaponPool : ObjectPool<Weapon>
 {
 
 }

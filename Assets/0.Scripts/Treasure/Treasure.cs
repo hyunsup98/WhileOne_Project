@@ -2,8 +2,9 @@ using UnityEngine;
 
 public enum TreasureType
 {
-    Common,         // 기획서 상의 1티어
-    Rare            // 기획서 상의 2티어
+    Common = 1,         // 기획서 상의 1티어
+    Rare,               // 기획서 상의 2티어
+    Orb = 4,            // 오브 아이템 (보스를 잡고 나오는 보물 / 엔딩에 필요)
 }
 
 /// <summary>
@@ -11,6 +12,17 @@ public enum TreasureType
 /// </summary>
 public class Treasure : MonoBehaviour
 {
-    [field: SerializeField] public TreasureType type { get; private set; }
-    [field: SerializeField] public Sprite icon { get; private set; }
+    private TreasureDataSO _treasureDataSO;
+    public TreasureDataSO TreasureData
+    {
+        get { return _treasureDataSO; }
+        set
+        {
+            _treasureDataSO = value;
+            _treasureType = (TreasureType)_treasureDataSO.treasureTier;
+            Debug.Log(_treasureType);
+        }
+    }
+
+    public TreasureType _treasureType;
 }
