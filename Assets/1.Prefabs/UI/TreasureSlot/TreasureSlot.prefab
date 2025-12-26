@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9313e0f329198f049bafbe1c9554c381, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TreasureSlot
-  iconImg: {fileID: 5200663609449712051}
+  iconImg: {fileID: 594846980585599471}
 --- !u!222 &7893134424343986990
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

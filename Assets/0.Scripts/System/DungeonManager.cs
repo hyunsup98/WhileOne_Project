@@ -37,6 +37,14 @@ public class DungeonManager : MonoBehaviour
         _tileManager = new TileManager(this);
     }
 
+    private void Update()
+    {
+        if(Keyboard.current.gKey.wasPressedThisFrame)
+        {
+            TreasureBarUI.AddTreasure(DataManager.Instance.TreasureData.PickTreasure());
+        }
+    }
+
     public void SetPosInteractImg(Vector3 pos)
     {
         InteractImg.SetActive(true);

@@ -24,5 +24,5 @@ public class Treasure : MonoBehaviour
         }
     }
 
-    public TreasureType _treasureType;
+    public TreasureType _treasureType { get; private set; }
 }

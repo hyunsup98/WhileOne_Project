@@ -25,4 +25,18 @@ public class DataManager_Treasure : MonoBehaviour
             }
         }
     }
+
+    public TreasureDataSO PickTreasure()
+    {
+        if (TreasureList.Count == 0) return null;
+
+        int rand = Random.Range(0, TreasureList.Count);
+        TreasureDataSO data = TreasureList[rand];
+
+        int lastIndex = TreasureList.Count - 1;
+        TreasureList[rand] = TreasureList[lastIndex];
+        TreasureList.RemoveAt(lastIndex);
+
+        return data;
+    }
 }

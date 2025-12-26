@@ -5,14 +5,14 @@ public class TreasureSlot : MonoBehaviour
 {
     [SerializeField] private Image iconImg;     // 보물 아이콘을 띄울 이미지
 
-    private Treasure _treasure;                 // 현재 슬롯에 존재하는 보물 데이터
+    private TreasureDataSO _treasureData;       // 현재 슬롯에 존재하는 보물 데이터
 
-    public void SetIcon(Treasure treasure)
+    public void SetIcon(TreasureDataSO data)
     {
-        if (iconImg == null || treasure == null) return;
+        if (iconImg == null || data == null) return;
 
-        _treasure = treasure;
-        iconImg.sprite = _treasure.TreasureData.treasureIconPath_Sprite;
+        _treasureData = data;
+        iconImg.sprite = _treasureData.treasureIconPath_Sprite;
         iconImg.SetAlpha(1f);
     }
 }
