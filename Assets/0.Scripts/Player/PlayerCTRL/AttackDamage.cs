@@ -1,8 +1,11 @@
+using System;
 using UnityEngine;
 
 public class AttackDamage : MonoBehaviour
 {
     BoxCollider2D _collider;
+
+    public event Action<GameObject> OnHit;
 
     private void Awake()
     {
@@ -13,10 +16,12 @@ public class AttackDamage : MonoBehaviour
     {
         if (collision.CompareTag("Monster"))
         {
-            if (collision.TryGetComponent<MonsterView>(out var monster))
-            {
-                monster.Presenter.OnHit(25f);
-            }
+
+            OnHit?.Invoke(collision.gameObject);
+            //if (collision.TryGetComponent<MonsterView>(out var monster))
+            //{
+            //    monster.Presenter.OnHit(25f);
+            //}
         }
     }
 }
