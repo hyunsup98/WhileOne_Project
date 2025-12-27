@@ -37,4 +37,14 @@ public class DataManager_Weapon : MonoBehaviour
 
         return weapon;
     }
+
+    // 지정된 아이디의 무기를 반환하는 메서드
+    public Weapon GetWeapon(int id)
+    {
+        Weapon weapon = WeaponPool.Instance.GetObject(defaultWeapon, transform);
+
+        weapon.SetWeaponData(WeaponDatabase[id]);
+
+        return weapon;
+    }
 }

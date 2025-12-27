@@ -7,8 +7,8 @@ public class TreasureSlot : Slot
     [SerializeField] private Image iconImg;     // 보물 아이콘을 띄울 이미지
 
     private Treasure _treasure;       // 현재 슬롯에 존재하는 보물 데이터
-    private Color _mouseEnterColor = new Color(255f, 255f, 255f);
-    private Color _mouseExitColor = new Color(200f, 200f, 200f);
+    private Color32 _mouseEnterColor = new Color32(255, 255, 255, 255);
+    private Color32 _mouseExitColor = new Color32(200, 200, 200, 255);
 
     public override void OnPointerEnter(PointerEventData eventData)
     {

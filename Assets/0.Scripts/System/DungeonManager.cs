@@ -27,8 +27,15 @@ public class DungeonManager : MonoBehaviour
     [field: SerializeField] public GameObject InteractImg { get; private set; }         // 상호작용 키 이미지
     #endregion
 
+    #region 툴팁 관련 변수
     [field: SerializeField] public WeaponTooltip WeaponTooltip { get; private set; }        // 무기 툴팁
     [field: SerializeField] public TreasureTooltip TreasureTooltip { get; private set; }    // 보물 툴팁
+    #endregion
+
+    #region 슬롯 관련 변수
+    [field: SerializeField] public EquipSlot MainWeaponSlot { get; private set; }       // 메인 무기 슬롯
+    [field: SerializeField] public EquipSlot SubWeaponSlot { get; private set; }        // 서브 무기 슬롯
+    #endregion
 
     private void Awake()
     {
@@ -38,6 +45,8 @@ public class DungeonManager : MonoBehaviour
     private void Start()
     {
         _tileManager = new TileManager(this);
+
+        MainWeaponSlot.ChangeIcon(DataManager.Instance.WeaponData.GetWeapon(4001));
     }
 
     private void Update()

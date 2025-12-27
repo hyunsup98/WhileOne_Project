@@ -14,8 +14,6 @@ public class Weapon : MonoBehaviour
 
     public event Action<int, int> onDurabilityChanged;
 
-    public void SetWeaponData(WeaponDataSO weaponData) => WeaponData = weaponData;
-
     private void Awake()
     {
         if (_renderer == null)
@@ -32,7 +30,7 @@ public class Weapon : MonoBehaviour
     }
 
     /// <summary>
-    /// 무기 데이터 수치 세팅
+    /// 무기 데이터 실체화
     /// </summary>
     /// <param name="data"> 적용할 무기 데이터 </param>
     public void InitData(WeaponDataSO data)
@@ -45,6 +43,14 @@ public class Weapon : MonoBehaviour
         _renderer.sprite = WeaponData.weaponResourcePath_Sprite;
 
         onDurabilityChanged?.Invoke(Durability, WeaponData.weaponDurability);
+    }
+
+    // 무기 데이터 세팅
+    public void SetWeaponData(WeaponDataSO weaponData)
+    {
+        WeaponData = weaponData;
+        _keyId = WeaponData.weaponID;
+        Durability = weaponData.weaponDurability;
     }
 
     /// <summary>

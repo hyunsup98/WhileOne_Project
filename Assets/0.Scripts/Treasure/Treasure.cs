@@ -10,8 +10,11 @@ public enum TreasureType
 /// <summary>
 /// 보물 클래스
 /// </summary>
-public class Treasure
+public class Treasure : MonoBehaviour
 {
+    [SerializeField] private int _keyId;
+    [SerializeField] private SpriteRenderer _renderer;
+
     private TreasureDataSO _treasureDataSO;
     public TreasureDataSO TreasureData
     {
@@ -19,8 +22,8 @@ public class Treasure
         set
         {
             _treasureDataSO = value;
+            _keyId = value.treasureID;
             _treasureType = (TreasureType)_treasureDataSO.treasureTier;
-            Debug.Log(_treasureType);
         }
     }
 

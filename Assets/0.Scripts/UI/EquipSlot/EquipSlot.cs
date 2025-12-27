@@ -15,11 +15,11 @@ public class EquipSlot : Slot
 
     [Header("선택된 슬롯에 적용해줄 색상")]
     [SerializeField] private Color _selectColor;        // 현재 무기가 선택되었을 때 변경해줄 색상
-    private Color _mouseEnterColor = new Color(255f, 255f, 255f);
-    private Color _mouseExitColor = new Color(200f, 200f, 200f);
+    private Color32 _mouseEnterColor = new Color32(255, 255, 255, 255);
+    private Color32 _mouseExitColor = new Color32(200, 200, 200, 255);
 
 
-    private Weapon weapon;
+    [SerializeField] private Weapon weapon;
 
     private void Awake()
     {
@@ -47,7 +47,7 @@ public class EquipSlot : Slot
     /// <param name="weapon"> 슬롯에 보여줄 무기 </param>
     public void ChangeIcon(Weapon weapon)
     {
-        if (_iconImg == null || _durabilityBar == null || _durability == null) return;
+        if (_iconImg == null) return;
 
         this.weapon = weapon;
 
@@ -57,7 +57,7 @@ public class EquipSlot : Slot
             _iconImg.SetAlpha(0f);
 
             // 내구도 바가 켜져있다면 꺼주기
-            if (_durability.activeSelf)
+            if (_durability != null && _durability.activeSelf)
                 _durability.SetActive(false);
         }
         else
@@ -67,7 +67,7 @@ public class EquipSlot : Slot
             _iconImg.SetAlpha(1f);
 
             // 내구도 바가 꺼져있다면 켜주고 수치 적용
-            if (!_durability.activeSelf)
+            if (_durability != null && !_durability.activeSelf)
                 _durability.SetActive(true);
             ChangeDurability(weapon.Durability, weapon.WeaponData.weaponDurability);
 
