@@ -233,7 +233,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6090921389041934258, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
   m_PrefabInstance: {fileID: 764684826}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 764684828}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7021466798dd22a4cb21856d0bc8fa51, type: 3}
@@ -996,8 +996,49 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4329574107018779310, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 764684830}
+    - targetCorrespondingSourceObject: {fileID: 4907960998979128360, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 764684829}
   m_SourcePrefab: {fileID: 100100000, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
+--- !u!1 &764684827 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4907960998979128360, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
+  m_PrefabInstance: {fileID: 764684826}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &764684828 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4329574107018779310, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
+  m_PrefabInstance: {fileID: 764684826}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &764684829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 764684827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8551e057d9f28f4e903b51b9d3e5985, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimationEventFind
+--- !u!114 &764684830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 764684828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6d13a7b7465926408516849f11fed13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponChange
+  _weaponHands: {fileID: 0}
 --- !u!1001 &1047313750
 PrefabInstance:
   m_ObjectHideFlags: 0
