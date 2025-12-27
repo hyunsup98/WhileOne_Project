@@ -33,6 +33,7 @@ public class DungeonManager : MonoBehaviour
     #endregion
 
     #region 슬롯 관련 변수
+    [field: SerializeField] public EquipSlotView EquipSlotController { get; private set; }
     [field: SerializeField] public EquipSlot MainWeaponSlot { get; private set; }       // 메인 무기 슬롯
     [field: SerializeField] public EquipSlot SubWeaponSlot { get; private set; }        // 서브 무기 슬롯
     #endregion
@@ -45,8 +46,6 @@ public class DungeonManager : MonoBehaviour
     private void Start()
     {
         _tileManager = new TileManager(this);
-
-        MainWeaponSlot.ChangeIcon(DataManager.Instance.WeaponData.GetWeapon(4001));
     }
 
     private void Update()

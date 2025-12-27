@@ -5,17 +5,6 @@ public class EquipSlotView : MonoBehaviour
     [SerializeField] private EquipSlot _mainWeaponSlot;     // 메인 무기 슬롯 (삽)
     [SerializeField] private EquipSlot _subWeaponSlot;      // 서브 무기 슬롯 (플레이 중 획득한 무기)
 
-    private EquipSlotPresenter _equipSlotPresenter;
-
-    private void Start()
-    {
-        // _equipSlotPresenter 생성
-        if (GameManager.Instance.player != null)
-        {
-            _equipSlotPresenter = new EquipSlotPresenter(GameManager.Instance.player, this);
-        }
-    }
-
     // 서브 무기 슬롯에 연결된 무기 아이콘 변경
     public void ChangeSubWeapon(Weapon weapon)
     {

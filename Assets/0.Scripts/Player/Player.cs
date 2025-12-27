@@ -164,11 +164,6 @@ public class Player : MonoBehaviour
         PlayerDir();
         moveCurrentState?.Update();
         actionCurrentState?.Update();
-
-        //if(Keyboard.current.qKey.wasPressedThisFrame)
-        //{
-        //    TakenDamage(10, Vector2.zero);
-        //}
     }
     
     void PlayerDir()

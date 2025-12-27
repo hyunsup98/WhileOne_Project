@@ -7,7 +7,7 @@ public class WeaponChange : MonoBehaviour
 {
     [SerializeField] Transform _weaponHands; //무기 들 손 위치
     private GameObject _currentWeapon; //현재 활성화 되어 있는 오브젝트
-    AttackDamage _decision;
+    public AttackDamage _decision;
 
     //private SO _currentWeaponData; //SO 들어갈 자리
     //Dictionary<SO, GameObject> weaponList = new(); //SO 키 값
@@ -24,6 +24,7 @@ public class WeaponChange : MonoBehaviour
     private float _weaponDamage;
     private bool _isAlreadyHit;
 
+    [SerializeField] private Weapon shovel;
 
     PlayerInput _input;
     InputActionMap _inputActionMap;
@@ -31,9 +32,11 @@ public class WeaponChange : MonoBehaviour
     InputAction _switchWeapon2;
     Player _player;
 
-    public event Action<int> onSwapWeapon;          // 무기 스왑 이벤트
-    public event Action<Weapon> onWeaponChanged;    // 무기 변경 이벤트
-
+    private void Awake()
+    {
+        _slotWeapon1 = shovel;
+        currentweapon = _slotWeapon1;
+    }
 
     private void Start()
     {
@@ -47,7 +50,12 @@ public class WeaponChange : MonoBehaviour
         _switchWeapon1.performed += WeaponSwitch1;
         _switchWeapon2.performed += WeaponSwitch2;
 
+        TrakingPlayer trakingPlayer;
+        _weaponHands.TryGetComponent(out trakingPlayer);
+        _decision = trakingPlayer._attackFxInstance;
         _decision.OnHit += HitAble;
+
+        GameManager.Instance.CurrentDungeon.MainWeaponSlot.ChangeIcon(_slotWeapon1);
     }
 
     private void WeaponSwitch1(InputAction.CallbackContext ctx)
@@ -65,10 +73,21 @@ public class WeaponChange : MonoBehaviour
 
     private void SwitchSlot(int slotNum)
     {
-        //SO targetData = (slotNum == 1) ? slotWeapon1 : slotWeapon2;
-        //EquipWeapon(targetData);
+        switch(slotNum)
+        {
+            case 1:
+                currentweapon = _slotWeapon1;
+                if (_slotWeapon2 != null)
+                    _slotWeapon2.gameObject.SetActive(false);
+                break;
 
-        onSwapWeapon?.Invoke(slotNum);
+            case 2:
+                currentweapon = _slotWeapon2;
+                _slotWeapon1.gameObject.SetActive(false);
+                break;
+        }
+
+        GameManager.Instance.CurrentDungeon.EquipSlotController.EquipWeapon(slotNum);
     }
 
     public void ChangeWeapon(Weapon weapon)//스크립터블 오브젝트 넣는 곳)
@@ -76,14 +95,17 @@ public class WeaponChange : MonoBehaviour
         //if(_currentWeaponData == 대충 매개변수로 받아온 변수) //스크립터블과 비교하는 곳
         //return;
 
+        if(_slotWeapon2 != null)
+            WeaponPool.Instance.TakeObject(_slotWeapon2);
+
         _slotWeapon2 = weapon;
+        _slotWeapon2.transform.SetParent(_weaponHands);
+        _slotWeapon2.transform.localPosition = Vector3.zero;
+        currentweapon.gameObject.SetActive(false);
+        currentweapon = _slotWeapon2;
 
-        if(_currentWeapon != null) //만약 기존에 데이터가 있다면
-        {
-            _currentWeapon.SetActive(false); //해당 데이터는 비활성화
-        }
-
-        onWeaponChanged?.Invoke(_slotWeapon2);
+        GameManager.Instance.CurrentDungeon.EquipSlotController.ChangeSubWeapon(_slotWeapon2);
+        GameManager.Instance.CurrentDungeon.EquipSlotController.ChangeSubWeaponDurability(_slotWeapon2.Durability, _slotWeapon2.WeaponData.weaponDurability);
 
         //if(!weaponeList.Contains(대충 매개변수로 받아온 변수))
         //{
@@ -126,6 +148,7 @@ public class WeaponChange : MonoBehaviour
         if (!_isAlreadyHit)
         {
             _durability--;
+            GameManager.Instance.CurrentDungeon.EquipSlotController.ChangeSubWeaponDurability(_slotWeapon2.Durability, _slotWeapon2.WeaponData.weaponDurability);
             _isAlreadyHit = true;
             if (_durability <= 0)
             {
@@ -136,6 +159,11 @@ public class WeaponChange : MonoBehaviour
     private void WeaponBreak()
     {
         //무기 뿌사짐
+        WeaponPool.Instance.TakeObject(currentweapon);
+        _slotWeapon2 = null;
+        GameManager.Instance.CurrentDungeon.EquipSlotController.ChangeSubWeapon(_slotWeapon2);
+        currentweapon = _slotWeapon1;
+        _slotWeapon1.gameObject.SetActive(true);
     }
     private void OnDisable()
     {

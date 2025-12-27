@@ -4,19 +4,19 @@ using UnityEngine.InputSystem;
 
 public class TrakingPlayer : MonoBehaviour
 {
-    [SerializeField] GameObject _attackFX;
+    [SerializeField] AttackDamage _attackFX;
     public Transform _test;
-    private GameObject _attackFxInstance;
+    public AttackDamage _attackFxInstance { get; private set; }
     Vector3 _mousePosition;
     private SpriteRenderer _rend;
 
-    public GameObject AttackFX => _attackFX;
+    public AttackDamage AttackFX => _attackFX;
     private void Awake()
     {
         if(_attackFX != null)
         {
            _attackFxInstance = Instantiate(_attackFX);
-           _attackFxInstance.SetActive(false);
+           _attackFxInstance.gameObject.SetActive(false);
         }
         _rend = _attackFxInstance.GetComponentInChildren<SpriteRenderer>(true);
     }
@@ -48,8 +48,8 @@ public class TrakingPlayer : MonoBehaviour
         //_attackFxInstance.transform.position = _test.position + (Vector3)dir;
         //_attackFxInstance.transform.rotation = _test.rotation;
 
-        _attackFxInstance.SetActive(false);
-        _attackFxInstance.SetActive(true);
+        _attackFxInstance.gameObject.SetActive(false);
+        _attackFxInstance.gameObject.SetActive(true);
 
     }
    

@@ -18,15 +18,8 @@ public class Weapon : MonoBehaviour
     {
         if (_renderer == null)
             TryGetComponent(out _renderer);
-    }
 
-    private void Start()
-    {
-        if(_keyId != default)
-        {
-            // DataManager의 WeaponDatabase에 인덱서를 통해 접근해 값을 가져옴
-            InitData(DataManager.Instance.WeaponData.WeaponDatabase[_keyId]);
-        }
+        InitData(DataManager.Instance.WeaponData.WeaponDatabase[_keyId]);
     }
 
     /// <summary>

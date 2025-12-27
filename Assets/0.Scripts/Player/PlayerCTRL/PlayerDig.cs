@@ -78,12 +78,12 @@ public class PlayerDig : MonoBehaviour
         if (angle.x > 1)
         {
             cursorPos.x += 1f;
-            dir.x = cursorPos.x+1f;
+            dir.x = cursorPos.x;
         }
         else if(angle.x < -1)
         {
             cursorPos.x -= 1f;
-            dir.x = cursorPos.x - 1f;
+            dir.x = cursorPos.x;
         }
         else
         {
@@ -92,12 +92,12 @@ public class PlayerDig : MonoBehaviour
         if (angle.y > 1)
         {
             cursorPos.y += 1f;
-            dir.y = cursorPos.y+1f;
+            dir.y = cursorPos.y;
         }
         else if(angle.y < -1)
         {
             cursorPos.y -= 1f;
-            dir.y = cursorPos.y - 1f;
+            dir.y = cursorPos.y;
         }
         else
         {

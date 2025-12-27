@@ -5219,7 +5219,7 @@ MonoBehaviour:
   _attack: 5
   _attackSpeed: 10
   <GetDamage>k__BackingField: {fileID: 2145774435355405310}
-  <Player_WeaponChange>k__BackingField: {fileID: 0}
+  <Player_WeaponChange>k__BackingField: {fileID: 3496470623769560657}
 --- !u!114 &4875647573395373011
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5278,6 +5278,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponChange
   _weaponHands: {fileID: 3089986550740207870}
+  _decision: {fileID: 0}
   currentweapon: {fileID: 0}
   _slotWeapon2: {fileID: 0}
 --- !u!114 &6475511304828831566
@@ -5741,7 +5742,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef3d3ec72dfa1274aa15ac5006b94ef0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrakingPlayer
-  _attackFX: {fileID: 5943636364474113757, guid: e85aa3aadc4121e4aa7d341730894040, type: 3}
+  _attackFX: {fileID: 6245544600291612829, guid: e85aa3aadc4121e4aa7d341730894040, type: 3}
   _test: {fileID: 0}
 --- !u!1 &4644395610220181773
 GameObject:
@@ -5967,6 +5968,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6556896868152485762}
+  - component: {fileID: 3353218436047144446}
   - component: {fileID: 1117383380203097495}
   - component: {fileID: 3642252984853493166}
   - component: {fileID: 5702264617188040040}
@@ -5994,6 +5996,18 @@ Transform:
   - {fileID: 4703368205314125819}
   m_Father: {fileID: 197790706286827359}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3353218436047144446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4907960998979128360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8551e057d9f28f4e903b51b9d3e5985, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimationEventFind
 --- !u!210 &1117383380203097495
 SortingGroup:
   m_ObjectHideFlags: 0

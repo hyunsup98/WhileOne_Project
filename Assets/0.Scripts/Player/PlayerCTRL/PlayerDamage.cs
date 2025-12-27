@@ -1,6 +1,7 @@
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 
 public class PlayerDamage : MonoBehaviour
@@ -39,6 +40,15 @@ public class PlayerDamage : MonoBehaviour
         _blinkTime = new WaitForSeconds(time);
         _group = transform.GetChild(0).GetComponent<SortingGroup>();
     }
+
+    private void Update()
+    {
+        if(Keyboard.current.qKey.wasPressedThisFrame)
+        {
+            TakenDamage(10f, Vector2.zero);
+        }
+    }
+
     public void TakenDamage(float damage, Vector2 target)
     {
         IsDamaged = true;
