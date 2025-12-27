@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 
 public class MonsterAction : IState
 {
     private MonsterPresenter _monster;
-    private MonsterView _view;
     private MonsterPattern _action;
 
     private int _actionCount;
@@ -12,15 +10,12 @@ public class MonsterAction : IState
     public MonsterAction(MonsterPresenter monster)
     {
         _monster = monster;
-        _view = monster.View;
     }
 
 
     public void Enter()
     {
         _action = SetAction();
-
-        UnityEngine.Debug.Log("액션" + _action);
         if(_action == null)
         {
             _monster.Model.SetState(MonsterState.Chase);
@@ -57,15 +52,23 @@ public class MonsterAction : IState
     private MonsterPattern SetAction()
     {
         Dictionary<ActionID, MonsterPattern> actionDict = _monster.Model.ActionDict;
-        if (_actionCount == 5)
+
+        if (actionDict[ActionID.six] != null && _monster.IsUlt)
+        {
+            _monster.SetIsUlt(false);
+            return actionDict[ActionID.six];
+        }
+
+        if (actionDict[ActionID.five] != null && _actionCount == 5)
             return actionDict[ActionID.five];
 
-        else if (actionDict[ActionID.four].IsActionable)
+        else if (actionDict[ActionID.four] != null && actionDict[ActionID.four].IsActionable)
             return actionDict[ActionID.four];
 
-        else if (actionDict[ActionID.one].IsActionable)
+        else if (actionDict[ActionID.one] != null && actionDict[ActionID.one].IsActionable)
             return actionDict[ActionID.one];
 
+        UnityEngine.Debug.LogWarning("쿨타임 또는 null로 인해 행동사용 불가");
         return null;
     }
 }

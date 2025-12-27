@@ -1,9 +1,8 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 
-public class MonsterView : MonoBehaviour
+public class MonsterView : MonoBehaviour, IStunable
 {
     [SerializeField] private MonsterData _monsterData;    // 몬스터 데이터 SO
     
@@ -31,7 +30,6 @@ public class MonsterView : MonoBehaviour
         Presenter = new MonsterPresenter(_monsterData, this, groundTilemap, wallTilemap);
     }
 
-    [ContextMenu("세팅값 갱신")]
     private void Start()
     {
         Presenter.OnStart();
@@ -49,6 +47,12 @@ public class MonsterView : MonoBehaviour
         {
             case "Idle":
                 _animator.SetBool("Idle", true);
+                break;
+            case "Teleport":
+                _animator.SetTrigger("Teleport");
+                break;
+            case "Stun":
+                _animator.SetBool("Stun", true);
                 break;
 
             case "Hurt":
@@ -75,6 +79,7 @@ public class MonsterView : MonoBehaviour
             case "Pattern06End":
                 _animator.SetTrigger("Pattern06End");
                 break;
+            
 
             default:
                 Debug.LogWarning("출력할 애니메이션 없음");
@@ -89,11 +94,13 @@ public class MonsterView : MonoBehaviour
             case "Idle":
                 _animator.SetBool("Idle", false);
                 break;
+
             default:
                 Debug.LogWarning("출력할 애니메이션 없음");
                 break;
         }
     }
+
 
     public void OnHurtAni() => _animator.SetTrigger("Hurt");
     public void OnDeathAni() => _animator.SetBool("Death", true);
@@ -159,4 +166,6 @@ public class MonsterView : MonoBehaviour
 
         return null;
     }
+
+    public void OnStun() => Presenter.OnStun();
 }

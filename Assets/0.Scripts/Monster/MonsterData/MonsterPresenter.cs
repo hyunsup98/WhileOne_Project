@@ -7,10 +7,9 @@ using UnityEngine.Tilemaps;
 
 public class MonsterPresenter : IAnimationable
 {
-
     public MonsterModel Model { get; private set; }  // 현재 몬스터 데이터 보관한 Model
-
     public MonsterView View { get; private set; }
+    public bool IsUlt {  get; private set; }        // 궁극기(행동06)를 실행하는 메서드
 
     private bool _isHit;
     private bool _isDeath;
@@ -55,8 +54,8 @@ public class MonsterPresenter : IAnimationable
         Model.StateList.Add(MonsterState.Patrol, new Patrol(this));
         Model.StateList.Add(MonsterState.Chase, new Chase(this));
         Model.StateList.Add(MonsterState.Search, new Search(this));
-        Model.StateList.Add(MonsterState.BackReturn, new BackReturn(this));
-        Model.StateList.Add(MonsterState.Attack, new MonsterAction(this));
+        Model.StateList.Add(MonsterState.Action, new MonsterAction(this));
+        Model.StateList.Add(MonsterState.Stun, new Stun(this));
         Model.CurrentState = Model.StateList[MonsterState.Patrol];
     }
 
@@ -136,6 +135,9 @@ public class MonsterPresenter : IAnimationable
     }
 
     public void StartCoroutine(IEnumerator coroutine) => View.StartCoroutine(coroutine);
+
+    public void OnStun() => Model.SetState(MonsterState.Stun);
+    public void SetIsUlt(bool isUlt) => IsUlt = isUlt;
 
     public void OnPlayAni(string animationName) => View.OnPlayAni(animationName);
     public void OnStopAni(string animationName) => View.OnStopAni(animationName);

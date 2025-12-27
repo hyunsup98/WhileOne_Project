@@ -24,13 +24,14 @@ MonoBehaviour:
   _speedBoost: 0
   _actionResource: 
   _actionSound: 
-  _chargeDelay: 1.5
-  _startFallingTime: 2
-  _fallingCount: 2
-  _fallingFrequency: 0
-  _fallingCycle: 0
-  _fallingRange: 20
+  _beforeDelay: 5
+  _afterDelay: 2
+  _startFallingTime: 1.5
+  _fallingCount: 10
+  _fallingFrequency: 1
+  _fallingCycle: 5
+  _fallingRange: 15
   _actionStopTime: 1
-  _fallingObjectPrefab: {fileID: 894711106951718873, guid: 27233f5a4f9a11a40bead43ddbefa54f, type: 3}
+  _fallingObjectPrefab: {fileID: 6084270481035088742, guid: ae795f74a76aeb342806230c21fb64d8, type: 3}
   _pathPreview: {fileID: 0}
   _hitDecision: {fileID: 0}

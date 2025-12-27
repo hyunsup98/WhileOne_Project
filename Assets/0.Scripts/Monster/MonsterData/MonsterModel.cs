@@ -75,7 +75,7 @@ public class MonsterModel
 
 public enum MonsterState
 {
-    Patrol, Chase, Search, BackReturn, Attack
+    Patrol, Chase, Search, Action, Stun
 }
 
 public enum ActionID

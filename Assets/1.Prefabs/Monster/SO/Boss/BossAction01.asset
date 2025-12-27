@@ -28,5 +28,7 @@ MonoBehaviour:
   _rushDistance: 4
   _beforeDelay: 1
   _afterDelay: 2
+  _createPos: {x: 1, y: 1}
+  _hitBoxSize: {x: 2, y: 6}
   _pathPreview: {fileID: 0}
-  _hitDecision: {fileID: 2036332339707325388, guid: d94254c94bff9a642b5a20d005850918, type: 3}
+  _hitDecision: {fileID: 5431072308586980615, guid: 0d3de12e6a3fb7647bb0d19ef4d0188c, type: 3}

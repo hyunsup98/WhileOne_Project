@@ -16,11 +16,11 @@ public class MonsterPattern06 : MonsterPattern
 
     private GameObject _fallingObjectPrefab;
 
+    private Vector2 _startPos;
     private Vector2 _mapCenterPos;
     private Transform _myTransform;
     private List<GameObject> _fallingObjects;
 
-    public string AniTrigger { get; private set; }
 
     public MonsterPattern06(Pattern06SO actionData, MonsterPresenter monster)
     {
@@ -48,14 +48,15 @@ public class MonsterPattern06 : MonsterPattern
     public override void StartAction()
     {
         IsAction = true;
-        _isDelay = true;
         _ani.OnPlayAni("Idle");
+        _startPos = _myTransform.position;
         _mapCenterPos = GetMapCenter().position;
+        _myTransform.GetComponentInChildren<Collider2D>().enabled = false;
 
         float timer = _beforeDelay;
         OnDelayAndStart(OnTeleport, timer);
 
-        timer += _startFallingTime;
+        timer += (_startFallingTime + 6f);
 
         OnDelayAndStart(() => _monster.StartCoroutine(CreateFallingObject()), timer);
     }
@@ -96,7 +97,6 @@ public class MonsterPattern06 : MonsterPattern
     // 중앙으로 텔레포트 이동하는 메서드
     private void OnTeleport()
     {
-        _myTransform.GetComponentInChildren<Collider2D>().enabled = false;
         _myTransform.position = _mapCenterPos;
         _ani.OnPlayAni("Pattern06Start");
     }
@@ -145,6 +145,12 @@ public class MonsterPattern06 : MonsterPattern
 
         _ani.OnPlayAni("Pattern06End");
         yield return CoroutineManager.waitForSeconds(_actionStopTime);
+
+        _ani.OnPlayAni("Teleport");
+        yield return CoroutineManager.waitForSeconds(6f);
+        _myTransform.position = _startPos;
+
+        yield return CoroutineManager.waitForSeconds(_afterDelay);
         IsAction = false;
     }
 }

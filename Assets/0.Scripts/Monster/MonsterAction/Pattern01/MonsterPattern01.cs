@@ -1,10 +1,12 @@
-using System.Collections;
 using UnityEngine;
 
 public class MonsterPattern01 : MonsterPattern
 {
+    private float _createdEffectTime = 0.3f;
     private float _rushSpeed;
     private float _rushDistance;
+    private Vector2 _createPos;
+    private Vector2 _hitBoxSize;
 
     private Vector2 _target;
     private Transform _myTransform;
@@ -21,7 +23,8 @@ public class MonsterPattern01 : MonsterPattern
 
         _pathPreview = actionData.PathPreview;
         _hitDecision = actionData.HitDecision;
-        IsActionable = true;
+        _createPos = actionData.CreatePos;
+        _hitBoxSize = actionData.HitBoxSize;
 
         _rushDistance = actionData.RushDistance;
         _rushSpeed = actionData.RushSpeed;
@@ -36,7 +39,19 @@ public class MonsterPattern01 : MonsterPattern
         Vector3 target = _monster.Model.ChaseTarget.position;
         _target = (target - _myTransform.position).normalized;
 
-        OnCreatedEffect(_myTransform.position);
+        // 콜라이더 크기 조절
+        if (_hitDecision.TryGetComponent<BoxCollider2D>(out var collider))
+            collider.size = _hitBoxSize;
+        else 
+            Debug.LogWarning("이펙트에 Collider없음");
+
+        Vector2 createPos = new Vector2(_createPos.x * _myTransform.localScale.x, _createPos.y);
+        createPos += (Vector2)_myTransform.position;
+
+            OnCreatedEffect(createPos);
+
+        float createdTime = _beforeDelay;
+        _monster.StartCoroutine(OnDelay(() => GameObject.Destroy(_actionEffect.gameObject), _beforeDelay + 0.8f));
     }
 
     public override void OnAction()
@@ -64,19 +79,24 @@ public class MonsterPattern01 : MonsterPattern
         // 몬스터 돌진 이동
         _myTransform.Translate(_target * Time.deltaTime * _rushSpeed);
     }
+
     public override void EndAction()
     {
         Init();
         _monster.StartCoroutine(StartCool());
     }
 
+
     // 시전시간 이후 이펙트 생성
     private void OnCreatedEffect(Vector2 createdPos)
     {
         _isDelay = true;
+        float createdTime = _beforeDelay + _createdEffectTime;
+
         _ani.OnPlayAni("Idle");
         _monster.StartCoroutine(OnDelay(() => _ani.OnPlayAni("Pattern01"), _beforeDelay));
-        _monster.StartCoroutine(OnDelay(() => CreatedEffect(createdPos), _beforeDelay));
         _monster.StartCoroutine(OnDelay(() => _isDelay = false, _beforeDelay));
+        _monster.StartCoroutine(OnDelay(() => CreatedEffect(createdPos), _beforeDelay));
+        _monster.StartCoroutine(OnDelay(() => _actionEffect.gameObject.SetActive(true), createdTime));
     }
 }

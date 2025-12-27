@@ -1,23 +1,23 @@
 using System.Collections;
-using System.Threading;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MonsterPattern05 : MonsterPattern
 {
-    private float _attackStartRange;
+    private float _hitBoxRadius;
     private float _actionAngle;
-    private float _actionStopTime;
     private float _createdEffectDistance;
     private float _createdEffectTime;
 
     private float _fallingStartTime;
-    private int _fallingFrequency;
-    private float _fallingCycle;
+    private float _fallingFrequency;
+    private int _fallingCycle;
     private float _fallingDestroyTime;
     private GameObject _fallingObject;
 
     private Transform _myTransform;
     private Transform _target;
+    private Queue<GameObject> _fallingObjQue;
 
     public string AniTrigger { get; private set; }
 
@@ -31,9 +31,8 @@ public class MonsterPattern05 : MonsterPattern
         _maxCoolTime = actionData.ActionCoolTime;
         _hitDecision = actionData.HitDecision;
 
-        _attackStartRange = actionData.ActionRange;
+        _hitBoxRadius = actionData.HitBoxRadius;
         _actionAngle = Mathf.Deg2Rad * actionData.ActionAngle;
-        _actionStopTime = actionData.ActionStopTime;
         _createdEffectDistance = actionData.CreatedEffectDistance;
         _createdEffectTime = actionData.CreatedEffectTime;
 
@@ -45,10 +44,12 @@ public class MonsterPattern05 : MonsterPattern
 
         
         _myTransform = monster.View.MyTransform;
+        _fallingObjQue = new Queue<GameObject>();
     }
 
     public override void StartAction()
     {
+        _target = _monster.Model.ChaseTarget;
         Vector2 dir =
             (_monster.Model.ChaseTarget.position - _myTransform.position).normalized;
         // 벡터 내적으로 플레이어와의 액션각보다 클 때는 스킬 시전X
@@ -56,14 +57,22 @@ public class MonsterPattern05 : MonsterPattern
             return;
 
         IsAction = true;
-        _target = _monster.Model.ChaseTarget;
+
+        // 콜라이더 크기 조절
+        if (_hitDecision.TryGetComponent<CircleCollider2D>(out var collider))
+            collider.radius = _hitBoxRadius;
+        else
+            Debug.LogWarning("이펙트에 Collider없음");
 
         // 시전 준비 후 이펙트 생성
         Vector2 createdPos = (Vector2)_myTransform.position;
-        createdPos.x += (dir.x * _createdEffectDistance);
-        _hitDecision.GetComponent<CircleCollider2D>().radius = _attackStartRange;
-
+        createdPos.x += (_myTransform.localScale.x *_createdEffectDistance);
         OnCreateedEffect(createdPos);
+
+        float createdTime = _beforeDelay + _createdEffectTime;
+        _monster.StartCoroutine(OnDelay(() => GameObject.Destroy(_actionEffect.gameObject), createdTime + 0.85f));
+
+        // 낙하물 생성
         _monster.StartCoroutine(CreateFallingObj());
     }
 
@@ -75,7 +84,7 @@ public class MonsterPattern05 : MonsterPattern
             return;
 
 
-        if (_timer > _actionStopTime)
+        if (_timer > 2.2f)
         {
             _isDelay = false;
             _monster.StartCoroutine(OnDelay(() => IsAction = false, _afterDelay));
@@ -114,13 +123,14 @@ public class MonsterPattern05 : MonsterPattern
     // 낙하물 떨어지는 타이밍을 조절하는 메서드
     private IEnumerator CreateFallingObj()
     {
-        yield return CoroutineManager.waitForSecondsRealtime(_fallingStartTime);
+        float createdTime = _beforeDelay + _createdEffectTime + _fallingStartTime;
+        yield return CoroutineManager.waitForSecondsRealtime(createdTime);
 
         for (int i = 0; i < _fallingCycle; i++)
         {
             yield return CoroutineManager.waitForSeconds(_fallingFrequency);
             Vector2 targetPos = new Vector2(_target.position.x, _target.position.y);
-            GameObject fallingObj = GameObject.Instantiate
+            GameObject obj = GameObject.Instantiate
                 (
                 _fallingObject, 
                 new Vector2(targetPos.x, targetPos.y),
@@ -128,10 +138,8 @@ public class MonsterPattern05 : MonsterPattern
                 _myTransform.parent
                 );
 
-            yield return CoroutineManager.waitForSeconds(_fallingDestroyTime);
-
-            GameObject.Destroy(fallingObj);
+            _fallingObjQue.Enqueue(obj);
+            _monster.StartCoroutine(OnDelay(() => GameObject.Destroy(_fallingObjQue.Dequeue()), _fallingDestroyTime));
         }
     }
-
 }

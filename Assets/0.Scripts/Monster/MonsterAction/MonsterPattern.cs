@@ -13,8 +13,8 @@ public abstract class MonsterPattern
     protected GameObject _hitDecision;
     protected GameObject _pathPreview;
 
-    protected GameObject _createdHitDecition;
-    protected AttackEffect _attackEffect;
+    //protected GameObject _createdHitDecition;
+    protected AttackEffect _actionEffect;
     protected float _coolTime;
     protected bool _isDelay;
     protected float _timer;
@@ -37,28 +37,28 @@ public abstract class MonsterPattern
 
     protected void CreatedEffect(Vector2 createdPos)
     {
+        if (_hitDecision == null)
+        {
+            Debug.LogWarning("이펙트 프리팹을 SO에 세팅하세요");
+            return;
+        }
+
         // 스킬 이펙트 오브젝트 생성
-        _createdHitDecition = GameObject.Instantiate
+        _actionEffect = GameObject.Instantiate
             (
             _hitDecision,
             createdPos,
             Quaternion.identity,
             _monster.View.MyTransform
-            );
+            ).GetComponent<AttackEffect>();
 
-        _attackEffect = _createdHitDecition.GetComponent<AttackEffect>();
-        _attackEffect.OnAttack += OnCrash;
-    }
-
-    // 플레이어 타격시 데미지 계산
-    protected void OnCrash(Collider2D collision)
-    {
-        int playerLayer = LayerMask.NameToLayer("Player");
-        if (collision.gameObject.layer == playerLayer)
+        if (_actionEffect == null)
         {
-            Player player = collision.GetComponent<Player>();
-            player.GetDamage.TakenDamage(_damage, _monster.View.MyTransform.position);
+            Debug.LogWarning(_hitDecision.name + "의 액션 이펙트 스크립트 없음");
+            return;
         }
+
+        _actionEffect.SetDamage(_damage);
     }
 
     // 쿨타임 시간
@@ -76,25 +76,7 @@ public abstract class MonsterPattern
         IsActionable = true;
     }
 
-
-
-    // 시전 시간(스킬과 애니메이션 사이의 aniDelayTime은 하드코딩)
-    public virtual IEnumerator OnChargeDelay(Vector2 createdPos, string aniName, float aniDelayTime = 0f)
-    {
-        _isDelay = true;
-
-        yield return CoroutineManager.waitForSecondsRealtime(_beforeDelay);
-
-        yield return CoroutineManager.waitForSecondsRealtime(aniDelayTime);
-
-        // 시전 준비 시간이 끝나고 액션 이펙트를 생성
-        CreatedEffect(createdPos);
-
-        _isDelay = false;
-    }
-
-
-
+    // 메서드 호출을 지연
     protected IEnumerator OnDelay(Action action, float delayTime)
     {
         yield return CoroutineManager.waitForSeconds(delayTime);
@@ -107,8 +89,7 @@ public abstract class MonsterPattern
         IsAction = false;
         _timer = 0;
 
-        if(_attackEffect != null)
-            _attackEffect.Init();
-        GameObject.Destroy(_createdHitDecition);
+        if(_actionEffect != null)
+            GameObject.Destroy(_actionEffect.gameObject);
     }
 }
