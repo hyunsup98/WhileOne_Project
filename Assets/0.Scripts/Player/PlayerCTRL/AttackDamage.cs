@@ -5,6 +5,8 @@ public class AttackDamage : MonoBehaviour
 {
     BoxCollider2D _collider;
 
+    public event Action<GameObject> OnHit;
+
     private void Awake()
     {
         _collider = GetComponent<BoxCollider2D>();
@@ -14,6 +16,7 @@ public class AttackDamage : MonoBehaviour
     {
         if (collision.CompareTag("Monster"))
         {
+
             if (collision.TryGetComponent<MonsterView>(out var monster))
             {
                 monster.Presenter.OnHit(25f);
@@ -31,6 +34,11 @@ public class AttackDamage : MonoBehaviour
                     }
                 }
             }
+
+
+            //OnHit?.Invoke(collision.gameObject);
+           
+
         }
     }
 }

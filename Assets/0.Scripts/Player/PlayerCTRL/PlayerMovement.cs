@@ -11,9 +11,12 @@ public class PlayerMovement : MonoBehaviour
     PlayerInput _playerInput;
     InputActionMap _actionMap;
     InputAction _moveAction;
+    PlayerDash _dash;
+    PlayerDamage _damage;
 
 
     //리짓바디, 방향 관련"
+    Rigidbody2D _rb;
     Vector2 _dir;
     Vector3 _move;
 
@@ -30,7 +33,11 @@ public class PlayerMovement : MonoBehaviour
     {
         _player = GetComponent<Player>();
        
+        _rb = GetComponent<Rigidbody2D>();
 
+        _dash = GetComponent<PlayerDash>();
+
+        _damage = GetComponentInChildren<PlayerDamage>();
 
         //playerRigid = GetComponent<Rigidbody>();
 
@@ -58,15 +65,24 @@ public class PlayerMovement : MonoBehaviour
     {
         Move = Vector3.zero;
     }
-    private void Update()
+    private void FixedUpdate()
     {
-        if (_player.Stop.Action)
+        if (_damage.IsKnock)
         {
-            _dir = Vector2.zero;
+            Debug.Log("넉백 중 이동 차단");
             return;
         }
-
-        _player.transform.Translate(_player.MoveSpeed * Time.deltaTime * Move);
+        if (_dash.IsDash)
+        {
+            return;
+        }
+        if (_player.Stop.Action)
+        {
+            _rb.linearVelocity = Vector2.zero;
+            return;
+        }
+        //_player.transform.Translate(_player.MoveSpeed * Time.deltaTime * Move);
+        _rb.linearVelocity = new Vector2(Move.x * _player.MoveSpeed, Move.y * _player.MoveSpeed);
 
     }
 }

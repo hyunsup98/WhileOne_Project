@@ -7,17 +7,23 @@ public class WeaponChange : MonoBehaviour
 {
     [SerializeField] Transform _weaponHands; //무기 들 손 위치
     private GameObject _currentWeapon; //현재 활성화 되어 있는 오브젝트
+    AttackDamage _decision;
 
     //private SO _currentWeaponData; //SO 들어갈 자리
     //Dictionary<SO, GameObject> weaponList = new(); //SO 키 값
     //public SO slotWeapon1
     //private SO slotWeapon2
 
+
     public Weapon currentweapon;
     private Dictionary<Weapon, GameObject> weaponList = new();
 
     private Weapon _slotWeapon1;        // 메인 무기 → 삽(변경될 일 없음)
     public Weapon _slotWeapon2;         // 서브 무기 → 다양한 무기(변경됨)
+    private float _durability;
+    private float _weaponDamage;
+    private bool _isAlreadyHit;
+
 
     PlayerInput _input;
     InputActionMap _inputActionMap;
@@ -40,6 +46,8 @@ public class WeaponChange : MonoBehaviour
 
         _switchWeapon1.performed += WeaponSwitch1;
         _switchWeapon2.performed += WeaponSwitch2;
+
+        _decision.OnHit += HitAble;
     }
 
     private void WeaponSwitch1(InputAction.CallbackContext ctx)
@@ -104,6 +112,31 @@ public class WeaponChange : MonoBehaviour
     //    _currentWeapon = weaponList[data];
     //    _currentWeapon.SetActive(true);
     //}
+    public void ResetAttack()
+    {
+        _isAlreadyHit = false;
+    }
+    private void HitAble(GameObject enemy)
+    {
+        if (enemy.TryGetComponent<MonsterView>(out var monster))
+        {
+            monster.Presenter.OnHit(_weaponDamage);
+        }
+
+        if (!_isAlreadyHit)
+        {
+            _durability--;
+            _isAlreadyHit = true;
+            if (_durability <= 0)
+            {
+                WeaponBreak();
+            }
+        }
+    }
+    private void WeaponBreak()
+    {
+        //무기 뿌사짐
+    }
     private void OnDisable()
     {
         _switchWeapon1.performed -= WeaponSwitch1;

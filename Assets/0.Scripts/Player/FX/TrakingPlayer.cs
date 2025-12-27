@@ -24,24 +24,26 @@ public class TrakingPlayer : MonoBehaviour
     public void PlayEffect()
     {
         if (_attackFxInstance == null) return;
+
         Vector3 _mouse = Mouse.current.position.ReadValue();
         float distanceToCamera = Mathf.Abs(Camera.main.transform.position.z);
         _mousePosition = Camera.main.ScreenToWorldPoint(new (_mouse.x, _mouse.y, distanceToCamera));
-        _mousePosition.z = 0f;
+        //_mousePosition.z = 0f;
 
         Vector2 dir = (_mousePosition - transform.position).normalized;
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        float aaa = Mathf.Abs(Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
+
+        Debug.Log(aaa);
+
         if (transform.localScale.x > 0)
         {
-            _attackFxInstance.transform.position = transform.position - new Vector3(0,0.4f);
-            _attackFxInstance.transform.rotation = Quaternion.Euler(0, 0, angle + 90f);
-            _rend.flipX = true;
+            _attackFxInstance.transform.position = transform.position + (Vector3)(dir);
+            _attackFxInstance.transform.Rotate((Vector3)(dir));
         }
         else
         {
-            _attackFxInstance.transform.position = transform.position - new Vector3(0, 0.4f);
-            _attackFxInstance.transform.rotation = Quaternion.Euler(0, 0, angle + 90f);
-            _rend.flipX = false;
+            _attackFxInstance.transform.position = transform.position + (Vector3)(dir);
+            _attackFxInstance.transform.Rotate((Vector3)(dir));
         }
         //_attackFxInstance.transform.position = _test.position + (Vector3)dir;
         //_attackFxInstance.transform.rotation = _test.rotation;

@@ -2,15 +2,27 @@ using UnityEngine;
 
 public class MonsterTest : MonoBehaviour
 {
-    [SerializeField] Blink _player;
+    [SerializeField]Player _player;
 
     int _layer;
    
-    private void OnCollisionStay2D(Collision2D collision)
+    //private void OnTriggerStay2D(Collision2D collision)
+    //{
+    //    GameObject hitTag = collision.otherCollider.gameObject;
+    //    if (hitTag.gameObject.CompareTag("Player"))
+    //    {
+    //        _player.GetDamage.TakenDamage(10,gameObject.transform.position);
+    //    }
+    //}
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
-            //_player.TakenDamage(10,gameObject.transform.position);
+            var damaged = collision.GetComponent<PlayerDamage>();
+            if (damaged != null)
+            {
+                _player.GetDamage.TakenDamage(10, transform.position);
+            }
         }
     }
 }

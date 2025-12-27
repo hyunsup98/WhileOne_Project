@@ -35,6 +35,7 @@ public class Player : MonoBehaviour
     private WaitForSeconds _delay;
     private float _finsihTime  = 0.7f;
     private float _checkTime = 0;
+    private float _restoreStamina = 5;
     Coroutine regen;
 
     [field: SerializeField] public PlayerDamage GetDamage { get; private set; }
@@ -48,7 +49,7 @@ public class Player : MonoBehaviour
     Animator _animator;
 
     //외부에서 사용할 프로퍼티
-    public float Hp => _hp;
+    public float Hp { get { return _hp; } set { _hp = value; } }
     public float MaxHp => _maxHp;
     public float Stamina { get { return _stamina; } set { _stamina = value; } }
     public int MoveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }
@@ -164,7 +165,6 @@ public class Player : MonoBehaviour
         moveCurrentState?.Update();
         actionCurrentState?.Update();
 
-        Debug.Log(Stamina);
         //if(Keyboard.current.qKey.wasPressedThisFrame)
         //{
         //    TakenDamage(10, Vector2.zero);
@@ -197,7 +197,7 @@ public class Player : MonoBehaviour
     {
        while(_stamina < _maxStamina)
         {
-            _stamina += 5;
+            _stamina += _restoreStamina;
 
             _stamina = Mathf.Clamp(_stamina, 0, _maxStamina);
 
