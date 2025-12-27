@@ -3751,6 +3751,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1730764451353781802, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
+      propertyPath: _test
+      value: 
+      objectReference: {fileID: 1963078381}
+    - target: {fileID: 1730764451353781802, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
+      propertyPath: _attackFX
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730764451353781802, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
+      propertyPath: attackAnim
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730764451353781802, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
+      propertyPath: parentTrans
+      value: 
+      objectReference: {fileID: 6465301196887841613, guid: d71a8f8fbb3d9b146a4d8d2101774da3, type: 3}
     - target: {fileID: 3496470623769560657, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
       propertyPath: shovel
       value: 
@@ -13823,6 +13839,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1957603005}
   m_CullTransparentMesh: 1
+--- !u!4 &1963078381 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8221642844235769604, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
+  m_PrefabInstance: {fileID: 558735061}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1978804503
 GameObject:
   m_ObjectHideFlags: 0

@@ -52,7 +52,7 @@ public class WeaponChange : MonoBehaviour
 
         TrakingPlayer trakingPlayer;
         _weaponHands.TryGetComponent(out trakingPlayer);
-        _decision = trakingPlayer._attackFxInstance;
+        _decision = trakingPlayer.AttackFxInstance;
         _decision.OnHit += HitAble;
 
         GameManager.Instance.CurrentDungeon.MainWeaponSlot.ChangeIcon(_slotWeapon1);
