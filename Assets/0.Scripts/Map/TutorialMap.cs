@@ -8,7 +8,9 @@ public class TutorialMap : MonoBehaviour
     {
         if(collision.CompareTag("Player"))
         {
-            SceneManager.LoadScene(_sceneName);
+            LoadingManager.nextSceneName = _sceneName;
+
+            SceneManager.LoadScene("Loading");
         }
     }
 }

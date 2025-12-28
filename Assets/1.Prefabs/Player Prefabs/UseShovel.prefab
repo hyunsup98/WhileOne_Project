@@ -2085,7 +2085,7 @@ GameObject:
   - component: {fileID: 785637017083249820}
   m_Layer: 8
   m_Name: UseShovel
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5281,6 +5281,7 @@ MonoBehaviour:
   _decision: {fileID: 0}
   currentweapon: {fileID: 0}
   _slotWeapon2: {fileID: 0}
+  shovel: {fileID: 0}
 --- !u!114 &6475511304828831566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5742,6 +5743,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef3d3ec72dfa1274aa15ac5006b94ef0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrakingPlayer
+  parentTrans: {fileID: 0}
+  atkDistance: 1
+  attackAnim: {fileID: 0}
   _attackFX: {fileID: 6245544600291612829, guid: e85aa3aadc4121e4aa7d341730894040, type: 3}
   _test: {fileID: 0}
 --- !u!1 &4644395610220181773

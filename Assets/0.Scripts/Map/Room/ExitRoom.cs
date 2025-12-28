@@ -94,10 +94,12 @@ public class ExitRoom : BaseRoom
             // 나중에 GameManager나 DataManager로 씬 전환 및 데이터 관리를 구현해야 함
             int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
             int nextSceneIndex = currentSceneIndex + 1;
+
             
             if (nextSceneIndex < SceneManager.sceneCountInBuildSettings)
             {
-                SceneManager.LoadScene(nextSceneIndex);
+                LoadingManager.nextSceneIndex = nextSceneIndex;
+                SceneManager.LoadScene("Loading");
             }
             else
             {

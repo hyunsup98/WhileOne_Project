@@ -58,7 +58,7 @@ public class IntroManager : MonoBehaviour
     {
         _isIntroSeen = true;
         _introImage.gameObject.SetActive(false);
-        //SceneManager.LoadScene(_nextSceneName);
+        SceneManager.LoadScene(_nextSceneName);
     }
     private void OnDisable()
     {

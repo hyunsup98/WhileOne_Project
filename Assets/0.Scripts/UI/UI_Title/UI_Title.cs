@@ -31,11 +31,15 @@ public class UI_Title : MonoBehaviour
         if (!PlayerPrefs.HasKey(HasSeenTutorial))
         {
             PlayerPrefs.SetString(HasSeenTutorial, "seen");
-            SceneManager.LoadScene(_tutorialSceneName);
+            LoadingManager.nextSceneName = _tutorialSceneName;
+            SceneManager.LoadScene("Loading");
+            //SceneManager.LoadScene(_tutorialSceneName);
         }
         else
         {
-            SceneManager.LoadScene(_gameSceneName);
+            LoadingManager.nextSceneName = _gameSceneName;
+            SceneManager.LoadScene("Loading");
+            //SceneManager.LoadScene(_gameSceneName);
         }
     }
 
