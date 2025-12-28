@@ -3,13 +3,17 @@ using UnityEngine;
 
 public class UIText : MonoBehaviour
 {
-    private TMP_Text text;
-    private int floor = 3;
+    [SerializeField] protected string _textId;
+    protected TMP_Text text;
 
-    private void Start()
+    protected void Awake()
     {
         text = GetComponent<TMP_Text>();
         text.richText = true;
-        text.text = string.Format(DataManager.Instance.UIData.UIDatabase["Floor_Text"].ko, floor);
+    }
+
+    protected virtual void Start()
+    {
+        text.text = $"{DataManager.Instance.UIData.UIDatabase[_textId].ko}";
     }
 }

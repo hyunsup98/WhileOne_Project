@@ -40,11 +40,15 @@ public class SoundManager : Singleton<SoundManager>
     }
 
     #region 사운드 재생
-    public void PlayBGM(AudioClip clip)
+    public void PlayBGM(string bgmId)
     {
-        if (_bgmAudioSource == null || clip == null) return;
+        if (_bgmAudioSource == null || string.IsNullOrEmpty(bgmId)) return;
 
-        _bgmAudioSource.clip = clip;
+        AudioClip bgm = DataManager.Instance.BGMData.BGMDatabase[bgmId].bgmPath_AudioClip;
+
+        if (bgm != null)
+            _bgmAudioSource.clip = bgm;
+
         _bgmAudioSource.Play();
     }
 

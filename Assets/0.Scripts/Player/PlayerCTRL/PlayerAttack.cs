@@ -106,6 +106,7 @@ public class PlayerAttack : MonoBehaviour
     private void OnDisable()
     {
         _attackAtion.started -= Attaking;
+        _attackAtion.started -= NotDuplication;
     }
     IEnumerator Delay()
     {

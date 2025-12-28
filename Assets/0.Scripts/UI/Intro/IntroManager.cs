@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class IntroManager : MonoBehaviour
 {
-    private Image _introImage;
-    private Sprite[] _introSprites;
-    private string nextSceneName; //æ¿ ¿Ã∏ß
+    [SerializeField] private Image _introImage;
+    [SerializeField] private Sprite[] _introSprites;
+    [SerializeField] private string _nextSceneName;     //æ¿ ¿Ã∏ß
 
     private PlayerInput _input;
     private InputAction _clickAction;
@@ -18,17 +18,16 @@ public class IntroManager : MonoBehaviour
 
     private void Awake()
     {
-        _input = GetComponent<PlayerInput>();
+        //_input = GetComponent<PlayerInput>();
 
-        _clickAction = _input.actions.FindAction("Click");
+        //_clickAction = _input.actions.FindAction("Click");
         
     }
     void Start()
     {
-
         if (_isIntroSeen)
         {
-            SceneManager.LoadScene(nextSceneName);
+            SceneManager.LoadScene(_nextSceneName);
             return;
         }
         if (_introSprites.Length > 0)
@@ -38,8 +37,9 @@ public class IntroManager : MonoBehaviour
     }
     private void OnEnable()
     {
+        InputSystem.actions["Click"].started += NextImage;
 
-        _clickAction.performed += NextImage;
+        //_clickAction.performed += NextImage;
     }
 
     private void NextImage(InputAction.CallbackContext ctx)
@@ -57,14 +57,12 @@ public class IntroManager : MonoBehaviour
     private void EndSecen()
     {
         _isIntroSeen = true;
-
-        SceneManager.LoadScene(nextSceneName);
+        _introImage.gameObject.SetActive(false);
+        //SceneManager.LoadScene(_nextSceneName);
     }
     private void OnDisable()
     {
-
-        _clickAction.performed -= NextImage;
+        InputSystem.actions["Click"].started -= NextImage;
+        //_clickAction.performed -= NextImage;
     }
-
-
 }

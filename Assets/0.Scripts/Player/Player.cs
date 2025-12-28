@@ -192,9 +192,7 @@ public class Player : MonoBehaviour
     {
        while(_stamina < _maxStamina)
         {
-            _stamina += _restoreStamina;
-
-            _stamina = Mathf.Clamp(_stamina, 0, _maxStamina);
+            ChangedStamina += _restoreStamina;
 
             yield return new WaitForSeconds(2);
         }

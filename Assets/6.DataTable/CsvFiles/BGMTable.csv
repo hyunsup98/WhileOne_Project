@@ -1,0 +1,12 @@
+﻿BGM ID,BGM사용처,BGM경로
+bgmID,bgmUse,bgmPath_AudioClip
+string,string,string
+FirstFloor_BGM_001,1층,Assets\9.GitIgnore\Audio\BGM\FirstFloor_BGM_001
+SecondFloor_BGM_001,2층,Assets\9.GitIgnore\Audio\BGM\SecondFloor_BGM_001
+ThirdFloor_BGM_001,3층,Assets\9.GitIgnore\Audio\BGM\ThirdFloor_BGM_001
+GameStory_BGM_001,게임 스토리,Assets\9.GitIgnore\Audio\BGM\GameStory_BGM_001
+GameMain_BGM_001,게임 메인,Assets\9.GitIgnore\Audio\BGM\GameMain_BGM_001
+GameOver_good_BGM_001,굿 엔딩,Assets\9.GitIgnore\Audio\BGM\GameOver_good_BGM_001
+GameOver_bad_BGM_001,베드 엔딩,Assets\9.GitIgnore\Audio\BGM\GameOver_bad_BGM_001
+BossStage_BGM_001,보스 스테이지,Assets\9.GitIgnore\Audio\BGM\BossStage_BGM_001
+Tutorial_BGM_001,튜토리얼,Assets\9.GitIgnore\Audio\BGM\Tutorial_BGM_001

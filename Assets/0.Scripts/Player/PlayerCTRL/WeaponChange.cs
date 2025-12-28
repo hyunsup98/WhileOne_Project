@@ -77,12 +77,14 @@ public class WeaponChange : MonoBehaviour
         {
             case 1:
                 currentweapon = _slotWeapon1;
+                _slotWeapon1.gameObject.SetActive(true);
                 if (_slotWeapon2 != null)
                     _slotWeapon2.gameObject.SetActive(false);
                 break;
 
             case 2:
                 currentweapon = _slotWeapon2;
+                _slotWeapon2.gameObject.SetActive(true);
                 _slotWeapon1.gameObject.SetActive(false);
                 break;
         }

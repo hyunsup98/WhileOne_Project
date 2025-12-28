@@ -43,13 +43,7 @@ public class PlayerDig : MonoBehaviour
         _digAction = _actionMap.FindAction("Special");
 
         _digAction.performed += Dig;
-        _digAction.canceled += ctx =>
-        {
-            tileCursor.gameObject.SetActive(false);
-            test.SetActive(false);
-            _isDigging = false;
-            GameManager.Instance.CurrentDungeon._tileManager.Dig(cursorPos);
-        };
+        _digAction.canceled += EndDig;
         _attack = _player.PlayerAttack;
     }
     void Dig(InputAction.CallbackContext ctx)
@@ -58,10 +52,16 @@ public class PlayerDig : MonoBehaviour
         if (!_attack.IsAttacking )
         {
             tileCursor.gameObject.SetActive(true);
-            test.SetActive(true);
             _isDigging = true;
 
         }
+    }
+
+    private void EndDig(InputAction.CallbackContext ctx)
+    {
+        tileCursor.gameObject.SetActive(false);
+        _isDigging = false;
+        GameManager.Instance.CurrentDungeon._tileManager.Dig(cursorPos);
     }
 
     private void Update()
@@ -115,7 +115,10 @@ public class PlayerDig : MonoBehaviour
         tileCursor.color = GameManager.Instance.CurrentDungeon._tileManager.CanDig(cursorPos)
             ? blue : red;
     }
-   
 
-
+    private void OnDisable()
+    {
+        _digAction.performed -= Dig;
+        _digAction.canceled -= EndDig;
+    }
 }

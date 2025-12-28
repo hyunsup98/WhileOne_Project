@@ -21,7 +21,7 @@ public class EquipSlot : Slot
 
     [SerializeField] private Weapon weapon;
 
-    private void Awake()
+    private void Start()
     {
         ChangeIcon(weapon);
     }

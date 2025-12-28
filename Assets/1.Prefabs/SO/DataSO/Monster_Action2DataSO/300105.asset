@@ -13,14 +13,13 @@ MonoBehaviour:
   m_Name: 300105
   m_EditorClassIdentifier: Assembly-CSharp::Monster_Action2DataSO
   <actionID>k__BackingField: 300105
-  <monsterName>k__BackingField: "\uD5C8\uBB34\uC758 \uD669\uC81C"
-  <actionMonster>k__BackingField: 3001
-  <actionClass>k__BackingField: 5
-  <actionCondition>k__BackingField: 10
-  <actionType>k__BackingField: 1
-  <actionCastTime>k__BackingField: 3
-  <actionDamage>k__BackingField: 35
-  <actionCooltime>k__BackingField: 0
-  <actionSound_AudioClip>k__BackingField: 
-  <castSound_AudioClip>k__BackingField: 
-  <castResource_Sprite>k__BackingField: 
+  <repeatTerm>k__BackingField: 1
+  <repeatTime>k__BackingField: 5
+  <actionTime>k__BackingField: 1
+  <actionShape>k__BackingField: 2
+  <actionWidth>k__BackingField: 2
+  <actionLength>k__BackingField: 1
+  <attackBoost>k__BackingField: 0
+  <speedBoost>k__BackingField: 0
+  <pathPreviewTime>k__BackingField: 1
+  <pathPreviewImagePath_Sprite>k__BackingField: {fileID: 0}

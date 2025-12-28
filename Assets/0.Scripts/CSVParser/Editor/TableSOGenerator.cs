@@ -327,6 +327,8 @@ public class TableSOGenerator
             #region 데이터베이스 SO 생성
             // 이번 데이터 SO와 매칭되는 데이터베이스 SO 클래스 파일 경로 찾기
             // 데이터 SO는 ~DataSO / 데이터베이스 SO는 ~DatabaseSO 이기에 이름으로 찾음
+            Debug.Log($"databaseSOPath: {databaseSOPath}");
+            Debug.Log($"soType: {soType}");
             string dbSOPath = Path.Combine(databaseSOPath, $"{soType.ToString().Replace("SO", "baseSO")}.cs");
 
             // 데이터 SO들을 담을 리스트 생성

@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: mDig_Text2
   m_EditorClassIdentifier: Assembly-CSharp::UIStringDataSO
   <stringResourceID>k__BackingField: mDig_Text2
-  <ko>k__BackingField: "<color=#000000>\uC0BD - \uBC1C\uAD74\\n(\uD640\uB4DC - \uC870\uC900)\\n\uBB34\uAE30
-    - \uC2A4\uD0AC</color>"
+  <ko>k__BackingField: "<color=#000000>\uC0BD - \uBC1C\uAD74\\n(\uD640\uB4DC - \uC870\uC900)</color>"
