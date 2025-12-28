@@ -46,6 +46,37 @@ public class DungeonManager : MonoBehaviour
     private void Start()
     {
         _tileManager = new TileManager(this);
+
+        if(GameManager.Instance.player != null)
+        {
+            Player player = GameManager.Instance.player;
+
+            player.ChangedHealth = DataManager.Instance.CharacterData._playerHp;
+            player.ChangedStamina = DataManager.Instance.CharacterData._playerStamina;
+
+            if(DataManager.Instance.CharacterData._treasureList.Count > 0)
+            {
+                foreach(var treasure in DataManager.Instance.CharacterData._treasureList)
+                {
+                    TreasureBarUI.AddTreasure(treasure);
+                }
+            }
+
+            if(DataManager.Instance.CharacterData._subWeapon != null)
+            {
+                player.Player_WeaponChange.ChangeWeapon(DataManager.Instance.CharacterData._subWeapon);
+            }
+        }
+    }
+
+    private void Update()
+    {
+        if(Keyboard.current.gKey.wasPressedThisFrame)
+        {
+            Treasure treasure = DataManager.Instance.TreasureData.PickTreasure();
+            TreasureBarUI.AddTreasure(treasure);
+            DataManager.Instance.CharacterData.AddTreasureData(treasure);
+        }
     }
 
     public void SetPosInteractImg(Vector3 pos)

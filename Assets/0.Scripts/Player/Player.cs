@@ -101,10 +101,13 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
+        GameManager.Instance.player = this;
+
         Component();
         _actionMap = _input.actions.FindActionMap("Player");
 
-        GameManager.Instance.player = this;
+        _hp = _maxHp;
+        _stamina = _maxStamina;
     }
     void Component()
     {
@@ -119,9 +122,8 @@ public class Player : MonoBehaviour
     }
     void Start()
     {
-        _hp = _maxHp;
-        _stamina = _maxStamina;
-
+        _onStaminaChanged?.Invoke(_maxStamina, ChangedStamina);
+        
         MoveState(new IdleState(this));
         ActionState(new ActionIdleState(this));
 
@@ -137,6 +139,7 @@ public class Player : MonoBehaviour
             if(_hp >= 0f)
             {
                 _onHpChanged?.Invoke(_maxHp,ChangedHealth);
+                DataManager.Instance.CharacterData._playerHp = _hp;
 
                 if(_hp <= Mathf.Epsilon)
                 {
@@ -149,10 +152,11 @@ public class Player : MonoBehaviour
     public float ChangedStamina
     {
         get { return _stamina; }
-        private set
+        set
         {
             _stamina = Mathf.Clamp(value, 0, _maxStamina);
-            if(_stamina >= 0f)
+            DataManager.Instance.CharacterData._playerStamina = _stamina;
+            if (_stamina >= 0f)
             {
                 _onStaminaChanged?.Invoke(_maxStamina, ChangedStamina);
             }
@@ -164,6 +168,11 @@ public class Player : MonoBehaviour
         PlayerDir();
         moveCurrentState?.Update();
         actionCurrentState?.Update();
+
+        if(Keyboard.current.fKey.wasPressedThisFrame)
+        {
+            ChangedHealth -= 10f;
+        }
     }
     
     void PlayerDir()

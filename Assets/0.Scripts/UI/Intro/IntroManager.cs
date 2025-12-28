@@ -9,6 +9,9 @@ public class IntroManager : MonoBehaviour
     [SerializeField] private Sprite[] _introSprites;
     [SerializeField] private string _nextSceneName;     //씬 이름
 
+    [Header("이미지를 다 넘긴 뒤 바로 다음 씬으로 넘어갈건지")]
+    [SerializeField] private bool isSkip;       // 이미지를 다 넘기면 바로 다음 씬으로 넘어갈건지
+
     private PlayerInput _input;
     private InputAction _clickAction;
 
@@ -58,7 +61,9 @@ public class IntroManager : MonoBehaviour
     {
         _isIntroSeen = true;
         _introImage.gameObject.SetActive(false);
-        SceneManager.LoadScene(_nextSceneName);
+
+        if(isSkip)
+            SceneManager.LoadScene(_nextSceneName);
     }
     private void OnDisable()
     {

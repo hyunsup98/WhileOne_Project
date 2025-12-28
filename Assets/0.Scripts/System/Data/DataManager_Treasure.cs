@@ -28,6 +28,7 @@ public class DataManager_Treasure : MonoBehaviour
         }
     }
 
+
     public Treasure PickTreasure()
     {
         if (TreasureList.Count == 0) return null;

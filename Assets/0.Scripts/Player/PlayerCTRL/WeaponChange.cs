@@ -171,5 +171,12 @@ public class WeaponChange : MonoBehaviour
     {
         _switchWeapon1.performed -= WeaponSwitch1;
         _switchWeapon2.performed -= WeaponSwitch2;
+
+        if (_slotWeapon2 != null)
+        {
+            DataManager.Instance.CharacterData._subWeapon = _slotWeapon2;
+            _slotWeapon2.transform.SetParent(DataManager.Instance.CharacterData.transform);
+        }
+
     }
 }

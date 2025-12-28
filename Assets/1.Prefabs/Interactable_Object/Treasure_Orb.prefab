@@ -51,6 +51,8 @@ MonoBehaviour:
   <YOffset>k__BackingField: 1
   _floatingYOffset: 0.1
   _floatingSpeed: 10
+  _maskRenderer: {fileID: 0}
+  _fadeTime: 5
 --- !u!212 &3558532051835795435
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -97,7 +99,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_Sprite: {fileID: 21300000, guid: 167e21c186327456c82ff68755cb0bd5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -144,4 +146,4 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
+  m_Radius: 1

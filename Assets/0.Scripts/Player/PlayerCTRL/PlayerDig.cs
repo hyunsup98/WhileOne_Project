@@ -48,12 +48,10 @@ public class PlayerDig : MonoBehaviour
     }
     void Dig(InputAction.CallbackContext ctx)
     {
-
-        if (!_attack.IsAttacking )
+        if (!_attack.IsAttacking && _player.Player_WeaponChange.currentweapon.WeaponData.weaponID == 4001)
         {
             tileCursor.gameObject.SetActive(true);
             _isDigging = true;
-
         }
     }
 
