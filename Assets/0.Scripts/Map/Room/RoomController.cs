@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Collections.Generic;
 
 /// <summary>
 /// 각 방마다 붙는 RoomController.
@@ -24,6 +25,27 @@ public class RoomController : MonoBehaviour
     public Tilemap FloorTileMap => floorTileMap;
     public Tilemap DigSpotTileMap => digSpotTileMap;
     public Tile AfterDigTile => afterDigTile;
+    
+    /// <summary>
+    /// TileManager에서 호출할 수 있는 Dig 메서드
+    /// TileManager.Dig()가 직접 타일맵을 조작하는 대신 이 메서드를 호출하도록 권장합니다.
+    /// </summary>
+    /// <param name="worldPosition">Dig할 월드 좌표</param>
+    /// <param name="digSpotTile">DigSpot 타일 (확인용)</param>
+    /// <returns>Dig 성공 여부</returns>
+    public bool DigAtWorldPosition(Vector3 worldPosition, Tile digSpotTile)
+    {
+        if (digSpotTileMap == null) return false;
+        
+        Vector3Int cellPos = digSpotTileMap.WorldToCell(worldPosition);
+        TileBase current = digSpotTileMap.GetTile(cellPos);
+        
+        // DigSpot 타일인지 확인
+        if (current != digSpotTile) return false;
+        
+        // TryDigAtCell 호출 (이벤트 발생)
+        return TryDigAtCell(cellPos);
+    }
 
     /// <summary>
     /// 플레이어가 이 방의 트리거 영역에 들어왔을 때 호출됩니다.
@@ -73,6 +95,11 @@ public class RoomController : MonoBehaviour
     }
 
     /// <summary>
+    /// Dig 이벤트 (셀 좌표, 타일맵, 제거된 타일)
+    /// </summary>
+    public System.Action<Vector3Int, Tilemap, TileBase> OnDigSpotRemoved;
+
+    /// <summary>
     /// 주어진 셀 좌표에 DigSpot 타일이 있으면 DugSpot으로 변경합니다.
     /// </summary>
     public bool TryDigAtCell(Vector3Int cellPosition)
@@ -93,6 +120,9 @@ public class RoomController : MonoBehaviour
         
         // DigSpot 타일 제거
         digSpotTileMap.SetTile(cellPosition, null);
+
+        // Dig 이벤트 발생
+        OnDigSpotRemoved?.Invoke(cellPosition, digSpotTileMap, current);
 
         // DugSpot 타일 선택 (지정되어 있지 않으면 기존 DigSpot 타일을 재사용)
         //TileBase targetDugTile = current;

@@ -1,111 +1,33 @@
 using UnityEngine;
 
 /// <summary>
-/// 상호작용 가능한 오브젝트의 기본 클래스
+/// 모든 이벤트 방의 기본 클래스
 /// </summary>
-public abstract class Interactable : MonoBehaviour
+public abstract class BaseEventRoom : BaseRoom
 {
-    [Header("Interaction Settings")]
-    [SerializeField] [Tooltip("플레이어가 상호작용 가능한 범위 (Unity unit)")]
-    protected float interactionRange = 1.5f;
-    [SerializeField] [Tooltip("플레이어가 속한 레이어 (충돌 체크용)")]
-    protected LayerMask playerLayer;
-    [SerializeField] [Tooltip("현재 상호작용 가능한지 여부")]
-    protected bool canInteract = true;
-    
-    protected bool isPlayerNearby = false;
+    protected EventRoomType eventRoomType;
     
     /// <summary>
-    /// 플레이어가 근처에 있는지 여부 (외부 접근용)
+    /// 이벤트 방을 초기화합니다.
     /// </summary>
-    public bool IsPlayerNearby => isPlayerNearby;
-    
-    private void Update()
+    public override void InitializeRoom(Room room)
     {
-        CheckPlayerDistance();
-    }
-    
-    /// <summary>
-    /// 플레이어와의 거리를 확인합니다.
-    /// </summary>
-    private void CheckPlayerDistance()
-    {
-        if (!canInteract) return;
+        base.InitializeRoom(room);
         
-        Collider2D playerCollider = Physics2D.OverlapCircle(transform.position, interactionRange, playerLayer);
-        bool wasNearby = isPlayerNearby;
-        isPlayerNearby = playerCollider != null;
-        
-        if (!wasNearby && isPlayerNearby)
+        // 이벤트 방 타입 설정
+        if (room.eventRoomType.HasValue)
         {
-            OnPlayerEnter();
-        }
-        else if (wasNearby && !isPlayerNearby)
-        {
-            OnPlayerExit();
+            eventRoomType = room.eventRoomType.Value;
         }
         
-        // E키 입력은 PlayerInteractable에서 처리
-        // 여기서는 거리 체크만 수행
+        // 이벤트 방 특화 초기화
+        InitializeEventRoom();
     }
     
     /// <summary>
-    /// 외부에서 상호작용을 트리거할 수 있도록 하는 메서드
-    /// PlayerInteractable에서 호출할 수 있습니다.
+    /// 각 이벤트 방 컨셉별 초기화 로직
     /// </summary>
-    public void TryInteract()
-    {
-        if (!canInteract || !isPlayerNearby) return;
-        
-        // 플레이어 찾기
-        Collider2D playerCollider = Physics2D.OverlapCircle(transform.position, interactionRange, playerLayer);
-        if (playerCollider != null)
-        {
-            Player player = playerCollider.GetComponent<Player>();
-            if (player != null)
-            {
-                Interact(player);
-            }
-        }
-    }
-    
-    /// <summary>
-    /// 상호작용을 수행합니다.
-    /// </summary>
-    public virtual void Interact(Player player)
-    {
-        if (!canInteract) return;
-        OnInteract(player);
-    }
-    
-    /// <summary>
-    /// 플레이어가 범위에 들어왔을 때
-    /// </summary>
-    protected virtual void OnPlayerEnter()
-    {
-        // 상호작용 가능 UI 표시
-        if (GameManager.Instance?.CurrentDungeon?.InteractImg != null)
-        {
-            GameManager.Instance.CurrentDungeon.SetPosInteractImg(transform.position);
-        }
-    }
-    
-    /// <summary>
-    /// 플레이어가 범위를 벗어났을 때
-    /// </summary>
-    protected virtual void OnPlayerExit()
-    {
-        // 상호작용 가능 UI 숨김
-        if (GameManager.Instance?.CurrentDungeon?.InteractImg != null)
-        {
-            GameManager.Instance.CurrentDungeon.InteractImg.SetActive(false);
-        }
-    }
-    
-    /// <summary>
-    /// 상호작용 실행
-    /// </summary>
-    protected abstract void OnInteract(Player player);
+    protected abstract void InitializeEventRoom();
     
     #region 플레이어 정보 접근 헬퍼 메서드
     
@@ -118,19 +40,9 @@ public abstract class Interactable : MonoBehaviour
     }
     
     /// <summary>
-    /// 범위 내의 플레이어를 가져옵니다. (상호작용 범위 내에 있을 때만 반환)
-    /// </summary>
-    protected Player GetNearbyPlayer()
-    {
-        if (!isPlayerNearby) return null;
-        
-        Collider2D playerCollider = Physics2D.OverlapCircle(transform.position, interactionRange, playerLayer);
-        return playerCollider?.GetComponent<Player>();
-    }
-    
-    /// <summary>
     /// 플레이어의 현재 체력을 가져옵니다.
     /// </summary>
+    /// <param name="player">대상 플레이어 (null이면 현재 플레이어)</param>
     protected float GetPlayerHealth(Player player = null)
     {
         if (player == null) player = GetPlayer();
@@ -140,6 +52,7 @@ public abstract class Interactable : MonoBehaviour
     /// <summary>
     /// 플레이어의 최대 체력을 가져옵니다.
     /// </summary>
+    /// <param name="player">대상 플레이어 (null이면 현재 플레이어)</param>
     protected float GetPlayerMaxHealth(Player player = null)
     {
         if (player == null) player = GetPlayer();
@@ -149,6 +62,7 @@ public abstract class Interactable : MonoBehaviour
     /// <summary>
     /// 플레이어의 체력 비율을 가져옵니다. (0.0 ~ 1.0)
     /// </summary>
+    /// <param name="player">대상 플레이어 (null이면 현재 플레이어)</param>
     protected float GetPlayerHealthRatio(Player player = null)
     {
         if (player == null) player = GetPlayer();
@@ -159,6 +73,7 @@ public abstract class Interactable : MonoBehaviour
     /// <summary>
     /// 플레이어가 도굴 중인지 확인합니다.
     /// </summary>
+    /// <param name="player">대상 플레이어 (null이면 현재 플레이어)</param>
     protected bool IsPlayerDigging(Player player = null)
     {
         if (player == null) player = GetPlayer();
@@ -226,11 +141,5 @@ public abstract class Interactable : MonoBehaviour
     }
     
     #endregion
-    
-    void OnDrawGizmos()
-    {
-        Gizmos.color = isPlayerNearby ? Color.green : Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, interactionRange);
-    }
 }
 

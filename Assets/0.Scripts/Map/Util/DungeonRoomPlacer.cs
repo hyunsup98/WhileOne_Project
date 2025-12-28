@@ -15,6 +15,7 @@ public static class DungeonRoomPlacer
         Grid unityGrid,
         int roomSpacingInCells,
         Dictionary<RoomType, GameObject[]> roomPrefabs,
+        Dictionary<EventRoomType, GameObject[]> eventRoomTypePrefabs,
         bool showRoomTypeLabels,
         float roomLabelOffsetX,
         float roomLabelOffsetY,
@@ -85,7 +86,17 @@ public static class DungeonRoomPlacer
             Room room = dungeonGrid.GetRoom(position);
             if (room == null) continue;
             
-            GameObject prefab = GetRoomPrefab(room.roomType, roomPrefabs);
+            // 이벤트 방인 경우 EventRoomType에 맞는 프리팹 선택
+            GameObject prefab = null;
+            if (room.roomType == RoomType.Event && room.eventRoomType.HasValue)
+            {
+                prefab = GetEventRoomPrefab(room.eventRoomType.Value, eventRoomTypePrefabs, roomPrefabs);
+            }
+            else
+            {
+                prefab = GetRoomPrefab(room.roomType, roomPrefabs);
+            }
+            
             if (prefab == null)
             {
                 Debug.LogWarning($"{room.roomType} 프리펩이 설정되지 않았습니다.");
@@ -252,7 +263,13 @@ public static class DungeonRoomPlacer
             room.roomObject = roomObj;
             
             // 방 스크립트에 문 정보 전달
-            BaseRoom roomScript = roomObj.GetComponent<BaseRoom>();
+            // BaseEventRoom을 우선적으로 찾고, 없으면 BaseRoom 찾기
+            BaseRoom roomScript = roomObj.GetComponent<BaseEventRoom>();
+            if (roomScript == null)
+            {
+                roomScript = roomObj.GetComponent<BaseRoom>();
+            }
+            
             if (roomScript != null)
             {
                 roomScript.InitializeRoom(room);
@@ -502,5 +519,32 @@ public static class DungeonRoomPlacer
         }
         
         return null;
+    }
+    
+    /// <summary>
+    /// 이벤트 방 컨셉에 해당하는 프리팹 리스트에서 랜덤하게 하나를 선택하여 반환합니다.
+    /// 이벤트 방 컨셉별 프리팹이 없으면 일반 이벤트 방 프리팹을 fallback으로 사용합니다.
+    /// </summary>
+    private static GameObject GetEventRoomPrefab(
+        EventRoomType eventType, 
+        Dictionary<EventRoomType, GameObject[]> eventRoomTypePrefabs,
+        Dictionary<RoomType, GameObject[]> roomPrefabs)
+    {
+        // 이벤트 방 컨셉별 프리팹이 있으면 사용
+        if (eventRoomTypePrefabs != null && 
+            eventRoomTypePrefabs.ContainsKey(eventType) && 
+            eventRoomTypePrefabs[eventType] != null && 
+            eventRoomTypePrefabs[eventType].Length > 0)
+        {
+            GameObject[] prefabs = eventRoomTypePrefabs[eventType];
+            var validPrefabs = System.Array.FindAll(prefabs, p => p != null);
+            if (validPrefabs.Length > 0)
+            {
+                return validPrefabs[Random.Range(0, validPrefabs.Length)];
+            }
+        }
+        
+        // 이벤트 방 컨셉별 프리팹이 없으면 일반 이벤트 방 프리팹을 fallback으로 사용
+        return GetRoomPrefab(RoomType.Event, roomPrefabs);
     }
 }

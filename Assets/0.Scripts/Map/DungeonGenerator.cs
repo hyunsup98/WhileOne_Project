@@ -111,10 +111,6 @@ public class DungeonGenerator : MonoBehaviour
     [ContextMenu("던전 생성")]
     public void GenerateDungeon()
     {
-        // TODO: 층에 따른 방 개수 조정하는 확장성 구현 예정
-        //currentFloor = DungeonManager.Instance != null ? DungeonManager.Instance.CurrentFloor : currentFloor;
-        // ㄴ DungeonManager에서 현재 층 정보 저장하는 변수 필요
-
         FloorInfo floorInfo = FloorRoomSetManager.GetFloorInfo(currentFloor);
 
         int roomCount = floorInfo != null ? floorInfo.Rooms.Length : 9;
@@ -162,6 +158,7 @@ public class DungeonGenerator : MonoBehaviour
         // 5. 방 오브젝트 생성
         // 층별 프리팹 리스트를 우선 사용하고, 없으면 기본 프리팹을 fallback으로 사용
         Dictionary<RoomType, GameObject[]> roomPrefabs = new Dictionary<RoomType, GameObject[]>();
+        Dictionary<EventRoomType, GameObject[]> eventRoomTypePrefabs = new Dictionary<EventRoomType, GameObject[]>();
         
         // 기본 프리팹 딕셔너리 (fallback용, 단일 프리팹을 배열로 변환)
         Dictionary<RoomType, GameObject[]> defaultPrefabs = new Dictionary<RoomType, GameObject[]>
@@ -184,6 +181,12 @@ public class DungeonGenerator : MonoBehaviour
                 // 층별 프리팹 리스트가 있으면 사용, 없으면 기본 프리팹 사용
                 roomPrefabs[roomType] = (prefabs != null && prefabs.Length > 0) ? prefabs : defaultPrefabs[roomType];
             }
+            
+            // 이벤트 방 컨셉별 프리팹 가져오기
+            if (floorInfo.EventRoomTypePrefabs != null)
+            {
+                eventRoomTypePrefabs = floorInfo.EventRoomTypePrefabs;
+            }
         }
         else
         {
@@ -202,7 +205,7 @@ public class DungeonGenerator : MonoBehaviour
         {
             // 방 오브젝트 생성
             DungeonRoomPlacer.CreateRoomObjects(
-                dungeonGrid, parent, unityGrid, roomSpacingInCells, roomPrefabs,
+                dungeonGrid, parent, unityGrid, roomSpacingInCells, roomPrefabs, eventRoomTypePrefabs,
                 showRoomTypeLabels, roomLabelOffsetX, roomLabelOffsetY, resolvedCellSize);
             
             // 방 겹침 검증
@@ -316,7 +319,7 @@ public class DungeonGenerator : MonoBehaviour
                 
                 // 방 배치 재시도
                 DungeonRoomPlacer.CreateRoomObjects(
-                    dungeonGrid, parent, unityGrid, roomSpacingInCells, roomPrefabs,
+                    dungeonGrid, parent, unityGrid, roomSpacingInCells, roomPrefabs, eventRoomTypePrefabs,
                     showRoomTypeLabels, roomLabelOffsetX, roomLabelOffsetY, resolvedCellSize);
                 
                 corridorAttempt++;
@@ -402,17 +405,67 @@ public class DungeonGenerator : MonoBehaviour
         }
 
         // 이벤트 방 지정
+        // TODO: 테스트용 - 이벤트 방을 무조건 ChestRoom으로 지정 (나중에 제거)
         int eventRoomCount = floorInfo.GetRoomCountWithType(RoomType.Event);
         if (eventRoomCount > 0 && remaining.Count >= eventRoomCount)
         {
-            for (int i = 0; i < eventRoomCount; i++)
+            // 테스트: 이벤트 방을 모두 ChestRoom으로 지정
+            int actualEventRoomCount = Mathf.Min(eventRoomCount, 2);
+            
+            for (int i = 0; i < actualEventRoomCount; i++)
             {
-                var eventPos1 = remaining[Random.Range(0, remaining.Count)];
-                var eventRoom1 = dungeonGrid.GetRoom(eventPos1);
-                if (eventRoom1 != null) eventRoom1.roomType = RoomType.Event;
-                remaining.Remove(eventPos1);
+                // 이벤트 방 위치 선택
+                var eventPos = remaining[Random.Range(0, remaining.Count)];
+                var eventRoom = dungeonGrid.GetRoom(eventPos);
+                if (eventRoom != null)
+                {
+                    eventRoom.roomType = RoomType.Event;
+                    eventRoom.eventRoomType = EventRoomType.ChestRoom; // 테스트용: 무조건 ChestRoom
+                }
+                remaining.Remove(eventPos);
             }
         }
+        
+        // 기존 이벤트 방 지정 로직 (테스트용으로 주석 처리)
+        /*
+        int eventRoomCount = floorInfo.GetRoomCountWithType(RoomType.Event);
+        if (eventRoomCount > 0 && remaining.Count >= eventRoomCount)
+        {
+            // 이벤트 방 컨셉 관리자 초기화
+            EventRoomManager.InitializeForFloor();
+            
+            // 이벤트 방 개수 제한 (최대 2개)
+            int actualEventRoomCount = Mathf.Min(eventRoomCount, 2);
+            
+            for (int i = 0; i < actualEventRoomCount; i++)
+            {
+                // 사용 가능한 이벤트 방 컨셉이 없으면 중단
+                if (EventRoomManager.GetAvailableCount() == 0)
+                {
+                    Debug.LogWarning($"[DungeonGenerator] 사용 가능한 이벤트 방 컨셉이 없어서 {i}개만 생성했습니다.");
+                    break;
+                }
+                
+                // 이벤트 방 컨셉 선택
+                EventRoomType? eventType = EventRoomManager.GetRandomEventType();
+                if (!eventType.HasValue)
+                {
+                    Debug.LogWarning($"[DungeonGenerator] 이벤트 방 컨셉을 선택할 수 없어서 {i}개만 생성했습니다.");
+                    break;
+                }
+                
+                // 이벤트 방 위치 선택
+                var eventPos = remaining[Random.Range(0, remaining.Count)];
+                var eventRoom = dungeonGrid.GetRoom(eventPos);
+                if (eventRoom != null)
+                {
+                    eventRoom.roomType = RoomType.Event;
+                    eventRoom.eventRoomType = eventType.Value;
+                }
+                remaining.Remove(eventPos);
+            }
+        }
+        */
 
         // 보물 방 지정
         int treasureRoomCount = floorInfo.GetRoomCountWithType(RoomType.Treasure);
