@@ -12,8 +12,6 @@ public class Weapon : MonoBehaviour
     public int Durability { get; private set; }     // 무기 내구도
     #endregion
 
-    public event Action<int, int> onDurabilityChanged;
-
     private void Awake()
     {
         if (_renderer == null)
@@ -34,8 +32,6 @@ public class Weapon : MonoBehaviour
         _keyId = WeaponData.weaponID;
         Durability = WeaponData.weaponDurability;
         _renderer.sprite = WeaponData.weaponResourcePath_Sprite;
-
-        onDurabilityChanged?.Invoke(Durability, WeaponData.weaponDurability);
     }
 
     // 무기 데이터 세팅
@@ -44,6 +40,8 @@ public class Weapon : MonoBehaviour
         WeaponData = weaponData;
         _keyId = WeaponData.weaponID;
         Durability = weaponData.weaponDurability;
+
+        InitData(WeaponData);
     }
 
     /// <summary>
@@ -53,8 +51,6 @@ public class Weapon : MonoBehaviour
     public void ReduceDurability(int amount)
     {
         Durability -= amount;
-
-        onDurabilityChanged?.Invoke(Durability, WeaponData.weaponDurability);
 
         if (Durability <= 0)
         {

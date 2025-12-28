@@ -12,10 +12,10 @@ public enum TreasureType
 /// </summary>
 public class Treasure : MonoBehaviour
 {
-    [SerializeField] private int _keyId;
-    [SerializeField] private SpriteRenderer _renderer;
+    [SerializeField] protected int _keyId;
+    [SerializeField] protected SpriteRenderer _renderer;
 
-    private TreasureDataSO _treasureDataSO;
+    protected TreasureDataSO _treasureDataSO;
     public TreasureDataSO TreasureData
     {
         get { return _treasureDataSO; }
@@ -23,9 +23,26 @@ public class Treasure : MonoBehaviour
         {
             _treasureDataSO = value;
             _keyId = value.treasureID;
-            _treasureType = (TreasureType)_treasureDataSO.treasureTier;
+            TreasureType = (TreasureType)_treasureDataSO.treasureTier;
         }
     }
 
-    public TreasureType _treasureType { get; private set; }
+    public TreasureType TreasureType { get; private set; }
+
+    protected virtual void Awake()
+    {
+        if (_renderer == null)
+            TryGetComponent(out _renderer);
+
+        InitData(DataManager.Instance.TreasureData.TreasureDatabase[_keyId]);
+    }
+
+    public void InitData(TreasureDataSO data)
+    {
+        if (data == null) return;
+
+        TreasureData = data;
+        _keyId = TreasureData.treasureID;
+        _renderer.sprite = TreasureData.treasureIconPath_Sprite;
+    }
 }

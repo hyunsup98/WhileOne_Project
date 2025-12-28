@@ -6,6 +6,7 @@ public class TrakingPlayer : MonoBehaviour
 {
     [SerializeField] private Transform parentTrans;
     private Transform atkParent;
+    [SerializeField] private float atkDistance = 1f;
     [SerializeField] private Animator attackAnim;
     [SerializeField] AttackDamage _attackFX;
     public Transform _test;
@@ -44,9 +45,7 @@ public class TrakingPlayer : MonoBehaviour
         Vector3 dir = (_mousePosition - _test.position).normalized;
         float aaa = Mathf.Abs(Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
 
-        float distance = 1.5f;
-
-        atkParent.position = _test.position + dir * distance;
+        atkParent.position = _test.position + dir * atkDistance;
         atkParent.transform.right = dir;
 
         //if (dir.x > 0)

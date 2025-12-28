@@ -3766,7 +3766,7 @@ PrefabInstance:
     - target: {fileID: 1730764451353781802, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
       propertyPath: parentTrans
       value: 
-      objectReference: {fileID: 6465301196887841613, guid: d71a8f8fbb3d9b146a4d8d2101774da3, type: 3}
+      objectReference: {fileID: 6465301196887841613, guid: 59cefbd03a64e92448825cb6aa765b71, type: 3}
     - target: {fileID: 3496470623769560657, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
       propertyPath: shovel
       value: 
