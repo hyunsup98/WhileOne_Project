@@ -18,13 +18,13 @@ MonoBehaviour:
   _actionClass: 1
   _actionCondition: 0
   _actionType: 1
-  _actionDamage: 0
+  _actionDamage: 10
   _actionCoolTime: 0
   _attackBoost: 0
   _speedBoost: 0
   _actionResource: 
   _actionSound: 
-  _beforeDelay: 5
+  _beforeDelay: 6
   _afterDelay: 2
   _startFallingTime: 1.5
   _fallingCount: 10

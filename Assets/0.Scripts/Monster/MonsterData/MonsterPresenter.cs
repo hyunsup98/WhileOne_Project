@@ -38,7 +38,7 @@ public class MonsterPresenter : IAnimationable
             Model.PatrolPoint.position
             );
 
-
+        Debug.LogWarning("행동매칭");
         // 몬스터 행동 매칭
         foreach (var action in monsterData.ActionList)
         {
@@ -46,6 +46,7 @@ public class MonsterPresenter : IAnimationable
                 (ActionID)(action.MonsterActionID % 10),
                 ActionFactory.Create(action, this)
                 );
+            Debug.LogWarning(Model.Name + $"<color=brow>{action.name}</color>");
         }
 
 

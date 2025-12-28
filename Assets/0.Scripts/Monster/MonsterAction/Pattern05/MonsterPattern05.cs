@@ -12,6 +12,7 @@ public class MonsterPattern05 : MonsterPattern
     private float _fallingStartTime;
     private float _fallingFrequency;
     private int _fallingCycle;
+    private float _fallingHitTiming = 0.9f;
     private float _fallingDestroyTime;
     private GameObject _fallingObject;
 
@@ -129,17 +130,27 @@ public class MonsterPattern05 : MonsterPattern
         for (int i = 0; i < _fallingCycle; i++)
         {
             yield return CoroutineManager.waitForSeconds(_fallingFrequency);
-            Vector2 targetPos = new Vector2(_target.position.x, _target.position.y);
-            GameObject obj = GameObject.Instantiate
-                (
-                _fallingObject, 
-                new Vector2(targetPos.x, targetPos.y),
-                Quaternion.identity, 
-                _myTransform.parent
-                );
+
+            GameObject obj = Create();
 
             _fallingObjQue.Enqueue(obj);
             _monster.StartCoroutine(OnDelay(() => GameObject.Destroy(_fallingObjQue.Dequeue()), _fallingDestroyTime));
         }
+    }
+
+    private GameObject Create()
+    {
+        GameObject obj = GameObject.Instantiate
+                (
+                _fallingObject,
+                _target.position,
+                Quaternion.identity,
+                _myTransform.parent
+                );
+
+        if (obj.TryGetComponent<Collider2D>(out var collider))
+            _monster.StartCoroutine(OnDelay(() => collider.enabled = true, _fallingHitTiming));
+
+        return obj;
     }
 }

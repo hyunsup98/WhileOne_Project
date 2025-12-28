@@ -45,13 +45,13 @@ public class MonsterPattern01 : MonsterPattern
         else 
             Debug.LogWarning("이펙트에 Collider없음");
 
-        Vector2 createPos = new Vector2(_createPos.x * _myTransform.localScale.x, _createPos.y);
-        createPos += (Vector2)_myTransform.position;
+        Vector2 createdPos = new Vector2(_createPos.x * _myTransform.localScale.x, _createPos.y);
+        createdPos += (Vector2)_myTransform.position;
 
-            OnCreatedEffect(createPos);
+        OnCreatedEffect(createdPos);
 
         float createdTime = _beforeDelay;
-        _monster.StartCoroutine(OnDelay(() => GameObject.Destroy(_actionEffect.gameObject), _beforeDelay + 0.8f));
+        _monster.StartCoroutine(OnDelay(() => GameObject.Destroy(_actionEffect?.gameObject), _beforeDelay + 0.8f));
     }
 
     public override void OnAction()
@@ -97,6 +97,6 @@ public class MonsterPattern01 : MonsterPattern
         _monster.StartCoroutine(OnDelay(() => _ani.OnPlayAni("Pattern01"), _beforeDelay));
         _monster.StartCoroutine(OnDelay(() => _isDelay = false, _beforeDelay));
         _monster.StartCoroutine(OnDelay(() => CreatedEffect(createdPos), _beforeDelay));
-        _monster.StartCoroutine(OnDelay(() => _actionEffect.gameObject.SetActive(true), createdTime));
+        _monster.StartCoroutine(OnDelay(() => _actionEffect?.gameObject.SetActive(true), createdTime));
     }
 }

@@ -50,7 +50,7 @@ public class MonsterPattern04 : MonsterPattern
         OnCreateedEffect(createdPos);
 
         float createdTime = _beforeDelay + _createdEffectTime;
-        _monster.StartCoroutine(OnDelay(() => GameObject.Destroy(_actionEffect.gameObject), createdTime + 1f));
+        _monster.StartCoroutine(OnDelay(() => GameObject.Destroy(_actionEffect?.gameObject), createdTime + 1f));
     }
 
     public override void OnAction()
@@ -62,7 +62,6 @@ public class MonsterPattern04 : MonsterPattern
         
         if( _timer > 2.2f)
         {
-            Debug.Log("타이밍 확인");
             _isDelay = false;
             _monster.StartCoroutine(OnDelay(() => IsAction = false, _afterDelay));
             return;

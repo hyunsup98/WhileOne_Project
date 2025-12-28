@@ -5,11 +5,11 @@ using UnityEngine.Tilemaps;
 public class MonsterView : MonoBehaviour, IStunable
 {
     [SerializeField] private MonsterData _monsterData;    // 몬스터 데이터 SO
+    private Animator _animator;
     
     public Transform MyTransform { get; private set; }
     public MonsterPresenter Presenter { get; private set; }
-
-    private Animator _animator;
+    public bool IsStun { get; private set; }
 
 
     [ContextMenu("세팅값 갱신")]
@@ -154,7 +154,7 @@ public class MonsterView : MonoBehaviour, IStunable
     {
         Transform parent = transform.parent;
 
-        // 몬스터 중심축이 다른 오브젝트의 경우 부모의 부모의 정보를 가져온다.
+        // 몬스터 중심축이 다른 오브젝트인 경우 부모의 부모의 정보를 가져온다.
         if(parent.CompareTag("Monster"))
             parent = parent.parent;
 
@@ -164,8 +164,18 @@ public class MonsterView : MonoBehaviour, IStunable
                 return child.GetComponent<Tilemap>();
         }
 
+        Debug.LogWarning(tag + "타일맵을 찾을 수 없습니다.");
         return null;
     }
 
-    public void OnStun() => Presenter.OnStun();
+    public void OnHit(float damage) => Presenter.OnHit(damage);
+
+    public void OnStun()
+    {
+        IsStun = true;
+        transform.GetComponent<Collider2D>().enabled = false;
+        Presenter.OnStun();
+    }
+
+    public void SetStun(bool isStun) => IsStun = isStun;
 }

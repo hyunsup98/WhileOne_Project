@@ -16,7 +16,7 @@ public class AttackDamage : MonoBehaviour
         {
             if (collision.TryGetComponent<MonsterView>(out var monster))
             {
-                monster.Presenter.OnHit(25f);
+                monster.OnHit(25f);
 
                 if(GameManager.Instance.player != null)
                 {

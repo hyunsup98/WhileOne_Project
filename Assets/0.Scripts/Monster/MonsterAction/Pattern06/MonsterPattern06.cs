@@ -16,7 +16,6 @@ public class MonsterPattern06 : MonsterPattern
 
     private GameObject _fallingObjectPrefab;
 
-    private Vector2 _startPos;
     private Vector2 _mapCenterPos;
     private Transform _myTransform;
     private List<GameObject> _fallingObjects;
@@ -49,7 +48,6 @@ public class MonsterPattern06 : MonsterPattern
     {
         IsAction = true;
         _ani.OnPlayAni("Idle");
-        _startPos = _myTransform.position;
         _mapCenterPos = GetMapCenter().position;
         _myTransform.GetComponentInChildren<Collider2D>().enabled = false;
 
@@ -145,10 +143,6 @@ public class MonsterPattern06 : MonsterPattern
 
         _ani.OnPlayAni("Pattern06End");
         yield return CoroutineManager.waitForSeconds(_actionStopTime);
-
-        _ani.OnPlayAni("Teleport");
-        yield return CoroutineManager.waitForSeconds(6f);
-        _myTransform.position = _startPos;
 
         yield return CoroutineManager.waitForSeconds(_afterDelay);
         IsAction = false;

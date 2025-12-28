@@ -24,16 +24,15 @@ MonoBehaviour:
   _speedBoost: 0
   _actionResource: 
   _actionSound: 
-  _actionRange: 2
+  _hitBoxRadius: 2
   _actionAngle: 60
   _beforeDelay: 1
   _afterDelay: 2
-  _actionStopTime: 5
   _createdEffectDistance: 4
   _createdEffectTime: 0.75
-  _fallingStartTime: 0
-  _fallingFrequency: 0
-  _fallingCycle: 0.3
+  _fallingStartTime: 1
+  _fallingFrequency: 0.3
+  _fallingCycle: 5
   _fallingDestroyTime: 2
   _fallingObject: {fileID: 4085769273580591424, guid: 64e5837f95763214aaf48327be836218, type: 3}
   _pathPreview: {fileID: 0}
