@@ -4,6 +4,10 @@ using UnityEngine.UI;
 
 public class UI_Settings : MonoBehaviour
 {
+    private const string MasterSliderKey = "MASTERSLIDER";
+    private const string BgmSliderKey = "BGMSLIDER";
+    private const string SfxSliderKey = "SFXSLIDER";
+
     [SerializeField] private GameObject _settings;          //설정창 오브젝트
     [SerializeField] private GameObject _warningWindow;     //경고 화면 창(게임 종료 버튼 클릭 시 확인창)
     [SerializeField] private GameObject _manualPage;        //조작설명 창
@@ -17,6 +21,13 @@ public class UI_Settings : MonoBehaviour
         #region Input System Mapping
         OnToggle();
         #endregion
+
+        _masterAudioSlider.value = PlayerPrefs.GetFloat(MasterSliderKey, 0.5f);
+        _bgmAudioSlider.value = PlayerPrefs.GetFloat(BgmSliderKey, 0.5f);
+        _sfxAudioSlider.value = PlayerPrefs.GetFloat(SfxSliderKey, 0.5f);
+
+        SoundManager.Instance.SetSoundVolume(SoundType.BGM, _bgmAudioSlider.value);
+        SoundManager.Instance.SetSoundVolume(SoundType.SFX, _sfxAudioSlider.value);
     }
 
     #region Input System
@@ -96,6 +107,8 @@ public class UI_Settings : MonoBehaviour
     //마스터 볼륨 조절 → 전체 볼륨에 관여
     public void OnValueChanged_MasterVolume()
     {
+        PlayerPrefs.SetFloat(MasterSliderKey, _masterAudioSlider.value);
+
         SoundManager.Instance.MasterVolume = _masterAudioSlider.value;
         SoundManager.Instance.SetSoundVolume(SoundType.BGM, _bgmAudioSlider.value);
         SoundManager.Instance.SetSoundVolume(SoundType.SFX, _sfxAudioSlider.value);
@@ -104,12 +117,16 @@ public class UI_Settings : MonoBehaviour
     //BGM 볼륨 조절
     public void OnValueChanged_BGMVolume()
     {
+        PlayerPrefs.SetFloat(BgmSliderKey, _bgmAudioSlider.value);
+
         SoundManager.Instance.SetSoundVolume(SoundType.BGM, _bgmAudioSlider.value);
     }
 
     //효과음 볼륨 조절
     public void OnValueChanged_SFXVolume()
     {
+        PlayerPrefs.SetFloat(SfxSliderKey, _sfxAudioSlider.value);
+
         SoundManager.Instance.SetSoundVolume(SoundType.SFX, _sfxAudioSlider.value);
     }
     #endregion
