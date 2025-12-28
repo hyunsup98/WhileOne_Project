@@ -10,6 +10,8 @@ public class DataManager_Treasure : MonoBehaviour
     // 보물은 한 번 획득하면 더 이상 획득할 수 없기 때문에 자료구조에 따로 담아두고 사용
     public List<TreasureDataSO> TreasureList { get; private set; }
 
+    [SerializeField] private Treasure _defaultTreasure;
+
     private void Awake()
     {
         TreasureList = new List<TreasureDataSO>();
@@ -31,8 +33,9 @@ public class DataManager_Treasure : MonoBehaviour
         if (TreasureList.Count == 0) return null;
 
         int rand = Random.Range(0, TreasureList.Count);
-        Treasure treasure = new Treasure();
+        Treasure treasure = TreasurePool.Instance.GetObject(_defaultTreasure, transform);
         treasure.TreasureData = TreasureList[rand];
+        treasure.InitData(treasure.TreasureData);
 
         int lastIndex = TreasureList.Count - 1;
         TreasureList[rand] = TreasureList[lastIndex];
