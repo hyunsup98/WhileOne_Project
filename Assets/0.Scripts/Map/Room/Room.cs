@@ -10,6 +10,7 @@ public class Room
     public RoomType roomType;            // 방 타입
     public GameObject roomObject;        // 실제 게임 오브젝트
     public Dictionary<Vector2Int, bool> doors; // 문 연결 상태 (방향, 연결됨)
+    public EventRoomType? eventRoomType; // 이벤트 방 컨셉 (이벤트 방일 경우에만 사용)
     
     public Room(Vector2Int position, RoomType type)
     {

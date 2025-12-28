@@ -2,6 +2,24 @@ using UnityEngine;
 using System.Collections.Generic;
 
 /// <summary>
+/// 이벤트 방 컨셉별 프리팹을 저장하는 클래스.
+/// </summary>
+[System.Serializable]
+public class EventRoomPrefabs
+{
+    [Tooltip("도굴 방 프리팹 리스트 (여러 개 설정 시 랜덤 선택)")]
+    public GameObject[] diggingRoomPrefabs;
+    [Tooltip("버려진 대장간 프리팹 리스트 (여러 개 설정 시 랜덤 선택)")]
+    public GameObject[] abandonedForgeRoomPrefabs;
+    [Tooltip("도박의 샘 프리팹 리스트 (여러 개 설정 시 랜덤 선택)")]
+    public GameObject[] gamblingWellRoomPrefabs;
+    [Tooltip("상자방 프리팹 리스트 (여러 개 설정 시 랜덤 선택)")]
+    public GameObject[] chestRoomPrefabs;
+    [Tooltip("체력 회복 방 프리팹 리스트 (여러 개 설정 시 랜덤 선택)")]
+    public GameObject[] healingRoomPrefabs;
+}
+
+/// <summary>
 /// 한 층에서 사용할 방 프리팹들을 저장하는 클래스.
 /// Unity Inspector에서 각 RoomType별 프리팹 리스트를 설정할 수 있습니다.
 /// 각 방 타입마다 여러 개의 프리팹을 설정하면, 생성 시 랜덤하게 선택됩니다.
@@ -15,8 +33,10 @@ public class FloorRoomPrefabs
     public GameObject[] normalRoomPrefabs;
     [Tooltip("출구 방 프리팹 리스트 (여러 개 설정 시 랜덤 선택)")]
     public GameObject[] exitRoomPrefabs;
-    [Tooltip("이벤트 방 프리팹 리스트 (여러 개 설정 시 랜덤 선택)")]
+    [Tooltip("이벤트 방 프리팹 리스트 (여러 개 설정 시 랜덤 선택, EventRoomType별 프리팹이 없을 때 fallback으로 사용)")]
     public GameObject[] eventRoomPrefabs;
+    [Tooltip("이벤트 방 컨셉별 프리팹 설정")]
+    public EventRoomPrefabs eventRoomTypePrefabs;
     [Tooltip("함정 방 프리팹 리스트 (여러 개 설정 시 랜덤 선택)")]
     public GameObject[] trapRoomPrefabs;
     [Tooltip("보물 방 프리팹 리스트 (여러 개 설정 시 랜덤 선택)")]
@@ -84,12 +104,16 @@ public class FloorRoomSetManager : MonoBehaviour
 
         /// <summary>이 층에서 사용할 맵 프리팹들 (RoomType별로 매핑된 딕셔너리, 각 타입마다 프리팹 배열)</summary>
         public Dictionary<RoomType, GameObject[]> FloorRoomPrefabs { get; }
+        
+        /// <summary>이 층에서 사용할 이벤트 방 컨셉별 프리팹들</summary>
+        public Dictionary<EventRoomType, GameObject[]> EventRoomTypePrefabs { get; }
 
-        public FloorInfo(int floorNumber, RoomType[] rooms, Dictionary<RoomType, GameObject[]> floorRoomPrefabs)
+        public FloorInfo(int floorNumber, RoomType[] rooms, Dictionary<RoomType, GameObject[]> floorRoomPrefabs, Dictionary<EventRoomType, GameObject[]> eventRoomTypePrefabs)
         {
             FloorNumber = floorNumber;
             Rooms = rooms;
             FloorRoomPrefabs = floorRoomPrefabs;
+            EventRoomTypePrefabs = eventRoomTypePrefabs;
         }
 
         /// <summary>
@@ -177,6 +201,51 @@ public class FloorRoomSetManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 이벤트 방 컨셉별 프리팹을 딕셔너리로 변환합니다.
+    /// </summary>
+    private Dictionary<EventRoomType, GameObject[]> ConvertEventRoomPrefabsToDictionary(EventRoomPrefabs eventPrefabs)
+    {
+        Dictionary<EventRoomType, GameObject[]> dict = new Dictionary<EventRoomType, GameObject[]>();
+        
+        if (eventPrefabs == null)
+        {
+            return dict;
+        }
+        
+        if (eventPrefabs.diggingRoomPrefabs != null && eventPrefabs.diggingRoomPrefabs.Length > 0)
+        {
+            var validPrefabs = System.Array.FindAll(eventPrefabs.diggingRoomPrefabs, p => p != null);
+            if (validPrefabs.Length > 0) dict[EventRoomType.Digging] = validPrefabs;
+        }
+        
+        if (eventPrefabs.abandonedForgeRoomPrefabs != null && eventPrefabs.abandonedForgeRoomPrefabs.Length > 0)
+        {
+            var validPrefabs = System.Array.FindAll(eventPrefabs.abandonedForgeRoomPrefabs, p => p != null);
+            if (validPrefabs.Length > 0) dict[EventRoomType.AbandonedForge] = validPrefabs;
+        }
+        
+        if (eventPrefabs.gamblingWellRoomPrefabs != null && eventPrefabs.gamblingWellRoomPrefabs.Length > 0)
+        {
+            var validPrefabs = System.Array.FindAll(eventPrefabs.gamblingWellRoomPrefabs, p => p != null);
+            if (validPrefabs.Length > 0) dict[EventRoomType.GamblingWell] = validPrefabs;
+        }
+        
+        if (eventPrefabs.chestRoomPrefabs != null && eventPrefabs.chestRoomPrefabs.Length > 0)
+        {
+            var validPrefabs = System.Array.FindAll(eventPrefabs.chestRoomPrefabs, p => p != null);
+            if (validPrefabs.Length > 0) dict[EventRoomType.ChestRoom] = validPrefabs;
+        }
+        
+        if (eventPrefabs.healingRoomPrefabs != null && eventPrefabs.healingRoomPrefabs.Length > 0)
+        {
+            var validPrefabs = System.Array.FindAll(eventPrefabs.healingRoomPrefabs, p => p != null);
+            if (validPrefabs.Length > 0) dict[EventRoomType.Healing] = validPrefabs;
+        }
+        
+        return dict;
+    }
+    
+    /// <summary>
     /// 층별 프리팹을 RoomType별 딕셔너리로 변환합니다.
     /// 각 RoomType마다 프리팹 배열을 저장합니다.
     /// </summary>
@@ -253,8 +322,10 @@ public class FloorRoomSetManager : MonoBehaviour
             RoomType[] rooms = kvp.Value;
             FloorRoomPrefabs floorPrefabs = instance.GetFloorPrefabs(floorNumber);
             Dictionary<RoomType, GameObject[]> prefabDict = instance.ConvertPrefabsToDictionary(floorPrefabs);
+            Dictionary<EventRoomType, GameObject[]> eventPrefabDict = instance.ConvertEventRoomPrefabsToDictionary(
+                floorPrefabs != null ? floorPrefabs.eventRoomTypePrefabs : null);
 
-            floorInfos[floorNumber] = new FloorInfo(floorNumber, rooms, prefabDict);
+            floorInfos[floorNumber] = new FloorInfo(floorNumber, rooms, prefabDict, eventPrefabDict);
         }
     }
 
@@ -333,6 +404,33 @@ public class FloorRoomSetManager : MonoBehaviour
     public static GameObject GetRoomPrefabRandom(int floorNumber, RoomType roomType)
     {
         GameObject[] prefabs = GetRoomPrefabs(floorNumber, roomType);
+        if (prefabs == null || prefabs.Length == 0) return null;
+        
+        // 프리팹 리스트에서 랜덤하게 선택
+        return prefabs[Random.Range(0, prefabs.Length)];
+    }
+    
+    /// <summary>
+    /// 층 번호와 EventRoomType을 넣으면, 해당 층에서 사용할 이벤트 방 프리팹 리스트를 반환합니다.
+    /// - 정의되지 않은 층이거나 프리팹이 없으면 null 반환.
+    /// </summary>
+    public static GameObject[] GetEventRoomPrefabs(int floorNumber, EventRoomType eventType)
+    {
+        FloorInfo info = GetFloorInfo(floorNumber);
+        if (info == null || info.EventRoomTypePrefabs == null) return null;
+        
+        info.EventRoomTypePrefabs.TryGetValue(eventType, out GameObject[] prefabs);
+        return prefabs;
+    }
+    
+    /// <summary>
+    /// 층 번호와 EventRoomType을 넣으면, 해당 층에서 사용할 이벤트 방 프리팹을 랜덤하게 선택하여 반환합니다.
+    /// - 정의되지 않은 층이거나 프리팹이 없으면 null 반환.
+    /// - 프리팹 리스트가 여러 개인 경우 랜덤하게 하나를 선택합니다.
+    /// </summary>
+    public static GameObject GetEventRoomPrefabRandom(int floorNumber, EventRoomType eventType)
+    {
+        GameObject[] prefabs = GetEventRoomPrefabs(floorNumber, eventType);
         if (prefabs == null || prefabs.Length == 0) return null;
         
         // 프리팹 리스트에서 랜덤하게 선택

@@ -646,10 +646,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49a66d55014607044bc2a9a0274d9696, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DataManager
-  treasures:
-  - {fileID: 7399012912179966071, guid: a38c2d9a1b4b383418b55ed1eacf9ad0, type: 3}
-  - {fileID: 4122688030647639447, guid: 6ecf87bebadd4534cb7a30d6770ac224, type: 3}
-  - {fileID: 7442353513546895077, guid: 622e010b8657ef24ca700cec78722a5c, type: 3}
+  <CharacterData>k__BackingField: {fileID: 0}
+  <MonsterData>k__BackingField: {fileID: 0}
+  <TrapData>k__BackingField: {fileID: 0}
+  <TreasureData>k__BackingField: {fileID: 0}
+  <UIData>k__BackingField: {fileID: 0}
+  <WeaponData>k__BackingField: {fileID: 0}
 --- !u!4 &1073975079
 Transform:
   m_ObjectHideFlags: 0
