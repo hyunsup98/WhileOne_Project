@@ -12267,12 +12267,6 @@ MonoBehaviour:
     - {fileID: 4474050308984926237, guid: d8f2b899e5705de49ba4ca16276c797b, type: 3}
     eventRoomPrefabs:
     - {fileID: 4474050308984926237, guid: 7154686066db2c544a90d0be579f1c96, type: 3}
-    eventRoomTypePrefabs:
-      diggingRoomPrefabs: []
-      abandonedForgeRoomPrefabs: []
-      gamblingWellRoomPrefabs: []
-      chestRoomPrefabs: []
-      healingRoomPrefabs: []
     trapRoomPrefabs:
     - {fileID: 4474050308984926237, guid: 99b8963901be3e147bbc947a0b56a58e, type: 3}
     treasureRoomPrefabs:
@@ -12283,12 +12277,6 @@ MonoBehaviour:
     normalRoomPrefabs: []
     exitRoomPrefabs: []
     eventRoomPrefabs: []
-    eventRoomTypePrefabs:
-      diggingRoomPrefabs: []
-      abandonedForgeRoomPrefabs: []
-      gamblingWellRoomPrefabs: []
-      chestRoomPrefabs: []
-      healingRoomPrefabs: []
     trapRoomPrefabs: []
     treasureRoomPrefabs: []
     bossRoomPrefabs: []
@@ -12297,12 +12285,6 @@ MonoBehaviour:
     normalRoomPrefabs: []
     exitRoomPrefabs: []
     eventRoomPrefabs: []
-    eventRoomTypePrefabs:
-      diggingRoomPrefabs: []
-      abandonedForgeRoomPrefabs: []
-      gamblingWellRoomPrefabs: []
-      chestRoomPrefabs: []
-      healingRoomPrefabs: []
     trapRoomPrefabs: []
     treasureRoomPrefabs: []
     bossRoomPrefabs: []

@@ -45,15 +45,15 @@ public class ChestRoom : BaseEventRoom
         // 상자 인스턴스화 및 배치
         PlaceChests();
         
-        // 각 상자에 상호작용 컴포넌트 추가
+        // 각 상자에 상호작용 컴포넌트 추가 (기존 IInteractable 시스템 사용)
         for (int i = 0; i < chests.Length; i++)
         {
             if (chests[i] == null) continue;
             
-            ChestInteractable interactable = chests[i].GetComponent<ChestInteractable>();
+            ChestRoomInteractable interactable = chests[i].GetComponent<ChestRoomInteractable>();
             if (interactable == null)
             {
-                interactable = chests[i].AddComponent<ChestInteractable>();
+                interactable = chests[i].AddComponent<ChestRoomInteractable>();
             }
             interactable.Initialize(this, i);
             
@@ -102,7 +102,7 @@ public class ChestRoom : BaseEventRoom
     /// <summary>
     /// 상자 상호작용 처리
     /// </summary>
-    public void OnChestInteracted(int chestIndex, Player player)
+    public void OnChestInteracted(int chestIndex)
     {
         // 이미 상자를 열었거나 처리 중이면 즉시 반환 (경쟁 조건 방지)
         if (hasOpenedChest || isProcessingInteraction)
@@ -111,9 +111,17 @@ public class ChestRoom : BaseEventRoom
             return;
         }
         
-        if (chestIndex < 0 || chestIndex >= chests.Length || player == null || chests == null)
+        if (chestIndex < 0 || chestIndex >= chests.Length || chests == null)
         {
-            Debug.LogWarning($"[ChestRoom] 잘못된 상자 인덱스 또는 플레이어: chestIndex={chestIndex}, player={player}, chests={chests}");
+            Debug.LogWarning($"[ChestRoom] 잘못된 상자 인덱스: chestIndex={chestIndex}, chests={chests}");
+            return;
+        }
+        
+        // 플레이어 찾기
+        Player player = GetPlayer();
+        if (player == null)
+        {
+            Debug.LogWarning($"[ChestRoom] 플레이어를 찾을 수 없습니다.");
             return;
         }
         
@@ -124,21 +132,44 @@ public class ChestRoom : BaseEventRoom
         hasOpenedChest = true;
         openedChestIndex = chestIndex;
         
-        // 모든 상자 비활성화 (현재 상자 포함 - 한 번만 열 수 있도록)
+        // 다른 상자들의 Box Collider 2D를 비활성화하여 물리적으로 상호작용 차단
         // 가장 먼저 수행하여 경쟁 조건 완전 차단
         for (int i = 0; i < chests.Length; i++)
         {
-            if (chests[i] != null)
+            if (i != chestIndex && chests[i] != null)
             {
-                ChestInteractable interactable = chests[i].GetComponent<ChestInteractable>();
-                if (interactable != null)
+                // 다른 상자의 InteractObj 해제
+                ChestRoomInteractable otherInteractable = chests[i].GetComponent<ChestRoomInteractable>();
+                if (otherInteractable != null && GameManager.Instance.InteractObj == otherInteractable)
                 {
-                    interactable.SetCanInteract(false);
+                    GameManager.Instance.InteractObj = null;
+                }
+                
+                // Box Collider 2D 찾아서 비활성화 (상자 자체 또는 자식 오브젝트에 있을 수 있음)
+                BoxCollider2D boxCollider = chests[i].GetComponent<BoxCollider2D>();
+                if (boxCollider != null)
+                {
+                    boxCollider.enabled = false;
+                    Debug.Log($"[ChestRoom] 상자 {i}번의 Box Collider 2D를 비활성화했습니다.");
+                }
+                else
+                {
+                    // 상자 자체에 없으면 자식 오브젝트에서 찾기
+                    boxCollider = chests[i].GetComponentInChildren<BoxCollider2D>();
+                    if (boxCollider != null)
+                    {
+                        boxCollider.enabled = false;
+                        Debug.Log($"[ChestRoom] 상자 {i}번의 자식 오브젝트 Box Collider 2D를 비활성화했습니다.");
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[ChestRoom] 상자 {i}번에서 Box Collider 2D를 찾을 수 없습니다.");
+                    }
                 }
             }
         }
         
-        Debug.Log($"[ChestRoom] 상자 {chestIndex}번이 열렸습니다. 모든 상자들은 비활성화되었습니다.");
+        Debug.Log($"[ChestRoom] 상자 {chestIndex}번이 열렸습니다. 다른 상자들의 Box Collider 2D가 비활성화되었습니다.");
         
         // 50% 확률로 진짜/가짜 결정 (1:1 확률)
         bool isReal = Random.Range(0f, 1f) < 0.5f;
@@ -180,10 +211,22 @@ public class ChestRoom : BaseEventRoom
     private void OnFakeChestOpened(Player player)
     {
         Debug.Log("[ChestRoom] 가짜 상자입니다. 아무것도 없습니다.");
-        
-        // TODO: 페널티 적용 (필요시)
+
+        // 기존 상자와 동일하게 fail UI 표시
+        if (GameManager.Instance?.CurrentDungeon?.WeaponUI != null)
+        {
+            GameManager.Instance.CurrentDungeon.WeaponUI.EnableFailUI();
+        }
+
+        // TODO: 페널티 적용
+        // 체력 감소 혹은 몹 생성
+
+        // 플레이어 체력 10% 감소
+        float damageAmount = player.MaxHp * 0.1f;
+        player.ChangedHealth -= damageAmount;
+        Debug.Log($"[ChestRoom] 플레이어에게 {damageAmount}의 피해를 입혔습니다.");
     }
-    
+
     /// <summary>
     /// 방의 중심 위치를 반환합니다.
     /// </summary>
@@ -200,12 +243,16 @@ public class ChestRoom : BaseEventRoom
 }
 
 /// <summary>
-/// 상자 상호작용 컴포넌트
+/// 상자방 상자 상호작용 컴포넌트 (기존 IInteractable 시스템 사용)
 /// </summary>
-public class ChestInteractable : Interactable
+public class ChestRoomInteractable : MonoBehaviour, IInteractable
 {
     private ChestRoom chestRoom;
     private int chestIndex;
+    private bool canInteract = true;
+    
+    [field: SerializeField] public float YOffset { get; set; } = 1.5f;
+    public Vector3 Pos => transform.position;
     
     public void Initialize(ChestRoom room, int index)
     {
@@ -213,43 +260,54 @@ public class ChestInteractable : Interactable
         chestIndex = index;
     }
     
-    public void SetCanInteract(bool value)
+    /// <summary>
+    /// 기존 IInteractable 인터페이스 구현 - GameManager에서 호출됨
+    /// </summary>
+    public void OnInteract()
     {
-        canInteract = value;
-    }
-    
-    protected override void OnInteract(Player player)
-    {
-        // 첫 번째 안전장치: canInteract 체크 (Interactable.Interact()에서도 체크하지만 중복 체크)
-        if (!canInteract)
-        {
-            Debug.Log($"[ChestInteractable] 상자 {chestIndex}번: canInteract가 false여서 상호작용할 수 없습니다.");
-            return;
-        }
+        // GameManager.InteractObj를 null로 설정 (기존 Chest 클래스 패턴 따름)
+        GameManager.Instance.InteractObj = null;
         
+        // ChestRoom에서 이미 열렸는지 확인 (경쟁 조건 방지)
         if (chestRoom == null)
         {
-            Debug.LogWarning($"[ChestInteractable] 상자 {chestIndex}번: chestRoom이 null입니다.");
+            Debug.LogWarning($"[ChestRoomInteractable] 상자 {chestIndex}번: chestRoom이 null입니다.");
             return;
         }
         
-        // 두 번째 안전장치: ChestRoom에서 이미 열렸는지 확인 (가장 중요!)
-        // 이 체크가 OnChestInteracted() 호출 전에 있어야 경쟁 조건을 방지할 수 있음
-        if (chestRoom.HasOpenedChest)
+        if (!canInteract || chestRoom.HasOpenedChest)
         {
-            Debug.Log($"[ChestInteractable] 상자 {chestIndex}번: 이미 다른 상자가 열려서 상호작용할 수 없습니다.");
-            // 추가로 이 상자의 canInteract도 false로 설정
-            canInteract = false;
+            Debug.Log($"[ChestRoomInteractable] 상자 {chestIndex}번: 이미 다른 상자가 열려서 상호작용할 수 없습니다.");
             return;
         }
         
-        // 세 번째 안전장치: OnChestInteracted() 내부에서도 hasOpenedChest 및 isProcessingInteraction 체크
-        chestRoom.OnChestInteracted(chestIndex, player);
-        
-        // OnChestInteracted() 호출 후 다시 한 번 체크하여 상호작용 완료 시 이 상자도 비활성화
-        if (chestRoom.HasOpenedChest)
+        // ChestRoom의 OnChestInteracted 호출
+        chestRoom.OnChestInteracted(chestIndex);
+    }
+    
+    /// <summary>
+    /// 기존 Chest 클래스 패턴 - OnTriggerEnter2D에서 GameManager.InteractObj 설정
+    /// </summary>
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player") && canInteract && chestRoom != null && !chestRoom.HasOpenedChest)
         {
-            canInteract = false;
+            GameManager.Instance.InteractObj = this;
+        }
+    }
+    
+    /// <summary>
+    /// 기존 Chest 클래스 패턴 - OnTriggerExit2D에서 GameManager.InteractObj 해제
+    /// </summary>
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            // 현재 InteractObj가 이 오브젝트인 경우에만 null로 설정
+            if (GameManager.Instance.InteractObj == this)
+            {
+                GameManager.Instance.InteractObj = null;
+            }
         }
     }
 }
