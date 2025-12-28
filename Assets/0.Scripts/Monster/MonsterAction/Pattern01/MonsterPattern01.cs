@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class MonsterPattern01 : MonsterPattern
 {
-    private float _createdEffectTime = 0.3f;
+    private float _createdEffectTime;
     private float _rushSpeed;
     private float _rushDistance;
     private Vector2 _createPos;
@@ -20,14 +20,15 @@ public class MonsterPattern01 : MonsterPattern
         _beforeDelay = actionData.BeforeDelay;
         _afterDelay = actionData.AfterDelay;
         _maxCoolTime = actionData.ActionCoolTime;
-
-        _pathPreview = actionData.PathPreview;
         _hitDecision = actionData.HitDecision;
+        _pathPreview = actionData.PathPreview;
+
+        _createdEffectTime = actionData.CreatedEffectTime;
+        _rushSpeed = actionData.RushSpeed;
+        _rushDistance = actionData.RushDistance;
         _createPos = actionData.CreatePos;
         _hitBoxSize = actionData.HitBoxSize;
 
-        _rushDistance = actionData.RushDistance;
-        _rushSpeed = actionData.RushSpeed;
     }
 
 
@@ -83,7 +84,7 @@ public class MonsterPattern01 : MonsterPattern
     public override void EndAction()
     {
         Init();
-        _monster.StartCoroutine(StartCool());
+         _monster.StartCoroutine(StartCool());
     }
 
 

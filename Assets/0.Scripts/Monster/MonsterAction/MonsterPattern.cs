@@ -43,6 +43,9 @@ public abstract class MonsterPattern
             return;
         }
 
+        if (!IsAction)
+            return;
+
         // 스킬 이펙트 오브젝트 생성
         _actionEffect = GameObject.Instantiate
             (

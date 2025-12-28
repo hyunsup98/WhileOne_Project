@@ -12,7 +12,6 @@ public class MonsterPattern06 : MonsterPattern
     private float _fallingCycle;
     private float _fallingFrequency;
     private float _fallingRange;
-    private float _actionStopTime;
 
     private GameObject _fallingObjectPrefab;
 
@@ -29,17 +28,15 @@ public class MonsterPattern06 : MonsterPattern
         _beforeDelay = actionData.BeforeDelay;
         _afterDelay = actionData.AfterDelay;
         _maxCoolTime = actionData.ActionCoolTime;
-        _hitDecision = actionData.HitDecision;
 
         _wallTilemap = monster.Model.WallTilemap;
         _myTransform = _monster.View.MyTransform;
 
-        _startFallingTime = actionData.StartFallingTime;
+        _startFallingTime = actionData.FallingStartTime;
         _fallingCount = actionData.FallingCount;
         _fallingFrequency = actionData.FallingFrequency;
         _fallingCycle = actionData.FallingCycle;
         _fallingRange = actionData.FallingRange;
-        _actionStopTime = actionData.ActionStopTime;
         _fallingObjectPrefab = actionData.FallingObjectPrefab;
         _fallingObjects = new List<GameObject>();
     }
@@ -142,7 +139,7 @@ public class MonsterPattern06 : MonsterPattern
         }
 
         _ani.OnPlayAni("Pattern06End");
-        yield return CoroutineManager.waitForSeconds(_actionStopTime);
+        yield return CoroutineManager.waitForSeconds(1f);
 
         yield return CoroutineManager.waitForSeconds(_afterDelay);
         IsAction = false;

@@ -12,7 +12,7 @@ public class MonsterPattern05 : MonsterPattern
     private float _fallingStartTime;
     private float _fallingFrequency;
     private int _fallingCycle;
-    private float _fallingHitTiming = 0.9f;
+    private float _fallingHitTiming;
     private float _fallingDestroyTime;
     private GameObject _fallingObject;
 
@@ -40,6 +40,7 @@ public class MonsterPattern05 : MonsterPattern
         _fallingStartTime = actionData.FallingStartTime;
         _fallingFrequency = actionData.FallingFrequency;
         _fallingCycle = actionData.FallingCycle;
+        _fallingHitTiming = actionData.FallingHitTiming;
         _fallingDestroyTime = actionData.FallingDestroyTime;
         _fallingObject = actionData.FallingObject;
 
