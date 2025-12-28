@@ -9,7 +9,7 @@ public class Chase : IState
     private float _speed;
     private float _ationTrigger;
     private Transform _target;
-    private float _sight;              // LOS판정을 위한 시야 거리
+    private float _sight;                   // LOS판정을 위한 시야 거리
     private Coroutine _pathfinder;          // 경로재탐색 제어를 위한 코루틴
 
     public Chase(MonsterPresenter monster)
@@ -25,6 +25,7 @@ public class Chase : IState
 
     public void Enter() 
     {
+        _monster.OnStopAni("Idle");
         _target = _monster.Model.ChaseTarget;
     }
 
@@ -47,7 +48,7 @@ public class Chase : IState
         Vector3 dir = _target.position - _myTransform.position;
         if (Vector3.SqrMagnitude(dir) <= _ationTrigger)
         {
-            _monster.Model.SetState(MonsterState.Attack);
+            _monster.Model.SetState(MonsterState.Action);
             Debug.LogWarning("<color=red>공격실행</color>(공격시야각 없을시 공격모션X");
             return;
         }

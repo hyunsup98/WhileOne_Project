@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8728184218078865386}
+  - component: {fileID: 7437473093673440418}
   - component: {fileID: 6595577617615844933}
   - component: {fileID: 447112615235300374}
-  - component: {fileID: 7437473093673440418}
   - component: {fileID: 3119828976897720335}
   - component: {fileID: 1850648910009851827}
   m_Layer: 7
@@ -30,12 +30,25 @@ Transform:
   m_GameObject: {fileID: 3625597477548088485}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5500002, y: 1.5299999, z: 0}
+  m_LocalPosition: {x: 0.59, y: 1.68, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7222049485149874721}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7437473093673440418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3625597477548088485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf7ea998ec743d5429fd2e638a7c6ac6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Monster
+  _monsterData: {fileID: 11400000, guid: 1b3d9265eef0ad34da38f0e13919ba4a, type: 2}
 --- !u!212 &6595577617615844933
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -116,19 +129,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &7437473093673440418
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3625597477548088485}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf7ea998ec743d5429fd2e638a7c6ac6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Monster
-  _monsterData: {fileID: 11400000, guid: 7671038e83694cc4eb2bec024be9c4e8, type: 2}
 --- !u!61 &3119828976897720335
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -227,7 +227,7 @@ Transform:
   m_GameObject: {fileID: 7718958073284229197}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.24, y: 1.13, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

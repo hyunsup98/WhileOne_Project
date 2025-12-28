@@ -99,9 +99,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8662519751401619824}
+  - component: {fileID: 7969065738387303571}
   - component: {fileID: 7203355645789686890}
   - component: {fileID: 4175699986522686860}
-  - component: {fileID: 7969065738387303571}
   - component: {fileID: 5230112735198013445}
   - component: {fileID: 2450573203241525570}
   m_Layer: 7
@@ -127,6 +127,19 @@ Transform:
   - {fileID: 4715615495401331289}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7969065738387303571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3789408753425000989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf7ea998ec743d5429fd2e638a7c6ac6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Monster
+  _monsterData: {fileID: 11400000, guid: 7671038e83694cc4eb2bec024be9c4e8, type: 2}
 --- !u!212 &7203355645789686890
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -207,23 +220,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &7969065738387303571
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3789408753425000989}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf7ea998ec743d5429fd2e638a7c6ac6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Monster
-  _monsterData: {fileID: 11400000, guid: 7671038e83694cc4eb2bec024be9c4e8, type: 2}
-  _wallTilemap: {fileID: 0}
-  _patrolTarget:
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!61 &5230112735198013445
 BoxCollider2D:
   m_ObjectHideFlags: 0
