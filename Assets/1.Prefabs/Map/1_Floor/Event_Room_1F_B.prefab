@@ -686,12 +686,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DiggingRoom
   roomWidth: 15
   roomHeight: 15
-  warningSign: {fileID: 0}
-  digSpotTile: {fileID: 0}
+  warningSign: {fileID: 788882376062105036}
+  digSpotTile: {fileID: 11400000, guid: cd14f05608220364e9c5183f6e3d0ec3, type: 2}
   realDigSpotCount: 2
   fakeDigSpotCount: 3
-  enemyPrefab: {fileID: 0}
   fakeDigDamageRatio: 0.1
+  digSpotTilemapSortingOrder: 3
 --- !u!114 &1620523778154479971
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5823,7 +5823,7 @@ TilemapRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -7783,6 +7783,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ebbfd28f10c403b48bf664bd9613ef15, type: 3}
+--- !u!1 &788882376062105036 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2988206636160428485, guid: ebbfd28f10c403b48bf664bd9613ef15, type: 3}
+  m_PrefabInstance: {fileID: 2561020197883468809}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1746903527393683430 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4302254643152206831, guid: ebbfd28f10c403b48bf664bd9613ef15, type: 3}

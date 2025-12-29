@@ -14,8 +14,40 @@ public class DungeonGenerator : MonoBehaviour
     private int gridSize = 10; // 그리드 크기 (시작 위치(0,0)를 중심으로 한 반경, -10 ~ +10 범위)
 
     [Header("현재 층 정보 (나중에 다른 매니저에서 처리)")]
-    [SerializeField] [Tooltip("현재 층 (기본값 1층)")]
-    public static int currentFloor = 1; // 현재 층 (기본값 1층)
+    [SerializeField] [Tooltip("현재 층 (기본값 1층, UIText_Floor에서 자동으로 가져옴)")]
+    private static int _currentFloor = 1; // 내부 저장용
+    private static UIText_Floor _cachedFloorText; // UIText_Floor 캐시 (static)
+    
+    /// <summary>
+    /// 현재 층 정보를 반환합니다. UIText_Floor에서 값을 가져옵니다.
+    /// </summary>
+    public static int currentFloor
+    {
+        get
+        {
+            // 캐시된 UIText_Floor가 유효한지 확인
+            if (_cachedFloorText == null)
+            {
+                // 씬에서 UIText_Floor 인스턴스 찾기
+                _cachedFloorText = Object.FindFirstObjectByType<UIText_Floor>();
+                if (_cachedFloorText != null)
+                {
+                    _currentFloor = _cachedFloorText.Floor;
+                }
+                else
+                {
+                    Debug.LogWarning("[DungeonGenerator] UIText_Floor를 찾을 수 없습니다. 기본값(1)을 사용합니다.");
+                }
+            }
+            else
+            {
+                // 캐시가 있으면 캐시된 값 사용
+                _currentFloor = _cachedFloorText.Floor;
+            }
+            
+            return _currentFloor;
+        }
+    }
 
     [Header("복도 프리팹")]
     [SerializeField] [Tooltip("가로 복도 프리팹 (좌우 연결용, Corridor_H)")]
@@ -71,6 +103,32 @@ public class DungeonGenerator : MonoBehaviour
 
     [SerializeField] private MonsterPresenter monster;
     
+    private bool isGenerating = false; // 던전 생성 중 플래그 (재귀 호출 방지)
+    
+    private void Awake()
+    {
+        // UIText_Floor 캐시 초기화
+        RefreshFloorInfo();
+    }
+    
+    /// <summary>
+    /// UIText_Floor에서 현재 층 정보를 새로고침합니다.
+    /// 씬이 변경되거나 UIText_Floor가 업데이트되었을 때 호출할 수 있습니다.
+    /// </summary>
+    public static void RefreshFloorInfo()
+    {
+        _cachedFloorText = Object.FindFirstObjectByType<UIText_Floor>();
+        if (_cachedFloorText != null)
+        {
+            _currentFloor = _cachedFloorText.Floor;
+            Debug.Log($"[DungeonGenerator] UIText_Floor에서 현재 층 정보를 가져왔습니다: {_currentFloor}층");
+        }
+        else
+        {
+            Debug.LogWarning("[DungeonGenerator] UIText_Floor를 찾을 수 없습니다. 기본값(1)을 사용합니다.");
+        }
+    }
+    
     private void Start()
     {
         if (generateOnStart)
@@ -85,7 +143,18 @@ public class DungeonGenerator : MonoBehaviour
     [ContextMenu("던전 생성")]
     public void GenerateDungeon()
     {
-        FloorInfo floorInfo = FloorRoomSetManager.GetFloorInfo(currentFloor);
+        // 이미 생성 중이면 중복 호출 방지
+        if (isGenerating)
+        {
+            Debug.LogWarning("[DungeonGenerator] 던전 생성이 이미 진행 중입니다. 중복 호출을 무시합니다.");
+            return;
+        }
+        
+        isGenerating = true;
+        
+        try
+        {
+            FloorInfo floorInfo = FloorRoomSetManager.GetFloorInfo(currentFloor);
 
         int roomCount = floorInfo != null ? floorInfo.Rooms.Length : 9;
 
@@ -188,8 +257,20 @@ public class DungeonGenerator : MonoBehaviour
         int adjustmentAttempt = 0;
         bool allCorridorsValid = false;
         
+        // 안전장치: 최대 반복 횟수 제한
+        int safetyCounter = 0;
+        const int MAX_SAFETY_COUNTER = 1000;
+        
         while (!allCorridorsValid && adjustmentAttempt < maxAdjustmentAttempts)
         {
+            // 안전장치: 무한 루프 방지
+            safetyCounter++;
+            if (safetyCounter > MAX_SAFETY_COUNTER)
+            {
+                Debug.LogError($"[DungeonGenerator] 안전장치: 최대 반복 횟수({MAX_SAFETY_COUNTER}) 초과. 루프를 강제 종료합니다.");
+                break;
+            }
+            
             // 재시도 시에도 프리팹 딕셔너리를 다시 로드 (floorInfo가 변경될 수 있으므로)
             if (adjustmentAttempt > 0)
             {
@@ -307,8 +388,20 @@ public class DungeonGenerator : MonoBehaviour
         int corridorAttempt = 0;
         bool corridorsPlacedCorrectly = false;
         
+        // 안전장치: 최대 반복 횟수 제한
+        int corridorSafetyCounter = 0;
+        const int MAX_CORRIDOR_SAFETY_COUNTER = 1000;
+        
         while (!corridorsPlacedCorrectly && corridorAttempt < maxCorridorAttempts)
         {
+            // 안전장치: 무한 루프 방지
+            corridorSafetyCounter++;
+            if (corridorSafetyCounter > MAX_CORRIDOR_SAFETY_COUNTER)
+            {
+                Debug.LogError($"[DungeonGenerator] 안전장치: 복도 생성 최대 반복 횟수({MAX_CORRIDOR_SAFETY_COUNTER}) 초과. 루프를 강제 종료합니다.");
+                break;
+            }
+            
             // 기존 복도 제거 (재시도 시)
             if (corridorAttempt > 0)
             {
@@ -395,6 +488,11 @@ public class DungeonGenerator : MonoBehaviour
 
         // 11. 보물 방에 보물 상자 배치
         DungeonItemPlacer.PlaceTreasureChests(dungeonGrid, treasureChestPrefab, unityGrid);
+        }
+        finally
+        {
+            isGenerating = false;
+        }
     }
 
     /// <summary>
@@ -563,8 +661,8 @@ public class DungeonGenerator : MonoBehaviour
         Room startRoom = dungeonGrid.GetRoom(startRoomPosition);
         if (startRoom == null || startRoom.roomObject == null)
         {
-            Debug.LogWarning("시작 방 정보가 없어 플레이어를 이동할 수 없습니다.");
-            GenerateDungeon();
+            Debug.LogError("[DungeonGenerator] 시작 방 정보가 없어 플레이어를 이동할 수 없습니다. 던전 생성에 실패한 것 같습니다.");
+            // 재귀 호출 제거: GenerateDungeon()을 다시 호출하면 무한 루프와 메모리 누수가 발생할 수 있음
             return;
         }
         
@@ -582,7 +680,11 @@ public class DungeonGenerator : MonoBehaviour
         {
             for (int i = gridParent.childCount - 1; i >= 0; i--)
             {
-                DestroyImmediate(gridParent.GetChild(i).gameObject);
+                GameObject child = gridParent.GetChild(i).gameObject;
+                if (child != null)
+                {
+                    DestroyImmediate(child);
+                }
             }
         }
         
@@ -591,13 +693,17 @@ public class DungeonGenerator : MonoBehaviour
         {
             Transform child = transform.GetChild(i);
             // Grid 오브젝트는 제거하지 않음
-            if (child.GetComponent<Grid>() == null)
+            if (child != null && child.GetComponent<Grid>() == null)
             {
                 DestroyImmediate(child.gameObject);
             }
         }
         
+        // 메모리 정리
         dungeonGrid = null;
+        
+        // 강제 가비지 컬렉션 (메모리 누수 방지)
+        System.GC.Collect();
     }
     
     /// <summary>
