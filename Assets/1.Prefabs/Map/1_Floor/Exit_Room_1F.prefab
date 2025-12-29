@@ -506,6 +506,7 @@ GameObject:
   - component: {fileID: 494122190908878811}
   - component: {fileID: 8946481763712334573}
   - component: {fileID: 4506030150568260383}
+  - component: {fileID: 4640434608512697130}
   m_Layer: 0
   m_Name: ExitZone
   m_TagString: ExitZone
@@ -632,6 +633,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &4640434608512697130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3535792898338188845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6edc4d4677d5a7c4e845ed1db0d20eb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExitZoneTrigger
+  exitRoom: {fileID: 6490708516128294081}
 --- !u!1 &4474050308984926237
 GameObject:
   m_ObjectHideFlags: 0

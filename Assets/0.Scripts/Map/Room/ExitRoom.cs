@@ -38,7 +38,7 @@ public class ExitRoom : BaseRoom
         {
             exitCenterPosition = exitZoneObject.transform.position;
             
-            Debug.Log($"[{name}] 출구 영역 설정 완료 - ExitZone 오브젝트 사용: {exitZoneObject.name}, 위치: {exitCenterPosition}, 반경: {exitZoneRadius}");
+            //Debug.Log($"[{name}] 출구 영역 설정 완료 - ExitZone 오브젝트 사용: {exitZoneObject.name}, 위치: {exitCenterPosition}, 반경: {exitZoneRadius}");
         }
     }
     

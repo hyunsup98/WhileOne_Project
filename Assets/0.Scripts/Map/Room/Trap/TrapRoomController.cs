@@ -22,7 +22,7 @@ public class TrapRoomController : MonoBehaviour
         mazeGenerator = generator;
         EnsureTriggerCollider();
 
-        Debug.Log($"[TrapRoomController] Initialize - room:{room?.name}, hasMazeGenerator:{mazeGenerator != null}");
+        //Debug.Log($"[TrapRoomController] Initialize - room:{room?.name}, hasMazeGenerator:{mazeGenerator != null}");
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ public class TrapRoomController : MonoBehaviour
         }
         else
         {
-            Debug.Log($"[TrapRoomController] EnsureTriggerCollider - using existing Collider2D:{col.GetType().Name}, isTrigger:{col.isTrigger}, room:{name}");
+            //Debug.Log($"[TrapRoomController] EnsureTriggerCollider - using existing Collider2D:{col.GetType().Name}, isTrigger:{col.isTrigger}, room:{name}");
         }
     }
 

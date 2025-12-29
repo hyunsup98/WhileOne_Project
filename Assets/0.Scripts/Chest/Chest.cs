@@ -2,18 +2,18 @@ using UnityEngine;
 
 public enum ChestState
 {
-    Closed,             // »óÀÚ¸¦ ÇÑ ¹øµµ ¿­Áö ¾Ê´Â »óÅÂ
-    OpenedLeft,         // »óÀÚ¸¦ ¿­¾úÁö¸¸ ¹«±â´Â °¡Á®°¡Áö ¾ÊÀº »óÅÂ
-    OpenedTaken         // »óÀÚ¸¦ ¿­°í ¹«±â¸¦ °¡Á®°£ »óÅÂ
+    Closed,             // ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´ï¿½ ï¿½ï¿½ï¿½ï¿½
+    OpenedLeft,         // ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    OpenedTaken         // ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½â¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 }
 
 public class Chest : MonoBehaviour, IInteractable
 {
-    [Header("ÄÄÆ÷³ÍÆ®")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®")]
     [SerializeField] private SpriteRenderer _renderer;
     [SerializeField] private Animator _animator;
 
-    [Header("¹«±â°¡ µå¶øµÇ´Â ÆÛ¼¾Æ®")]
+    [Header("ï¿½ï¿½ï¿½â°¡ ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½Û¼ï¿½Æ®")]
     [Range(0, 100)]
     [SerializeField] private int dropWeaponPer;
 
@@ -21,13 +21,13 @@ public class Chest : MonoBehaviour, IInteractable
 
     private ChestState chestState;
 
-    [field: SerializeField] public float YOffset { get; set; } = 1.5f;      //ÀÎÅÍÆäÀÌ½º ÇÊµå ¡æ »óÈ£ÀÛ¿ë Å° ÀÌ¹ÌÁö À§Ä¡¿¡ ´õÇÒ ¿ÀÇÁ¼Â
+    [field: SerializeField] public float YOffset { get; set; } = 1.5f;      //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ ï¿½Êµï¿½ ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ Å° ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-    public Vector3 Pos => transform.position;           // ÀÎÅÍÆäÀÌ½º ÇÊµå ¡æ »óÈ£ÀÛ¿ë ÀÌ¹ÌÁö À§Ä¡ ¼¼ÆÃÀ» À§ÇÑ ¿ÀºêÁ§Æ® À§Ä¡ ÁÂÇ¥
+    public Vector3 Pos => transform.position;           // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ ï¿½Êµï¿½ ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½Ä¡ ï¿½ï¿½Ç¥
 
     private void Awake()
     {
-        // ÄÄÆ÷³ÍÆ® ÃÊ±âÈ­
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ê±ï¿½È­
         if (_renderer == null)
             TryGetComponent(out _renderer);
 
@@ -37,36 +37,36 @@ public class Chest : MonoBehaviour, IInteractable
         chestState = ChestState.Closed;
     }
 
-    // »óÈ£ ÀÛ¿ë ¸Þ¼­µå
-    public void OnInteract()
+    // ï¿½ï¿½È£ ï¿½Û¿ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
+    public virtual void OnInteract()
     {
         GameManager.Instance.InteractObj = null;
         _animator.SetBool("isOpen", true);
 
         if(chestState == ChestState.Closed)
         {
-            // ¹«±â ·£´ý ¼ÒÈ¯
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
             SetWeapon();
         }
 
-        // ¹«±â°¡ ·£´ýÀ¸·Î ¼ÒÈ¯µÆÀ¸¸é, ÀÌ¹Ì »óÀÚ¿¡ ¹«±â°¡ ÀÖÀ» ¶§
+        // ï¿½ï¿½ï¿½â°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½Ú¿ï¿½ ï¿½ï¿½ï¿½â°¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
         if (weapon != null)
         {
-            // ¾ÆÁ÷ ¹«±â¸¦ µé°í°¡Áö ¾Ê¾ÒÀ¸¹Ç·Î OpenedLeft »óÅÂ
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½â¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ OpenedLeft ï¿½ï¿½ï¿½ï¿½
             chestState = ChestState.OpenedLeft;
             GameManager.Instance.CurrentDungeon.WeaponUI.EnableGainUI(weapon, this);
         }
-        // ²ÎÀÌ ¶°¼­ ¹«±â°¡ ¾È»ÌÇûÀ¸¸é or 
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½â°¡ ï¿½È»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ or 
         else
         {
-            // ¹«±â°¡ ¾øÀ¸¹Ç·Î OpenedTaken »óÅÂ
+            // ï¿½ï¿½ï¿½â°¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ OpenedTaken ï¿½ï¿½ï¿½ï¿½
             chestState = ChestState.OpenedTaken;
             GameManager.Instance.CurrentDungeon.WeaponUI.EnableFailUI();
         }
     }
 
-    // ÇÃ·¹ÀÌ¾î°¡ »óÀÚ¸¦ È®ÀÎÇÑ µÚ ´ÝÀ» ¶§ Çàµ¿
-    // ¹«±â¸¦ °¡Á®°¡°í ´Ý°Å³ª, °¡Á®°¡Áö ¾Ê°í ´ÝÀ» ¼ö ÀÖÀ½
+    // ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½Ú¸ï¿½ È®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½àµ¿
+    // ï¿½ï¿½ï¿½â¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ý°Å³ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public void ChestClose(ChestState state)
     {
         chestState = state;
@@ -84,7 +84,7 @@ public class Chest : MonoBehaviour, IInteractable
     }
 
     /// <summary>
-    /// »óÀÚ¸¦ Ã³À½À¸·Î ¿­¾úÀ» ¶§ ¹«±â¸¦ ·£´ýÀ¸·Î »ý¼º
+    /// ï¿½ï¿½ï¿½Ú¸ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½â¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     private void SetWeapon()
     {
@@ -98,7 +98,7 @@ public class Chest : MonoBehaviour, IInteractable
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // »óÀÚ¿¡¼­ ÀÌ¹Ì ¹«±â¸¦ °¡Á®°£ µÚ¸é »óÈ£ÀÛ¿ë ºÒ°¡´É
+        // ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½â¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ú¸ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½Ò°ï¿½ï¿½ï¿½
         if (collision.CompareTag("Player") && chestState != ChestState.OpenedTaken)
         {
             GameManager.Instance.InteractObj = this;

@@ -90,6 +90,7 @@ public static class DungeonRoomPlacer
             if (room.roomType == RoomType.Event && room.eventRoomType.HasValue)
             {
                 prefab = GetEventRoomPrefab(room.eventRoomType.Value, eventRoomTypePrefabs, roomPrefabs);
+                Debug.Log($"이벤트 방 프리팹 선택: {prefab?.name} (컨셉: {room.eventRoomType.Value})");
             }
             else
             {
@@ -443,11 +444,25 @@ public static class DungeonRoomPlacer
             var validPrefabs = System.Array.FindAll(prefabs, p => p != null);
             if (validPrefabs.Length > 0)
             {
-                return validPrefabs[Random.Range(0, validPrefabs.Length)];
+                int randomIndex = Random.Range(0, validPrefabs.Length);
+                GameObject selectedPrefab = validPrefabs[randomIndex];
+                Debug.Log($"[DungeonRoomPlacer] 이벤트 방 프리팹 선택 - 컨셉: {eventType}, 등록된 프리팹 수: {validPrefabs.Length}, 선택된 인덱스: {randomIndex}, 선택된 프리팹: {selectedPrefab.name}");
+                return selectedPrefab;
             }
+            else
+            {
+                Debug.LogWarning($"[DungeonRoomPlacer] 이벤트 방 컨셉 {eventType}에 유효한 프리팹이 없습니다. (null 제외 후 0개)");
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"[DungeonRoomPlacer] 이벤트 방 컨셉 {eventType}의 프리팹을 찾을 수 없습니다. " +
+                $"(eventRoomTypePrefabs: {(eventRoomTypePrefabs != null ? "not null" : "null")}, " +
+                $"ContainsKey: {(eventRoomTypePrefabs != null && eventRoomTypePrefabs.ContainsKey(eventType) ? "true" : "false")})");
         }
         
         // 이벤트 방 컨셉별 프리팹이 없으면 일반 이벤트 방 프리팹을 fallback으로 사용
+        Debug.Log($"[DungeonRoomPlacer] 이벤트 방 컨셉별 프리팹이 없어 일반 이벤트 방 프리팹을 fallback으로 사용합니다.");
         return GetRoomPrefab(RoomType.Event, roomPrefabs);
     }
 }

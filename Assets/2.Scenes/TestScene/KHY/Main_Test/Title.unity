@@ -1259,7 +1259,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73b320e512617a846bbabcd3a38d716e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Title
-  _gameSceneName: Dungeon_Floor1
+  _gameSceneName: KHY_Dungeon_Floor1
   _tutorialSceneName: Tutorial
   _buttonClickClip: {fileID: 0}
 --- !u!1 &381399235

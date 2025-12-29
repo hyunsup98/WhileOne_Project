@@ -180,7 +180,7 @@ public static class DungeonItemPlacer
         Transform interactiveParent = DungeonRoomHelper.FindInteractiveParent(room.roomObject.transform);
         if (interactiveParent == null)
         {
-            Debug.LogWarning($"[DungeonItemPlacer] 방({room.roomObject.name})에 Interactive 오브젝트를 찾을 수 없어 방의 직접 자식으로 배치합니다.");
+            //Debug.LogWarning($"[DungeonItemPlacer] 방({room.roomObject.name})에 Interactive 오브젝트를 찾을 수 없어 방의 직접 자식으로 배치합니다.");
             interactiveParent = room.roomObject.transform;
         }
 

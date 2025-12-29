@@ -7,8 +7,6 @@ using System.Collections.Generic;
 /// </summary>
 public class TrapRoom : BaseRoom
 {
-    [Header("Trap Room Settings")]
-    [SerializeField] [Tooltip("함정방 미로를 생성할 때 사용할 TrapRoomMazeGenerator 프리팹")]
     private GameObject trapRoomMazeGeneratorPrefab; // 함정방 미로 생성기 프리펩
     
     // 함정방 미로 생성기
@@ -35,8 +33,6 @@ public class TrapRoom : BaseRoom
         // 프리팹이 설정되지 않았으면 자동으로 찾기
         if (prefabToUse == null)
         {
-            Debug.LogWarning($"[{name}] 함정방 미로 생성기 프리펩이 설정되지 않았습니다. 자동으로 찾는 중...");
-            
             // 씬에서 찾기
             if (prefabToUse == null)
             {

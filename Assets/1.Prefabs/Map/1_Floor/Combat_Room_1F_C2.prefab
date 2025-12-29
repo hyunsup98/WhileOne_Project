@@ -193,8 +193,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a49ee2a50119ee4db4498ee5d12a24a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NormalRoom
-  roomWidth: 15
-  roomHeight: 15
+  roomWidth: 45
+  roomHeight: 21
 --- !u!114 &1367362990579626758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12339,7 +12339,7 @@ Tilemap:
       - {fileID: -841234556, guid: 2d7fb5c600edada46af99d8b107de61b, type: 3}
       - {fileID: -527490619, guid: 2d7fb5c600edada46af99d8b107de61b, type: 3}
       - {fileID: -1754641146, guid: 2d7fb5c600edada46af99d8b107de61b, type: 3}
-      m_AnimationSpeed: 10.000001
+      m_AnimationSpeed: 10
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: 45, y: -10, z: 0}

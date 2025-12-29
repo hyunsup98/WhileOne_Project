@@ -136,10 +136,18 @@ public class FloorRoomSetManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 현재 씬의 FloorRoomSetManager 인스턴스를 찾아 반환합니다.
+    /// </summary>
+    private static FloorRoomSetManager FindCurrentInstance()
+    {
+        return Object.FindFirstObjectByType<FloorRoomSetManager>();
+    }
+
+    /// <summary>
     /// 층 번호 → FloorInfo 매핑 테이블.
     /// 런타임에 동적으로 생성됩니다.
     /// </summary>
-    private static Dictionary<int, FloorInfo> floorInfos;
+    private Dictionary<int, FloorInfo> floorInfos;
 
     /// <summary>
     /// 층별 방 타입 구성을 반환합니다.
@@ -209,39 +217,68 @@ public class FloorRoomSetManager : MonoBehaviour
         
         if (eventPrefabs == null)
         {
+            Debug.LogWarning("[FloorRoomSetManager] ConvertEventRoomPrefabsToDictionary: eventPrefabs가 null입니다.");
             return dict;
         }
+        
+        Debug.Log($"[FloorRoomSetManager] ConvertEventRoomPrefabsToDictionary 시작 - eventPrefabs: {(eventPrefabs != null ? "not null" : "null")}");
         
         if (eventPrefabs.diggingRoomPrefabs != null && eventPrefabs.diggingRoomPrefabs.Length > 0)
         {
             var validPrefabs = System.Array.FindAll(eventPrefabs.diggingRoomPrefabs, p => p != null);
+            Debug.Log($"[FloorRoomSetManager] Digging 프리팹 - 원본: {eventPrefabs.diggingRoomPrefabs.Length}개, 유효: {validPrefabs.Length}개");
             if (validPrefabs.Length > 0) dict[EventRoomType.Digging] = validPrefabs;
+        }
+        else
+        {
+            Debug.Log($"[FloorRoomSetManager] Digging 프리팹 - 배열이 null이거나 비어있음 (null: {eventPrefabs.diggingRoomPrefabs == null}, Length: {(eventPrefabs.diggingRoomPrefabs != null ? eventPrefabs.diggingRoomPrefabs.Length : 0)})");
         }
         
         if (eventPrefabs.abandonedForgeRoomPrefabs != null && eventPrefabs.abandonedForgeRoomPrefabs.Length > 0)
         {
             var validPrefabs = System.Array.FindAll(eventPrefabs.abandonedForgeRoomPrefabs, p => p != null);
+            Debug.Log($"[FloorRoomSetManager] AbandonedForge 프리팹 - 원본: {eventPrefabs.abandonedForgeRoomPrefabs.Length}개, 유효: {validPrefabs.Length}개");
             if (validPrefabs.Length > 0) dict[EventRoomType.AbandonedForge] = validPrefabs;
+        }
+        else
+        {
+            Debug.Log($"[FloorRoomSetManager] AbandonedForge 프리팹 - 배열이 null이거나 비어있음 (null: {eventPrefabs.abandonedForgeRoomPrefabs == null}, Length: {(eventPrefabs.abandonedForgeRoomPrefabs != null ? eventPrefabs.abandonedForgeRoomPrefabs.Length : 0)})");
         }
         
         if (eventPrefabs.gamblingWellRoomPrefabs != null && eventPrefabs.gamblingWellRoomPrefabs.Length > 0)
         {
             var validPrefabs = System.Array.FindAll(eventPrefabs.gamblingWellRoomPrefabs, p => p != null);
+            Debug.Log($"[FloorRoomSetManager] GamblingWell 프리팹 - 원본: {eventPrefabs.gamblingWellRoomPrefabs.Length}개, 유효: {validPrefabs.Length}개");
             if (validPrefabs.Length > 0) dict[EventRoomType.GamblingWell] = validPrefabs;
+        }
+        else
+        {
+            Debug.Log($"[FloorRoomSetManager] GamblingWell 프리팹 - 배열이 null이거나 비어있음 (null: {eventPrefabs.gamblingWellRoomPrefabs == null}, Length: {(eventPrefabs.gamblingWellRoomPrefabs != null ? eventPrefabs.gamblingWellRoomPrefabs.Length : 0)})");
         }
         
         if (eventPrefabs.chestRoomPrefabs != null && eventPrefabs.chestRoomPrefabs.Length > 0)
         {
             var validPrefabs = System.Array.FindAll(eventPrefabs.chestRoomPrefabs, p => p != null);
+            Debug.Log($"[FloorRoomSetManager] ChestRoom 프리팹 - 원본: {eventPrefabs.chestRoomPrefabs.Length}개, 유효: {validPrefabs.Length}개");
             if (validPrefabs.Length > 0) dict[EventRoomType.ChestRoom] = validPrefabs;
+        }
+        else
+        {
+            Debug.Log($"[FloorRoomSetManager] ChestRoom 프리팹 - 배열이 null이거나 비어있음 (null: {eventPrefabs.chestRoomPrefabs == null}, Length: {(eventPrefabs.chestRoomPrefabs != null ? eventPrefabs.chestRoomPrefabs.Length : 0)})");
         }
         
         if (eventPrefabs.healingRoomPrefabs != null && eventPrefabs.healingRoomPrefabs.Length > 0)
         {
             var validPrefabs = System.Array.FindAll(eventPrefabs.healingRoomPrefabs, p => p != null);
+            Debug.Log($"[FloorRoomSetManager] Healing 프리팹 - 원본: {eventPrefabs.healingRoomPrefabs.Length}개, 유효: {validPrefabs.Length}개");
             if (validPrefabs.Length > 0) dict[EventRoomType.Healing] = validPrefabs;
         }
+        else
+        {
+            Debug.Log($"[FloorRoomSetManager] Healing 프리팹 - 배열이 null이거나 비어있음 (null: {eventPrefabs.healingRoomPrefabs == null}, Length: {(eventPrefabs.healingRoomPrefabs != null ? eventPrefabs.healingRoomPrefabs.Length : 0)})");
+        }
         
+        Debug.Log($"[FloorRoomSetManager] ConvertEventRoomPrefabsToDictionary 완료 - 총 {dict.Count}개 EventRoomType 등록됨");
         return dict;
     }
     
@@ -310,7 +347,11 @@ public class FloorRoomSetManager : MonoBehaviour
     /// </summary>
     private void InitializeFloorInfos()
     {
-        if (floorInfos != null) return;
+        if (floorInfos != null)
+        {
+            Debug.Log($"[FloorRoomSetManager] InitializeFloorInfos: 이미 초기화되어 있습니다. (floorInfos.Count: {floorInfos.Count})");
+            return;
+        }
 
         floorInfos = new Dictionary<int, FloorInfo>();
         Dictionary<int, RoomType[]> roomTypes = GetFloorRoomTypes();
@@ -321,10 +362,15 @@ public class FloorRoomSetManager : MonoBehaviour
             int floorNumber = kvp.Key;
             RoomType[] rooms = kvp.Value;
             FloorRoomPrefabs floorPrefabs = instance.GetFloorPrefabs(floorNumber);
+            
+            Debug.Log($"[FloorRoomSetManager] {floorNumber}층 초기화 시작 - floorPrefabs: {(floorPrefabs != null ? "not null" : "null")}, " +
+                $"eventRoomTypePrefabs: {(floorPrefabs != null && floorPrefabs.eventRoomTypePrefabs != null ? "not null" : "null")}");
+            
             Dictionary<RoomType, GameObject[]> prefabDict = instance.ConvertPrefabsToDictionary(floorPrefabs);
             Dictionary<EventRoomType, GameObject[]> eventPrefabDict = instance.ConvertEventRoomPrefabsToDictionary(
                 floorPrefabs != null ? floorPrefabs.eventRoomTypePrefabs : null);
 
+            Debug.Log($"[FloorRoomSetManager] {floorNumber}층 초기화 완료 - eventPrefabDict.Count: {eventPrefabDict.Count}");
             floorInfos[floorNumber] = new FloorInfo(floorNumber, rooms, prefabDict, eventPrefabDict);
         }
     }
@@ -347,14 +393,25 @@ public class FloorRoomSetManager : MonoBehaviour
     /// 층 번호를 넣으면 해당 층의 정보를 반환합니다.
     /// - 정의되지 않은 층이면 null 을 반환하고 경고 로그를 남깁니다.
     /// </summary>
-    public static FloorInfo GetFloorInfo(int floorNumber)
+    public static FloorInfo GetFloorInfo(int floorNumber, bool forceReinitialize = false)
     {
-        if (floorInfos == null)
+        FloorRoomSetManager instance = FindCurrentInstance();
+        if (instance == null)
         {
-            Instance.InitializeFloorInfos();
+            Debug.LogError($"[FloorRoomSetManager] 현재 씬에 FloorRoomSetManager가 없습니다.");
+            return null;
         }
+        
+        // 강제 재초기화가 요청되면 floorInfos를 null로 설정
+        if (forceReinitialize)
+        {
+            Debug.Log($"[FloorRoomSetManager] GetFloorInfo: floorInfos 강제 재초기화");
+            instance.floorInfos = null;
+        }
+        
+        instance.InitializeFloorInfos();
 
-        if (floorInfos.TryGetValue(floorNumber, out FloorInfo info))
+        if (instance.floorInfos.TryGetValue(floorNumber, out FloorInfo info))
         {
             return info;
         }
@@ -417,9 +474,32 @@ public class FloorRoomSetManager : MonoBehaviour
     public static GameObject[] GetEventRoomPrefabs(int floorNumber, EventRoomType eventType)
     {
         FloorInfo info = GetFloorInfo(floorNumber);
-        if (info == null || info.EventRoomTypePrefabs == null) return null;
+        if (info == null)
+        {
+            Debug.LogWarning($"[FloorRoomSetManager] GetEventRoomPrefabs({floorNumber}, {eventType}): floorInfo가 null입니다.");
+            return null;
+        }
         
-        info.EventRoomTypePrefabs.TryGetValue(eventType, out GameObject[] prefabs);
+        if (info.EventRoomTypePrefabs == null)
+        {
+            Debug.LogWarning($"[FloorRoomSetManager] GetEventRoomPrefabs({floorNumber}, {eventType}): EventRoomTypePrefabs가 null입니다.");
+            return null;
+        }
+        
+        bool hasKey = info.EventRoomTypePrefabs.TryGetValue(eventType, out GameObject[] prefabs);
+        if (!hasKey)
+        {
+            Debug.LogWarning($"[FloorRoomSetManager] GetEventRoomPrefabs({floorNumber}, {eventType}): EventRoomTypePrefabs에 {eventType} 키가 없습니다. (총 {info.EventRoomTypePrefabs.Count}개 키 존재)");
+            return null;
+        }
+        
+        if (prefabs == null || prefabs.Length == 0)
+        {
+            Debug.LogWarning($"[FloorRoomSetManager] GetEventRoomPrefabs({floorNumber}, {eventType}): 프리팹 배열이 null이거나 비어있습니다.");
+            return null;
+        }
+        
+        Debug.Log($"[FloorRoomSetManager] GetEventRoomPrefabs({floorNumber}, {eventType}): {prefabs.Length}개 프리팹 반환");
         return prefabs;
     }
     

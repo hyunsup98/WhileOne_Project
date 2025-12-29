@@ -161,6 +161,18 @@ public class DungeonGenerator : MonoBehaviour
             if (floorInfo.EventRoomTypePrefabs != null)
             {
                 eventRoomTypePrefabs = floorInfo.EventRoomTypePrefabs;
+                Debug.Log($"[DungeonGenerator] 층별 이벤트 방 프리팹이 {eventRoomTypePrefabs.Count}개 로드되었습니다.");
+                
+                // 각 EventRoomType별 프리팹 개수 로그 출력
+                foreach (var kvp in eventRoomTypePrefabs)
+                {
+                    int validCount = kvp.Value != null ? System.Array.FindAll(kvp.Value, p => p != null).Length : 0;
+                    Debug.Log($"[DungeonGenerator] - {kvp.Key}: {validCount}개 프리팹 등록됨");
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"[DungeonGenerator] floorInfo.EventRoomTypePrefabs가 null입니다.");
             }
         }
         else
@@ -178,6 +190,52 @@ public class DungeonGenerator : MonoBehaviour
         
         while (!allCorridorsValid && adjustmentAttempt < maxAdjustmentAttempts)
         {
+            // 재시도 시에도 프리팹 딕셔너리를 다시 로드 (floorInfo가 변경될 수 있으므로)
+            if (adjustmentAttempt > 0)
+            {
+                // roomPrefabs 다시 로드
+                roomPrefabs.Clear();
+                foreach (RoomType roomType in System.Enum.GetValues(typeof(RoomType)))
+                {
+                    GameObject[] prefabs = FloorRoomSetManager.GetRoomPrefabs(currentFloor, roomType);
+                    roomPrefabs[roomType] = (prefabs != null && prefabs.Length > 0) ? prefabs : null;
+                }
+                
+                // eventRoomTypePrefabs 다시 로드 - FloorRoomSetManager에서 직접 가져오기
+                // 재시도 시에는 floorInfos를 강제로 재초기화
+                FloorInfo retryFloorInfo = FloorRoomSetManager.GetFloorInfo(currentFloor, forceReinitialize: true);
+                if (retryFloorInfo != null && retryFloorInfo.EventRoomTypePrefabs != null)
+                {
+                    eventRoomTypePrefabs.Clear();
+                    foreach (var kvp in retryFloorInfo.EventRoomTypePrefabs)
+                    {
+                        eventRoomTypePrefabs[kvp.Key] = kvp.Value;
+                    }
+                    Debug.Log($"[DungeonGenerator] 재시도 시 층별 이벤트 방 프리팹이 {eventRoomTypePrefabs.Count}개 로드되었습니다.");
+                    
+                    // 각 EventRoomType별 프리팹 개수 로그 출력
+                    foreach (var kvp in eventRoomTypePrefabs)
+                    {
+                        int validCount = kvp.Value != null ? System.Array.FindAll(kvp.Value, p => p != null).Length : 0;
+                        Debug.Log($"[DungeonGenerator] - {kvp.Key}: {validCount}개 프리팹 등록됨");
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning($"[DungeonGenerator] 재시도 시 floorInfo를 가져올 수 없습니다. (retryFloorInfo: {(retryFloorInfo != null ? "not null" : "null")})");
+                    eventRoomTypePrefabs.Clear();
+                }
+                
+                Debug.Log($"[DungeonGenerator] 재시도 시 층별 이벤트 방 프리팹이 {eventRoomTypePrefabs.Count}개 로드되었습니다.");
+                
+                // 각 EventRoomType별 프리팹 개수 로그 출력
+                foreach (var kvp in eventRoomTypePrefabs)
+                {
+                    int validCount = kvp.Value != null ? System.Array.FindAll(kvp.Value, p => p != null).Length : 0;
+                    Debug.Log($"[DungeonGenerator] - {kvp.Key}: {validCount}개 프리팹 등록됨");
+                }
+            }
+            
             // 방 오브젝트 생성
             DungeonRoomPlacer.CreateRoomObjects(
                 dungeonGrid, parent, unityGrid, roomSpacingInCells, roomPrefabs, eventRoomTypePrefabs,
@@ -292,6 +350,24 @@ public class DungeonGenerator : MonoBehaviour
                 DungeonRoomGenerator.EnsureAdjacentDoorsConnected(dungeonGrid);
                 SetRooms(floorInfo);
                 
+                // 프리팹 딕셔너리 다시 로드
+                roomPrefabs.Clear();
+                foreach (RoomType roomType in System.Enum.GetValues(typeof(RoomType)))
+                {
+                    GameObject[] prefabs = FloorRoomSetManager.GetRoomPrefabs(currentFloor, roomType);
+                    roomPrefabs[roomType] = (prefabs != null && prefabs.Length > 0) ? prefabs : null;
+                }
+                
+                eventRoomTypePrefabs.Clear();
+                foreach (EventRoomType eventType in System.Enum.GetValues(typeof(EventRoomType)))
+                {
+                    GameObject[] prefabs = FloorRoomSetManager.GetEventRoomPrefabs(currentFloor, eventType);
+                    if (prefabs != null && prefabs.Length > 0)
+                    {
+                        eventRoomTypePrefabs[eventType] = prefabs;
+                    }
+                }
+                
                 // 방 배치 재시도
                 DungeonRoomPlacer.CreateRoomObjects(
                     dungeonGrid, parent, unityGrid, roomSpacingInCells, roomPrefabs, eventRoomTypePrefabs,
@@ -401,7 +477,7 @@ public class DungeonGenerator : MonoBehaviour
         //    }
         //}
         
-        // 기존 이벤트 방 지정 로직 (테스트용으로 주석 처리)
+        // 기존 이벤트 방 지정 로직
         
         int eventRoomCount = floorInfo.GetRoomCountWithType(RoomType.Event);
         if (eventRoomCount > 0 && remaining.Count >= eventRoomCount)
@@ -409,10 +485,7 @@ public class DungeonGenerator : MonoBehaviour
             // 이벤트 방 컨셉 관리자 초기화
             EventRoomManager.InitializeForFloor();
             
-            // 이벤트 방 개수 제한 (최대 2개)
-            int actualEventRoomCount = Mathf.Min(eventRoomCount, 2);
-            
-            for (int i = 0; i < actualEventRoomCount; i++)
+            for (int i = 0; i < eventRoomCount; i++)
             {
                 // 사용 가능한 이벤트 방 컨셉이 없으면 중단
                 if (EventRoomManager.GetAvailableCount() == 0)
