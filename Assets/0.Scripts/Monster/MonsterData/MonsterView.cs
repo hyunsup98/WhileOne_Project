@@ -1,12 +1,15 @@
+using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 
-public class MonsterView : MonoBehaviour, IStunable
+public class MonsterView : MonoBehaviour, IStunable, IDead
 {
     [SerializeField] private MonsterData _monsterData;    // 몬스터 데이터 SO
     private Animator _animator;
-    
+
+    public event Action OnDeath;
+
     public Transform MyTransform { get; private set; }
     public MonsterPresenter Presenter { get; private set; }
     public bool IsStun { get; private set; }
@@ -185,6 +188,8 @@ public class MonsterView : MonoBehaviour, IStunable
     }
 
     public void OnHit(float damage) => Presenter.OnHit(damage);
+
+    public void OnDead() => OnDeath?.Invoke();
 
     public void OnStun()
     {
