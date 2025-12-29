@@ -10,7 +10,7 @@ public class StatBarPresenter
         _model = model;
         _view = view;
 
-        _model._onStaminaChanged += _view.SetStaminaSlider;
-        _model._onHpChanged += _view.SetHpSlider;
+        _model.OnStaminaChanged += _view.SetStaminaSlider;
+        _model.OnHpChanged += _view.SetHpSlider;
     }
 }

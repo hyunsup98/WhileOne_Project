@@ -45,7 +45,7 @@ public class UI_Settings : MonoBehaviour
                     OnClick_EnableSettings();
 
                 //설정창의 on/off 여부에 따라서 게임 상태 변경
-                GameManager.Instance.SetGameState(_settings.activeSelf ? GameState.Pause : GameState.InGame);
+                GameManager.Instance.SetGameState(_settings.activeSelf ? GameState.Pause : GameState.Playing);
             }
         };
     }
@@ -58,6 +58,7 @@ public class UI_Settings : MonoBehaviour
         if(_settings != null && !_settings.activeSelf)
         {
             _settings.SetActive(true);
+            GameManager.Instance.SetGameState(_settings.activeSelf ? GameState.Pause : GameState.Playing);
         }
     }
 
@@ -67,6 +68,7 @@ public class UI_Settings : MonoBehaviour
         if(_settings != null && _settings.activeSelf)
         {
             _settings.SetActive(false);
+            GameManager.Instance.SetGameState(_settings.activeSelf ? GameState.Pause : GameState.Playing);
         }
     }
 
@@ -88,7 +90,7 @@ public class UI_Settings : MonoBehaviour
             _settings.SetActive(false);
 
             //설정창의 on/off 여부에 따라서 게임 상태 변경
-            GameManager.Instance.SetGameState(_settings.activeSelf ? GameState.Pause : GameState.InGame);
+            GameManager.Instance.SetGameState(_settings.activeSelf ? GameState.Pause : GameState.Playing);
         }
     }
 

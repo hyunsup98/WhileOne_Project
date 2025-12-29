@@ -11,7 +11,7 @@ public class LoadingManager : MonoBehaviour
     [SerializeField] private Image _loadingBar;
     [SerializeField] private TMP_Text _loadingText;
 
-    private float _loadingTime = 4f; //최소 시간동안은 로딩 안됨
+    private float _loadingTime = 2.5f; //최소 시간동안은 로딩 안됨
 
 
     private void Start()

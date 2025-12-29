@@ -2,8 +2,6 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Player : MonoBehaviour
 {
@@ -28,8 +26,8 @@ public class Player : MonoBehaviour
     private IState actionCurrentState;
 
     //이벤트 관련 변수
-    public event Action<float,float> _onHpChanged;
-    public event Action<float,float> _onStaminaChanged;
+    public event Action<float,float> OnHpChanged;
+    public event Action<float,float> OnStaminaChanged;
 
     //코루틴 변수
     private WaitForSeconds _delay;
@@ -106,8 +104,11 @@ public class Player : MonoBehaviour
         Component();
         _actionMap = _input.actions.FindActionMap("Player");
 
-        _hp = _maxHp;
-        _stamina = _maxStamina;
+        ChangedStamina = _maxStamina;
+
+        float savedHp = DataManager.Instance.CharacterData._playerHp;
+        _hp = (savedHp > 0) ? savedHp : _maxHp;
+
     }
     void Component()
     {
@@ -122,12 +123,19 @@ public class Player : MonoBehaviour
     }
     void Start()
     {
-        _onStaminaChanged?.Invoke(_maxStamina, ChangedStamina);
+        OnStaminaChanged?.Invoke(_maxStamina, ChangedStamina);
         
         MoveState(new IdleState(this));
         ActionState(new ActionIdleState(this));
 
         _delay = new WaitForSeconds(5f);
+
+        _hp = DataManager.Instance.CharacterData._playerHp;
+        OnHpChanged?.Invoke(_maxHp, _hp);
+    }
+    private void OnEnable()
+    {
+        regen = StartCoroutine(RestoreStamina());
     }
 
     public float ChangedHealth
@@ -138,7 +146,7 @@ public class Player : MonoBehaviour
             _hp = Mathf.Clamp(value, 0, _maxHp);
             if(_hp >= 0f)
             {
-                _onHpChanged?.Invoke(_maxHp,ChangedHealth);
+                OnHpChanged?.Invoke(_maxHp,ChangedHealth);
                 DataManager.Instance.CharacterData._playerHp = _hp;
 
                 if(_hp <= Mathf.Epsilon)
@@ -147,7 +155,6 @@ public class Player : MonoBehaviour
                 }
             }
         }
-           
     }
     public float ChangedStamina
     {
@@ -158,18 +165,27 @@ public class Player : MonoBehaviour
             DataManager.Instance.CharacterData._playerStamina = _stamina;
             if (_stamina >= 0f)
             {
-                _onStaminaChanged?.Invoke(_maxStamina, ChangedStamina);
+                OnStaminaChanged?.Invoke(_maxStamina, ChangedStamina);
             }
         }
-           
     }
+    //private void UpdateStamina(float currentStamina)
+    //{
+    //    _stamina = currentStamina;
+    //    DataManager.Instance.CharacterData._playerStamina = _stamina;
+    //    if (_stamina >= 0f)
+    //    {
+    //        _onStaminaChanged?.Invoke(_maxStamina, ChangedStamina);
+    //    }
+    //}
+
     private void Update()
     {
         PlayerDir();
         moveCurrentState?.Update();
         actionCurrentState?.Update();
 
-        if(Keyboard.current.fKey.wasPressedThisFrame)
+        if (Keyboard.current.fKey.wasPressedThisFrame)
         {
             ChangedHealth -= 10f;
         }
@@ -201,16 +217,16 @@ public class Player : MonoBehaviour
     {
        while(_stamina < _maxStamina)
         {
-            ChangedStamina += _restoreStamina;
+            yield return new WaitForSeconds(1);
 
-            yield return new WaitForSeconds(2);
+            ChangedStamina += _restoreStamina;
         }
         regen = null;
     }
     public void UseStamina()
     {
         _stamina -= 50;
-        _onStaminaChanged?.Invoke(_maxStamina, _stamina);
+        OnStaminaChanged?.Invoke(_maxStamina, _stamina);
         if (regen == null)
         {
            regen =  StartCoroutine(RestoreStamina());
@@ -232,5 +248,6 @@ public class Player : MonoBehaviour
     private void OnDisable()
     {
         GameManager.Instance.player = null;
+        StopAllCoroutines();
     }
 }

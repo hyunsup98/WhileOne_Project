@@ -805,6 +805,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8061fc5ef5ab9cf4ebb10cad4d46ed38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeadEnding
+  _titleSceneName: Title
   text_title: {fileID: 152258405}
   text_desc: {fileID: 324576513}
 --- !u!114 &1378989514

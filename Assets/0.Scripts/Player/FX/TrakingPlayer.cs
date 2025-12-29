@@ -10,7 +10,10 @@ public class TrakingPlayer : MonoBehaviour
     [SerializeField] private Animator attackAnim;
     [SerializeField] AttackDamage _attackFX;
     public Transform _test;
+
+    private bool _isActive = true;
     public AttackDamage AttackFxInstance { get; private set; }
+    public bool Active { get{ return _isActive; } set{ value = _isActive; } }
     Vector3 _mousePosition;
     private SpriteRenderer _rend;
 
@@ -35,6 +38,7 @@ public class TrakingPlayer : MonoBehaviour
     {
         if (AttackFxInstance == null) return;
 
+        atkParent.transform.GetChild(0).gameObject.SetActive(true);
         attackAnim.SetTrigger("attack");
 
         Vector3 _mouse = Mouse.current.position.ReadValue();
@@ -47,6 +51,7 @@ public class TrakingPlayer : MonoBehaviour
 
         atkParent.position = _test.position + dir * atkDistance;
         atkParent.transform.right = dir;
+
 
         //if (dir.x > 0)
         //{

@@ -101,7 +101,7 @@ public class WeaponChange : MonoBehaviour
             WeaponPool.Instance.TakeObject(_slotWeapon2);
 
         _slotWeapon2 = weapon;
-        _slotWeapon2.transform.SetParent(_weaponHands);
+        _slotWeapon2.transform.SetParent(_weaponHands, false);
         _slotWeapon2.transform.localPosition = Vector3.zero;
         currentweapon.gameObject.SetActive(false);
         currentweapon = _slotWeapon2;
@@ -140,25 +140,33 @@ public class WeaponChange : MonoBehaviour
     {
         _isAlreadyHit = false;
     }
+
     private void HitAble(GameObject enemy)
     {
         if (enemy.TryGetComponent<MonsterView>(out var monster))
         {
-            monster.Presenter.OnHit(_weaponDamage);
+            monster.Presenter.OnHit(currentweapon.WeaponData.weaponAttack1Damage + DataManager.Instance.CharacterData._bonusAtk);
         }
 
         if (!_isAlreadyHit)
         {
-            _durability--;
-            GameManager.Instance.CurrentDungeon.EquipSlotController.ChangeSubWeaponDurability(_slotWeapon2.Durability, _slotWeapon2.WeaponData.weaponDurability);
-            _isAlreadyHit = true;
-            if (_durability <= 0)
+            if (currentweapon == _slotWeapon2)
             {
-                WeaponBreak();
+                _slotWeapon2.ReduceDurability(1);
+                GameManager.Instance.CurrentDungeon.EquipSlotController.ChangeSubWeaponDurability(_slotWeapon2.Durability, _slotWeapon2.WeaponData.weaponDurability);
+
+                if (_slotWeapon2.Durability <= 0)
+                    _slotWeapon2 = currentweapon = null;
+
+                _isAlreadyHit = true;
+                if (_durability <= 0)
+                {
+                    WeaponBreak();
+                }
             }
         }
     }
-    private void WeaponBreak()
+    public void WeaponBreak()
     {
         //¹«±â »Ñ»çÁü
         WeaponPool.Instance.TakeObject(currentweapon);
@@ -175,7 +183,7 @@ public class WeaponChange : MonoBehaviour
         if (_slotWeapon2 != null)
         {
             DataManager.Instance.CharacterData._subWeapon = _slotWeapon2;
-            _slotWeapon2.transform.SetParent(DataManager.Instance.CharacterData.transform);
+            _slotWeapon2.transform.SetParent(DataManager.Instance.CharacterData.transform, false);
         }
 
     }

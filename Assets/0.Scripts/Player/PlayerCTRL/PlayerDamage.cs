@@ -51,20 +51,29 @@ public class PlayerDamage : MonoBehaviour
 
     public void TakenDamage(float damage, Vector2 target)
     {
-        IsDamaged = true;
-        _isknock = true;
+
+        if (IsDamaged)
+        {
+            return;
+        }
         _player.ChangedHealth -= damage;
-        StartCoroutine(KnockBack(target));
+        if (!_isknock)
+        {
+            _isknock = true;
+            StartCoroutine(KnockBack(target));
+        }
         if(_isCoroutine == false)
         {
             StartCoroutine(Blink());
         }
+        
     }
     IEnumerator Blink()
     {
-       
+
         gameObject.tag = "Untagged";
         _checkTime = 0;
+        _isDamage = true;
         _isCoroutine = true;
         while (_finsihTime > _checkTime)
         {
@@ -86,12 +95,13 @@ public class PlayerDamage : MonoBehaviour
         }
         gameObject.tag = "Player";
         _isCoroutine = false;
+        _isDamage = false;
 
     }
     IEnumerator KnockBack(Vector2 target)
     {
         Vector3 dir = (transform.position - (Vector3)target).normalized;
-        _rg2d.linearVelocity = dir * _player.MoveSpeed * 1.2f;
+        _rg2d.linearVelocity = _player.MoveSpeed * 1.2f * dir;
         yield return new WaitForSeconds(0.2f);
 
         _rg2d.linearVelocity = Vector2.zero;

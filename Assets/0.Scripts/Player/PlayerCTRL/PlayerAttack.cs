@@ -19,7 +19,7 @@ public class PlayerAttack : MonoBehaviour
     //[SerializeField] private GameObject _effect2;
 
     // 이벤트 관련 변수
-    public event Action<int> _onSubWeaponAttack;        // 서브 무기로 쳤을 때 내구도 넘겨주기
+    public event Action<int> OnSubWeaponAttack;        // 서브 무기로 쳤을 때 내구도 넘겨주기
 
     bool _timer = false;
     float _attSpeed;
@@ -33,10 +33,10 @@ public class PlayerAttack : MonoBehaviour
 
     private void Awake()
     {
-        inIt();
+       InIt();
     }
 
-    void inIt()
+    void InIt()
     {
         _player = GetComponent<Player>();
 
