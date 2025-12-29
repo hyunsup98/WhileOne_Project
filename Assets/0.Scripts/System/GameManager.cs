@@ -36,7 +36,7 @@ public class GameManager : Singleton<GameManager>
 
             if (_currentGameState == GameState.Title)
             {
-                SceneManager.LoadScene("Pro_Title");
+                SceneManager.LoadScene("Title");
                 onGameStateTitle?.Invoke();
             }
             else if (_currentGameState == GameState.InGame)
@@ -49,7 +49,7 @@ public class GameManager : Singleton<GameManager>
             }
             else if (_currentGameState == GameState.Dead)
             {
-                SceneManager.LoadScene("Pro_DeadEnding");
+                SceneManager.LoadScene("Gameover");
                 onGameStateDead?.Invoke();
             }
         }
