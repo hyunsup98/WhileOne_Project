@@ -104,8 +104,9 @@ public class Player : MonoBehaviour
         Component();
         _actionMap = _input.actions.FindActionMap("Player");
 
-        _hp = _maxHp;
-        _stamina = _maxStamina;
+        ChangedStamina = _maxStamina;
+        ChangedHealth = _maxHp;
+
     }
     void Component()
     {
@@ -127,6 +128,10 @@ public class Player : MonoBehaviour
 
         _delay = new WaitForSeconds(5f);
     }
+    private void OnEnable()
+    {
+        regen = StartCoroutine(RestoreStamina());
+    }
 
     public float ChangedHealth
     {
@@ -145,7 +150,6 @@ public class Player : MonoBehaviour
                 }
             }
         }
-           
     }
     public float ChangedStamina
     {
@@ -159,15 +163,24 @@ public class Player : MonoBehaviour
                 _onStaminaChanged?.Invoke(_maxStamina, ChangedStamina);
             }
         }
-           
     }
+    //private void UpdateStamina(float currentStamina)
+    //{
+    //    _stamina = currentStamina;
+    //    DataManager.Instance.CharacterData._playerStamina = _stamina;
+    //    if (_stamina >= 0f)
+    //    {
+    //        _onStaminaChanged?.Invoke(_maxStamina, ChangedStamina);
+    //    }
+    //}
+
     private void Update()
     {
         PlayerDir();
         moveCurrentState?.Update();
         actionCurrentState?.Update();
 
-        if(Keyboard.current.fKey.wasPressedThisFrame)
+        if (Keyboard.current.fKey.wasPressedThisFrame)
         {
             ChangedHealth -= 10f;
         }
@@ -199,9 +212,9 @@ public class Player : MonoBehaviour
     {
        while(_stamina < _maxStamina)
         {
-            ChangedStamina += _restoreStamina;
+            yield return new WaitForSeconds(1);
 
-            yield return new WaitForSeconds(2);
+            ChangedStamina += _restoreStamina;
         }
         regen = null;
     }
@@ -230,5 +243,6 @@ public class Player : MonoBehaviour
     private void OnDisable()
     {
         GameManager.Instance.player = null;
+        StopAllCoroutines();
     }
 }
