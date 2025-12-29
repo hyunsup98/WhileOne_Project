@@ -158,7 +158,7 @@ public class WeaponChange : MonoBehaviour
             }
         }
     }
-    private void WeaponBreak()
+    public void WeaponBreak()
     {
         //¹«±â »Ñ»çÁü
         WeaponPool.Instance.TakeObject(currentweapon);
