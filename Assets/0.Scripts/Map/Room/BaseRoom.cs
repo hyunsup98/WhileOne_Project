@@ -133,7 +133,7 @@ public class BaseRoom : MonoBehaviour
                     // 연결되지 않은 경우: active = true (벽처럼 막힘)
                     door.SetActive(!isConnected);
                     
-                    // 연결되지 않은 경우 벽처럼 막기 위해 Wall 태그 설정
+                    // 연결되지 않은 경우 벽처럼 막기 위해 콜라이더 활성화
                     if (!isConnected)
                     {
                         Collider2D[] colliders = door.GetComponentsInChildren<Collider2D>(true);
@@ -142,7 +142,7 @@ public class BaseRoom : MonoBehaviour
                             if (col != null)
                             {
                                 col.enabled = true;
-                                col.isTrigger = true; // 물리 충돌은 피하고 이동 로직으로만 막기
+                                col.isTrigger = false; // 물리 충돌로 막기
                                 col.gameObject.tag = "Wall";
                             }
                         }
@@ -171,17 +171,14 @@ public class BaseRoom : MonoBehaviour
                     // 모든 문을 닫기 (벽처럼 막기)
                     door.SetActive(true);
                     
-                    // PlayerMoveController.CanMoveTo에서 벽으로 인식되도록
-                    // 콜라이더들이 "Wall" 태그를 가지게 설정
+                    // 콜라이더들을 물리 충돌로 막기
                     Collider2D[] colliders = door.GetComponentsInChildren<Collider2D>(true);
                     foreach (var col in colliders)
                     {
                         if (col != null)
                         {
                             col.enabled = true;
-                            // 물리적으로는 Trigger로 두고, 이동 로직(CanMoveTo)으로만 막아서
-                            // 문이 닫힐 때 플레이어가 벽에 끼지 않도록 한다.
-                            col.isTrigger = true;
+                            col.isTrigger = false; // 물리 충돌로 막기
                             col.gameObject.tag = "Wall";
                         }
                     }
