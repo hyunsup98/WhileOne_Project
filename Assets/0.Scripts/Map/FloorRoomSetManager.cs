@@ -33,16 +33,16 @@ public class FloorRoomPrefabs
     public GameObject[] normalRoomPrefabs;
     [Tooltip("출구 방 프리팹 리스트 (여러 개 설정 시 랜덤 선택)")]
     public GameObject[] exitRoomPrefabs;
-    [Tooltip("이벤트 방 프리팹 리스트 (여러 개 설정 시 랜덤 선택, EventRoomType별 프리팹이 없을 때 fallback으로 사용)")]
-    public GameObject[] eventRoomPrefabs;
-    [Tooltip("이벤트 방 컨셉별 프리팹 설정")]
-    public EventRoomPrefabs eventRoomTypePrefabs;
     [Tooltip("함정 방 프리팹 리스트 (여러 개 설정 시 랜덤 선택)")]
     public GameObject[] trapRoomPrefabs;
     [Tooltip("보물 방 프리팹 리스트 (여러 개 설정 시 랜덤 선택)")]
     public GameObject[] treasureRoomPrefabs;
     [Tooltip("보스 방 프리팹 리스트 (여러 개 설정 시 랜덤 선택)")]
     public GameObject[] bossRoomPrefabs;
+    [Tooltip("이벤트 방 프리팹 리스트 (여러 개 설정 시 랜덤 선택, EventRoomType별 프리팹이 없을 때 fallback으로 사용)")]
+    public GameObject[] eventRoomPrefabs;
+    [Tooltip("이벤트 방 컨셉별 프리팹 설정")]
+    public EventRoomPrefabs eventRoomTypePrefabs;
 }
 
 /// <summary>

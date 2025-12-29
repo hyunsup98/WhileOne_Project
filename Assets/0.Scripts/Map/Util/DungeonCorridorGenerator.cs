@@ -14,9 +14,7 @@ public static class DungeonCorridorGenerator
         Transform parent,
         Grid unityGrid,
         GameObject corridorPrefabHorizontal,
-        GameObject corridorPrefabVertical,
-        GameObject corridorPrefabT,
-        GameObject corridorPrefabCross)
+        GameObject corridorPrefabVertical)
     {
         if (corridorPrefabHorizontal == null && corridorPrefabVertical == null)
         {
@@ -249,6 +247,29 @@ public static class DungeonCorridorGenerator
             return new List<GameObject>();
         }
         
+        // cellSize 가져오기 (오프셋 계산용)
+        float cellSize = DungeonGridHelper.ResolveCellSize(null, unityGrid);
+        
+        // DoorCenterMarker에서 복도가 뻗어나가는 방향으로 +1칸 이동한 위치 계산
+        Vector3 corridorStartPos = room1DoorPos;
+        Vector3 corridorEndPos = room2DoorPos;
+        
+        // 방향 벡터 계산 (정규화)
+        Vector3 directionOffset = Vector3.zero;
+        if (direction == Direction.Up)
+            directionOffset = Vector3.up * cellSize;
+        else if (direction == Direction.Down)
+            directionOffset = Vector3.down * cellSize;
+        else if (direction == Direction.Left)
+            directionOffset = Vector3.left * cellSize;
+        else if (direction == Direction.Right)
+            directionOffset = Vector3.right * cellSize;
+        
+        // 복도 시작 위치: DoorCenterMarker에서 +1칸 이동
+        corridorStartPos = room1DoorPos + directionOffset;
+        // 복도 끝 위치: 반대 방향 DoorCenterMarker에서 반대 방향으로 +1칸 이동
+        corridorEndPos = room2DoorPos - directionOffset;
+        
         // 수평/수직 판단 (십자 규격 정렬로 항상 수평 또는 수직만 가능)
         bool isHorizontal = (direction == Direction.Left || direction == Direction.Right);
         GameObject corridorPrefab = isHorizontal ? corridorPrefabHorizontal : corridorPrefabVertical;
@@ -259,8 +280,8 @@ public static class DungeonCorridorGenerator
             return new List<GameObject>();
         }
         
-        // 복도 길이 계산: |방 A 문 위치 - 방 B 문 위치|
-        float targetDistance = Vector3.Distance(room1DoorPos, room2DoorPos);
+        // 복도 길이 계산: |복도 시작 위치 - 복도 끝 위치|
+        float targetDistance = Vector3.Distance(corridorStartPos, corridorEndPos);
         
         // 방향 벡터 계산
         Vector3 directionVector = room2DoorPos - room1DoorPos;
@@ -289,9 +310,8 @@ public static class DungeonCorridorGenerator
         else
         {
             // DoorCenterMarker가 없으면 기본값 사용 (4칸)
-            float cellSize = DungeonGridHelper.ResolveCellSize(null, unityGrid);
             const int corridorTileSize = 4;
-            actualCorridorLength = corridorTileSize * cellSize;
+            actualCorridorLength = corridorTileSize;
         }
         Object.DestroyImmediate(tempCorridor);
         
@@ -309,14 +329,14 @@ public static class DungeonCorridorGenerator
         // 복도 프리팹들을 배치 (끊기지 않게 연결, 필요시 겹침 허용)
         List<GameObject> corridorTiles = new List<GameObject>();
         
-        // 첫 번째 복도: 방1의 DoorCenterMarker에 맞추기
-        GameObject firstCorridor = Object.Instantiate(corridorPrefab, room1DoorPos, Quaternion.identity, parent);
+        // 첫 번째 복도: 복도 시작 위치에 맞추기 (DoorCenterMarker에서 +1칸 이동한 위치)
+        GameObject firstCorridor = Object.Instantiate(corridorPrefab, corridorStartPos, Quaternion.identity, parent);
         Transform[] firstMarkers = FindCorridorDoorCenterMarkers(firstCorridor, isHorizontal, direction, room1Pos, room2Pos);
         
         if (firstMarkers[0] != null)
         {
             Vector3 firstStartPos = firstMarkers[0].position;
-            Vector3 offset = room1DoorPos - firstStartPos;
+            Vector3 offset = corridorStartPos - firstStartPos;
             firstCorridor.transform.position += offset;
         }
         corridorTiles.Add(firstCorridor);
@@ -359,7 +379,7 @@ public static class DungeonCorridorGenerator
             SetCorridorTilePassable(corridor);
         }
         
-        // 마지막 복도의 끝 DoorCenterMarker를 방2의 DoorCenterMarker에 정확히 맞추기
+        // 마지막 복도의 끝 DoorCenterMarker를 복도 끝 위치에 정확히 맞추기 (DoorCenterMarker에서 +1칸 이동한 위치)
         // 거리가 4의 배수가 아니면 복도들이 일부 겹치게 됨 (끊기지 않고 연결)
         if (corridorTiles.Count > 0)
         {
@@ -370,9 +390,9 @@ public static class DungeonCorridorGenerator
             if (lastEndMarker != null)
             {
                 Vector3 lastEndPos = lastEndMarker.position;
-                Vector3 offset = room2DoorPos - lastEndPos;
+                Vector3 offset = corridorEndPos - lastEndPos;
                 
-                // 마지막 복도만 이동하여 방2의 DoorCenterMarker에 정확히 맞추기
+                // 마지막 복도만 이동하여 복도 끝 위치에 정확히 맞추기
                 // 이렇게 하면 복도들이 일부 겹칠 수 있지만, 끊기지 않고 완전히 연결됨
                 lastCorridor.transform.position += offset;
             }
@@ -380,7 +400,7 @@ public static class DungeonCorridorGenerator
         
         // 디버그: 복도 배치 확인
         Debug.Log($"[DungeonCorridorGenerator] 복도 생성 완료 - 방1: {room1.name}, 방2: {room2.name}, 복도 개수: {corridorTiles.Count}/{corridorCount}\n" +
-            $"방1 DoorCenterMarker: {room1DoorPos}, 방2 DoorCenterMarker: {room2DoorPos}, 거리: {targetDistance:F2}, 실제 프리팹 길이: {actualCorridorLength:F2}");
+            $"방1 DoorCenterMarker: {room1DoorPos}, 복도 시작 위치: {corridorStartPos}, 방2 DoorCenterMarker: {room2DoorPos}, 복도 끝 위치: {corridorEndPos}, 거리: {targetDistance:F2}, 실제 프리팹 길이: {actualCorridorLength:F2}");
         
         return corridorTiles;
     }

@@ -8,30 +8,25 @@ using System.Collections.Generic;
 public class BaseRoom : MonoBehaviour
 {
     [Header("Room Settings")]
-    [SerializeField] [Tooltip("방의 크기 (단위: Unity unit, 하위 호환용)")]
-    protected float roomSize = 4f;
-    [SerializeField] [Tooltip("방의 가로 크기 (단위: 타일 수, 0이면 roomSize 사용)")]
-    protected int roomWidth = 0; // 타일 수 단위
-    [SerializeField] [Tooltip("방의 세로 크기 (단위: 타일 수, 0이면 roomSize 사용)")]
-    protected int roomHeight = 0; // 타일 수 단위
-    [SerializeField] [Tooltip("타일 하나의 크기 (단위: Unity unit)")]
+    [SerializeField] [Tooltip("방의 가로 크기")]
+    protected int roomWidth = 15; // 타일 수 단위
+    [SerializeField] [Tooltip("방의 세로 크기")]
+    protected int roomHeight = 15; // 타일 수 단위
+
     protected float tileSize = 1f;
-    [SerializeField] [Tooltip("프리펩을 그대로 사용할지 여부. true면 방을 재생성하지 않고 프리펩 상태 그대로 사용합니다.")]
-    protected bool usePrefabAsIs = false; // 프리펩을 그대로 사용 (재생성 안 함)
-    
+
     // 외부 접근용
-    public float RoomSize => roomSize;
     public float TileSize => tileSize;
     
     /// <summary>
-    /// 방의 가로 크기를 Unity unit으로 반환합니다.
+    /// 방의 가로 크기를 Unity unit으로 반환합니다. (현재 타일사이즈 1이라 변동 없음)
     /// </summary>
-    public float RoomWidth => (roomWidth > 0) ? roomWidth * tileSize : roomSize;
+    public float RoomWidth => roomWidth * tileSize;
     
     /// <summary>
     /// 방의 세로 크기를 Unity unit으로 반환합니다.
     /// </summary>
-    public float RoomHeight => (roomHeight > 0) ? roomHeight * tileSize : roomSize;
+    public float RoomHeight => roomHeight * tileSize;
 
     protected Room roomData;
     
@@ -48,9 +43,6 @@ public class BaseRoom : MonoBehaviour
         
         // Door 오브젝트 찾기
         FindDoors();
-
-        // 프리팹으로 방 크기 계산
-        CalculateRoomSizeFromPrefab();
 
         // Door 활성화/비활성화
         UpdateDoors();
@@ -206,76 +198,5 @@ public class BaseRoom : MonoBehaviour
     {
         UpdateDoors();
     }
-
-
-    /// <summary>
-    /// 프리펩의 실제 크기를 계산합니다.
-    /// </summary>
-    protected virtual void CalculateRoomSizeFromPrefab()
-    {
-        // 이미 Inspector에서 roomSize를 지정했다면 자동 계산을 건너뜁니다.
-        if (roomSize > 0f)
-        {
-            return;
-        }
-        
-        Bounds bounds = new Bounds(transform.position, Vector3.zero);
-        bool hasBounds = false;
-        
-        // 모든 Renderer의 bounds를 합쳐서 방 크기 계산
-        Renderer[] renderers = GetComponentsInChildren<Renderer>();
-        foreach (Renderer renderer in renderers)
-        {
-            // 문은 제외 (문은 나중에 추가되므로)
-            if (renderer.name.Contains("Door") || renderer.name.Contains("door"))
-                continue;
-                
-            if (!hasBounds)
-            {
-                bounds = renderer.bounds;
-                hasBounds = true;
-            }
-            else
-            {
-                bounds.Encapsulate(renderer.bounds);
-            }
-        }
-        
-        if (hasBounds)
-        {
-            // 로컬 공간으로 변환 (부모의 스케일 고려)
-            Vector3 localSize = bounds.size;
-            if (transform.parent != null)
-            {
-                localSize.x /= transform.parent.lossyScale.x;
-                localSize.y /= transform.parent.lossyScale.y;
-            }
-            roomSize = Mathf.Max(localSize.x, localSize.y);
-        }
-        else
-        {
-            // bounds를 찾을 수 없으면 Collider로 시도
-            Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
-            if (colliders.Length > 0)
-            {
-                Bounds colliderBounds = colliders[0].bounds;
-                foreach (Collider2D col in colliders)
-                {
-                    if (col.name.Contains("Door") || col.name.Contains("door"))
-                        continue;
-                    colliderBounds.Encapsulate(col.bounds);
-                }
-                
-                Vector3 localSize = colliderBounds.size;
-                if (transform.parent != null)
-                {
-                    localSize.x /= transform.parent.lossyScale.x;
-                    localSize.y /= transform.parent.lossyScale.y;
-                }
-                roomSize = Mathf.Max(localSize.x, localSize.y);
-            }
-        }
-    }
-    
 }
 

@@ -40,7 +40,8 @@ public class ChestRoom : BaseEventRoom
             }
         }
         
-        Debug.Log($"[ChestRoom] 상자 배치 시작. RoomSize: {RoomSize}, 방 중심: {transform.position}");
+        float roomSize = Mathf.Max(RoomWidth, RoomHeight);
+        Debug.Log($"[ChestRoom] 상자 배치 시작. RoomSize: {roomSize}, 방 중심: {transform.position}");
         
         // 상자 인스턴스화 및 배치
         PlaceChests();
@@ -67,9 +68,10 @@ public class ChestRoom : BaseEventRoom
     private void PlaceChests()
     {
         Vector3 center = GetRoomCenter();
-        float spacing = RoomSize * 0.3f;
+        float roomSize = Mathf.Max(RoomWidth, RoomHeight);
+        float spacing = roomSize * 0.3f;
         
-        Debug.Log($"[ChestRoom] PlaceChests - center: {center}, spacing: {spacing}, RoomSize: {RoomSize}");
+        Debug.Log($"[ChestRoom] PlaceChests - center: {center}, spacing: {spacing}, RoomSize: {roomSize}");
         
         // Interactive 부모 찾기 (현재는 항상 방의 자식으로 직접 배치됨)
         Transform interactiveParent = DungeonRoomHelper.FindInteractiveParent(transform);

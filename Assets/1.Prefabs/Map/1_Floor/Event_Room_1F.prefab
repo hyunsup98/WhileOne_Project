@@ -195,8 +195,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1485902094766885545}
   - component: {fileID: 2859676890898842891}
-  - component: {fileID: 7017153539187398630}
   - component: {fileID: 3497035071729725615}
+  - component: {fileID: 7017153539187398630}
   m_Layer: 0
   m_Name: Event_Room_1F
   m_TagString: Untagged
@@ -239,6 +239,23 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
+--- !u!114 &3497035071729725615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4474050308984926237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7fb6eac52e9a514ba0f036159cb4dca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChestRoom
+  roomWidth: 15
+  roomHeight: 15
+  chestPrefabs:
+  - {fileID: 228447053981868614, guid: 015eba3987a021a4ea06ededd42a7476, type: 3}
+  - {fileID: 228447053981868614, guid: 015eba3987a021a4ea06ededd42a7476, type: 3}
 --- !u!114 &7017153539187398630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -254,26 +271,6 @@ MonoBehaviour:
   floorTileMap: {fileID: 6052733454294142852}
   digSpotTileMap: {fileID: 8431079681925531888}
   afterDigTile: {fileID: 0}
---- !u!114 &3497035071729725615
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4474050308984926237}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7fb6eac52e9a514ba0f036159cb4dca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ChestRoom
-  roomSize: 15
-  roomWidth: 15
-  roomHeight: 15
-  tileSize: 1
-  usePrefabAsIs: 1
-  chestPrefabs:
-  - {fileID: 228447053981868614, guid: 015eba3987a021a4ea06ededd42a7476, type: 3}
-  - {fileID: 228447053981868614, guid: 015eba3987a021a4ea06ededd42a7476, type: 3}
 --- !u!1 &4649929659397084723
 GameObject:
   m_ObjectHideFlags: 0

@@ -46,7 +46,8 @@ public class AbandonedForgeRoom : BaseEventRoom
         if (debris == null || debris.Length == 0) return;
         
         Vector3 center = GetRoomCenter();
-        float radius = RoomSize * 0.3f;
+        float roomSize = Mathf.Min(RoomWidth, RoomHeight);
+        float radius = roomSize * 0.3f;
         
         foreach (GameObject debrisObj in debris)
         {

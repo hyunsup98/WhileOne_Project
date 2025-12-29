@@ -18,8 +18,7 @@ public static class DungeonRoomPlacer
         Dictionary<EventRoomType, GameObject[]> eventRoomTypePrefabs,
         bool showRoomTypeLabels,
         float roomLabelOffsetX,
-        float roomLabelOffsetY,
-        float cellSize)
+        float roomLabelOffsetY)
     {
         // 먼저 모든 방의 크기 정보를 수집
         Dictionary<Vector2Int, Vector2> roomSizes = new Dictionary<Vector2Int, Vector2>();
@@ -48,7 +47,7 @@ public static class DungeonRoomPlacer
         // 각 방을 배치하면서 충돌 검사 및 조정
         // roomPositions에는 RoomCenterMarker의 월드 위치를 저장
         Dictionary<Vector2Int, Vector3> roomPositions = new Dictionary<Vector2Int, Vector3>();
-        Vector3 cellCenterOffset = new Vector3(cellSize * 0.5f, cellSize * 0.5f, 0f);
+        Vector3 cellCenterOffset = new Vector3(0.5f, 0.5f, 0f);
         
         // 십자 규격 정렬: 같은 행/열의 방들이 정확히 같은 x/y 좌표를 가지도록
         // 먼저 모든 방의 기본 위치를 계산 (행/열별로 최대 크기를 고려하여 정렬)
@@ -64,8 +63,8 @@ public static class DungeonRoomPlacer
             Vector3Int baseRoomCenterCell = new Vector3Int(position.x * roomSpacingInCells, position.y * roomSpacingInCells, 0);
             Vector3 baseWorldPosition = unityGrid != null
                 ? unityGrid.CellToWorld(baseRoomCenterCell) + cellCenterOffset
-                : new Vector3(position.x * roomSpacingInCells * cellSize + cellSize * 0.5f, 
-                             position.y * roomSpacingInCells * cellSize + cellSize * 0.5f, 0f);
+                : new Vector3(position.x * roomSpacingInCells + 1 * 0.5f, 
+                             position.y * roomSpacingInCells + 1 * 0.5f, 0f);
             
             // 행/열별 위치 저장 (같은 행/열의 방들이 같은 좌표를 가지도록)
             if (!rowYPositions.ContainsKey(position.y))
@@ -161,7 +160,7 @@ public static class DungeonRoomPlacer
                     float dy = Mathf.Abs(pos1.y - pos2.y);
                     
                     // 최소 간격 (복도 간격 포함)
-                    float corridorSpacing = roomSpacingInCells * cellSize;
+                    float corridorSpacing = roomSpacingInCells;
                     float minRequiredX = halfWidth1 + halfWidth2 + corridorSpacing;
                     float minRequiredY = halfHeight1 + halfHeight2 + corridorSpacing;
                     
@@ -178,20 +177,20 @@ public static class DungeonRoomPlacer
                         float yGap = (halfHeight1 + halfHeight2) - dy;
                         
                         // 최대 이동 거리 제한 (한 번에 너무 많이 이동하지 않도록)
-                        float maxPush = roomSpacingInCells * cellSize * 0.5f; // 최대 roomSpacingInCells의 절반만 이동
+                        float maxPush = roomSpacingInCells * 0.5f; // 최대 roomSpacingInCells의 절반만 이동
                         
                         if (xGap >= yGap)
                         {
                             // X축으로 분리
                             float pushX = Mathf.Min(minRequiredX - dx, maxPush);
-                            float pushXInCells = Mathf.Ceil(pushX / cellSize);
+                            float pushXInCells = Mathf.Ceil(pushX / 1);
                             float direction = pos2.x > pos1.x ? 1 : -1;
                             
                             // 같은 열의 모든 방 이동
                             int col = position1.x;
                             if (colXPositions.ContainsKey(col))
                             {
-                                colXPositions[col] -= direction * pushXInCells * cellSize;
+                                colXPositions[col] -= direction * pushXInCells;
                                 
                                 // 같은 열의 모든 방 위치 업데이트
                                 foreach (var sameColPos in dungeonGrid.GetAllPositions())
@@ -210,14 +209,14 @@ public static class DungeonRoomPlacer
                         {
                             // Y축으로 분리
                             float pushY = Mathf.Min(minRequiredY - dy, maxPush);
-                            float pushYInCells = Mathf.Ceil(pushY / cellSize);
+                            float pushYInCells = Mathf.Ceil(pushY / 1);
                             float direction = pos2.y > pos1.y ? 1 : -1;
                             
                             // 같은 행의 모든 방 이동
                             int row = position1.y;
                             if (rowYPositions.ContainsKey(row))
                             {
-                                rowYPositions[row] -= direction * pushYInCells * cellSize;
+                                rowYPositions[row] -= direction * pushYInCells;
                                 
                                 // 같은 행의 모든 방 위치 업데이트
                                 foreach (var sameRowPos in dungeonGrid.GetAllPositions())
@@ -290,106 +289,6 @@ public static class DungeonRoomPlacer
     }
     
     /// <summary>
-    /// 십자 규격 정렬을 유지하면서 충돌을 검사하고 위치를 조정합니다.
-    /// 같은 행/열의 방들은 정확히 같은 x/y 좌표를 유지합니다.
-    /// </summary>
-    private static Vector3 AdjustRoomPositionForCollisionAligned(
-        Vector2Int currentPos, 
-        Vector3 basePosition, 
-        Vector2 currentRoomSize,
-        Dictionary<Vector2Int, Vector3> existingPositions,
-        Dictionary<Vector2Int, Vector2> roomSizes,
-        float cellSize,
-        int roomSpacingInCells,
-        Dictionary<int, float> colXPositions,
-        Dictionary<int, float> rowYPositions)
-    {
-        float adjustedX = basePosition.x;
-        float adjustedY = basePosition.y;
-        float corridorSpacing = roomSpacingInCells * cellSize; // 칸 수를 Unity unit으로 변환
-        
-        // 같은 행/열이 아닌 모든 이미 배치된 방과 충돌 검사
-        foreach (var kvp in existingPositions)
-        {
-            Vector2Int existingPos = kvp.Key;
-            Vector3 existingRoomCenterPos = kvp.Value;
-            
-            // 자기 자신은 건너뛰기
-            if (existingPos == currentPos) continue;
-            
-            // 같은 행 또는 열에 있는 방은 이미 정렬되어 있으므로 건너뛰기
-            // (같은 행/열은 충돌하지 않도록 roomSpacingInCells로 이미 간격이 확보됨)
-            if (existingPos.x == currentPos.x || existingPos.y == currentPos.y) continue;
-            
-            // 방 크기 정보 확인
-            if (!roomSizes.ContainsKey(existingPos)) continue;
-            Vector2 existingSize = roomSizes[existingPos];
-            
-            // 현재 방과 기존 방의 반경 계산
-            float currentHalfWidth = currentRoomSize.x * 0.5f;
-            float currentHalfHeight = currentRoomSize.y * 0.5f;
-            float existingHalfWidth = existingSize.x * 0.5f;
-            float existingHalfHeight = existingSize.y * 0.5f;
-            
-            // 두 방 사이의 실제 거리 (대각선 거리)
-            float dx = Mathf.Abs(adjustedX - existingRoomCenterPos.x);
-            float dy = Mathf.Abs(adjustedY - existingRoomCenterPos.y);
-            
-            // 방 겹침 방지: 두 방의 경계 상자(Bounding Box)가 겹치지 않도록 확인
-            // X축과 Y축 모두에서 최소 간격 확보 필요
-            
-            // X축 최소 간격: 두 방의 반폭 합 + 복도 간격
-            float minRequiredX = currentHalfWidth + existingHalfWidth + corridorSpacing;
-            // Y축 최소 간격: 두 방의 반높이 합 + 복도 간격
-            float minRequiredY = currentHalfHeight + existingHalfHeight + corridorSpacing;
-            
-            // X축 충돌 검사: X축 거리가 부족하고 Y축에서도 겹칠 가능성이 있는 경우
-            bool xCollision = dx < minRequiredX;
-            bool yOverlap = dy < (currentHalfHeight + existingHalfHeight);
-            
-            if (xCollision && yOverlap)
-            {
-                // X축으로 충분히 밀어내기 (Grid 셀 단위로, 같은 열 정렬 유지)
-                float pushX = minRequiredX - dx;
-                float pushXInCells = Mathf.Ceil(pushX / cellSize);
-                
-                // 같은 열의 모든 방들을 함께 이동시켜야 함 (십자 규격 유지)
-                float direction = existingRoomCenterPos.x > adjustedX ? 1 : -1;
-                float newX = adjustedX + direction * pushXInCells * cellSize;
-                adjustedX = newX;
-                
-                // 열의 X 좌표 업데이트 (같은 열의 모든 방이 함께 이동)
-                colXPositions[currentPos.x] = adjustedX;
-                
-                // X축 조정 후 거리 재계산
-                dx = Mathf.Abs(adjustedX - existingRoomCenterPos.x);
-            }
-            
-            // Y축 충돌 검사: Y축 거리가 부족하고 X축에서도 겹칠 가능성이 있는 경우
-            bool yCollision = dy < minRequiredY;
-            bool xOverlap = dx < (currentHalfWidth + existingHalfWidth);
-            
-            if (yCollision && xOverlap)
-            {
-                // Y축으로 충분히 밀어내기 (Grid 셀 단위로, 같은 행 정렬 유지)
-                float pushY = minRequiredY - dy;
-                float pushYInCells = Mathf.Ceil(pushY / cellSize);
-                
-                // 같은 행의 모든 방들을 함께 이동시켜야 함 (십자 규격 유지)
-                float direction = existingRoomCenterPos.y > adjustedY ? 1 : -1;
-                float newY = adjustedY + direction * pushYInCells * cellSize;
-                adjustedY = newY;
-                
-                // 행의 Y 좌표 업데이트 (같은 행의 모든 방이 함께 이동)
-                rowYPositions[currentPos.y] = adjustedY;
-            }
-        }
-        
-        // 최종 위치 (십자 규격 정렬 유지)
-        return new Vector3(adjustedX, adjustedY, basePosition.z);
-    }
-    
-    /// <summary>
     /// 방 프리팹을 Grid 셀 중심에 정렬합니다.
     /// </summary>
     private static void AlignRoomToGridCenter(GameObject roomObj, Vector3 targetCenter)
@@ -412,11 +311,15 @@ public static class DungeonRoomPlacer
         // 방 중심 기준 크기 계산 (월드 단위)
         float roomSize = 0f;
         BaseRoom baseRoom = roomObj.GetComponent<BaseRoom>();
-        if (baseRoom != null && baseRoom.RoomSize > 0)
+        if (baseRoom != null)
         {
-            float cellSize = DungeonGridHelper.ResolveCellSize(roomObj, null);
-            float tileSize = baseRoom.TileSize > 0f ? baseRoom.TileSize : cellSize;
-            roomSize = baseRoom.RoomSize * tileSize;
+            float roomWidth = baseRoom.RoomWidth;
+            float roomHeight = baseRoom.RoomHeight;
+            if (roomWidth > 0 || roomHeight > 0)
+            {
+                // 가로와 세로 중 큰 값을 사용 (라벨 위치 계산용)
+                roomSize = Mathf.Max(roomWidth, roomHeight);
+            }
         }
         else
         {

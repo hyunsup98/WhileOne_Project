@@ -86,12 +86,16 @@ public class TrapRoomMazeGenerator : MonoBehaviour
         if (baseRoom != null && baseRoom.TileSize > 0f)
         {
             this.cellSize = baseRoom.TileSize;
-            this.roomSize = baseRoom.RoomSize;
+            // RoomWidth와 RoomHeight는 이미 Unity unit으로 반환되므로 그대로 사용
+            float roomWidth = baseRoom.RoomWidth;
+            float roomHeight = baseRoom.RoomHeight;
+            this.roomSize = Mathf.Max(roomWidth, roomHeight);
             
-            // roomSize / tileSize = 방의 셀 개수 (정사각형 방 가정)
-            int sizeInCells = Mathf.Max(5, Mathf.RoundToInt(baseRoom.RoomSize / baseRoom.TileSize));
-            mazeWidth = sizeInCells;
-            mazeHeight = sizeInCells;
+            // 방의 셀 개수 계산 (가로와 세로 각각)
+            int widthInCells = Mathf.Max(5, Mathf.RoundToInt(roomWidth / baseRoom.TileSize));
+            int heightInCells = Mathf.Max(5, Mathf.RoundToInt(roomHeight / baseRoom.TileSize));
+            mazeWidth = widthInCells;
+            mazeHeight = heightInCells;
         }
         // 2) BaseRoom 정보가 없으면, 함정방의 실제 크기를 측정하여 미로 크기 결정
         else if (parent != null)
@@ -1106,16 +1110,19 @@ public class TrapRoomMazeGenerator : MonoBehaviour
             return result;
         }
         
-        // bounds를 찾지 못하면 BaseRoom의 roomSize 사용
+        // bounds를 찾지 못하면 BaseRoom의 RoomWidth/RoomHeight 사용
         BaseRoom baseRoom = parent.GetComponent<BaseRoom>();
         if (baseRoom != null)
         {
-            float roomSize = baseRoom.RoomSize;
-            int sizeInCells = Mathf.RoundToInt(roomSize / grid.cellSize.x);
-            int halfSize = sizeInCells / 2;
+            float roomWidth = baseRoom.RoomWidth;
+            float roomHeight = baseRoom.RoomHeight;
+            int widthInCells = Mathf.RoundToInt(roomWidth / grid.cellSize.x);
+            int heightInCells = Mathf.RoundToInt(roomHeight / grid.cellSize.y);
+            int halfWidth = widthInCells / 2;
+            int halfHeight = heightInCells / 2;
             BoundsInt result = new BoundsInt(
-                centerCell - new Vector3Int(halfSize, halfSize, 0),
-                new Vector3Int(sizeInCells, sizeInCells, 0)
+                centerCell - new Vector3Int(halfWidth, halfHeight, 0),
+                new Vector3Int(widthInCells, heightInCells, 0)
             );
             return result;
         }

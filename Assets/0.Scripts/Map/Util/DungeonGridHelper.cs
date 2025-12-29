@@ -88,8 +88,11 @@ public static class DungeonGridHelper
         
         if (baseRoom != null)
         {
-            float ts = baseRoom.TileSize > 0f ? baseRoom.TileSize : cellSize;
-            roomSize = baseRoom.RoomSize * ts; // RoomSize는 칸 수
+            // RoomWidth와 RoomHeight는 이미 Unity unit으로 반환되므로 그대로 사용
+            float roomWidth = baseRoom.RoomWidth;
+            float roomHeight = baseRoom.RoomHeight;
+            // 가로와 세로 중 큰 값을 사용 (방 간격 계산용)
+            roomSize = Mathf.Max(roomWidth, roomHeight);
         }
         else
         {

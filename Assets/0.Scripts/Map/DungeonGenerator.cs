@@ -9,45 +9,21 @@ using static FloorRoomSetManager;
 /// </summary>
 public class DungeonGenerator : MonoBehaviour
 {
-    [Header("Dungeon Settings")]
-    //[SerializeField] [Tooltip("생성할 방의 총 개수 (1층 기본값: 9개)")]
-    //private int roomCount = 9; // 생성할 방의 개수 (1층 기본값: 9개)
+    [Header("던전 설정")]
     [SerializeField] [Tooltip("던전 그리드 크기 (시작 위치(0,0)를 중심으로 한 반경, -gridSize ~ +gridSize 범위)")]
     private int gridSize = 10; // 그리드 크기 (시작 위치(0,0)를 중심으로 한 반경, -10 ~ +10 범위)
-    //[SerializeField] [Tooltip("이벤트 방의 개수")]
-    //private int eventRoomCount = 2; // 이벤트 방 개수
 
-    // 현재 층 정보
+    [Header("현재 층 정보 (나중에 다른 매니저에서 처리)")]
     [SerializeField] [Tooltip("현재 층 (기본값 1층)")]
     public static int currentFloor = 1; // 현재 층 (기본값 1층)
 
-    [Header("Room Prefabs")]
-    [SerializeField] [Tooltip("기본 일반 방 프리팹")]
-    private GameObject normalRoomPrefab; // 기본 Room 프리펩 (1.Prefabs > Map > Room)
-    [SerializeField] [Tooltip("시작 방 프리팹 (없으면 normalRoomPrefab 사용)")]
-    private GameObject startRoomPrefab; // 시작 방 프리펩 (없으면 normalRoomPrefab 사용)
-    [SerializeField] [Tooltip("다음층 입구 방 프리팹 (없으면 normalRoomPrefab 사용)")]
-    private GameObject exitRoomPrefab; // 다음층 입구 방 프리펩 (없으면 normalRoomPrefab 사용)
-    [SerializeField] [Tooltip("이벤트 방 프리팹 (없으면 normalRoomPrefab 사용)")]
-    private GameObject eventRoomPrefab; // 이벤트 방 프리펩 (없으면 normalRoomPrefab 사용)
-    [SerializeField] [Tooltip("함정 방 프리팹 (없으면 normalRoomPrefab 사용)")]
-    private GameObject trapRoomPrefab; // 함정 방 프리펩 (없으면 normalRoomPrefab 사용)
-    [SerializeField] [Tooltip("보물 방 프리팹 (없으면 normalRoomPrefab 사용)")]
-    private GameObject treasureRoomPrefab; // 보물 방 프리펩 (없으면 normalRoomPrefab 사용)
-    [SerializeField] [Tooltip("보스 방 프리팹 (없으면 normalRoomPrefab 사용)")]
-    private GameObject bossRoomPrefab; // 보스 방 프리펩 (없으면 normalRoomPrefab 사용)
-
-    [Header("Corridor Prefabs")]
+    [Header("복도 프리팹")]
     [SerializeField] [Tooltip("가로 복도 프리팹 (좌우 연결용, Corridor_H)")]
     private GameObject corridorPrefabHorizontal; // 가로 복도 프리펩 (좌우 연결)
     [SerializeField] [Tooltip("세로 복도 프리팹 (상하 연결용, Corridor_V)")]
     private GameObject corridorPrefabVertical; // 세로 복도 프리펩 (상하 연결)
-    [SerializeField] [Tooltip("T자형 교차로 프리팹 (3방향 연결용, Corridor_T)")]
-    private GameObject corridorPrefabT; // T자형 교차로 프리팹 (3방향)
-    [SerializeField] [Tooltip("+자형 교차로 프리팹 (4방향 연결용, Corridor_Cross)")]
-    private GameObject corridorPrefabCross; // +자형 교차로 프리팹 (4방향)
     
-    [Header("Generation Settings")]
+    [Header("던전 생성 설정")]
     [SerializeField] [Tooltip("방 생성 시 여러 방향으로 분기할 확률 (0~100%, 높을수록 더 많은 분기)")]
     [Range(0f, 100f)]
     private float branchProbability = 40f; // 여러 방향으로 분기할 확률 (%)
@@ -57,8 +33,6 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField] [Tooltip("방과 방 사이의 간격 (칸 수, 4의 배수로 지정, 기본값: 12칸)")]
     [Range(4, 100)]
     private int roomSpacingInCells = 12; // 방 간격 (칸 수, 4의 배수)
-    [SerializeField] [Tooltip("roomSize와 corridorLength를 기반으로 방 간격을 자동 계산할지 여부")]
-    private bool autoCalculateSpacing = true; // roomSize와 corridorLength로 자동 계산
     [SerializeField] [Tooltip("복도 최소 길이 (칸 수, 기본값: 4칸)")]
     [Range(1, 20)]
     private int minCorridorLengthInCells = 4; // 복도 최소 길이 (칸 수)
@@ -71,7 +45,7 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField] [Tooltip("최소 타일 간격 (칸 단위)")]
     private float minTileSpacing = 5f; // 최소 타일 간격 (칸)
     
-    [Header("Scene Objects")]
+    [Header("오브젝트")]
     [SerializeField] [Tooltip("시작 방에 배치할 플레이어 오브젝트")]
     private GameObject playerObject; // 시작 방에 배치할 플레이어 오브젝트
 
@@ -124,17 +98,17 @@ public class DungeonGenerator : MonoBehaviour
         gridParent = finalGridParent;
         
         // Grid 셀 크기를 방 타일 크기와 동일하게 맞춤
-        float resolvedCellSize = DungeonGridHelper.ResolveCellSize(normalRoomPrefab, unityGrid);
-        if (unityGrid != null)
-        {
-            unityGrid.cellSize = new Vector3(resolvedCellSize, resolvedCellSize, 1f);
-        }
+        //float resolvedCellSize = DungeonGridHelper.ResolveCellSize(normalRoomPrefab, unityGrid);
+        //if (unityGrid != null)
+        //{
+        //    unityGrid.cellSize = new Vector3(resolvedCellSize, resolvedCellSize, 1f);
+        //}
         
         // 방 간격 자동 계산 (칸 수로 계산 후 4의 배수로 반올림)
-        if (autoCalculateSpacing && normalRoomPrefab != null)
-        {
-            roomSpacingInCells = DungeonGridHelper.CalculateRoomSpacingInCells(normalRoomPrefab, minTileSpacing, resolvedCellSize);
-        }
+        //if (normalRoomPrefab != null)
+        //{
+        //    roomSpacingInCells = DungeonGridHelper.CalculateRoomSpacingInCells(normalRoomPrefab, minTileSpacing, resolvedCellSize);
+        //}
         
         // 4의 배수 검증 및 조정
         if (roomSpacingInCells % 4 != 0)
@@ -160,17 +134,17 @@ public class DungeonGenerator : MonoBehaviour
         Dictionary<RoomType, GameObject[]> roomPrefabs = new Dictionary<RoomType, GameObject[]>();
         Dictionary<EventRoomType, GameObject[]> eventRoomTypePrefabs = new Dictionary<EventRoomType, GameObject[]>();
         
-        // 기본 프리팹 딕셔너리 (fallback용, 단일 프리팹을 배열로 변환)
-        Dictionary<RoomType, GameObject[]> defaultPrefabs = new Dictionary<RoomType, GameObject[]>
-        {
-            { RoomType.Normal, normalRoomPrefab != null ? new[] { normalRoomPrefab } : null },
-            { RoomType.Start, startRoomPrefab != null ? new[] { startRoomPrefab } : null },
-            { RoomType.Exit, exitRoomPrefab != null ? new[] { exitRoomPrefab } : null },
-            { RoomType.Event, eventRoomPrefab != null ? new[] { eventRoomPrefab } : null },
-            { RoomType.Trap, trapRoomPrefab != null ? new[] { trapRoomPrefab } : null },
-            { RoomType.Treasure, treasureRoomPrefab != null ? new[] { treasureRoomPrefab } : null },
-            { RoomType.Boss, bossRoomPrefab != null ? new[] { bossRoomPrefab } : null }
-        };
+        //// 기본 프리팹 딕셔너리 (fallback용, 단일 프리팹을 배열로 변환)
+        //Dictionary<RoomType, GameObject[]> defaultPrefabs = new Dictionary<RoomType, GameObject[]>
+        //{
+        //    { RoomType.Normal, normalRoomPrefab != null ? new[] { normalRoomPrefab } : null },
+        //    { RoomType.Start, startRoomPrefab != null ? new[] { startRoomPrefab } : null },
+        //    { RoomType.Exit, exitRoomPrefab != null ? new[] { exitRoomPrefab } : null },
+        //    { RoomType.Event, eventRoomPrefab != null ? new[] { eventRoomPrefab } : null },
+        //    { RoomType.Trap, trapRoomPrefab != null ? new[] { trapRoomPrefab } : null },
+        //    { RoomType.Treasure, treasureRoomPrefab != null ? new[] { treasureRoomPrefab } : null },
+        //    { RoomType.Boss, bossRoomPrefab != null ? new[] { bossRoomPrefab } : null }
+        //};
         
         // 층별 프리팹 리스트를 가져와서 사용 (없으면 기본 프리팹 사용)
         if (floorInfo != null && floorInfo.FloorRoomPrefabs != null)
@@ -179,9 +153,10 @@ public class DungeonGenerator : MonoBehaviour
             {
                 GameObject[] prefabs = FloorRoomSetManager.GetRoomPrefabs(currentFloor, roomType);
                 // 층별 프리팹 리스트가 있으면 사용, 없으면 기본 프리팹 사용
-                roomPrefabs[roomType] = (prefabs != null && prefabs.Length > 0) ? prefabs : defaultPrefabs[roomType];
+                //roomPrefabs[roomType] = (prefabs != null && prefabs.Length > 0) ? prefabs : defaultPrefabs[roomType];
+                roomPrefabs[roomType] = (prefabs != null && prefabs.Length > 0) ? prefabs : null;
+
             }
-            
             // 이벤트 방 컨셉별 프리팹 가져오기
             if (floorInfo.EventRoomTypePrefabs != null)
             {
@@ -191,7 +166,7 @@ public class DungeonGenerator : MonoBehaviour
         else
         {
             // FloorInfo가 없으면 기본 프리팹만 사용
-            roomPrefabs = defaultPrefabs;
+            //roomPrefabs = defaultPrefabs;
         }
         
         Transform parent = gridParent != null ? gridParent : transform;
@@ -206,7 +181,7 @@ public class DungeonGenerator : MonoBehaviour
             // 방 오브젝트 생성
             DungeonRoomPlacer.CreateRoomObjects(
                 dungeonGrid, parent, unityGrid, roomSpacingInCells, roomPrefabs, eventRoomTypePrefabs,
-                showRoomTypeLabels, roomLabelOffsetX, roomLabelOffsetY, resolvedCellSize);
+                showRoomTypeLabels, roomLabelOffsetX, roomLabelOffsetY);
             
             // 방 겹침 검증
             bool hasRoomOverlap = DungeonCorridorValidator.ValidateRoomOverlaps(
@@ -240,7 +215,7 @@ public class DungeonGenerator : MonoBehaviour
             // 복도 최소 길이 검증
             if (autoAdjustSpacingForCorridors)
             {
-                float minCorridorLength = minCorridorLengthInCells * resolvedCellSize;
+                float minCorridorLength = minCorridorLengthInCells;
                 bool needsAdjustment = DungeonCorridorValidator.ValidateCorridorLengths(
                     dungeonGrid, unityGrid, minCorridorLength, out float minActualLength);
                 
@@ -251,7 +226,7 @@ public class DungeonGenerator : MonoBehaviour
                     roomSpacingInCells += 4;
                     
                     Debug.LogWarning($"[DungeonGenerator] 복도 최소 길이({minCorridorLengthInCells}칸) 미만 감지. " +
-                        $"현재 최소 복도 길이: {minActualLength / resolvedCellSize:F2}칸. " +
+                        $"현재 최소 복도 길이: {minActualLength / 1:F2}칸. " +
                         $"방 간격을 {oldSpacing}칸에서 {roomSpacingInCells}칸으로 증가시킵니다. (시도 {adjustmentAttempt + 1}/{maxAdjustmentAttempts})");
                     
                     // 기존 방 오브젝트 제거
@@ -285,7 +260,7 @@ public class DungeonGenerator : MonoBehaviour
             // 복도 생성
             DungeonCorridorGenerator.CreateCorridors(
                 dungeonGrid, parent, unityGrid,
-                corridorPrefabHorizontal, corridorPrefabVertical, corridorPrefabT, corridorPrefabCross);
+                corridorPrefabHorizontal, corridorPrefabVertical);
             
             // 복도 배치 검증
             bool hasCorridorProblems = DungeonCorridorValidator.ValidateCorridorPlacement(
@@ -320,7 +295,7 @@ public class DungeonGenerator : MonoBehaviour
                 // 방 배치 재시도
                 DungeonRoomPlacer.CreateRoomObjects(
                     dungeonGrid, parent, unityGrid, roomSpacingInCells, roomPrefabs, eventRoomTypePrefabs,
-                    showRoomTypeLabels, roomLabelOffsetX, roomLabelOffsetY, resolvedCellSize);
+                    showRoomTypeLabels, roomLabelOffsetX, roomLabelOffsetY);
                 
                 corridorAttempt++;
                 continue;
@@ -405,29 +380,29 @@ public class DungeonGenerator : MonoBehaviour
         }
 
         // 이벤트 방 지정
-        // TODO: 테스트용 - 이벤트 방을 무조건 ChestRoom으로 지정 (나중에 제거)
-        int eventRoomCount = floorInfo.GetRoomCountWithType(RoomType.Event);
-        if (eventRoomCount > 0 && remaining.Count >= eventRoomCount)
-        {
-            // 테스트: 이벤트 방을 모두 ChestRoom으로 지정
-            int actualEventRoomCount = Mathf.Min(eventRoomCount, 2);
+        //// TODO: 테스트용 - 이벤트 방을 무조건 ChestRoom으로 지정 (나중에 제거)
+        //int eventRoomCount = floorInfo.GetRoomCountWithType(RoomType.Event);
+        //if (eventRoomCount > 0 && remaining.Count >= eventRoomCount)
+        //{
+        //    // 테스트: 이벤트 방을 모두 ChestRoom으로 지정
+        //    int actualEventRoomCount = Mathf.Min(eventRoomCount, 2);
             
-            for (int i = 0; i < actualEventRoomCount; i++)
-            {
-                // 이벤트 방 위치 선택
-                var eventPos = remaining[Random.Range(0, remaining.Count)];
-                var eventRoom = dungeonGrid.GetRoom(eventPos);
-                if (eventRoom != null)
-                {
-                    eventRoom.roomType = RoomType.Event;
-                    eventRoom.eventRoomType = EventRoomType.ChestRoom; // 테스트용: 무조건 ChestRoom
-                }
-                remaining.Remove(eventPos);
-            }
-        }
+        //    for (int i = 0; i < actualEventRoomCount; i++)
+        //    {
+        //        // 이벤트 방 위치 선택
+        //        var eventPos = remaining[Random.Range(0, remaining.Count)];
+        //        var eventRoom = dungeonGrid.GetRoom(eventPos);
+        //        if (eventRoom != null)
+        //        {
+        //            eventRoom.roomType = RoomType.Event;
+        //            eventRoom.eventRoomType = EventRoomType.ChestRoom; // 테스트용: 무조건 ChestRoom
+        //        }
+        //        remaining.Remove(eventPos);
+        //    }
+        //}
         
         // 기존 이벤트 방 지정 로직 (테스트용으로 주석 처리)
-        /*
+        
         int eventRoomCount = floorInfo.GetRoomCountWithType(RoomType.Event);
         if (eventRoomCount > 0 && remaining.Count >= eventRoomCount)
         {
@@ -453,7 +428,9 @@ public class DungeonGenerator : MonoBehaviour
                     Debug.LogWarning($"[DungeonGenerator] 이벤트 방 컨셉을 선택할 수 없어서 {i}개만 생성했습니다.");
                     break;
                 }
-                
+
+                Debug.Log($"[DungeonGenerator] 이벤트 방 컨셉으로 {eventType.Value}을(를) 선택했습니다.");
+
                 // 이벤트 방 위치 선택
                 var eventPos = remaining[Random.Range(0, remaining.Count)];
                 var eventRoom = dungeonGrid.GetRoom(eventPos);
@@ -465,7 +442,7 @@ public class DungeonGenerator : MonoBehaviour
                 remaining.Remove(eventPos);
             }
         }
-        */
+        
 
         // 보물 방 지정
         int treasureRoomCount = floorInfo.GetRoomCountWithType(RoomType.Treasure);
