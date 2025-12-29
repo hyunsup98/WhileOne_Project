@@ -101,7 +101,7 @@ public class WeaponChange : MonoBehaviour
             WeaponPool.Instance.TakeObject(_slotWeapon2);
 
         _slotWeapon2 = weapon;
-        _slotWeapon2.transform.SetParent(_weaponHands);
+        _slotWeapon2.transform.SetParent(_weaponHands, false);
         _slotWeapon2.transform.localPosition = Vector3.zero;
         currentweapon.gameObject.SetActive(false);
         currentweapon = _slotWeapon2;
@@ -175,7 +175,7 @@ public class WeaponChange : MonoBehaviour
         if (_slotWeapon2 != null)
         {
             DataManager.Instance.CharacterData._subWeapon = _slotWeapon2;
-            _slotWeapon2.transform.SetParent(DataManager.Instance.CharacterData.transform);
+            _slotWeapon2.transform.SetParent(DataManager.Instance.CharacterData.transform, false);
         }
 
     }
