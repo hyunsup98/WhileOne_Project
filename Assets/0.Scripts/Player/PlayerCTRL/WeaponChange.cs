@@ -140,21 +140,29 @@ public class WeaponChange : MonoBehaviour
     {
         _isAlreadyHit = false;
     }
+
     private void HitAble(GameObject enemy)
     {
         if (enemy.TryGetComponent<MonsterView>(out var monster))
         {
-            monster.Presenter.OnHit(_weaponDamage);
+            monster.Presenter.OnHit(currentweapon.WeaponData.weaponAttack1Damage + DataManager.Instance.CharacterData._bonusAtk);
         }
 
         if (!_isAlreadyHit)
         {
-            _durability--;
-            GameManager.Instance.CurrentDungeon.EquipSlotController.ChangeSubWeaponDurability(_slotWeapon2.Durability, _slotWeapon2.WeaponData.weaponDurability);
-            _isAlreadyHit = true;
-            if (_durability <= 0)
+            if (currentweapon == _slotWeapon2)
             {
-                WeaponBreak();
+                _slotWeapon2.ReduceDurability(1);
+                GameManager.Instance.CurrentDungeon.EquipSlotController.ChangeSubWeaponDurability(_slotWeapon2.Durability, _slotWeapon2.WeaponData.weaponDurability);
+
+                if (_slotWeapon2.Durability <= 0)
+                    _slotWeapon2 = currentweapon = null;
+
+                _isAlreadyHit = true;
+                if (_durability <= 0)
+                {
+                    WeaponBreak();
+                }
             }
         }
     }
