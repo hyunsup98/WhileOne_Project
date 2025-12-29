@@ -53,6 +53,12 @@ public class MonsterAction : IState
     {
         Dictionary<ActionID, MonsterPattern> actionDict = _monster.Model.ActionDict;
 
+        if (_monster.IsPattern03)
+        {
+            _monster.setIsPattern03(false);
+            return actionDict[ActionID.three];
+        }
+
         if (actionDict.TryGetValue(ActionID.six, out var value) && _monster.IsUlt)
         {
             _monster.SetIsUlt(false);

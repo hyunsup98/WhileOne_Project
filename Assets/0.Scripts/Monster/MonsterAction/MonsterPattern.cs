@@ -61,7 +61,15 @@ public abstract class MonsterPattern
             return;
         }
 
-        _actionEffect.SetDamage(_damage);
+        float damage = _damage + _monster.Model.AttackBoost;
+        _actionEffect.SetDamage(damage > 1f? damage : 1f);
+    }
+
+    // 메서드 호출을 지연
+    protected IEnumerator OnDelay(Action action, float delayTime)
+    {
+        yield return CoroutineManager.waitForSeconds(delayTime);
+        action?.Invoke();
     }
 
     // 쿨타임 시간
@@ -79,14 +87,7 @@ public abstract class MonsterPattern
         IsActionable = true;
     }
 
-    // 메서드 호출을 지연
-    protected IEnumerator OnDelay(Action action, float delayTime)
-    {
-        yield return CoroutineManager.waitForSeconds(delayTime);
-        action?.Invoke();
-    }
-
-    protected void Init()
+    protected virtual void Init()
     {
         _isDelay = false;
         IsAction = false;

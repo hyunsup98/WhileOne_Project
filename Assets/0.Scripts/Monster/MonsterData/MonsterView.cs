@@ -67,15 +67,26 @@ public class MonsterView : MonoBehaviour, IStunable
                 _animator.SetTrigger("Pattern01");
                 break;
 
+            case "Pattern02":
+                _animator.SetTrigger("Pattern02");
+                break;
+
+            case "Pattern03":
+                _animator.SetTrigger("Pattern03");
+                break;
+
             case "Pattern04":
                 _animator.SetTrigger("Pattern04");
                 break;
+
             case "Pattern05":
                 _animator.SetTrigger("Pattern05");
                 break;
+
             case "Pattern06Start":
                 _animator.SetTrigger("Pattern06Start");
                 break;
+
             case "Pattern06End":
                 _animator.SetTrigger("Pattern06End");
                 break;

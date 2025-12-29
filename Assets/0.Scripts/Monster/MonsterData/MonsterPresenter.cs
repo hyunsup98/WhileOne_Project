@@ -9,7 +9,9 @@ public class MonsterPresenter : IAnimationable
 {
     public MonsterModel Model { get; private set; }  // 현재 몬스터 데이터 보관한 Model
     public MonsterView View { get; private set; }
-    public bool IsUlt {  get; private set; }        // 궁극기(행동06)를 실행하는 메서드
+
+    public bool IsPattern03 { get; private set; }
+    public bool IsUlt { get; private set; }        // 궁극기(행동06)를 실행하는 메서드
 
     private bool _isHit;
     private bool _isDeath;
@@ -46,7 +48,7 @@ public class MonsterPresenter : IAnimationable
                 (ActionID)(action.MonsterActionID % 10),
                 ActionFactory.Create(action, this)
                 );
-            Debug.LogWarning(Model.Name + $"<color=brow>{action.name}</color>");
+            Debug.LogWarning(Model.Name + $"<color=brown>{action.name}</color>");
         }
 
 
@@ -111,6 +113,13 @@ public class MonsterPresenter : IAnimationable
 
     public void OnHit(float Damage)
     {
+        if (Model.ActionDict.TryGetValue(ActionID.three, out var action))
+        {
+            IsPattern03 = true;
+            Model.SetState(MonsterState.Action);
+        }
+            
+
         if(!_isHit)
             _isHit = true;
 
@@ -139,6 +148,7 @@ public class MonsterPresenter : IAnimationable
 
     public void OnStun() => Model.SetState(MonsterState.Stun);
     public void SetIsUlt(bool isUlt) => IsUlt = isUlt;
+    public void setIsPattern03(bool isPattern03) => IsPattern03 = isPattern03;
 
     public void OnPlayAni(string animationName) => View.OnPlayAni(animationName);
     public void OnStopAni(string animationName) => View.OnStopAni(animationName);
