@@ -52,7 +52,7 @@ public class PlayerDamage : MonoBehaviour
     public void TakenDamage(float damage, Vector2 target)
     {
 
-        if (IsDamaged)
+        if (IsDamaged || _player.PlayerDash.IsDash)
         {
             return;
         }

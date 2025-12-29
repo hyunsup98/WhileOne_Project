@@ -217,7 +217,7 @@ public class Player : MonoBehaviour
     {
        while(_stamina < _maxStamina)
         {
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(0.2f);
 
             ChangedStamina += _restoreStamina;
         }

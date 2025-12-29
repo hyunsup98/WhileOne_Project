@@ -79,7 +79,7 @@ public class PlayerDash : MonoBehaviour
         if (!_dig.IsDigging && !_player.Stop.Action)
         {
             _player.UseStamina();
-            _damaged.tag = "Untagged";
+            //_damaged.tag = "Untagged";
             _rd2D.linearVelocity = _playerMovement.Move.normalized * _dashForce;
             //AfterimagePool.Instance.GetObject(_test, AfterimagePool.Instance.transform);
             //blink.transform.position = transform.position;
@@ -89,7 +89,7 @@ public class PlayerDash : MonoBehaviour
             _isDash = false;
             float dashDelay = 0.2f;
             yield return new WaitForSeconds(dashDelay);
-            _damaged.tag = "Player";
+            //_damaged.tag = "Player";
         }
         else
         {
