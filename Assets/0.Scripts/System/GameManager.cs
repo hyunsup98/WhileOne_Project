@@ -1,5 +1,4 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -7,9 +6,8 @@ using UnityEngine.SceneManagement;
 //게임 상태
 public enum GameState
 {
-    Title,      // 타이틀 화면 상태
-    InGame,     // 인게임(플레이중인 상태)
-    Pause,      // 인게임(팝업 UI등에 의해서 일시중지인 상태)
+    Playing,    // 시간이 흐르고 있는 상태
+    Pause,      // 시간이 멈춰있는 상태
     Dead,       // 플레이어가 죽었을 때(데드 엔딩 씬으로 이동)
 }
 
@@ -19,7 +17,6 @@ public enum GameState
 public class GameManager : Singleton<GameManager>
 {
     #region 게임 상태
-    public event Action onGameStateTitle;
     public event Action onGameStateInGame;
     public event Action onGameStatePause;
     public event Action onGameStateDead;
@@ -34,22 +31,20 @@ public class GameManager : Singleton<GameManager>
 
             _currentGameState = value;
 
-            if (_currentGameState == GameState.Title)
+            if (_currentGameState == GameState.Playing)
             {
-                SceneManager.LoadScene("Pro_Title");
-                onGameStateTitle?.Invoke();
-            }
-            else if (_currentGameState == GameState.InGame)
-            {
+                Time.timeScale = 1f;
                 onGameStateInGame?.Invoke();
             }
             else if (_currentGameState == GameState.Pause)
             {
+                Time.timeScale = 0f;
                 onGameStatePause?.Invoke();
             }
             else if (_currentGameState == GameState.Dead)
             {
-                SceneManager.LoadScene("Pro_DeadEnding");
+                Time.timeScale = 1f;
+                SceneManager.LoadScene("GameOver");
                 onGameStateDead?.Invoke();
             }
         }
@@ -81,13 +76,13 @@ public class GameManager : Singleton<GameManager>
     public void InitToSceneChanged(Scene scene, LoadSceneMode mode) => InteractObj = null;
 
     //게임 상태를 변경하는 메서드
-    public void SetGameState(GameState state) => _currentGameState = state;
+    public void SetGameState(GameState state) => _CurrentGameState = state;
 
     protected override void Awake()
     {
         base.Awake();
 
-        _CurrentGameState = GameState.Title;
+        _CurrentGameState = GameState.Playing;
 
         SceneManager.sceneLoaded += InitToSceneChanged;
 

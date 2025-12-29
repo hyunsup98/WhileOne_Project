@@ -15,8 +15,6 @@ public class WeaponUI : MonoBehaviour
     private Weapon weapon;      // UI에 표시할 무기
     private Chest chest;        // 가장 최근에 열었던 상자
 
-    public void DisableUI(GameObject obj) => obj.SetActive(false);
-
     // UI로 표시할 무기가 어떤 것인지 받아옴
     public void SetWeaponInit(Weapon weapon)
     {
@@ -62,11 +60,13 @@ public class WeaponUI : MonoBehaviour
         this.chest = chest;
 
         panel_GainWeaponUI.SetActive(true);
+        GameManager.Instance.SetGameState(GameState.Pause);
     }
 
     public void EnableFailUI()
     {
         panel_FailWeaponUI.SetActive(true);
+        GameManager.Instance.SetGameState(GameState.Pause);
     }
 
     /// <summary>
@@ -85,5 +85,13 @@ public class WeaponUI : MonoBehaviour
         img_Weapon.sprite = null;
         text_WeaponDesc1.text = string.Empty;
         text_WeaponDesc2.text = string.Empty;
+
+        GameManager.Instance.SetGameState(GameState.Playing);
+    }
+
+    public void DisableUI(GameObject obj)
+    {
+        obj.SetActive(false);
+        GameManager.Instance.SetGameState(GameState.Playing);
     }
 }
