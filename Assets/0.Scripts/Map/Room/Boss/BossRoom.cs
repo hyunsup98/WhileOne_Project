@@ -31,7 +31,7 @@ public class BossRoom : MonoBehaviour
     
     private bool hasPlayerEntered = false; // 플레이어 진입 여부
     private bool isBossDead = false; // 보스 사망 여부
-    private IDead bossDeadInterface; // 보스의 IDead 인터페이스
+    private MonsterView bossMonsterView; // 보스의 MonsterView 컴포넌트
     
     private void Awake()
     {
@@ -43,8 +43,8 @@ public class BossRoom : MonoBehaviour
         // EntryZone에 트리거 스크립트 설정
         SetupEntryZone();
         
-        // 초기에는 보스가 소환되지 않았으므로 구독하지 않음
-        // 보스 소환 후 SubscribeToBossDeath() 호출
+        // 보스가 처음부터 소환되어 있는지 확인하고 구독
+        TrySubscribeToBossDeath();
     }
     
     /// <summary>
@@ -113,7 +113,32 @@ public class BossRoom : MonoBehaviour
     }
     
     /// <summary>
-    /// 보스의 IDead 인터페이스를 찾아서 OnDeath 이벤트를 구독합니다.
+    /// 보스가 존재하는지 확인하고 OnDeath 이벤트를 구독합니다.
+    /// </summary>
+    private void TrySubscribeToBossDeath()
+    {
+        // bossObject가 Inspector에서 할당되어 있지 않으면 씬에서 찾기
+        if (bossObject == null)
+        {
+            // 씬에서 "Boss" 태그를 가진 오브젝트 찾기
+            GameObject bossInScene = GameObject.FindGameObjectWithTag("Boss");
+            if (bossInScene != null)
+            {
+                bossObject = bossInScene;
+                Debug.Log($"[BossRoom] 씬에서 보스를 찾았습니다: {bossObject.name}");
+            }
+            else
+            {
+                Debug.LogWarning("[BossRoom] 보스 오브젝트가 설정되지 않았고 씬에서도 찾을 수 없습니다. 보스 소환 후 구독하세요.");
+                return;
+            }
+        }
+
+        SubscribeToBossDeath();
+    }
+    
+    /// <summary>
+    /// MonsterView 컴포넌트를 통해 OnDeath 이벤트를 구독합니다.
     /// </summary>
     private void SubscribeToBossDeath()
     {
@@ -122,36 +147,35 @@ public class BossRoom : MonoBehaviour
             Debug.LogWarning("[BossRoom] 보스 오브젝트가 설정되지 않았습니다.");
             return;
         }
-        
-        // MonsterView 컴포넌트를 통해 MonsterPresenter에 접근
-        MonsterView monsterView = bossObject.GetComponent<MonsterView>();
-        if (monsterView != null && monsterView.Presenter != null)
+
+        // 이미 구독되어 있으면 중복 구독 방지
+        if (bossMonsterView != null)
         {
-            MonsterPresenter presenter = monsterView.Presenter;
-            if (presenter is IDead deadInterface)
-            {
-                bossDeadInterface = deadInterface;
-                bossDeadInterface.OnDeath += OnBossDeath;
-                Debug.Log($"[BossRoom] 보스의 OnDeath 이벤트를 구독했습니다: {bossObject.name}");
-                return;
-            }
+            Debug.LogWarning("[BossRoom] 이미 보스의 OnDeath 이벤트를 구독하고 있습니다.");
+            return;
+        }
+
+        // MonsterView 컴포넌트를 통해 OnDeath에 접근
+        MonsterView monsterView = bossObject.GetComponent<MonsterView>();
+        if (monsterView != null)
+        {
+            bossMonsterView = monsterView;
+            bossMonsterView.OnDeath += OnBossDeath;
+            Debug.Log($"[BossRoom] 보스의 OnDeath 이벤트를 구독했습니다: {bossObject.name}");
+            return;
         }
         
         // 자식 오브젝트에서도 MonsterView 찾기
         monsterView = bossObject.GetComponentInChildren<MonsterView>();
-        if (monsterView != null && monsterView.Presenter != null)
+        if (monsterView != null)
         {
-            MonsterPresenter presenter = monsterView.Presenter;
-            if (presenter is IDead deadInterface)
-            {
-                bossDeadInterface = deadInterface;
-                bossDeadInterface.OnDeath += OnBossDeath;
-                Debug.Log($"[BossRoom] 보스의 OnDeath 이벤트를 구독했습니다 (자식에서 찾음): {bossObject.name}");
-                return;
-            }
+            bossMonsterView = monsterView;
+            bossMonsterView.OnDeath += OnBossDeath;
+            Debug.Log($"[BossRoom] 보스의 OnDeath 이벤트를 구독했습니다 (자식에서 찾음): {bossObject.name}");
+            return;
         }
         
-        Debug.LogWarning($"[BossRoom] 보스 오브젝트 '{bossObject.name}'에서 MonsterView 또는 IDead 인터페이스를 찾을 수 없습니다.");
+        Debug.LogWarning($"[BossRoom] 보스 오브젝트 '{bossObject.name}'에서 MonsterView 컴포넌트를 찾을 수 없습니다.");
     }
     
     /// <summary>
@@ -235,7 +259,13 @@ public class BossRoom : MonoBehaviour
     /// </summary>
     private void OnBossDeath()
     {
-        if (isBossDead) return; // 중복 호출 방지
+        Debug.Log("[BossRoom] ========== OnBossDeath() 호출됨 ==========");
+        
+        if (isBossDead)
+        {
+            Debug.LogWarning("[BossRoom] OnBossDeath()가 이미 호출되었습니다. 중복 호출을 무시합니다.");
+            return; // 중복 호출 방지
+        }
         
         isBossDead = true;
         
@@ -246,6 +276,8 @@ public class BossRoom : MonoBehaviour
         
         // OrbRoom 활성화
         ActivateOrbRoom();
+        
+        Debug.Log("[BossRoom] ========== OnBossDeath() 처리 완료 ==========");
     }
     
     /// <summary>
@@ -287,9 +319,9 @@ public class BossRoom : MonoBehaviour
     /// </summary>
     private void OnDestroy()
     {
-        if (bossDeadInterface != null)
+        if (bossMonsterView != null)
         {
-            bossDeadInterface.OnDeath -= OnBossDeath;
+            bossMonsterView.OnDeath -= OnBossDeath;
         }
     }
 }
