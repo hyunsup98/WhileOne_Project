@@ -3,10 +3,12 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 
-
 public class MonsterModel
 {
     private float _hp;
+    private float _moveSpeed;
+    private float _attackBoost;
+    private float _speedBoost;
 
     // SO데이터에서 값을 받아오는 필드
     public int MonsterID { get; set; }
@@ -17,7 +19,14 @@ public class MonsterModel
         get => _hp;
         set => _hp = Mathf.Max(0, value);
     }
-    public float MoveSpeed { get; set; }
+    public float MoveSpeed
+    {
+        get => _moveSpeed + _speedBoost;
+        set => _moveSpeed = Mathf.Max(0.1f , value + _speedBoost); 
+    }
+
+    public float AttackBoost { get => _attackBoost; }
+
     public float Sight { get; set; }
     public float SightAngle { get; set; }
     public float SearchTime { get; set; }
@@ -70,6 +79,12 @@ public class MonsterModel
     {
         Hp -= damage;
         Debug.Log("몬스터HP" + Hp);
+    }
+
+    public void SetBoost(float attackBoost = 0, float speedBoost = 0)
+    {
+        _attackBoost += attackBoost;
+        _speedBoost += speedBoost;
     }
 }
 

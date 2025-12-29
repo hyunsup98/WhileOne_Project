@@ -10,6 +10,12 @@ public static class ActionFactory
             case Pattern01SO pattern01:
                 return new MonsterPattern01(pattern01, monster);
 
+            case Pattern02SO pattern02:
+                return new MonsterPattern02(pattern02, monster);
+
+            case Pattern03SO pattern03:
+                return new MonsterPattern03(pattern03, monster);
+
             case Pattern04SO pattern04:
                 return new MonsterPattern04(pattern04, monster);
 
@@ -20,7 +26,7 @@ public static class ActionFactory
                 return new MonsterPattern06(pattern06, monster);
 
             default:
-                Debug.LogError("할당되지 않은 행동을 생성하려 합니다.");
+                Debug.LogError(actionData.Name + "할당되지 않은 행동을 생성하려 합니다.");
                 return null;
         }
     }

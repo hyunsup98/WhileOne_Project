@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1321b59a8dc7b848b20a975fc8bc5dd, type: 3}
+  m_Name: GhostPattern03
+  m_EditorClassIdentifier: Assembly-CSharp::Pattern03SO
+  _monsterActionID: 100203
+  _name: 
+  _monsterID: 0
+  _actionClass: 1
+  _actionCondition: 0
+  _actionType: 1
+  _actionDamage: 0
+  _actionCoolTime: 0
+  _attackBoost: 0
+  _speedBoost: 0
+  _actionResource: 
+  _actionSound: 
+  _beforeDelay: 3
+  _afterDelay: 2
+  _teleportCount: 8
+  _teleportPoint: {fileID: 4238306751931922466, guid: d06bfc6f24dcd514ca94c27630351069, type: 3}
