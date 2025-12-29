@@ -5743,11 +5743,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef3d3ec72dfa1274aa15ac5006b94ef0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrakingPlayer
-  parentTrans: {fileID: 0}
+  parentTrans: {fileID: 6465301196887841613, guid: 59cefbd03a64e92448825cb6aa765b71, type: 3}
   atkDistance: 1
   attackAnim: {fileID: 0}
-  _attackFX: {fileID: 6245544600291612829, guid: e85aa3aadc4121e4aa7d341730894040, type: 3}
-  _test: {fileID: 0}
+  _attackFX: {fileID: 0}
+  _test: {fileID: 5675224901648824701}
 --- !u!1 &4644395610220181773
 GameObject:
   m_ObjectHideFlags: 0
