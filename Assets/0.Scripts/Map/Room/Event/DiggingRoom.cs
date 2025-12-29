@@ -239,7 +239,8 @@ public class DiggingRoom : BaseEventRoom
         else
         {
             // HP 피해 (헬퍼 메서드 사용)
-            ChangePlayerHealthByRatio(-fakeDigDamageRatio, player);
+            player.ChangedHealth += -player.MaxHp * fakeDigDamageRatio;
+            //ChangePlayerHealthByRatio(-fakeDigDamageRatio, player);
         }
     }
     

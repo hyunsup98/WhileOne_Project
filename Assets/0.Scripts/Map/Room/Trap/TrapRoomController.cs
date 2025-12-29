@@ -115,17 +115,6 @@ public class TrapRoomController : MonoBehaviour
             return true;
         }
 
-        // 2순위: 자신 또는 부모 중에 PlayerController가 있는지 확인
-        if (other.GetComponent<PlayerController>() != null)
-        {
-            return true;
-        }
-
-        if (other.GetComponentInParent<PlayerController>() != null)
-        {
-            return true;
-        }
-
         return false;
     }
 }

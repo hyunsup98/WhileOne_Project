@@ -60,17 +60,6 @@ public abstract class BaseEventRoom : BaseRoom
     }
     
     /// <summary>
-    /// 플레이어의 체력 비율을 가져옵니다. (0.0 ~ 1.0)
-    /// </summary>
-    /// <param name="player">대상 플레이어 (null이면 현재 플레이어)</param>
-    protected float GetPlayerHealthRatio(Player player = null)
-    {
-        if (player == null) player = GetPlayer();
-        if (player == null || player.MaxHp <= 0f) return 0f;
-        return player.Hp / player.MaxHp;
-    }
-    
-    /// <summary>
     /// 플레이어가 도굴 중인지 확인합니다.
     /// </summary>
     /// <param name="player">대상 플레이어 (null이면 현재 플레이어)</param>
@@ -95,21 +84,6 @@ public abstract class BaseEventRoom : BaseRoom
     }
     
     /// <summary>
-    /// 플레이어의 체력을 비율로 변경합니다.
-    /// </summary>
-    /// <param name="ratio">변경할 체력 비율 (0.1 = 10%, 양수면 회복, 음수면 피해)</param>
-    /// <param name="player">대상 플레이어 (null이면 현재 플레이어)</param>
-    protected void ChangePlayerHealthByRatio(float ratio, Player player = null)
-    {
-        if (player == null) player = GetPlayer();
-        if (player != null)
-        {
-            float amount = player.MaxHp * ratio;
-            player.ChangedHealth += amount;
-        }
-    }
-    
-    /// <summary>
     /// 플레이어에게 피해를 입힙니다.
     /// </summary>
     /// <param name="damage">입힐 피해량</param>
@@ -121,22 +95,6 @@ public abstract class BaseEventRoom : BaseRoom
         if (player != null && player.GetDamage != null)
         {
             player.GetDamage.TakenDamage(damage, sourcePosition);
-        }
-    }
-    
-    /// <summary>
-    /// 플레이어의 체력을 비율로 회복합니다.
-    /// </summary>
-    /// <param name="ratio">회복할 체력 비율 (0.1 = 10%, 최대 1.0 = 100%)</param>
-    /// <param name="player">대상 플레이어 (null이면 현재 플레이어)</param>
-    protected void HealPlayer(float ratio, Player player = null)
-    {
-        if (player == null) player = GetPlayer();
-        if (player != null)
-        {
-            ratio = Mathf.Clamp01(ratio);
-            float healAmount = player.MaxHp * ratio;
-            player.ChangedHealth = Mathf.Min(player.ChangedHealth + healAmount, player.MaxHp);
         }
     }
     

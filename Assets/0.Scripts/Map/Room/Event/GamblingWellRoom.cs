@@ -68,7 +68,8 @@ public class GamblingWellRoom : BaseEventRoom
         interactionCount++;
         
         // HP 20% 소모 (헬퍼 메서드 사용)
-        ChangePlayerHealthByRatio(-0.2f, player);
+        player.ChangedHealth += -player.MaxHp * 0.2f;
+        //ChangePlayerHealthByRatio(-0.2f, player);
         
         // 50% 확률로 보상 지급
         bool success = Random.Range(0f, 1f) < 0.5f;
