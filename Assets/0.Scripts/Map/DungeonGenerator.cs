@@ -716,6 +716,7 @@ public class DungeonGenerator : MonoBehaviour
         {
             Debug.LogError("[DungeonGenerator] 시작 방 정보가 없어 플레이어를 이동할 수 없습니다. 던전 생성에 실패한 것 같습니다.");
             // GenerateDungeon()을 다시 호출하면 무한 루프와 메모리 누수가 발생할 수 있음,,,,,,,,,,,,,,
+            isGenerating = false;
             GenerateDungeon();
             //return;
         }
