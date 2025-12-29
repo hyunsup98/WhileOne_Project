@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 
 
 
-public class MonsterPresenter : IAnimationable, IDead
+public class MonsterPresenter : IAnimationable
 {
     public MonsterModel Model { get; private set; }  // 현재 몬스터 데이터 보관한 Model
     public MonsterView View { get; private set; }
@@ -16,8 +16,6 @@ public class MonsterPresenter : IAnimationable, IDead
 
     private bool _isHit;
     private bool _isDeath;
-
-    public event Action OnDeath;
 
     // 추후 지워야 할 목록
     public float ActionTrigger { get; private set; } = 5f;
@@ -148,7 +146,7 @@ public class MonsterPresenter : IAnimationable, IDead
         float destroyTime = View.GetPlayingAni().length;
 
         View.RequestDestroy(destroyTime + 1f);
-        OnDeath?.Invoke();
+        View.OnDead();
     }
 
     public void StartCoroutine(IEnumerator coroutine) => View.StartCoroutine(coroutine);
