@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -8,6 +9,8 @@ public class TrapDamageTrigger : MonoBehaviour
 {
     [SerializeField] [Tooltip("데미지를 주는 간격 (초 단위, 같은 함정에 연속으로 데미지를 받지 않도록)")]
     private float damageCooldown = 0.5f;
+    
+    private const float INVINCIBILITY_DURATION = 0.7f; // 무적 지속 시간 (PlayerDamage의 _finsihTime과 동일)
     
     [Header("Animation Settings")]
     [SerializeField] [Tooltip("애니메이션에서 데미지를 주는 구간의 애니메이션 이름 (비어있으면 항상 데미지)")]
@@ -97,11 +100,13 @@ public class TrapDamageTrigger : MonoBehaviour
         // 플레이어가 트리거 안에 있고, 쿨다운이 지났으면 데미지 적용을 시도
         if (isPlayerInTrigger && currentPlayer != null)
         {
-            // 플레이어가 무적 상태면 데미지 주지 않음
-            ////if (currentPlayer.IsDamaged)
-            //{
-            //    return;
-            //}
+            // 무적 상태가 너무 오래 지속되고 있다면 초기화 (다른 함정에서 받은 무적 상태가 해제되지 않은 경우)
+            if (currentPlayer.GetDamage.IsDamaged)
+            {
+                // 무적 상태가지만 실제로는 무적 시간이 지났을 수 있으므로
+                // PlayerDamage의 Blink 코루틴이 끝났는지 확인하기 위해
+                // 여기서는 일단 무적 상태 체크만 하고, ApplyDamage에서 처리
+            }
             
             // 쿨다운 체크
             float timeSinceLastDamage = Time.time - lastDamageTime;
@@ -251,9 +256,27 @@ public class TrapDamageTrigger : MonoBehaviour
         
         Debug.Log($"[TrapDamageTrigger] 플레이어에게 데미지 {damage} 적용 - 함정: {gameObject.name}, 시간: {Time.time:F2}");
 
+        // 무적 시간 후 자동으로 무적 상태 초기화하는 코루틴 시작
+        StartCoroutine(ResetInvincibilityAfterDelay(currentPlayer));
+
         // 데미지 후에는 플레이어가 트리거 안에 있더라도 플래그 초기화
         isPlayerInTrigger = false;
         currentPlayer = null;
+    }
+    
+    /// <summary>
+    /// 무적 시간이 지난 후 플레이어의 무적 상태를 초기화하는 코루틴
+    /// </summary>
+    private IEnumerator ResetInvincibilityAfterDelay(Player player)
+    {
+        yield return new WaitForSeconds(INVINCIBILITY_DURATION);
+        
+        if (player != null && player.GetDamage != null)
+        {
+            // 무적 시간이 지났으므로 무적 상태 해제
+            player.GetDamage.IsDamaged = false;
+            Debug.Log($"[TrapDamageTrigger] 플레이어 무적 상태 초기화 - 함정: {gameObject.name}");
+        }
     }
     
     private void OnTriggerEnter2D(Collider2D other)
@@ -266,6 +289,15 @@ public class TrapDamageTrigger : MonoBehaviour
             Player player = other.GetComponent<Player>();
             if (player != null)
             {
+                // 무적 상태가 너무 오래 지속되고 있다면 초기화
+                // (다른 함정에서 받은 무적 상태가 정상적으로 해제되지 않은 경우 대비)
+                if (player.GetDamage != null && player.GetDamage.IsDamaged)
+                {
+                    // 무적 시간이 지났을 가능성이 있으므로 강제로 초기화
+                    // 실제로는 코루틴에서 처리되지만, 혹시 모를 경우를 대비
+                    StartCoroutine(ResetInvincibilityAfterDelay(player));
+                }
+                
                 isPlayerInTrigger = true;
                 currentPlayer = player;
                 Debug.Log($"[TrapDamageTrigger] 플레이어가 함정 범위에 진입 - 함정: {gameObject.name}, 플레이어: {player.name}");
