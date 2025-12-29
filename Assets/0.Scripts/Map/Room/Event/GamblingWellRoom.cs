@@ -19,12 +19,8 @@ public class GamblingWellRoom : BaseEventRoom
     {
         Vector3 center = GetRoomCenter();
         
-        // 샘 배치 (방 중앙)
         if (well != null)
         {
-            well.transform.position = center;
-            well.SetActive(true);
-            
             // 샘에 상호작용 컴포넌트 추가
             WellInteractable wellInteractable = well.GetComponent<WellInteractable>();
             if (wellInteractable == null)
@@ -162,18 +158,80 @@ public class GamblingWellRoom : BaseEventRoom
 /// <summary>
 /// 샘 상호작용 컴포넌트
 /// </summary>
-public class WellInteractable : Interactable
+public class WellInteractable : Interactable, IInteractable
 {
     private GamblingWellRoom wellRoom;
+    private bool isLayerInitialized = false;
+    
+    [field: SerializeField] public float YOffset { get; set; } = 1.5f;
+    
+    public Vector3 Pos => transform.position;
+    
+    private void Awake()
+    {
+        InitializePlayerLayer();
+        // 상호작용 범위 설정
+        interactionRange = 2.5f;
+    }
+    
+    private void Start()
+    {
+        if (!isLayerInitialized)
+        {
+            InitializePlayerLayer();
+        }
+    }
+    
+    private void InitializePlayerLayer()
+    {
+        int playerLayerIndex = LayerMask.NameToLayer("Player");
+        if (playerLayerIndex == -1)
+        {
+            Debug.LogError("[WellInteractable] Player 레이어를 찾을 수 없습니다!");
+            return;
+        }
+        
+        playerLayer = 1 << playerLayerIndex;
+        isLayerInitialized = true;
+    }
     
     public void Initialize(GamblingWellRoom room)
     {
         wellRoom = room;
+        
+        if (!isLayerInitialized)
+        {
+            InitializePlayerLayer();
+        }
+        
+        // 상호작용 범위 설정 (Awake가 호출되지 않은 경우 대비)
+        interactionRange = 2.5f;
     }
     
     public void SetCanInteract(bool value)
     {
         canInteract = value;
+        if (!value && GameManager.Instance != null && GameManager.Instance.InteractObj == this)
+        {
+            GameManager.Instance.InteractObj = null;
+        }
+    }
+    
+    // IInteractable 인터페이스 구현
+    public void OnInteract()
+    {
+        if (!canInteract || !isPlayerNearby) return;
+        
+        Player player = GetNearbyPlayer();
+        if (player == null)
+        {
+            player = GetPlayer();
+        }
+        
+        if (player != null)
+        {
+            OnInteract(player);
+        }
     }
     
     protected override void OnInteract(Player player)
@@ -182,19 +240,96 @@ public class WellInteractable : Interactable
         {
             wellRoom.OnWellInteracted(player);
         }
+        
+        // 상호작용 후 GameManager에서 제거 (2번 상호작용 후에는 자동으로 비활성화됨)
+        if (GameManager.Instance != null && GameManager.Instance.InteractObj == this && !canInteract)
+        {
+            GameManager.Instance.InteractObj = null;
+        }
+    }
+    
+    protected override void OnPlayerEnter()
+    {
+        base.OnPlayerEnter();
+        if (GameManager.Instance != null && canInteract)
+        {
+            GameManager.Instance.InteractObj = this;
+        }
+    }
+    
+    protected override void OnPlayerExit()
+    {
+        base.OnPlayerExit();
+        if (GameManager.Instance != null && GameManager.Instance.InteractObj == this)
+        {
+            GameManager.Instance.InteractObj = null;
+        }
     }
 }
 
 /// <summary>
 /// 시체 상호작용 컴포넌트
 /// </summary>
-public class SkeletonInteractable : Interactable
+public class SkeletonInteractable : Interactable, IInteractable
 {
     private GamblingWellRoom wellRoom;
+    private bool isLayerInitialized = false;
+    
+    [field: SerializeField] public float YOffset { get; set; } = 1.5f;
+    
+    public Vector3 Pos => transform.position;
+    
+    private void Awake()
+    {
+        InitializePlayerLayer();
+    }
+    
+    private void Start()
+    {
+        if (!isLayerInitialized)
+        {
+            InitializePlayerLayer();
+        }
+    }
+    
+    private void InitializePlayerLayer()
+    {
+        int playerLayerIndex = LayerMask.NameToLayer("Player");
+        if (playerLayerIndex == -1)
+        {
+            Debug.LogError("[SkeletonInteractable] Player 레이어를 찾을 수 없습니다!");
+            return;
+        }
+        
+        playerLayer = 1 << playerLayerIndex;
+        isLayerInitialized = true;
+    }
     
     public void Initialize(GamblingWellRoom room)
     {
         wellRoom = room;
+        
+        if (!isLayerInitialized)
+        {
+            InitializePlayerLayer();
+        }
+    }
+    
+    // IInteractable 인터페이스 구현
+    public void OnInteract()
+    {
+        if (!canInteract || !isPlayerNearby) return;
+        
+        Player player = GetNearbyPlayer();
+        if (player == null)
+        {
+            player = GetPlayer();
+        }
+        
+        if (player != null)
+        {
+            OnInteract(player);
+        }
     }
     
     protected override void OnInteract(Player player)
@@ -202,6 +337,30 @@ public class SkeletonInteractable : Interactable
         if (wellRoom != null)
         {
             wellRoom.OnSkeletonInteracted(player);
+        }
+        
+        // 규칙 표시 후 GameManager에서 제거
+        if (GameManager.Instance != null && GameManager.Instance.InteractObj == this)
+        {
+            GameManager.Instance.InteractObj = null;
+        }
+    }
+    
+    protected override void OnPlayerEnter()
+    {
+        base.OnPlayerEnter();
+        if (GameManager.Instance != null && canInteract)
+        {
+            GameManager.Instance.InteractObj = this;
+        }
+    }
+    
+    protected override void OnPlayerExit()
+    {
+        base.OnPlayerExit();
+        if (GameManager.Instance != null && GameManager.Instance.InteractObj == this)
+        {
+            GameManager.Instance.InteractObj = null;
         }
     }
 }
