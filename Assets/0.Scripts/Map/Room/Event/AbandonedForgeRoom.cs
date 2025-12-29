@@ -18,13 +18,8 @@ public class AbandonedForgeRoom : BaseEventRoom
     
     protected override void InitializeEventRoom()
     {
-        // 모루 배치 (방 중앙)
         if (anvil != null)
         {
-            Vector3 center = GetRoomCenter();
-            anvil.transform.position = center;
-            anvil.SetActive(true);
-            
             // 모루에 상호작용 컴포넌트 추가
             AnvilInteractable interactable = anvil.GetComponent<AnvilInteractable>();
             if (interactable == null)
@@ -66,10 +61,10 @@ public class AbandonedForgeRoom : BaseEventRoom
     {
         if (isAnvilUsed || player == null) return;
         
-        isAnvilUsed = true;
-        
         // 규칙 안내
         ShowRules();
+        
+        isAnvilUsed = true;
         
         // 50% 확률로 성공
         bool success = Random.Range(0f, 1f) < 0.5f;
@@ -85,6 +80,9 @@ public class AbandonedForgeRoom : BaseEventRoom
         
         // 모루를 망가진 모루로 교체
         ReplaceAnvilWithBroken();
+        
+        // 상호작용 비활성화
+        DisableAnvilInteraction();
     }
     
     /// <summary>
@@ -107,14 +105,37 @@ public class AbandonedForgeRoom : BaseEventRoom
     {
         Debug.Log("[AbandonedForgeRoom] 장비 수리 성공!");
         
-        // TODO: 무기 완전 회복 기능 구현 필요
-        // Weapon 클래스에 내구도를 최대치로 회복하는 메서드가 없음
-        // 필요 시 Weapon 클래스에 RepairToFull() 또는 SetDurability(int) 메서드 추가 필요
-        // if (player?.Player_WeaponChange?._slotWeapon2 != null)
-        // {
-        //     Weapon weapon = player.Player_WeaponChange._slotWeapon2;
-        //     weapon.RepairToFull(); // 또는 weapon.SetDurability(weapon.WeaponData.weaponDurability);
-        // }
+        // 현재 장비 수리 (내구도를 최대치로 회복)
+        if (player?.Player_WeaponChange?._slotWeapon2 != null)
+        {
+            Weapon weapon = player.Player_WeaponChange._slotWeapon2;
+            int maxDurability = weapon.WeaponData.weaponDurability;
+            int currentDurability = weapon.Durability;
+            int repairAmount = maxDurability - currentDurability;
+            
+            if (repairAmount > 0)
+            {
+                // ReduceDurability에 음수 값을 전달하여 내구도 회복
+                weapon.ReduceDurability(-repairAmount);
+                
+                // UI 업데이트
+                if (GameManager.Instance?.CurrentDungeon?.EquipSlotController != null)
+                {
+                    GameManager.Instance.CurrentDungeon.EquipSlotController.ChangeSubWeaponDurability(
+                        weapon.Durability, maxDurability);
+                }
+                
+                Debug.Log($"[AbandonedForgeRoom] 장비 내구도가 {currentDurability}에서 {maxDurability}로 회복되었습니다.");
+            }
+            else
+            {
+                Debug.Log("[AbandonedForgeRoom] 장비가 이미 최대 내구도입니다.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[AbandonedForgeRoom] 수리할 장비가 없습니다.");
+        }
     }
     
     /// <summary>
@@ -124,35 +145,37 @@ public class AbandonedForgeRoom : BaseEventRoom
     {
         Debug.Log("[AbandonedForgeRoom] 장비 수리 실패!");
         
-        // 30% 확률로 장비 파괴, 70% 확률로 내구도 절반
+        if (player?.Player_WeaponChange?._slotWeapon2 == null)
+        {
+            Debug.LogWarning("[AbandonedForgeRoom] 수리할 장비가 없습니다.");
+            return;
+        }
+        
+        Weapon weapon = player.Player_WeaponChange._slotWeapon2;
+        int currentDurability = weapon.Durability;
+        
+        // 30% 확률로 내구도 1, 70% 확률로 내구도 절반
         if (Random.Range(0f, 1f) < 0.3f)
         {
-            // 장비 파괴
-            Debug.Log("[AbandonedForgeRoom] 장비가 파괴되었습니다!");
+            // 30% 확률: 내구도를 1로 설정
+            weapon.ReduceDurability(weapon.Durability - 1);
             
-            // 무기 시스템 확인
-            if (player?.Player_WeaponChange?._slotWeapon2 != null)
-            {
-                Weapon weapon = player.Player_WeaponChange._slotWeapon2;
-                // 내구도를 0으로 만들어서 파괴 효과 (Weapon의 ReduceDurability는 내구도가 0 이하가 되면 WeaponPool로 반환됨)
-                weapon.ReduceDurability(weapon.Durability);
-                player.Player_WeaponChange._slotWeapon2 = null;
-                player.Player_WeaponChange.currentweapon = null;
-            }
+            Debug.Log($"[AbandonedForgeRoom] 장비 내구도가 {currentDurability}에서 1로 감소했습니다.");
         }
         else
         {
-            // 내구도 절반
-            Debug.Log("[AbandonedForgeRoom] 장비 내구도가 절반으로 줄어들었습니다!");
+            // 70% 확률: 내구도를 절반으로 감소
+            int reduceAmount = currentDurability / 2;
+            weapon.ReduceDurability(reduceAmount);
             
-            // 무기 시스템 확인
-            if (player?.Player_WeaponChange?._slotWeapon2 != null)
-            {
-                Weapon weapon = player.Player_WeaponChange._slotWeapon2;
-                int currentDurability = weapon.Durability;
-                int reduceAmount = currentDurability / 2; // 현재 내구도의 절반 감소
-                weapon.ReduceDurability(reduceAmount);
-            }
+            Debug.Log($"[AbandonedForgeRoom] 장비 내구도가 {currentDurability}에서 {weapon.Durability}로 감소했습니다. (절반)");
+        }
+        
+        // UI 업데이트
+        if (GameManager.Instance?.CurrentDungeon?.EquipSlotController != null)
+        {
+            GameManager.Instance.CurrentDungeon.EquipSlotController.ChangeSubWeaponDurability(
+                weapon.Durability, weapon.WeaponData.weaponDurability);
         }
     }
     
@@ -174,6 +197,18 @@ public class AbandonedForgeRoom : BaseEventRoom
     }
     
     /// <summary>
+    /// 모루 상호작용 비활성화
+    /// </summary>
+    private void DisableAnvilInteraction()
+    {
+        AnvilInteractable anvilInteractable = anvil?.GetComponent<AnvilInteractable>();
+        if (anvilInteractable != null)
+        {
+            anvilInteractable.SetCanInteract(false);
+        }
+    }
+    
+    /// <summary>
     /// 방의 중심 위치를 반환합니다.
     /// </summary>
     private Vector3 GetRoomCenter()
@@ -185,13 +220,75 @@ public class AbandonedForgeRoom : BaseEventRoom
 /// <summary>
 /// 모루 상호작용 컴포넌트
 /// </summary>
-public class AnvilInteractable : Interactable
+public class AnvilInteractable : Interactable, IInteractable
 {
     private AbandonedForgeRoom forgeRoom;
+    private bool isLayerInitialized = false;
+    
+    [field: SerializeField] public float YOffset { get; set; } = 1.5f;
+    
+    public Vector3 Pos => transform.position;
+    
+    private void Awake()
+    {
+        InitializePlayerLayer();
+    }
+    
+    private void Start()
+    {
+        if (!isLayerInitialized)
+        {
+            InitializePlayerLayer();
+        }
+    }
+    
+    private void InitializePlayerLayer()
+    {
+        int playerLayerIndex = LayerMask.NameToLayer("Player");
+        if (playerLayerIndex == -1)
+        {
+            Debug.LogError("[AnvilInteractable] Player 레이어를 찾을 수 없습니다!");
+            return;
+        }
+        
+        playerLayer = 1 << playerLayerIndex;
+        isLayerInitialized = true;
+    }
     
     public void Initialize(AbandonedForgeRoom room)
     {
         forgeRoom = room;
+        
+        if (!isLayerInitialized)
+        {
+            InitializePlayerLayer();
+        }
+    }
+    
+    public void SetCanInteract(bool value)
+    {
+        canInteract = value;
+        if (!value && GameManager.Instance != null && GameManager.Instance.InteractObj == this)
+        {
+            GameManager.Instance.InteractObj = null;
+        }
+    }
+    
+    // IInteractable 인터페이스 구현
+    public void OnInteract()
+    {
+        if (!canInteract || !isPlayerNearby) return;
+        
+        Player player = GetNearbyPlayer();
+        if (player == null)
+        {
+            player = GetPlayer();
+        }
+        
+        if (player != null)
+        {
+            OnInteract(player);
+        }
     }
     
     protected override void OnInteract(Player player)
@@ -199,6 +296,30 @@ public class AnvilInteractable : Interactable
         if (forgeRoom != null)
         {
             forgeRoom.OnAnvilInteracted(player);
+        }
+        
+        // 상호작용 후 GameManager에서 제거 (한 번만 상호작용 가능)
+        if (GameManager.Instance != null && GameManager.Instance.InteractObj == this)
+        {
+            GameManager.Instance.InteractObj = null;
+        }
+    }
+    
+    protected override void OnPlayerEnter()
+    {
+        base.OnPlayerEnter();
+        if (GameManager.Instance != null && canInteract)
+        {
+            GameManager.Instance.InteractObj = this;
+        }
+    }
+    
+    protected override void OnPlayerExit()
+    {
+        base.OnPlayerExit();
+        if (GameManager.Instance != null && GameManager.Instance.InteractObj == this)
+        {
+            GameManager.Instance.InteractObj = null;
         }
     }
 }
