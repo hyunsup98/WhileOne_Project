@@ -12,6 +12,15 @@ public class MonsterView : MonoBehaviour, IStunable
     public bool IsStun { get; private set; }
 
 
+    //
+    public void Hit()
+    {
+        Presenter.OnHit(1);
+    }
+    //
+
+
+
     [ContextMenu("세팅값 갱신")]
     private void Awake()
     {
@@ -67,15 +76,22 @@ public class MonsterView : MonoBehaviour, IStunable
                 _animator.SetTrigger("Pattern01");
                 break;
 
+            case "Pattern03":
+                _animator.SetTrigger("Pattern03");
+                break;
+
             case "Pattern04":
                 _animator.SetTrigger("Pattern04");
                 break;
+
             case "Pattern05":
                 _animator.SetTrigger("Pattern05");
                 break;
+
             case "Pattern06Start":
                 _animator.SetTrigger("Pattern06Start");
                 break;
+
             case "Pattern06End":
                 _animator.SetTrigger("Pattern06End");
                 break;
