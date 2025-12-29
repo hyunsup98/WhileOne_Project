@@ -50,7 +50,7 @@ public class MonsterPattern02 : MonsterPattern
         if (_isDelay)
             return;
 
-        _timer = Time.deltaTime;
+        _timer += Time.deltaTime;
         if (_timer > _beforeDelay + _startTime)
         {
             _isDelay = true;
@@ -62,21 +62,22 @@ public class MonsterPattern02 : MonsterPattern
 
     private IEnumerator OnBoosting(Vector2 createdPos)
     {
-        yield return CoroutineManager.waitForSeconds(_beforeDelay);
-
-        _isDelay = false;
         IsAction = true;
+        _isDelay = true;
+        yield return CoroutineManager.waitForSeconds(_beforeDelay);
+        _isDelay = false;
+
         CreatedEffect(createdPos);
         IsAction = false;
 
-        _monster.Model.SetBoost(_attackBoost, _speedBoost);
-
         Debug.Log("버프 강화");
+        _monster.Model.SetBoost(_attackBoost, _speedBoost);
 
         yield return CoroutineManager.waitForSeconds(_duration + _startTime);
 
         Debug.Log("버프 강화 종료");
         _monster.Model.SetBoost(-_attackBoost, -_speedBoost);
+
         if (_actionEffect != null)
             GameObject.Destroy(_actionEffect.gameObject);
     }
