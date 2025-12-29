@@ -9,7 +9,8 @@ public enum RoomType
     Event,      // 이벤트 방
     Trap,        // 함정 방
     Treasure,   // 보물 방
-    Boss        // 보스 방
+    Boss,       // 보스 방
+    Portal      // 포탈 방 (3층에서 보스 방으로 이동)
     // 새로운 방 타입은 BaseRoom을 상속받아 구성
 }
 

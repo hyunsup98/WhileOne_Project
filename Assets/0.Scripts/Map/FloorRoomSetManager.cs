@@ -39,6 +39,8 @@ public class FloorRoomPrefabs
     public GameObject[] treasureRoomPrefabs;
     [Tooltip("보스 방 프리팹 리스트 (여러 개 설정 시 랜덤 선택)")]
     public GameObject[] bossRoomPrefabs;
+    [Tooltip("포탈 방 프리팹 리스트 (여러 개 설정 시 랜덤 선택, 3층에서 보스 방으로 이동)")]
+    public GameObject[] portalRoomPrefabs;
     [Tooltip("이벤트 방 프리팹 리스트 (여러 개 설정 시 랜덤 선택, EventRoomType별 프리팹이 없을 때 fallback으로 사용)")]
     public GameObject[] eventRoomPrefabs;
     [Tooltip("이벤트 방 컨셉별 프리팹 설정")]
@@ -202,7 +204,7 @@ public class FloorRoomSetManager : MonoBehaviour
                     RoomType.Event,
                     RoomType.Trap,
                     RoomType.Trap,
-                    RoomType.Boss
+                    RoomType.Portal
                 }
             }
         };
@@ -337,6 +339,12 @@ public class FloorRoomSetManager : MonoBehaviour
         {
             var validPrefabs = System.Array.FindAll(floorPrefabs.bossRoomPrefabs, p => p != null);
             if (validPrefabs.Length > 0) dict[RoomType.Boss] = validPrefabs;
+        }
+        
+        if (floorPrefabs.portalRoomPrefabs != null && floorPrefabs.portalRoomPrefabs.Length > 0)
+        {
+            var validPrefabs = System.Array.FindAll(floorPrefabs.portalRoomPrefabs, p => p != null);
+            if (validPrefabs.Length > 0) dict[RoomType.Portal] = validPrefabs;
         }
 
         return dict;

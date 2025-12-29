@@ -3823,6 +3823,7 @@ MonoBehaviour:
     treasureRoomPrefabs:
     - {fileID: 4474050308984926237, guid: b19713a99ee861f45aa0d0d9e58a975b, type: 3}
     bossRoomPrefabs: []
+    portalRoomPrefabs: []
     eventRoomPrefabs:
     - {fileID: 4474050308984926237, guid: 7154686066db2c544a90d0be579f1c96, type: 3}
     eventRoomTypePrefabs:
@@ -3862,6 +3863,7 @@ MonoBehaviour:
     treasureRoomPrefabs:
     - {fileID: 4474050308984926237, guid: b19713a99ee861f45aa0d0d9e58a975b, type: 3}
     bossRoomPrefabs: []
+    portalRoomPrefabs: []
     eventRoomPrefabs:
     - {fileID: 4474050308984926237, guid: 7154686066db2c544a90d0be579f1c96, type: 3}
     eventRoomTypePrefabs:
@@ -3901,19 +3903,18 @@ MonoBehaviour:
     treasureRoomPrefabs:
     - {fileID: 4474050308984926237, guid: b19713a99ee861f45aa0d0d9e58a975b, type: 3}
     bossRoomPrefabs: []
+    portalRoomPrefabs:
+    - {fileID: 3715045633591972553, guid: ef6aaf001cd139944b60b19b6c2c5bac, type: 3}
     eventRoomPrefabs:
     - {fileID: 4474050308984926237, guid: 7154686066db2c544a90d0be579f1c96, type: 3}
     eventRoomTypePrefabs:
       diggingRoomPrefabs:
-      - {fileID: 4474050308984926237, guid: c7b311616b2190340a99f153379cd870, type: 3}
-      abandonedForgeRoomPrefabs:
-      - {fileID: 4474050308984926237, guid: c55e76121b63cde4ca63e412a9e2b8eb, type: 3}
-      gamblingWellRoomPrefabs:
-      - {fileID: 4474050308984926237, guid: e276d48c15c66ac478539cce3290d893, type: 3}
-      chestRoomPrefabs:
-      - {fileID: 4474050308984926237, guid: 52b3293dd4280c541abc3d1b0940c037, type: 3}
+      - {fileID: 4474050308984926237, guid: 93c280c3e86ae614cb36c5802adf45e9, type: 3}
+      abandonedForgeRoomPrefabs: []
+      gamblingWellRoomPrefabs: []
+      chestRoomPrefabs: []
       healingRoomPrefabs:
-      - {fileID: 4474050308984926237, guid: 693d6ddb42fca514296c0563b40ed22b, type: 3}
+      - {fileID: 4474050308984926237, guid: 4fcc0ff6da68b494186d52b256a7685e, type: 3}
 --- !u!1001 &558735061
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5864,7 +5865,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &837792735
 Transform:
   m_ObjectHideFlags: 0

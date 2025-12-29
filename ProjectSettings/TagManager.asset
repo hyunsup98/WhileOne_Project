@@ -11,6 +11,7 @@ TagManager:
   - ExitZone
   - DoorCenterMarker
   - Ground
+  - PortalZone
   layers:
   - Default
   - TransparentFX

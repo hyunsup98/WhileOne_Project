@@ -24,6 +24,9 @@ EditorBuildSettings:
     path: Assets/2.Scenes/MainScene/Dungeon_Floor3.unity
     guid: 6373b1f88584b5644a9442f8f9048681
   - enabled: 1
+    path: Assets/2.Scenes/MainScene/BossScene.unity
+    guid: bd671e211e9193442919f26beef21772
+  - enabled: 1
     path: Assets/2.Scenes/MainScene/Ending.unity
     guid: 44f73ba267f080a48a5afe0471d40384
   - enabled: 1

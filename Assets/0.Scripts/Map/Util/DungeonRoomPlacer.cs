@@ -377,6 +377,10 @@ public static class DungeonRoomPlacer
                 roomTypeText = "보스 방";
                 textColor = Color.orange;
                 break;
+            case RoomType.Portal:
+                roomTypeText = "포탈 방";
+                textColor = Color.magenta;
+                break;
             case RoomType.Normal:
             default:
                 roomTypeText = "전투 방";

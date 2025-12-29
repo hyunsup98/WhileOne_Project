@@ -18,6 +18,10 @@ public class RoomController : MonoBehaviour
 
     [SerializeField] [Tooltip("Dig 후 파헤쳐진 자리(Dug Spot)에 사용할 타일")]
     private Tile afterDigTile;
+    
+    // TileManager의 직접 타일 제거를 감지하기 위한 변수
+    private Dictionary<Vector3Int, TileBase> lastKnownTiles = new Dictionary<Vector3Int, TileBase>();
+    private DungeonGenerator dungeonGenerator; // DigSpotTile 참조용
 
     /// <summary>
     /// 타일매니저에서 읽기 전용으로 사용할 수 있도록 프로퍼티를 제공합니다.
@@ -25,6 +29,116 @@ public class RoomController : MonoBehaviour
     public Tilemap FloorTileMap => floorTileMap;
     public Tilemap DigSpotTileMap => digSpotTileMap;
     public Tile AfterDigTile => afterDigTile;
+    
+    private void Awake()
+    {
+        // DungeonGenerator 찾기 (DigSpotTile 참조용)
+        dungeonGenerator = FindFirstObjectByType<DungeonGenerator>();
+    }
+    
+    private void Start()
+    {
+        // 초기 타일 상태 저장
+        if (digSpotTileMap != null)
+        {
+            RefreshKnownTiles();
+        }
+    }
+    
+    private void Update()
+    {
+        // TileManager가 직접 타일을 제거했는지 감지
+        if (digSpotTileMap != null)
+        {
+            CheckForTileRemoval();
+        }
+    }
+    
+    /// <summary>
+    /// 현재 타일맵의 모든 타일 상태를 저장합니다.
+    /// </summary>
+    private void RefreshKnownTiles()
+    {
+        lastKnownTiles.Clear();
+        
+        if (digSpotTileMap == null) return;
+        
+        // 타일맵의 bounds를 가져와서 모든 타일 확인
+        digSpotTileMap.CompressBounds();
+        BoundsInt bounds = digSpotTileMap.cellBounds;
+        
+        for (int x = bounds.xMin; x < bounds.xMax; x++)
+        {
+            for (int y = bounds.yMin; y < bounds.yMax; y++)
+            {
+                Vector3Int pos = new Vector3Int(x, y, 0);
+                TileBase tile = digSpotTileMap.GetTile(pos);
+                if (tile != null)
+                {
+                    lastKnownTiles[pos] = tile;
+                }
+            }
+        }
+    }
+    
+    /// <summary>
+    /// TileManager가 직접 타일을 제거했는지 확인하고, 제거된 경우 이벤트를 발생시킵니다.
+    /// </summary>
+    private void CheckForTileRemoval()
+    {
+        if (digSpotTileMap == null || dungeonGenerator == null) return;
+        
+        // 이전에 알고 있던 타일 중 제거된 것이 있는지 확인
+        List<Vector3Int> removedPositions = new List<Vector3Int>();
+        
+        foreach (var kvp in lastKnownTiles)
+        {
+            Vector3Int pos = kvp.Key;
+            TileBase previousTile = kvp.Value;
+            TileBase currentTile = digSpotTileMap.GetTile(pos);
+            
+            // 타일이 제거되었고, 이전에 DigSpot 타일이었는지 확인
+            if (previousTile != null && currentTile == null)
+            {
+                // DigSpot 타일인지 확인 (DungeonGenerator의 DigSpotTile과 비교)
+                Tile digSpotTile = dungeonGenerator.DigSpotTile;
+                if (digSpotTile != null && (previousTile == digSpotTile || previousTile.name == digSpotTile.name))
+                {
+                    removedPositions.Add(pos);
+                }
+            }
+        }
+        
+        // 제거된 타일이 있으면 이벤트 발생
+        foreach (Vector3Int pos in removedPositions)
+        {
+            TileBase removedTile = lastKnownTiles[pos];
+            lastKnownTiles.Remove(pos);
+            
+            Debug.Log($"[RoomController] TileManager가 직접 제거한 타일 감지 - cell:{pos}, removedTile:{removedTile?.name}");
+            
+            // Dig 이벤트 발생
+            OnDigSpotRemoved?.Invoke(pos, digSpotTileMap, removedTile);
+        }
+        
+        // 새로운 타일이 추가된 경우도 업데이트
+        digSpotTileMap.CompressBounds();
+        BoundsInt bounds = digSpotTileMap.cellBounds;
+        
+        for (int x = bounds.xMin; x < bounds.xMax; x++)
+        {
+            for (int y = bounds.yMin; y < bounds.yMax; y++)
+            {
+                Vector3Int pos = new Vector3Int(x, y, 0);
+                TileBase currentTile = digSpotTileMap.GetTile(pos);
+                
+                if (currentTile != null && !lastKnownTiles.ContainsKey(pos))
+                {
+                    lastKnownTiles[pos] = currentTile;
+                }
+            }
+        }
+    }
     
     /// <summary>
     /// TileManager에서 호출할 수 있는 Dig 메서드
@@ -120,6 +234,12 @@ public class RoomController : MonoBehaviour
         
         // DigSpot 타일 제거
         digSpotTileMap.SetTile(cellPosition, null);
+        
+        // 타일 상태 업데이트
+        if (lastKnownTiles.ContainsKey(cellPosition))
+        {
+            lastKnownTiles.Remove(cellPosition);
+        }
 
         // Dig 이벤트 발생
         OnDigSpotRemoved?.Invoke(cellPosition, digSpotTileMap, current);

@@ -11,25 +11,36 @@ public class DiggingRoom : BaseEventRoom
     [Header("Digging Room Settings")]
     [SerializeField] [Tooltip("경고 표지판 오브젝트 (중앙에 배치)")]
     private GameObject warningSign;
-    [SerializeField] [Tooltip("Dig Spot 타일")]
-    private Tile digSpotTile;
     [SerializeField] [Tooltip("진짜 Dig Spot 개수")]
     private int realDigSpotCount = 2;
     [SerializeField] [Tooltip("가짜 Dig Spot 개수")]
     private int fakeDigSpotCount = 3;
-    [SerializeField] [Tooltip("가짜를 파면 나오는 적대 몬스터 프리팹")]
-    private GameObject enemyPrefab;
     [SerializeField] [Tooltip("가짜를 파면 받는 HP 피해 비율 (0.1 = 10%)")]
     private float fakeDigDamageRatio = 0.1f;
+    [SerializeField] [Tooltip("Dig Spot 타일맵의 Sorting Order (Order in Layer)")]
+    private int digSpotTilemapSortingOrder = 3;
     
     private Tilemap tilemap;
     private RoomController roomController;
-    private int totalDigSpots = 0;
+    private Dictionary<Vector3Int, bool> digSpotTypes; // true = 진짜, false = 가짜
     private int realDigSpotsFound = 0;
     private int fakeDigSpotsFound = 0;
+    private Tile digSpotTile; // DungeonGenerator에서 가져온 Dig Spot 타일
     
     protected override void InitializeEventRoom()
     {
+        // DungeonGenerator에서 Dig Spot 타일 가져오기
+        DungeonGenerator dungeonGenerator = FindFirstObjectByType<DungeonGenerator>();
+        if (dungeonGenerator != null)
+        {
+            digSpotTile = dungeonGenerator.DigSpotTile;
+        }
+        
+        if (digSpotTile == null)
+        {
+            Debug.LogWarning("[DiggingRoom] DungeonGenerator에서 Dig Spot 타일을 찾을 수 없습니다.");
+        }
+        
         // RoomController 찾기 및 이벤트 구독
         roomController = GetComponent<RoomController>();
         if (roomController != null)
@@ -51,19 +62,29 @@ public class DiggingRoom : BaseEventRoom
             return;
         }
         
-        // 경고 표지판 배치 (방 중앙)
+        // 타일맵의 Sorting Order 설정
+        TilemapRenderer tilemapRenderer = tilemap.GetComponent<TilemapRenderer>();
+        if (tilemapRenderer != null)
+        {
+            tilemapRenderer.sortingOrder = digSpotTilemapSortingOrder;
+        }
+        
         if (warningSign != null)
         {
-            Vector3 center = GetRoomCenter();
-            warningSign.transform.position = center;
-            warningSign.SetActive(true);
+            // 경고 표지판에 상호작용 컴포넌트 추가
+            WarningSignInteractable signInteractable = warningSign.GetComponent<WarningSignInteractable>();
+            if (signInteractable == null)
+            {
+                signInteractable = warningSign.AddComponent<WarningSignInteractable>();
+            }
+            signInteractable.Initialize(this);
         }
         
         // Dig Spot 배치
         PlaceDigSpots();
         
-        // 규칙 안내 (경고 표지판에 표시)
-        ShowRules();
+        // 디버그: 타일맵과 타일 정보 확인
+        Debug.Log($"[DiggingRoom] 초기화 완료 - tilemap:{tilemap?.name}, digSpotTile:{digSpotTile?.name}, RoomController:{roomController?.name}");
     }
     
     private void OnDestroy()
@@ -80,16 +101,43 @@ public class DiggingRoom : BaseEventRoom
     /// </summary>
     private void HandleDigSpotRemoved(Vector3Int cellPosition, Tilemap sourceTilemap, TileBase removedTile)
     {
-        // DiggingRoom의 타일맵에서 발생한 이벤트인지 확인
-        if (sourceTilemap != tilemap) return;
+        Debug.Log($"[DiggingRoom] HandleDigSpotRemoved 호출 - cell:{cellPosition}, sourceTilemap:{sourceTilemap?.name}, removedTile:{removedTile?.name}, digSpotTile:{digSpotTile?.name}");
         
-        // Dig Spot 타일인지 확인
-        if (removedTile != digSpotTile) return;
+        // DiggingRoom의 타일맵에서 발생한 이벤트인지 확인
+        if (sourceTilemap != tilemap)
+        {
+            Debug.Log($"[DiggingRoom] 타일맵 불일치 - sourceTilemap:{sourceTilemap?.name}, tilemap:{tilemap?.name}");
+            return;
+        }
+        
+        // Dig Spot 타일인지 확인 (타일 인스턴스 비교 + 이름 비교)
+        bool isDigSpotTile = false;
+        if (removedTile == digSpotTile)
+        {
+            isDigSpotTile = true;
+        }
+        else if (removedTile != null && digSpotTile != null)
+        {
+            // 타일 인스턴스가 다를 수 있으므로 이름으로도 비교
+            isDigSpotTile = removedTile.name == digSpotTile.name || 
+                           removedTile.GetType() == digSpotTile.GetType();
+        }
+        
+        if (!isDigSpotTile)
+        {
+            Debug.LogWarning($"[DiggingRoom] Dig Spot 타일 불일치 - removedTile:{removedTile?.name} ({removedTile?.GetType()?.Name}), digSpotTile:{digSpotTile?.name} ({digSpotTile?.GetType()?.Name})");
+            return;
+        }
         
         // 플레이어 찾기 (헬퍼 메서드 사용)
         Player player = GetPlayer();
-        if (player == null) return;
+        if (player == null)
+        {
+            Debug.LogWarning("[DiggingRoom] 플레이어를 찾을 수 없습니다.");
+            return;
+        }
         
+        Debug.Log($"[DiggingRoom] Dig Spot 처리 시작 - cell:{cellPosition}");
         // Dig Spot 처리
         OnDigSpotDug(cellPosition, player);
     }
@@ -100,6 +148,13 @@ public class DiggingRoom : BaseEventRoom
     private void PlaceDigSpots()
     {
         if (tilemap == null || digSpotTile == null) return;
+        
+        // Dig Spot 타입 딕셔너리 초기화
+        digSpotTypes = new Dictionary<Vector3Int, bool>();
+        
+        // RoomCenterMarker를 사용하여 방의 중앙 좌표 계산
+        Vector3 roomCenterWorldPos = DungeonRoomHelper.GetRoomWorldCenter(gameObject);
+        Vector3Int roomCenterCellPos = tilemap.WorldToCell(roomCenterWorldPos);
         
         // 방 크기 계산 (15x15 타일)
         int roomSize = 15;
@@ -115,7 +170,13 @@ public class DiggingRoom : BaseEventRoom
                 // 중앙 영역 제외 (경고 표지판 위치)
                 if (Mathf.Abs(x - centerX) > 2 || Mathf.Abs(y - centerY) > 2)
                 {
-                    availablePositions.Add(new Vector3Int(x, y, 0));
+                    // RoomCenterMarker 기준으로 셀 좌표 계산
+                    Vector3Int cellPos = new Vector3Int(
+                        roomCenterCellPos.x + (x - centerX),
+                        roomCenterCellPos.y + (y - centerY),
+                        0
+                    );
+                    availablePositions.Add(cellPos);
                 }
             }
         }
@@ -134,7 +195,7 @@ public class DiggingRoom : BaseEventRoom
         {
             Vector3Int pos = availablePositions[i];
             tilemap.SetTile(pos, digSpotTile);
-            totalDigSpots++;
+            digSpotTypes[pos] = true; // 진짜로 표시
         }
         
         // 가짜 Dig Spot 배치
@@ -143,18 +204,27 @@ public class DiggingRoom : BaseEventRoom
         {
             Vector3Int pos = availablePositions[startIndex + i];
             tilemap.SetTile(pos, digSpotTile);
-            totalDigSpots++;
+            digSpotTypes[pos] = false; // 가짜로 표시
+        }
+        
+        Debug.Log($"[DiggingRoom] Dig Spot 배치 완료: 진짜 {realDigSpotCount}개, 가짜 {fakeDigSpotCount}개 (중앙 기준: {roomCenterWorldPos})");
+        
+        // 디버그: 배치된 위치 확인
+        foreach (var kvp in digSpotTypes)
+        {
+            TileBase placedTile = tilemap.GetTile(kvp.Key);
+            Debug.Log($"[DiggingRoom] Dig Spot 배치 위치: {kvp.Key}, 타입:{(kvp.Value ? "진짜" : "가짜")}, 타일:{placedTile?.name}");
         }
     }
     
     /// <summary>
     /// 규칙을 안내합니다.
     /// </summary>
-    private void ShowRules()
+    public void ShowRules()
     {
         string rules = "도굴 방 규칙:\n" +
                       "5개 중 진짜는 2개, 가짜는 3개\n" +
-                      "가짜를 파면 적대 몬스터가 나오거나 HP가 10% 감소합니다.";
+                      "가짜를 파면 플레이어의 HP가 10% 감소합니다.";
         
         Debug.Log($"[DiggingRoom] {rules}");
         // TODO: UI에 규칙 표시
@@ -164,12 +234,21 @@ public class DiggingRoom : BaseEventRoom
     /// Dig Spot을 파는 이벤트 처리
     /// (타일은 이미 RoomController에서 제거되었으므로 여기서는 로직만 처리)
     /// </summary>
-    public void OnDigSpotDug(Vector3Int position, Player player)
+    public void OnDigSpotDug(Vector3Int cellPosition, Player player)
     {
         if (player == null) return;
         
-        // 진짜인지 가짜인지 판단 (확률 기반)
-        bool isReal = DetermineIfReal();
+        // 해당 위치의 Dig Spot 타입 확인
+        if (digSpotTypes == null || !digSpotTypes.ContainsKey(cellPosition))
+        {
+            Debug.LogWarning($"[DiggingRoom] Dig Spot 위치 {cellPosition}를 찾을 수 없습니다.");
+            return;
+        }
+        
+        bool isReal = digSpotTypes[cellPosition];
+        
+        // 딕셔너리에서 제거 (이미 파낸 것으로 처리)
+        digSpotTypes.Remove(cellPosition);
         
         if (isReal)
         {
@@ -181,22 +260,6 @@ public class DiggingRoom : BaseEventRoom
             fakeDigSpotsFound++;
             OnFakeDigSpotFound(player);
         }
-    }
-    
-    /// <summary>
-    /// 진짜인지 가짜인지 판단합니다.
-    /// </summary>
-    private bool DetermineIfReal()
-    {
-        // 남은 진짜 개수와 가짜 개수에 따라 확률 계산
-        int remainingReal = realDigSpotCount - realDigSpotsFound;
-        int remainingFake = fakeDigSpotCount - fakeDigSpotsFound;
-        int totalRemaining = remainingReal + remainingFake;
-        
-        if (totalRemaining == 0) return false;
-        
-        float realProbability = (float)remainingReal / totalRemaining;
-        return Random.Range(0f, 1f) < realProbability;
     }
     
     /// <summary>
@@ -224,24 +287,11 @@ public class DiggingRoom : BaseEventRoom
     {
         Debug.Log("[DiggingRoom] 가짜 Dig Spot을 찾았습니다!");
         
-        // 50% 확률로 적대 몬스터 소환 또는 HP 피해
-        if (Random.Range(0f, 1f) < 0.5f)
-        {
-            // 적대 몬스터 소환
-            // TODO: 몬스터 스폰 시스템이 있다면 해당 시스템 사용 (예: MonsterSpawnManager.SpawnEnemy())
-            // 현재는 프리팹 직접 인스턴스화 사용
-            if (enemyPrefab != null)
-            {
-                Vector3 spawnPos = GetRoomCenter() + (Vector3)(Random.insideUnitCircle * 3f);
-                Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
-            }
-        }
-        else
-        {
-            // HP 피해 (헬퍼 메서드 사용)
-            player.ChangedHealth += -player.MaxHp * fakeDigDamageRatio;
-            //ChangePlayerHealthByRatio(-fakeDigDamageRatio, player);
-        }
+        // HP 10% 감소
+        float damage = player.MaxHp * fakeDigDamageRatio;
+        player.ChangedHealth += -damage;
+        
+        Debug.Log($"[DiggingRoom] HP가 {damage:F1} 감소했습니다. (현재 HP: {player.Hp:F1}/{player.MaxHp:F1})");
     }
     
     /// <summary>
@@ -250,6 +300,104 @@ public class DiggingRoom : BaseEventRoom
     private Vector3 GetRoomCenter()
     {
         return transform.position;
+    }
+}
+
+/// <summary>
+/// 경고 표지판 상호작용 컴포넌트
+/// </summary>
+public class WarningSignInteractable : Interactable, IInteractable
+{
+    private DiggingRoom diggingRoom;
+    private bool isLayerInitialized = false;
+    
+    [field: SerializeField] public float YOffset { get; set; } = 1.5f;
+    
+    public Vector3 Pos => transform.position;
+    
+    private void Awake()
+    {
+        InitializePlayerLayer();
+    }
+    
+    private void Start()
+    {
+        if (!isLayerInitialized)
+        {
+            InitializePlayerLayer();
+        }
+    }
+    
+    private void InitializePlayerLayer()
+    {
+        int playerLayerIndex = LayerMask.NameToLayer("Player");
+        if (playerLayerIndex == -1)
+        {
+            Debug.LogError("[WarningSignInteractable] Player 레이어를 찾을 수 없습니다!");
+            return;
+        }
+        
+        playerLayer = 1 << playerLayerIndex;
+        isLayerInitialized = true;
+    }
+    
+    public void Initialize(DiggingRoom room)
+    {
+        diggingRoom = room;
+        
+        if (!isLayerInitialized)
+        {
+            InitializePlayerLayer();
+        }
+    }
+    
+    // IInteractable 인터페이스 구현
+    public void OnInteract()
+    {
+        if (!canInteract || !isPlayerNearby) return;
+        
+        Player player = GetNearbyPlayer();
+        if (player == null)
+        {
+            player = GetPlayer();
+        }
+        
+        if (player != null)
+        {
+            OnInteract(player);
+        }
+    }
+    
+    protected override void OnInteract(Player player)
+    {
+        if (diggingRoom != null)
+        {
+            diggingRoom.ShowRules();
+        }
+        
+        // 규칙 표시 후 GameManager에서 제거
+        if (GameManager.Instance != null && GameManager.Instance.InteractObj == this)
+        {
+            GameManager.Instance.InteractObj = null;
+        }
+    }
+    
+    protected override void OnPlayerEnter()
+    {
+        base.OnPlayerEnter();
+        if (GameManager.Instance != null && canInteract)
+        {
+            GameManager.Instance.InteractObj = this;
+        }
+    }
+    
+    protected override void OnPlayerExit()
+    {
+        base.OnPlayerExit();
+        if (GameManager.Instance != null && GameManager.Instance.InteractObj == this)
+        {
+            GameManager.Instance.InteractObj = null;
+        }
     }
 }
 
