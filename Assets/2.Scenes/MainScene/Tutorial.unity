@@ -469,7 +469,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 412455331}
   m_HandleRect: {fileID: 0}
@@ -6034,6 +6034,7 @@ MonoBehaviour:
   - {fileID: 4219698208080206254, guid: 90a52d1df7452054fa33d747d0f73b7b, type: 3}
   - {fileID: -7203523727993057270, guid: 19646414ea02ee34aa2ce47094059d50, type: 3}
   _nextSceneName: Dungeon_Floor1
+  isSkip: 0
 --- !u!1 &882290055
 GameObject:
   m_ObjectHideFlags: 0
@@ -9300,7 +9301,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 1596453878}
   m_HandleRect: {fileID: 0}
