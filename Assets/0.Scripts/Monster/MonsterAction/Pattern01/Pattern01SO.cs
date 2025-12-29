@@ -19,7 +19,7 @@ public class Pattern01SO : MonsterActionSO
     [SerializeField] private float _createdEffectTime = 0.3f;
     [Tooltip("이펙트 생성 위치")]
     [SerializeField] private Vector2 _createPos;
-    [Tooltip("히트박스 크기(가로 × 세로")]
+    [Tooltip("히트박스 크기(가로 × 세로)")]
     [SerializeField] private Vector2 _hitBoxSize;
     [Tooltip("액션 이펙트 프리펩")]
     [SerializeField] private GameObject _hitDecision;

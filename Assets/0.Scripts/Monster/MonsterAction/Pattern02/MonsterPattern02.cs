@@ -25,6 +25,7 @@ public class MonsterPattern02 : MonsterPattern
         _hitDecision = actionData.ActionEffectPrefab;
         
         _startTime = actionData.StartTime;
+        _duration = actionData.Duration;
         _attackBoost = actionData.AttackBoost;
         _speedBoost = actionData.SpeedBoost;
         _createPos = actionData.CreatePos;
@@ -64,12 +65,17 @@ public class MonsterPattern02 : MonsterPattern
         yield return CoroutineManager.waitForSeconds(_beforeDelay);
 
         _isDelay = false;
-        _ani.OnPlayAni("Pattern02");
+        IsAction = true;
         CreatedEffect(createdPos);
+        IsAction = false;
+
         _monster.Model.SetBoost(_attackBoost, _speedBoost);
 
-        yield return CoroutineManager.waitForSeconds(_duration+ _startTime);
+        Debug.Log("버프 강화");
 
+        yield return CoroutineManager.waitForSeconds(_duration + _startTime);
+
+        Debug.Log("버프 강화 종료");
         _monster.Model.SetBoost(-_attackBoost, -_speedBoost);
         if (_actionEffect != null)
             GameObject.Destroy(_actionEffect.gameObject);

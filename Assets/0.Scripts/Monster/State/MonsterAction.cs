@@ -53,29 +53,31 @@ public class MonsterAction : IState
     {
         Dictionary<ActionID, MonsterPattern> actionDict = _monster.Model.ActionDict;
 
-        if (_monster.IsPattern03)
+        if (actionDict.TryGetValue(ActionID.three, out var value) && _monster.IsPattern03)
         {
             _monster.setIsPattern03(false);
-            return actionDict[ActionID.three];
+            return value;
         }
 
-        if (actionDict.TryGetValue(ActionID.six, out var value) && _monster.IsUlt)
+        else if (actionDict.TryGetValue(ActionID.six, out value) && _monster.IsUlt)
         {
             _monster.SetIsUlt(false);
             return value;
         }
 
-        if (actionDict.TryGetValue(ActionID.five, out value) && _actionCount == 5)
+
+        else if (actionDict.TryGetValue(ActionID.five, out value) && _actionCount == 5)
+            return value;
+
+        else if (actionDict.TryGetValue(ActionID.two, out value) && value.IsActionable)
             return value;
 
         else if (
-            actionDict.TryGetValue(ActionID.four, out value) && 
-            actionDict[ActionID.four].IsActionable)
+            actionDict.TryGetValue(ActionID.four, out value) && value.IsActionable)
             return value;
 
         else if (
-            actionDict.TryGetValue(ActionID.one, out value) && 
-            actionDict[ActionID.one].IsActionable)
+            actionDict.TryGetValue(ActionID.one, out value) && value.IsActionable)
             return value;
 
         UnityEngine.Debug.LogWarning("쿨타임 또는 null로 인해 행동사용 불가");

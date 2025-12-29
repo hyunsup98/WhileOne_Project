@@ -14,7 +14,7 @@ public abstract class MonsterPattern
     protected GameObject _pathPreview;
 
     //protected GameObject _createdHitDecition;
-    protected AttackEffect _actionEffect;
+    protected ActionEffect _actionEffect;
     protected float _coolTime;
     protected bool _isDelay;
     protected float _timer;
@@ -53,7 +53,7 @@ public abstract class MonsterPattern
             createdPos,
             Quaternion.identity,
             _monster.View.MyTransform
-            ).GetComponent<AttackEffect>();
+            ).GetComponent<ActionEffect>();
 
         if (_actionEffect == null)
         {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AttackEffect : MonoBehaviour
+public class ActionEffect : MonoBehaviour
 {
     protected float _damage;
 

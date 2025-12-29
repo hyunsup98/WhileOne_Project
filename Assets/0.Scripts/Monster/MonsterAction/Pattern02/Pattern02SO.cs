@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+
+[CreateAssetMenu(fileName = "MonsterActionSO", menuName = "MonsterSO/MonsterActionSO/Pattern02")]
 public class Pattern02SO : MonsterActionSO
 {
     [Header("-------------------- 패턴별 데이터 --------------------")]
@@ -9,6 +11,7 @@ public class Pattern02SO : MonsterActionSO
     [SerializeField] private float _beforeDelay;
     [SerializeField] private float _afterDelay;
     [SerializeField] private float _startTime = 1;
+    [SerializeField] private float _duration = 10;
     [SerializeField] private float _attackBoost;
     [SerializeField] private float _speedBoost;
 
@@ -21,6 +24,7 @@ public class Pattern02SO : MonsterActionSO
     public float BeforeDelay => _beforeDelay;
     public float AfterDelay => _afterDelay;
     public float StartTime => _startTime;
+    public float Duration => _duration;
     public float AttackBoost => _attackBoost;
     public float SpeedBoost => _speedBoost;
     public Vector2 CreatePos => _createPos;

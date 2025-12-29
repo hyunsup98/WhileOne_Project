@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 5364896454617037161}
   - component: {fileID: 5083990808972969419}
   - component: {fileID: 4003275279392289281}
-  - component: {fileID: 3447184645124248839}
   m_Layer: 0
   m_Name: BossEffect01
   m_TagString: Untagged
@@ -114,18 +113,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3447184645124248839
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5356135465024926979}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66a99ee473d6e514bb240ad0e4c97d3d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AttackEffect
 --- !u!1 &5431072308586980615
 GameObject:
   m_ObjectHideFlags: 0
@@ -136,7 +123,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9028821466478753905}
   - component: {fileID: 5791043585443322762}
-  - component: {fileID: 4001981215934406185}
+  - component: {fileID: 3767616632201993517}
   m_Layer: 0
   m_Name: BossEffect01
   m_TagString: Untagged
@@ -206,7 +193,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 2, y: 6}
   m_EdgeRadius: 0
---- !u!114 &4001981215934406185
+--- !u!114 &3767616632201993517
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -215,6 +202,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 5431072308586980615}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66a99ee473d6e514bb240ad0e4c97d3d, type: 3}
+  m_Script: {fileID: 11500000, guid: 542ea3ad4a0d6404c9030183a83b4146, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AttackEffect
+  m_EditorClassIdentifier: Assembly-CSharp::ActionEffect

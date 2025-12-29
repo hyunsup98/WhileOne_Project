@@ -20,35 +20,38 @@ public class MonsterPattern03 : MonsterPattern
 
         _beforeDelay = actionData.BeforeDelay;
         _afterDelay = actionData.AfterDelay;
+        _teleportCount = actionData.TeleportCount;
         _returnPos = actionData.TeleportPoint.position;
     }
 
-
-    public override void EndAction()
+    public override void StartAction()
     {
         IsAction = true;
+        _myTransform.GetComponentInChildren<Collider2D>().enabled = false;
         _ani.OnPlayAni("Idle");
+
         if (_currentCount < _teleportCount)
         {
             Debug.Log("<color=red>피격카운트</color>" + _currentCount);
             IsAction = false;
+            _currentCount++;
             return;
         }
 
         _monster.StartCoroutine(OnTelepor());
+    }
 
+    public override void EndAction()
+    {
+        if (_currentCount > _teleportCount)
+            _currentCount = 0;
+        Init();
     }
 
     public override void OnAction()
     {
     }
 
-    public override void StartAction()
-    {
-        if (_currentCount >= _teleportCount)
-            _currentCount = 0;
-        Init();
-    }
 
     private IEnumerator OnTelepor()
     {
@@ -58,6 +61,8 @@ public class MonsterPattern03 : MonsterPattern
         _myTransform.position = _returnPos;
         
         yield return CoroutineManager.waitForSeconds(_afterDelay);
+
+        _myTransform.GetComponentInChildren<Collider2D>().enabled = true;
         IsAction = false;
     }
 }
