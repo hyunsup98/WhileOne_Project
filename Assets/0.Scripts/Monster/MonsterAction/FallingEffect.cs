@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class FallingEffect : AttackEffect
+public class FallingEffect : ActionEffect
 {
     public override void DealDamage(Collider2D collision)
     {

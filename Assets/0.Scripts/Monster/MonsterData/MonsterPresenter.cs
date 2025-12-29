@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,14 +6,18 @@ using UnityEngine.Tilemaps;
 
 
 
-public class MonsterPresenter : IAnimationable
+public class MonsterPresenter : IAnimationable, IDead
 {
     public MonsterModel Model { get; private set; }  // 현재 몬스터 데이터 보관한 Model
     public MonsterView View { get; private set; }
-    public bool IsUlt {  get; private set; }        // 궁극기(행동06)를 실행하는 메서드
+
+    public bool IsPattern03 { get; private set; }
+    public bool IsUlt { get; private set; }        // 궁극기(행동06)를 실행하는 메서드
 
     private bool _isHit;
     private bool _isDeath;
+
+    public event Action OnDeath;
 
     // 추후 지워야 할 목록
     public float ActionTrigger { get; private set; } = 5f;
@@ -28,7 +33,7 @@ public class MonsterPresenter : IAnimationable
     {
         View = monsterView;
         Model = new MonsterModel(monsterData, View.MyTransform, GroundTilmap, wallTilmap);
-        
+
 
         // 경로 탐색으로 순찰 포인트 초기화
         Model.MobAstar = new Astar(wallTilmap);
@@ -46,7 +51,7 @@ public class MonsterPresenter : IAnimationable
                 (ActionID)(action.MonsterActionID % 10),
                 ActionFactory.Create(action, this)
                 );
-            Debug.LogWarning(Model.Name + $"<color=brow>{action.name}</color>");
+            Debug.LogWarning(Model.Name + $"<color=brown>{action.name}</color>");
         }
 
 
@@ -59,6 +64,7 @@ public class MonsterPresenter : IAnimationable
         Model.StateList.Add(MonsterState.Stun, new Stun(this));
         Model.CurrentState = Model.StateList[MonsterState.Patrol];
     }
+
 
 
     public void OnStart()
@@ -111,13 +117,22 @@ public class MonsterPresenter : IAnimationable
 
     public void OnHit(float Damage)
     {
-        if(!_isHit)
+        if (Model.ActionDict.TryGetValue(ActionID.three, out var action))
+        {
+            IsPattern03 = true;
+            View.OnPlayAni("Hurt");
+            Model.SetState(MonsterState.Action);
+            return;
+        }
+
+
+        if (!_isHit)
             _isHit = true;
 
         View.OnHurtAni();
         Model.TakeDamage(Damage);
 
-        if(Model.Hp <= 0)
+        if (Model.Hp <= 0)
             View.StartCoroutine(OnDead());
     }
 
@@ -133,12 +148,14 @@ public class MonsterPresenter : IAnimationable
         float destroyTime = View.GetPlayingAni().length;
 
         View.RequestDestroy(destroyTime + 1f);
+        OnDeath?.Invoke();
     }
 
     public void StartCoroutine(IEnumerator coroutine) => View.StartCoroutine(coroutine);
 
     public void OnStun() => Model.SetState(MonsterState.Stun);
     public void SetIsUlt(bool isUlt) => IsUlt = isUlt;
+    public void setIsPattern03(bool isPattern03) => IsPattern03 = isPattern03;
 
     public void OnPlayAni(string animationName) => View.OnPlayAni(animationName);
     public void OnStopAni(string animationName) => View.OnStopAni(animationName);
