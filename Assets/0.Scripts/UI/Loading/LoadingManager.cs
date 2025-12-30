@@ -31,7 +31,6 @@ public class LoadingManager : MonoBehaviour
         {
             StartCoroutine(LoadingSecen(nextSceneName));
         }
-       
         else
         {
             Debug.LogError("다음 씬이 정해지지 않았습니다.");
@@ -51,7 +50,7 @@ public class LoadingManager : MonoBehaviour
 
         while(!oper.isDone)
         {
-            yield return null;
+            yield return 1;
             currentTime += Time.unscaledDeltaTime;
             Debug.Log(oper.progress*100);
             if (oper.progress < 0.9f) //로딩하기 전에 해야할 것들
@@ -88,7 +87,7 @@ public class LoadingManager : MonoBehaviour
 
         while(!oper.isDone)
         {
-            yield return null;
+            yield return 1;
             currentTime += Time.deltaTime;
             Debug.Log(oper.progress*100);
             if (oper.progress < 0.9f) //로딩하기 전에 해야할 것들
@@ -105,6 +104,9 @@ public class LoadingManager : MonoBehaviour
                 _loadingText.text = $"100%";
                 yield return new WaitForSeconds(0.5f);
                 oper.allowSceneActivation = true;
+
+                nextSceneIndex = -1;
+                nextSceneName = "";
 
                 yield break;
             }

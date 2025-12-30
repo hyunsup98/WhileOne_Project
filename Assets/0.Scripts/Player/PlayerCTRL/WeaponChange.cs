@@ -173,7 +173,6 @@ public class WeaponChange : MonoBehaviour
     }
     public void WeaponBreak()
     {
-        //¹«±â »Ñ»çÁü
         WeaponPool.Instance.TakeObject(currentweapon);
         _slotWeapon2 = null;
         GameManager.Instance.CurrentDungeon.EquipSlotController.ChangeSubWeapon(_slotWeapon2);
