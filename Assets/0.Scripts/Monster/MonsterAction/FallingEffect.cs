@@ -1,7 +1,15 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class FallingEffect : ActionEffect
 {
+    [SerializeField] private GameObject _fallingPathPreview;
+
+    private void Start()
+    {
+        Destroy(_fallingPathPreview, 0.08f);
+    }
+
     public override void DealDamage(Collider2D collision)
     {
 

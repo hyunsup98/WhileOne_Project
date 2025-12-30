@@ -65,8 +65,8 @@ public class MonsterPattern02 : MonsterPattern
         IsAction = true;
         _isDelay = true;
         yield return CoroutineManager.waitForSeconds(_beforeDelay);
-        _isDelay = false;
 
+        _isDelay = false;
         CreatedEffect(createdPos);
         IsAction = false;
 

@@ -17,9 +17,9 @@ MonoBehaviour:
   _tier: 1
   _hp: 120
   _moveSpeed: 4
-  _sight: 5
+  _sight: 10
   _sightAngle: 90
   _searchTime: 3
-  _patrolRange: 3
+  _patrolRange: 5
   _actionList:
   - {fileID: 11400000, guid: b1b91468c63face40a3e9b2c586d0149, type: 2}

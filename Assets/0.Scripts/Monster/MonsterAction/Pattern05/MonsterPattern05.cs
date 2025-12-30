@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class MonsterPattern05 : MonsterPattern
 {
@@ -31,6 +32,7 @@ public class MonsterPattern05 : MonsterPattern
         _afterDelay = actionData.AfterDelay;
         _maxCoolTime = actionData.ActionCoolTime;
         _hitDecision = actionData.HitDecision;
+        _pathPreview = actionData.PathPreview;
 
         _hitBoxRadius = actionData.HitBoxRadius;
         _actionAngle = Mathf.Deg2Rad * actionData.ActionAngle;
@@ -68,11 +70,11 @@ public class MonsterPattern05 : MonsterPattern
 
         // 시전 준비 후 이펙트 생성
         Vector2 createdPos = (Vector2)_myTransform.position;
-        createdPos.x += (_myTransform.localScale.x *_createdEffectDistance);
-        OnCreateedEffect(createdPos);
+        createdPos.x += (_myTransform.localScale.x * _createdEffectDistance);
+        _monster.StartCoroutine(OnCreateedEffect(createdPos));
 
         float createdTime = _beforeDelay + _createdEffectTime;
-        _monster.StartCoroutine(OnDelay(() => GameObject.Destroy(_actionEffect.gameObject), createdTime + 0.85f));
+        GameObject.Destroy(_actionEffect.gameObject, createdTime + 0.85f);
 
         // 낙하물 생성
         _monster.StartCoroutine(CreateFallingObj());
@@ -111,15 +113,29 @@ public class MonsterPattern05 : MonsterPattern
     }
 
     // 시전시간 이후 이펙트 생성
-    private void OnCreateedEffect(Vector2 createdPos)
+    private IEnumerator OnCreateedEffect(Vector2 createdPos)
     {
         _isDelay = true;
-        float createdTime = _beforeDelay + _createdEffectTime;
-
         _ani.OnPlayAni("Idle");
-        _monster.StartCoroutine(OnDelay(() => _ani.OnPlayAni("Pattern04"), _beforeDelay));
-        _monster.StartCoroutine(OnDelay(() => CreatedEffect(createdPos), createdTime));
-        _monster.StartCoroutine(OnDelay(() => _isDelay = false, createdTime));
+
+        GameObject pathPreview = CreatedPathPreview(
+            _pathPreview, 
+            createdPos, 
+            Vector2.zero, 
+            _beforeDelay
+            );
+        float radius = _hitBoxRadius * 2;
+        if (pathPreview != null)
+            pathPreview.transform.localScale = new Vector2(radius, radius);
+
+        yield return CoroutineManager.waitForSeconds(_beforeDelay);
+
+        _ani.OnPlayAni("Pattern04");
+
+        yield return CoroutineManager.waitForSeconds(_createdEffectTime);
+
+        CreatedEffect(createdPos);
+        _isDelay = false;
     }
 
     // 낙하물 떨어지는 타이밍을 조절하는 메서드
@@ -130,21 +146,23 @@ public class MonsterPattern05 : MonsterPattern
 
         for (int i = 0; i < _fallingCycle; i++)
         {
+            Vector2 target = _target.position;
+
             yield return CoroutineManager.waitForSeconds(_fallingFrequency);
 
-            GameObject obj = Create();
+            GameObject obj = Create(target);
 
             _fallingObjQue.Enqueue(obj);
-            _monster.StartCoroutine(OnDelay(() => GameObject.Destroy(_fallingObjQue.Dequeue()), _fallingDestroyTime));
+            GameObject.Destroy(_fallingObjQue.Dequeue(), _fallingDestroyTime);
         }
     }
 
-    private GameObject Create()
+    private GameObject Create(Vector2 target)
     {
         GameObject obj = GameObject.Instantiate
                 (
                 _fallingObject,
-                _target.position,
+                target,
                 Quaternion.identity,
                 _myTransform.parent
                 );

@@ -19,9 +19,6 @@ public class MonsterPresenter : IAnimationable, IDead
 
     public event Action OnDeath;
 
-    // 추후 지워야 할 목록
-    public float ActionTrigger { get; private set; } = 5f;
-
     // 생성자
     public MonsterPresenter
         (
@@ -36,12 +33,8 @@ public class MonsterPresenter : IAnimationable, IDead
 
 
         // 경로 탐색으로 순찰 포인트 초기화
-        Model.MobAstar = new Astar(wallTilmap);
-        Model.PatrolPath = Model.MobAstar.Pathfinder
-            (
-            View.MyTransform.position,
-            Model.PatrolPoint.position
-            );
+        Model.SetAstar(wallTilmap);
+        Model.SetPatrolPath(View.MyTransform);
 
         Debug.LogWarning("행동매칭");
         // 몬스터 행동 매칭
@@ -56,13 +49,7 @@ public class MonsterPresenter : IAnimationable, IDead
 
 
         // 상태 패턴 세팅
-        Model.StateList = new Dictionary<MonsterState, IState>();
-        Model.StateList.Add(MonsterState.Patrol, new Patrol(this));
-        Model.StateList.Add(MonsterState.Chase, new Chase(this));
-        Model.StateList.Add(MonsterState.Search, new Search(this));
-        Model.StateList.Add(MonsterState.Action, new MonsterAction(this));
-        Model.StateList.Add(MonsterState.Stun, new Stun(this));
-        Model.CurrentState = Model.StateList[MonsterState.Patrol];
+        Model.SetState(this);
     }
 
 
@@ -117,10 +104,11 @@ public class MonsterPresenter : IAnimationable, IDead
 
     public void OnHit(float Damage)
     {
+
+        View.OnPlayAni("Hurt");
         if (Model.ActionDict.TryGetValue(ActionID.three, out var action))
         {
             IsPattern03 = true;
-            View.OnPlayAni("Hurt");
             Model.SetState(MonsterState.Action);
             return;
         }
@@ -129,7 +117,7 @@ public class MonsterPresenter : IAnimationable, IDead
         if (!_isHit)
             _isHit = true;
 
-        View.OnHurtAni();
+
         Model.TakeDamage(Damage);
 
         if (Model.Hp <= 0)
@@ -140,7 +128,7 @@ public class MonsterPresenter : IAnimationable, IDead
     public IEnumerator OnDead()
     {
         _isDeath = true;
-        View.OnDeathAni();
+        View.OnPlayAni("Death");
         while (View.GetPlayingAni().normalizedTime < 0.5f)
             yield return null;
 

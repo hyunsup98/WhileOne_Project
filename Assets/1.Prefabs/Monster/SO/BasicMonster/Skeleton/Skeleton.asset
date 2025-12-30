@@ -16,7 +16,7 @@ MonoBehaviour:
   _name: Skeleton
   _tier: 0
   _hp: 80
-  _moveSpeed: 1
+  _moveSpeed: 1.5
   _sight: 4
   _sightAngle: 90
   _searchTime: 3

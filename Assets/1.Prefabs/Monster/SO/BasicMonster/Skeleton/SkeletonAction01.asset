@@ -32,4 +32,4 @@ MonoBehaviour:
   _createPos: {x: 0, y: 0}
   _hitBoxSize: {x: 3, y: 2}
   _hitDecision: {fileID: 24579296237097063, guid: 24f77dbf76321c64482b121c5f46f5b2, type: 3}
-  _pathPreview: {fileID: 0}
+  _pathPreview: {fileID: 3329018732716166738, guid: 9a067bd56bd6b3d4b88c4a8179b0594b, type: 3}

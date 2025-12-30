@@ -11,38 +11,39 @@ public class MonsterModel
     private float _speedBoost;
 
     // SO데이터에서 값을 받아오는 필드
-    public int MonsterID { get; set; }
-    public string Name { get; set; }
-    public int Tier { get; set; }
+    public int MonsterID { get; private set; }
+    public string Name { get; private set; }
+    public int Tier { get; private set; }
     public float Hp
     {
         get => _hp;
-        set => _hp = Mathf.Max(0, value);
+        private set => _hp = Mathf.Max(0, value);
     }
     public float MoveSpeed
     {
         get => _moveSpeed + _speedBoost;
-        set => _moveSpeed = Mathf.Max(0.1f , value + _speedBoost); 
+        private set => _moveSpeed = Mathf.Max(0.1f , value + _speedBoost); 
     }
 
     public float AttackBoost { get => _attackBoost; }
 
-    public float Sight { get; set; }
-    public float SightAngle { get; set; }
-    public float SearchTime { get; set; }
-    public float PatrolRange { get; set; } // 현재 미할당
-    public Transform PatrolPoint {  get; set; }  // 순찰 할 지점 저장
-    public Dictionary<ActionID, MonsterPattern> ActionDict { get; set; } // 몬스터 행동 목록
+    public float Sight { get; private set; }
+    public float SightAngle { get; private set; }
+    public float ActionDistance;
+    public float SearchTime { get; private set; }
+    public float PatrolRange { get; private set; } // 현재 미할당
+    public Transform PatrolPoint { get; private set; }  // 순찰 할 지점 저장
+    public Dictionary<ActionID, MonsterPattern> ActionDict { get; private set; } // 몬스터 행동 목록
 
 
     // 내부 로직에서 사용되는 필드
-    public List<Vector2> PatrolPath { get; set; }      // 순찰 경로 저장
-    public Astar MobAstar { get; set; }
-    public Transform ChaseTarget { get; set; }
-    public IState CurrentState { get; set; }
-    public Dictionary<MonsterState, IState> StateList { get; set; }
-    public Tilemap GroundTilemap { get; set; }
-    public Tilemap WallTilemap { get; set; }
+    public List<Vector2> PatrolPath { get; private set; }      // 순찰 경로 저장
+    public Astar MobAstar { get; private set; }
+    public Transform ChaseTarget { get; private set; }
+    public IState CurrentState { get; private set; }
+    public Dictionary<MonsterState, IState> StateList { get; private set; }
+    public Tilemap GroundTilemap { get; private set; }
+    public Tilemap WallTilemap { get; private set; }
 
 
     public MonsterModel(MonsterData monsterData, Transform transform, Tilemap ground, Tilemap wall)
@@ -54,6 +55,7 @@ public class MonsterModel
         MoveSpeed = monsterData.MoveSpeed;
         Sight = monsterData.Sight;
         SightAngle = Mathf.Cos(monsterData.SightAngle * Mathf.Deg2Rad);
+        ActionDistance = monsterData.ActionDistance;
         SearchTime = monsterData.SearchTime;
         PatrolRange = monsterData.PatrolRange;
         PatrolPoint = transform;
@@ -81,10 +83,29 @@ public class MonsterModel
         Debug.Log("몬스터HP" + Hp);
     }
 
+    public void SetAstar(Tilemap tilemap) => MobAstar = new Astar(tilemap);
+    public void SetPatrolPath(Transform myTransform) => 
+        PatrolPath = MobAstar.Pathfinder(
+            myTransform.position,
+            PatrolPoint.position
+            );
+
     public void SetBoost(float attackBoost = 0, float speedBoost = 0)
     {
         _attackBoost += attackBoost;
         _speedBoost += speedBoost;
+    }
+
+    public void SetState(MonsterPresenter presenter)
+    {
+        // 상태 패턴 세팅
+        StateList = new Dictionary<MonsterState, IState>();
+        StateList.Add(MonsterState.Patrol, new Patrol(presenter));
+        StateList.Add(MonsterState.Chase, new Chase(presenter));
+        StateList.Add(MonsterState.Search, new Search(presenter));
+        StateList.Add(MonsterState.Action, new MonsterAction(presenter));
+        StateList.Add(MonsterState.Stun, new Stun(presenter));
+        CurrentState = StateList[MonsterState.Patrol];
     }
 }
 

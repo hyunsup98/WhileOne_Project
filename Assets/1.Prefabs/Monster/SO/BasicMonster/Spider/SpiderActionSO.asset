@@ -30,6 +30,6 @@ MonoBehaviour:
   _rushDistance: 5
   _createdEffectTime: 0.3
   _createPos: {x: 0, y: 0}
-  _hitBoxSize: {x: 2, y: 2}
+  _hitBoxSize: {x: 3, y: 2}
   _hitDecision: {fileID: 7761410613069909045, guid: 23b1873913cc31c46a6a18d3b6ef4272, type: 3}
   _pathPreview: {fileID: 0}

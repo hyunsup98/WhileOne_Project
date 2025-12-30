@@ -49,7 +49,7 @@ public class Patrol : IState
     {
         if (_patrolPath == null || _patrolPath.Count <= 1)
         {
-            _monster.View.OnIdleAni();
+            _monster.View.OnPlayAni("Idle");
             if (Time.time < _pathFindCool)
                 return;
             _pathFindCool = Time.time + 1.5f;
@@ -63,7 +63,7 @@ public class Patrol : IState
 
             _patrolIndex = 0;
         }
-        _monster.View.OnDisIdleAni();
+        _monster.View.OnStopAni("Idle");
 
         Debug.DrawLine(_myTransform.position, _patrolPoin, Color.brown);
 
