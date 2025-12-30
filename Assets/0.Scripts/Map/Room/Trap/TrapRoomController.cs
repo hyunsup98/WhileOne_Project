@@ -153,7 +153,7 @@ public class TrapRoomController : MonoBehaviour
             if (rb != null)
             {
                 // Rigidbody2D가 있으면 velocity로 밀어내기
-                rb.velocity = Vector2.zero; // 기존 속도 초기화
+                rb.linearVelocity = Vector2.zero; // 기존 속도 초기화
                 rb.MovePosition(targetPosition);
             }
             else
