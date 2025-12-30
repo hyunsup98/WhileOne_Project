@@ -12,6 +12,7 @@ TagManager:
   - DoorCenterMarker
   - Ground
   - PortalZone
+  - DigSpot_Point
   layers:
   - Default
   - TransparentFX

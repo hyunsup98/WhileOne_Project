@@ -77,7 +77,7 @@ public static class DungeonRoomGenerator
                 count++;
             }
             
-            // 이미 있는 인접 방과도 연결할 수 있는지 확인 (교차로 생성)
+            // 이미 있는 인접 방과도 연결할 수 있는지 확인 (추가 연결)
             foreach (Vector2Int dir in Direction.All)
             {
                 Vector2Int neighborPos = currentPos + dir;

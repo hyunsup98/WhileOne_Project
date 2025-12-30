@@ -1,7 +1,8 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 /// <summary>
-/// Å¸ÀÏ Á¶°Ç Ã¼Å© °ü·Ã ±â´ÉÀ» ´ã´çÇÏ´Â Å¬·¡½º
+/// íƒ€ì¼ ì¡°ê±´ ì²´í¬ ê´€ë ¨ ê¸°ëŠ¥ì„ ë‹´ë‹¹í•˜ëŠ” í´ë˜ìŠ¤
 /// </summary>
 public class TileManager
 {
@@ -13,10 +14,10 @@ public class TileManager
     }
 
     /// <summary>
-    /// ¹Ş¾Æ¿Â ÁÂÇ¥¿¡ ¹ß±¼ °¡´ÉÇÑ Å¸ÀÏÀÌ ÀÖ´ÂÁö Ã¼Å©ÇÏ´Â ¸Ş¼­µå
+    /// ë°›ì•„ì˜¨ ì¢Œí‘œì— ë°œêµ´ ê°€ëŠ¥í•œ íƒ€ì¼ì´ ìˆëŠ”ì§€ ì²´í¬í•˜ëŠ” ë©”ì„œë“œ
     /// </summary>
-    /// <param name="pos"> È®ÀÎÇÒ ÁÂÇ¥ </param>
-    /// <returns> ¹ß±¼ÀÌ °¡´ÉÇÑÁö¿¡ ´ëÇÑ ¿©ºÎ </returns>
+    /// <param name="pos"> í™•ì¸í•  ì¢Œí‘œ </param>
+    /// <returns> ë°œêµ´ì´ ê°€ëŠ¥í•œì§€ì— ëŒ€í•œ ì—¬ë¶€ </returns>
     public bool CanDig(Vector3Int pos)
     {
         if (_dungeonManager.CurrentRoom == null) return false;
@@ -33,35 +34,56 @@ public class TileManager
     }
 
     /// <summary>
-    /// ½ÇÁ¦·Î ¶¥À» ÆÄ´Â ¸Ş¼­µå
+    /// ì‹¤ì œë¡œ ë•…ì„ íŒŒëŠ” ë©”ì„œë“œ
     /// </summary>
-    /// <param name="pos"> È®ÀÎÇÒ ÁÂÇ¥ </param>
+    /// <param name="pos"> í™•ì¸í•  ì¢Œí‘œ </param>
     public void Dig(Vector3 pos)
     {
         if (_dungeonManager.CurrentRoom == null) return;
 
         Vector3Int cellPos = _dungeonManager.CurrentRoom.DigSpotTileMap.WorldToCell(pos);
 
-        // ¶¥À» ÆÈ ¼ö ÀÖÀ» ¶§
+        Tile afterDigTile = _dungeonManager.AfterDigTile;
+
+        // ë•…ì„ íŒ” ìˆ˜ ìˆì„ ë•Œ
         if (CanDig(cellPos))
         {
+            // DigSpotTileMapì—ì„œ íƒ€ì¼ ì œê±°
             _dungeonManager.CurrentRoom.DigSpotTileMap.SetTile(cellPos, null);
-            _dungeonManager.CurrentRoom.FloorTileMap.SetTile(cellPos, _dungeonManager.CurrentRoom.AfterDigTile);
-
-            _dungeonManager.TreasureBarUI.AddTreasure(DataManager.Instance.TreasureData.PickTreasure());
-        }
-        // ¶¥À» ÆÈ ¼ö ¾øÀ» ¶§
-        else
-        {
-            if(_dungeonManager.CurrentRoom.FloorTileMap.GetTile(cellPos) == _dungeonManager.CurrentRoom.AfterDigTile)
+            
+            if (afterDigTile != null)
             {
-                // ÀÌ¹Ì ¹ß±¼ÀÌ ¿Ï·áµÈ Å¸ÀÏÀÏ ¶§
-                // todo: Èë »ç¿îµå ·£´ı Àç»ı
+                // DigSpotTileMapì— AfterDigTile ì„¤ì •
+                // FloorTileMapì´ ì•„ë‹Œ DigSpotTileMapì— í•´ì•¼ Ground ìœ„ì— ë³´ì„ (Floorì— í• ì‹œ ê²€ì€ ë°”íƒ•ê¹Œì§€ ë³´ì—¬ì„œ ì´ìƒí•´ì§)
+                _dungeonManager.CurrentRoom.DigSpotTileMap.SetTile(cellPos, afterDigTile);
             }
             else
             {
-                // ¿ø·¡ºÎÅÍ ¶¥À» ÆÈ ¼ö ¾ø´Â Å¸ÀÏÀÏ ¶§
-                // todo: ±ø! ¼Ò¸®°¡ ³ª´Â »ç¿îµå ·£´ı Àç»ı
+                Debug.LogWarning("[TileManager] DungeonGeneratorì˜ AfterDigTileì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
+            }
+
+            // DiggingRoomì¸ì§€ í™•ì¸
+            DiggingRoom diggingRoom = _dungeonManager.CurrentRoom.GetComponent<DiggingRoom>();
+            if (diggingRoom != null)
+            {
+                diggingRoom.OnDigSpotDug(cellPos);
+                return;
+            }
+
+            _dungeonManager.TreasureBarUI.AddTreasure(DataManager.Instance.TreasureData.PickTreasure());
+        }
+        // ë•…ì„ íŒ” ìˆ˜ ì—†ì„ ë•Œ
+        else
+        {
+            if(_dungeonManager.CurrentRoom.FloorTileMap.GetTile(cellPos) == afterDigTile)
+            {
+                // ì´ë¯¸ ë°œêµ´ì´ ì™„ë£Œëœ íƒ€ì¼ì¼ ë•Œ
+                // todo: í™ ì‚¬ìš´ë“œ ëœë¤ ì¬ìƒ
+            }
+            else
+            {
+                // ì›ë˜ë¶€í„° ë•…ì„ íŒ” ìˆ˜ ì—†ëŠ” íƒ€ì¼ì¼ ë•Œ
+                // todo: ê¹¡! ì†Œë¦¬ê°€ ë‚˜ëŠ” ì‚¬ìš´ë“œ ëœë¤ ì¬ìƒ
             }
         }
     }
