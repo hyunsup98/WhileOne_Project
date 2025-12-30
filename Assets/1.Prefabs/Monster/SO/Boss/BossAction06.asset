@@ -26,10 +26,9 @@ MonoBehaviour:
   _actionSound: 
   _beforeDelay: 6
   _afterDelay: 2
-  _fallingStartTime: 0
+  _fallingStartTime: 0.75
   _fallingFrequency: 1
   _fallingCycle: 5
-  _fallingHitTiming: 0
   _fallingCount: 10
   _fallingRange: 10
   _fallingObjectPrefab: {fileID: 6084270481035088742, guid: ae795f74a76aeb342806230c21fb64d8, type: 3}
