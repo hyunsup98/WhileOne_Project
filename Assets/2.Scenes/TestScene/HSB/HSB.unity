@@ -239,6 +239,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7021466798dd22a4cb21856d0bc8fa51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
+--- !u!4 &535838891 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3089986550740207870, guid: bcb58bbeb11e9c643b23ba29efa6df4b, type: 3}
+  m_PrefabInstance: {fileID: 764684826}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &686643208
 GameObject:
   m_ObjectHideFlags: 0
@@ -523,7 +528,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6d13a7b7465926408516849f11fed13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponChange
-  _weaponHands: {fileID: 0}
+  _weaponHands: {fileID: 535838891}
   _decision: {fileID: 0}
   currentweapon: {fileID: 0}
   _slotWeapon2: {fileID: 0}
