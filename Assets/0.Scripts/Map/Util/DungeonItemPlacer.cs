@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Collections.Generic;
 
 /// <summary>
 /// 던전에 아이템을 배치하는 클래스
@@ -7,31 +8,37 @@ using UnityEngine.Tilemaps;
 public static class DungeonItemPlacer
 {
     /// <summary>
-    /// 일반 전투 방에 Dig Spot을 배치합니다.
+    /// 지정된 방 타입에 Dig Spot을 배치합니다.
     /// </summary>
+    /// <param name="dungeonGrid">던전 그리드</param>
+    /// <param name="roomType">배치할 방 타입</param>
+    /// <param name="spawnChance">생성 확률 (0~100%)</param>
+    /// <param name="unityGrid">Unity Grid 컴포넌트</param>
     public static void PlaceDigSpots(
         DungeonGrid dungeonGrid,
-        Tile digSpotTile,
-        float digSpotSpawnChance,
+        RoomType roomType,
+        float spawnChance,
         Grid unityGrid)
     {
+        Tile digSpotTile = GameManager.Instance.CurrentDungeon.DigSpotTile;
+
         if (digSpotTile == null)
         {
             Debug.LogWarning("[DungeonItemPlacer] digSpotTile이 지정되지 않아 Dig Spot을 생성할 수 없습니다.");
             return;
         }
         
-        // 모든 일반 전투 방 확인
+        // 지정된 방 타입의 모든 방 확인
         foreach (var position in dungeonGrid.GetAllPositions())
         {
             Room room = dungeonGrid.GetRoom(position);
             if (room == null || room.roomObject == null) continue;
             
-            // 일반 전투 방만 처리
-            if (room.roomType != RoomType.Normal) continue;
+            // 지정된 방 타입만 처리
+            if (room.roomType != roomType) continue;
             
             // 확률로 생성
-            if (Random.Range(0f, 100f) >= digSpotSpawnChance) continue;
+            if (Random.Range(0f, 100f) >= spawnChance) continue;
             
             // Dig Spot 배치
             PlaceDigSpotInRoom(room, digSpotTile, unityGrid);
@@ -66,56 +73,123 @@ public static class DungeonItemPlacer
         }
     }
     
+    
+    /// <summary>
+    /// 개별 방 오브젝트에 Dig Spot을 배치합니다.
+    /// </summary>
+    /// <param name="roomObject">방 오브젝트</param>
+    /// <param name="unityGrid">Unity Grid 컴포넌트</param>
+    public static void PlaceDigSpotInRoom(GameObject roomObject, Grid unityGrid)
+    {
+        if (roomObject == null) return;
+
+        Tile digSpotTile = GameManager.Instance.CurrentDungeon.DigSpotTile;
+        if (digSpotTile == null)
+        {
+            Debug.LogWarning("[DungeonItemPlacer] digSpotTile이 지정되지 않아 Dig Spot을 생성할 수 없습니다.");
+            return;
+        }
+
+        // 해당 방 RoomController 컴포넌트 가져오기
+        RoomController roomController = roomObject.GetComponent<RoomController>();
+        if (roomController == null)
+        {
+            Debug.LogWarning($"[DungeonItemPlacer] 방({roomObject.name})에 RoomController 컴포넌트를 찾을 수 없습니다.");
+            return;
+        }
+
+        Tilemap digSpotTilemap = roomController.DigSpotTileMap;
+        if (digSpotTilemap == null)
+        {
+            Debug.LogWarning($"[DungeonItemPlacer] 방({roomObject.name})에 digSpotTilemap을 찾을 수 없습니다.");
+            return;
+        }
+
+        // Grid 컴포넌트 찾기
+        Grid targetGrid = digSpotTilemap.GetComponentInParent<Grid>();
+        if (targetGrid == null)
+        {
+            targetGrid = unityGrid;
+        }
+
+        if (targetGrid == null)
+        {
+            Debug.LogWarning($"[DungeonItemPlacer] Grid를 찾을 수 없습니다.");
+            return;
+        }
+
+        // DigSpot_Point 태그가 붙은 오브젝트 찾아서 그 중 랜덤하게 하나 선택
+        Transform[] digSpotPoints = FindDigSpotPoints(roomObject);
+        if (digSpotPoints != null && digSpotPoints.Length > 0)
+        {
+            // 랜덤하게 하나 선택
+            Transform selectedPoint = digSpotPoints[Random.Range(0, digSpotPoints.Length)];
+            Vector3Int digSpotCell = targetGrid.WorldToCell(selectedPoint.position);
+            
+            // digSpotTilemap에 Dig Spot 타일 배치
+            digSpotTilemap.SetTile(digSpotCell, digSpotTile);
+        }
+        else
+        {
+            Debug.LogWarning($"[DungeonItemPlacer] 방({roomObject.name})에 DigSpot_Point 태그가 붙은 오브젝트를 찾을 수 없습니다.");
+        }
+    }
+    
     /// <summary>
     /// 방에 Dig Spot을 배치합니다.
     /// </summary>
     private static void PlaceDigSpotInRoom(Room room, Tile digSpotTile, Grid unityGrid)
     {
         if (room.roomObject == null) return;
-        
-        // 방 내부의 Tilemap 찾기
-        Tilemap roomTilemap = room.roomObject.GetComponentInChildren<Tilemap>();
-        if (roomTilemap == null)
+
+        // 해당 방 RoomController 컴포넌트 가져오기
+        RoomController roomController = room.roomObject.GetComponent<RoomController>();
+        if (roomController == null)
         {
-            Debug.LogWarning($"[DungeonItemPlacer] 방({room.roomObject.name})에 Tilemap을 찾을 수 없습니다.");
+            Debug.LogWarning($"[DungeonItemPlacer] 방({room.roomObject.name})에 RoomController 컴포넌트를 찾을 수 없습니다.");
             return;
         }
-        
+
+        Tilemap digSpotTilemap = roomController.DigSpotTileMap;
+        if (digSpotTilemap == null)
+        {
+            Debug.LogWarning($"[DungeonItemPlacer] 방({room.roomObject.name})에 digSpotTilemap을 찾을 수 없습니다.");
+            return;
+        }
+
+        // 방의 기본 타일맵 가져오기 (중앙 위치 계산용)
+        Tilemap floorTilemap = roomController.FloorTileMap;
+        if (floorTilemap == null)
+        {
+            Debug.LogWarning($"[DungeonItemPlacer] 방({room.roomObject.name})에 floorTilemap을 찾을 수 없습니다.");
+            return;
+        }
+
         // Grid 컴포넌트 찾기
-        Grid targetGrid = roomTilemap.GetComponentInParent<Grid>();
+        Grid targetGrid = digSpotTilemap.GetComponentInParent<Grid>();
         if (targetGrid == null)
         {
             targetGrid = unityGrid;
         }
-        
+
         if (targetGrid == null)
         {
             Debug.LogWarning($"[DungeonItemPlacer] Grid를 찾을 수 없습니다.");
             return;
         }
-        
-        // 중앙 기준: RoomCenterMarker가 있으면 그 위치를 사용, 없으면 타일맵 중앙 셀 사용
-        Transform centerMarker = DungeonRoomHelper.FindRoomCenterMarker(room.roomObject);
-        Vector3Int centerCell = centerMarker != null
-            ? targetGrid.WorldToCell(centerMarker.position)
-            : DungeonRoomHelper.GetRoomCenterCell(roomTilemap);
-        
-        // 중앙 셀에 타일이 있는지 확인
-        Vector3Int digSpotCell = centerCell;
-        TileBase centerTile = roomTilemap.GetTile(centerCell);
-        
-        // 중앙에 타일이 없으면 가장 가까운 타일이 있는 셀 찾기
-        if (centerTile == null)
+
+        // DigSpot_Point 태그가 붙은 오브젝트 찾아서 그 중 랜덤하게 하나 선택
+        Transform[] digSpotPoints = FindDigSpotPoints(room.roomObject);
+        if (digSpotPoints != null && digSpotPoints.Length > 0)
         {
-            digSpotCell = DungeonRoomHelper.FindNearestTileCell(roomTilemap, centerCell, targetGrid);
-            if (digSpotCell == Vector3Int.zero && centerCell != Vector3Int.zero)
-            {
-                digSpotCell = centerCell;
-            }
+            // 랜덤하게 하나 선택
+            Transform selectedPoint = digSpotPoints[Random.Range(0, digSpotPoints.Length)];
+            Vector3Int digSpotCell = targetGrid.WorldToCell(selectedPoint.position);
+            
+            // digSpotTilemap에 Dig Spot 타일 배치
+            digSpotTilemap.SetTile(digSpotCell, digSpotTile);
         }
-        
-        // TODO: 프리팹 설치를 타일 맵 설치로 리팩토링
-        // Dig Spot 타일 배치 (현재는 구현되지 않음)
+        else Debug.LogWarning($"[DungeonItemPlacer] 방({room.roomObject.name})에 DigSpot_Point 태그가 붙은 오브젝트를 찾을 수 없습니다.");
     }
     
     /// <summary>
@@ -186,5 +260,26 @@ public static class DungeonItemPlacer
 
         // Treasure Chest 프리팹 생성 (Interactive의 자식으로)
         Object.Instantiate(treasureChestPrefab, treasureChestWorldPos, Quaternion.identity, interactiveParent);
+    }
+    
+    /// <summary>
+    /// 방 오브젝트 하위에서 DigSpot_Point 태그를 가진 모든 Transform을 찾습니다.
+    /// </summary>
+    public static Transform[] FindDigSpotPoints(GameObject roomObj)
+    {
+        if (roomObj == null) return null;
+
+        List<Transform> digSpotPoints = new List<Transform>();
+        Transform[] children = roomObj.GetComponentsInChildren<Transform>(true);
+        
+        foreach (var t in children)
+        {
+            if (t.CompareTag("DigSpot_Point"))
+            {
+                digSpotPoints.Add(t);
+            }
+        }
+
+        return digSpotPoints.Count > 0 ? digSpotPoints.ToArray() : null;
     }
 }

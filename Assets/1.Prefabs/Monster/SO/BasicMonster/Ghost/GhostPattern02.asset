@@ -27,7 +27,7 @@ MonoBehaviour:
   _beforeDelay: 0.5
   _afterDelay: 0.5
   _startTime: 1
-  _duration: 2
+  _duration: 5
   _attackBoost: 10
   _speedBoost: 10
   _createPos: {x: 0, y: 0}

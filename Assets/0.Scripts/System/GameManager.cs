@@ -22,7 +22,7 @@ public class GameManager : Singleton<GameManager>
     public event Action onGameStateDead;
 
     private GameState _currentGameState;
-    public GameState _CurrentGameState
+    public GameState CurrentGameState
     {
         get { return _currentGameState; }
         set
@@ -84,13 +84,13 @@ public class GameManager : Singleton<GameManager>
     public void InitToSceneChanged(Scene scene, LoadSceneMode mode) => InteractObj = null;
 
     //게임 상태를 변경하는 메서드
-    public void SetGameState(GameState state) => _CurrentGameState = state;
+    public void SetGameState(GameState state) => CurrentGameState = state;
 
     protected override void Awake()
     {
         base.Awake();
 
-        _CurrentGameState = GameState.Playing;
+        CurrentGameState = GameState.Playing;
 
         SceneManager.sceneLoaded += InitToSceneChanged;
 

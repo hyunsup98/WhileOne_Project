@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -16,6 +15,8 @@ public class MonsterPresenter : IAnimationable
 
     private bool _isHit;
     private bool _isDeath;
+
+    public event Action OnDeath;
 
     // 추후 지워야 할 목록
     public float ActionTrigger { get; private set; } = 5f;
@@ -34,12 +35,8 @@ public class MonsterPresenter : IAnimationable
 
 
         // 경로 탐색으로 순찰 포인트 초기화
-        Model.MobAstar = new Astar(wallTilmap);
-        Model.PatrolPath = Model.MobAstar.Pathfinder
-            (
-            View.MyTransform.position,
-            Model.PatrolPoint.position
-            );
+        Model.SetAstar(wallTilmap);
+        Model.SetPatrolPath(View.MyTransform);
 
         Debug.LogWarning("행동매칭");
         // 몬스터 행동 매칭
@@ -54,13 +51,7 @@ public class MonsterPresenter : IAnimationable
 
 
         // 상태 패턴 세팅
-        Model.StateList = new Dictionary<MonsterState, IState>();
-        Model.StateList.Add(MonsterState.Patrol, new Patrol(this));
-        Model.StateList.Add(MonsterState.Chase, new Chase(this));
-        Model.StateList.Add(MonsterState.Search, new Search(this));
-        Model.StateList.Add(MonsterState.Action, new MonsterAction(this));
-        Model.StateList.Add(MonsterState.Stun, new Stun(this));
-        Model.CurrentState = Model.StateList[MonsterState.Patrol];
+        Model.SetState(this);
     }
 
 
@@ -115,36 +106,40 @@ public class MonsterPresenter : IAnimationable
 
     public void OnHit(float Damage)
     {
+        if (Model.CurrentState != Model.StateList[MonsterState.Action])
+            View.OnPlayAni("Hurt");
+
+        StartCoroutine(View.OnHitBlink());
         if (Model.ActionDict.TryGetValue(ActionID.three, out var action))
         {
             IsPattern03 = true;
-            View.OnPlayAni("Hurt");
             Model.SetState(MonsterState.Action);
             return;
         }
 
 
-        if (!_isHit)
-            _isHit = true;
-
-        View.OnHurtAni();
         Model.TakeDamage(Damage);
 
         if (Model.Hp <= 0)
             View.StartCoroutine(OnDead());
+
+
+        if (!_isHit)
+            _isHit = true;
     }
 
     // 죽음 애니메이션 호출
     public IEnumerator OnDead()
     {
+        View.SetCollider(false);
         _isDeath = true;
-        View.OnDeathAni();
+        View.OnPlayAni("Death");
         while (View.GetPlayingAni().normalizedTime < 0.5f)
             yield return null;
 
         yield return CoroutineManager.waitForSeconds(0.5f);
         float destroyTime = View.GetPlayingAni().length;
-
+        Debug.Log("파괴합니다.");
         View.RequestDestroy(destroyTime + 1f);
         View.OnDead();
     }
@@ -157,4 +152,6 @@ public class MonsterPresenter : IAnimationable
 
     public void OnPlayAni(string animationName) => View.OnPlayAni(animationName);
     public void OnStopAni(string animationName) => View.OnStopAni(animationName);
+
+    
 }

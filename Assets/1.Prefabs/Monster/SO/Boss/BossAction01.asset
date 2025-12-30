@@ -24,11 +24,11 @@ MonoBehaviour:
   _speedBoost: 0
   _actionResource: 
   _actionSound: 
-  _rushSpeed: 7
-  _rushDistance: 4
   _beforeDelay: 1
   _afterDelay: 2
+  _rushSpeed: 7
+  _rushDistance: 4
   _createPos: {x: 1, y: 1}
-  _hitBoxSize: {x: 2, y: 6}
-  _pathPreview: {fileID: 0}
+  _hitBoxSize: {x: 3, y: 4}
   _hitDecision: {fileID: 5431072308586980615, guid: 795dc628e90b5864384d25a26bb84d91, type: 3}
+  _pathPreview: {fileID: 3329018732716166738, guid: 9a067bd56bd6b3d4b88c4a8179b0594b, type: 3}

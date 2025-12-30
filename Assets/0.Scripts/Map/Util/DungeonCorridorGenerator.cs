@@ -28,9 +28,8 @@ public static class DungeonCorridorGenerator
             return;
         }
         
-        // 1단계: 모든 방 사이에 일반 복도 생성
+        // 모든 방 사이에 직선 복도 생성
         Dictionary<Vector2Int, List<Vector2Int>> roomConnections = new Dictionary<Vector2Int, List<Vector2Int>>();
-        Dictionary<string, CorridorSegment> corridorSegments = new Dictionary<string, CorridorSegment>(); // 복도 세그먼트 저장
         
         // 방 연결 정보 수집
         foreach (var position in dungeonGrid.GetAllPositions())
@@ -57,7 +56,7 @@ public static class DungeonCorridorGenerator
             roomConnections[position] = connectedDirections;
         }
         
-        // 복도 생성 및 경로 추적
+        // 복도 중복 생성 방지
         HashSet<string> createdCorridors = new HashSet<string>();
         
         foreach (var kvp in roomConnections)
@@ -89,7 +88,6 @@ public static class DungeonCorridorGenerator
                 if (createdCorridors.Contains(corridorKey)) continue;
                 createdCorridors.Add(corridorKey);
                 
-                // 복도 생성 및 경로 저장
                 // 두 방의 실제 문 위치를 확인하여 복도 유형 결정
                 Vector3 room1DoorPos = DungeonRoomHelper.GetDoorWorldPosition(room.roomObject, direction);
                 Vector2Int oppositeDirection = Direction.Opposite(direction);
@@ -107,111 +105,18 @@ public static class DungeonCorridorGenerator
                 
                 if (!sameAxis)
                 {
-                    // 교차로(ㄱ, T, +)는 더 이상 사용하지 않으므로,
-                    // 문이 같은 축에 있지 않으면 복도를 생성하지 않습니다.
+                    // 문이 같은 축에 있지 않으면 직선 복도를 생성할 수 없습니다.
                     Debug.LogWarning($"[DungeonCorridorGenerator] 두 문의 축이 일치하지 않아 직선 복도를 생성할 수 없습니다. " +
                                      $"Room1: {position}, Room2: {nextPos}, Door1: {room1DoorPos}, Door2: {room2DoorPos}");
                     continue;
                 }
                 
-                // 같은 축: 직선 복도만 생성
-                List<GameObject> corridorTiles = CreateStraightCorridor(
+                // 같은 축: 직선 복도 생성
+                CreateStraightCorridor(
                     room.roomObject, nextRoom.roomObject, direction,
                     corridorPrefabHorizontal, corridorPrefabVertical, parent, unityGrid, position, nextPos);
-                
-                if (corridorTiles != null && corridorTiles.Count > 0)
-                {
-                    // 복도 경로 정보 저장 (교차점 찾기용)
-                    bool isHorizontal = (direction == Direction.Left || direction == Direction.Right);
-                    
-                    corridorSegments[corridorKey] = new CorridorSegment
-                    {
-                        StartPos = room1DoorPos,
-                        EndPos = room2DoorPos,
-                        IsHorizontal = isHorizontal,
-                        Tiles = corridorTiles
-                    };
-                }
             }
         }
-    }
-    
-    /// <summary>
-    /// 교차로 프리팹의 중심 마커를 찾습니다.
-    /// </summary>
-    private static Transform FindJunctionCenter(GameObject junctionObj)
-    {
-        if (junctionObj == null) return null;
-        
-        // RoomCenterMarker 또는 DoorCenterMarker를 중심으로 사용
-        Transform[] allChildren = junctionObj.GetComponentsInChildren<Transform>(true);
-        
-        // RoomCenterMarker 우선
-        foreach (Transform child in allChildren)
-        {
-            if (child.CompareTag("RoomCenterMarker"))
-            {
-                return child;
-            }
-        }
-        
-        // DoorCenterMarker 중 하나를 중심으로 사용 (가장 중앙에 가까운 것)
-        List<Transform> doorMarkers = new List<Transform>();
-        foreach (Transform child in allChildren)
-        {
-            if (child.CompareTag("DoorCenterMarker"))
-            {
-                doorMarkers.Add(child);
-            }
-        }
-        
-        if (doorMarkers.Count > 0)
-        {
-            // 모든 DoorCenterMarker의 평균 위치 계산
-            Vector3 avgPos = Vector3.zero;
-            foreach (Transform marker in doorMarkers)
-            {
-                avgPos += marker.localPosition;
-            }
-            avgPos /= doorMarkers.Count;
-            
-            // 평균 위치에 가장 가까운 마커 반환
-            Transform closest = doorMarkers[0];
-            float minDist = Vector3.Distance(closest.localPosition, avgPos);
-            foreach (Transform marker in doorMarkers)
-            {
-                float dist = Vector3.Distance(marker.localPosition, avgPos);
-                if (dist < minDist)
-                {
-                    minDist = dist;
-                    closest = marker;
-                }
-            }
-            return closest;
-        }
-        
-        // 마커가 없으면 교차로 자체의 transform 반환
-        return junctionObj.transform;
-    }
-    
-    /// <summary>
-    /// 복도 세그먼트 정보를 저장하는 클래스
-    /// </summary>
-    private class CorridorSegment
-    {
-        public Vector3 StartPos;
-        public Vector3 EndPos;
-        public bool IsHorizontal;
-        public List<GameObject> Tiles;
-    }
-    
-    /// <summary>
-    /// 교차로 정보를 저장하는 클래스
-    /// </summary>
-    private class JunctionInfo
-    {
-        public List<Vector2Int> ConnectedDirections = new List<Vector2Int>();
-        public List<string> IntersectingCorridors = new List<string>();
     }
     
     /// <summary>
@@ -340,7 +245,6 @@ public static class DungeonCorridorGenerator
             firstCorridor.transform.position += offset;
         }
         corridorTiles.Add(firstCorridor);
-        SetCorridorTilePassable(firstCorridor);
         
         // 이후 복도들: 이전 복도의 끝에 정확히 연결
         for (int i = 1; i < corridorCount; i++)
@@ -376,7 +280,6 @@ public static class DungeonCorridorGenerator
             }
             
             corridorTiles.Add(corridor);
-            SetCorridorTilePassable(corridor);
         }
         
         // 마지막 복도의 끝 DoorCenterMarker를 복도 끝 위치에 정확히 맞추기 (DoorCenterMarker에서 +1칸 이동한 위치)
@@ -402,24 +305,6 @@ public static class DungeonCorridorGenerator
         //Debug.Log($"[DungeonCorridorGenerator] 복도 생성 완료 - 방1: {room1.name}, 방2: {room2.name}, 복도 개수: {corridorTiles.Count}/{corridorCount}\n" + "방1 DoorCenterMarker: {room1DoorPos}, 복도 시작 위치: {corridorStartPos}, 방2 DoorCenterMarker: {room2DoorPos}, 복도 끝 위치: {corridorEndPos}, 거리: {targetDistance:F2}, 실제 프리팹 길이: {actualCorridorLength:F2}");
         
         return corridorTiles;
-    }
-    
-    /// <summary>
-    /// 복도 타일을 플레이어가 통과 가능하도록 설정합니다.
-    /// </summary>
-    private static void SetCorridorTilePassable(GameObject corridorTile)
-    {
-        // 복도 타일의 모든 충돌체를 Trigger로 설정
-        Collider2D[] colliders = corridorTile.GetComponentsInChildren<Collider2D>();
-        foreach (Collider2D collider in colliders)
-        {
-            // 바닥 타일은 통과 가능하게 (벽은 제외할 수도 있음)
-            // 이름에 "Wall"이 포함되어 있지 않으면 통과 가능하게 설정
-            if (!collider.name.Contains("Wall") && !collider.name.Contains("wall"))
-            {
-                collider.isTrigger = true;
-            }
-        }
     }
     
     /// <summary>
