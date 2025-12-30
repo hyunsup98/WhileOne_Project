@@ -3,7 +3,7 @@
 [CreateAssetMenu(fileName = "Monster_Action2DataSO", menuName = "Scriptable Objects/Data/Monster_Action2DataSO")]
 public class Monster_Action2DataSO : TableBase<int>
 {
-    // 몬스터 행동 ID (몬스터ID + 행동분류)
+    // 몬스터 행동 ID(몬스터ID + 행동분류)
     [field: SerializeField] public int actionID { get; private set; }
 
     // 해당 행동 텀

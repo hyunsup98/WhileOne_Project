@@ -21,6 +21,4 @@ MonoBehaviour:
   <actionCastTime>k__BackingField: 3
   <actionDamage>k__BackingField: 35
   <actionCooltime>k__BackingField: 10
-  <actionSoundPath_AudioClip>k__BackingField: {fileID: 0}
-  <castSoundPath_AudioClip>k__BackingField: {fileID: 0}
   <castResourcePath_Sprite>k__BackingField: {fileID: 0}

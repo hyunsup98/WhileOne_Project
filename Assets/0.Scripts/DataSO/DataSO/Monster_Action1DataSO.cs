@@ -30,12 +30,6 @@ public class Monster_Action1DataSO : TableBase<int>
     // 행동 주기
     [field: SerializeField] public float actionCooltime { get; private set; }
 
-    // 행동 사운드 리소스(경로)
-    [field: SerializeField] public AudioClip actionSoundPath_AudioClip { get; private set; }
-
-    // 시전 효과음
-    [field: SerializeField] public AudioClip castSoundPath_AudioClip { get; private set; }
-
     // 시전 스프라이트
     [field: SerializeField] public Sprite castResourcePath_Sprite { get; private set; }
 

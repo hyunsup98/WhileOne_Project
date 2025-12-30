@@ -1,0 +1,47 @@
+﻿SFX ID,SFX 객체,SFX사용처,SFX경로
+sfxID,sfxObject,sfxUse,sfxPath_AudioClip
+string,string,string,string
+Goblin_Attack_FX_001,고블린,고블린 공격,Assets/9.GitIgnore/Audio/SFX/Monster/Goblin_Attack_FX_001
+Goblin_Dead_FX_001,고블린,고블린 사망,Assets/9.GitIgnore/Audio/SFX/Monster/Goblin_Dead_FX_001
+Skeleton_Attack_FX_001,스켈레톤,스켈레톤 공격,Assets/9.GitIgnore/Audio/SFX/Monster/Skeleton_Attack_FX_001
+Skeleton_Death_FX_001,스켈레톤,스켈레톤 사망,Assets/9.GitIgnore/Audio/SFX/Monster/Skeleton_Death_FX_001
+Spider_Attack_FX_001,거미,거미 공격,Assets/9.GitIgnore/Audio/SFX/Monster/Spider_Attack_FX_001
+Spider_Death_FX_001,거미,거미 사망,Assets/9.GitIgnore/Audio/SFX/Monster/Spider_Death_FX_001
+Ghost_Skill2_FX_001,유령,유령 광폭화,Assets/9.GitIgnore/Audio/SFX/Monster/Ghost_Skill2_FX_001
+Ghost_Skill3_FX_001,유령,유령 텔레포트,Assets/9.GitIgnore/Audio/SFX/Monster/Ghost_Skill3_FX_001
+Boss_Attacktile_FX_001,보스,보스 지면강타,Assets/9.GitIgnore/Audio/SFX/Monster/Boss_Attacktile_FX_001
+Boss_StartVoice_FX_001,보스,보스 시작음성,Assets/9.GitIgnore/Audio/SFX/Monster/Boss_StartVoice_FX_001
+Boss_WeaponSwing_FX_001,보스,보스 무기스윙,Assets/9.GitIgnore/Audio/SFX/Monster/Boss_WeaponSwing_FX_001
+Boss_Death_FX_001,보스,보스 사망,Assets/9.GitIgnore/Audio/SFX/Monster/Boss_Death_FX_001
+Shovel_TreasureGet_FX_001,상자,보물 발견 시,Assets/9.GitIgnore/Audio/SFX/Object/Shovel_TreasureGet_FX_001
+WeaponBox_Off_FX_001,상자,상자 닫을 때,Assets/9.GitIgnore/Audio/SFX/Object/WeaponBox_Off_FX_001
+WeaponBox_On_FX_001,상자,상자 열릴 때,Assets/9.GitIgnore/Audio/SFX/Object/WeaponBox_On_FX_001
+Player_CantDash_FX_001,플레이어,대쉬 불가,Assets/9.GitIgnore/Audio/SFX/Player/Player_CantDash_FX_001
+Player_Dash_FX_001,플레이어,대쉬,Assets/9.GitIgnore/Audio/SFX/Player/Player_Dash_FX_001
+Weapon_4001_FX_001,삽,삽 공격1,Assets/9.GitIgnore/Audio/SFX/Player/Weapon_4001_FX_001
+Weapon_4001_FX_002,삽,삽 공격2,Assets/9.GitIgnore/Audio/SFX/Player/Weapon_4001_FX_002
+Weapon_4001_FX_003,삽,삽 공격3,Assets/9.GitIgnore/Audio/SFX/Player/Weapon_4001_FX_003
+Weapon_4003_FX_001,미늘창,미늘창 공격1,Assets/9.GitIgnore/Audio/SFX/Player/Weapon_4003_FX_001
+Weapon_4003_FX_002,미늘창,미늘창 공격2,Assets/9.GitIgnore/Audio/SFX/Player/Weapon_4003_FX_002
+Weapon_4003_FX_003,미늘창,미늘창 공격3,Assets/9.GitIgnore/Audio/SFX/Player/Weapon_4003_FX_003
+Weapon_4006_FX_001,보석둔기,둔기 공격1,Assets/9.GitIgnore/Audio/SFX/Player/Weapon_4006_FX_001
+Weapon_4006_FX_002,보석둔기,둔기 공격2,Assets/9.GitIgnore/Audio/SFX/Player/Weapon_4006_FX_002
+Weapon_4010_FX_001,롱소드,롱소드 공격1,Assets/9.GitIgnore/Audio/SFX/Player/Weapon_4010_FX_001
+Weapon_4010_FX_002,롱소드,롱소드 공격2,Assets/9.GitIgnore/Audio/SFX/Player/Weapon_4010_FX_002
+Weapon_4010_FX_003,롱소드,롱소드 공격3,Assets/9.GitIgnore/Audio/SFX/Player/Weapon_4010_FX_003
+Shovel_PossibleTile_FX_001,삽,발굴 성공 시,Assets/9.GitIgnore/Audio/SFX/Player/Shovel_PossibleTile_FX_001
+Shovel_ImpossibleTile_FX_001,삽,발굴 실패 시 1,Assets/9.GitIgnore/Audio/SFX/Player/Shovel_ImpossibleTile_FX_001
+Shovel_ImpossibleTile_FX_002,삽,발굴 실패 시 2,Assets/9.GitIgnore/Audio/SFX/Player/Shovel_ImpossibleTile_FX_002
+Shovel_ImpossibleTile_FX_003,삽,발굴 실패 시 3,Assets/9.GitIgnore/Audio/SFX/Player/Shovel_ImpossibleTile_FX_003
+Weapon_5009_FX_001,왕의 도전,왕의 도전 공격1,Assets/9.GitIgnore/Audio/SFX/Player/Weapon_5009_FX_001
+Weapon_5009_FX_002,왕의 도전,왕의 도전 공격2,Assets/9.GitIgnore/Audio/SFX/Player/Weapon_5009_FX_002
+Weapon_5009_FX_003,왕의 도전,왕의 도전 공격3,Assets/9.GitIgnore/Audio/SFX/Player/Weapon_5009_FX_003
+Weapon_5001_FX_001,화룡검,화룡검 공격1,Assets/9.GitIgnore/Audio/SFX/Player/Weapon_5001_FX_001
+Weapon_5001_FX_002,화룡검,화룡검 공격2,Assets/9.GitIgnore/Audio/SFX/Player/Weapon_5001_FX_002
+Weapon_5001_FX_003,화룡검,화룡검 공격3,Assets/9.GitIgnore/Audio/SFX/Player/Weapon_5001_FX_003
+Player_WeaponHit_FX_001,플레이어,타격,Assets/9.GitIgnore/Audio/SFX/Player/Player_WeaponHit_FX_001
+Player_Recovery_FX_001,플레이어,플레이어 회복,Assets/9.GitIgnore/Audio/SFX/Player/Player_Recovery_FX_001
+GameOver_FX_001,플레이어,게임 오버,Assets/9.GitIgnore/Audio/SFX/Player/GameOver_FX_001
+Mouse_Click_Possible_FX_001,UI,마우스 클릭,Assets/9.GitIgnore/Audio/SFX/UI/Mouse_Click_Possible_FX_001
+Weapon_Break_FX_001,플레이어,무기 파괴,Assets/9.GitIgnore/Audio/SFX/UI/Weapon_Break_FX_001
+Weapon_Get_FX_001,플레이어,무기 획득,Assets/9.GitIgnore/Audio/SFX/UI/Weapon_Get_FX_001

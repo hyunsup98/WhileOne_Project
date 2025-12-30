@@ -10,7 +10,7 @@ public class SceneController : MonoBehaviour
     private void Start()
     {
         // 브금 아이디를 이용해 데이터매니저에 접근해 오디오 클립 가져오기
-        if(!string.IsNullOrEmpty(_bgmID))
+        if (!string.IsNullOrEmpty(_bgmID))
             SoundManager.Instance.PlayBGM(_bgmID);
     }
 }

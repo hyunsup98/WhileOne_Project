@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3b7ad29bf034e34f899966d875524a2, type: 3}
+  m_Name: Spider_Death_FX_001
+  m_EditorClassIdentifier: Assembly-CSharp::SFXDataSO
+  <sfxID>k__BackingField: Spider_Death_FX_001
+  <sfxObject>k__BackingField: "\uAC70\uBBF8"
+  <sfxUse>k__BackingField: "\uAC70\uBBF8 \uC0AC\uB9DD"
+  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: 31c507153dce40444861e3436f4ddfb8, type: 3}

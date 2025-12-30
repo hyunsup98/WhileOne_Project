@@ -58,6 +58,18 @@ public class SoundManager : Singleton<SoundManager>
 
         _sfxAudioSource.PlayOneShot(clip);
     }
+
+    public void PlaySoundEffect(string sfxId)
+    {
+        if (_sfxAudioSource == null || string.IsNullOrEmpty(sfxId)) return;
+
+        AudioClip sfx = DataManager.Instance.SFXData.SFXDatabase[sfxId].sfxPath_AudioClip;
+
+        if (sfx != null)
+            _sfxAudioSource.clip = sfx;
+
+        _sfxAudioSource.PlayOneShot(sfx);
+    }
     #endregion
 
     #region 오디오 볼륨 조절
