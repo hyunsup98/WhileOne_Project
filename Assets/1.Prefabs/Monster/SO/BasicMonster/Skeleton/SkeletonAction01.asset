@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e6919f4b851f5040ad84266260e7f5e, type: 3}
+  m_Name: SkeletonAction01
+  m_EditorClassIdentifier: Assembly-CSharp::Pattern01SO
+  _monsterActionID: 100201
+  _name: Skeleton
+  _monsterID: 1002
+  _actionClass: 1
+  _actionCondition: 0
+  _actionType: 1
+  _actionDamage: 10
+  _actionCoolTime: 3
+  _attackBoost: 0
+  _speedBoost: 0
+  _actionResource: 
+  _actionSound: 
+  _beforeDelay: 0.3
+  _afterDelay: 1
+  _rushSpeed: 4
+  _rushDistance: 4
+  _createdEffectTime: 0.3
+  _createPos: {x: 0, y: 0}
+  _hitBoxSize: {x: 3, y: 2}
+  _hitDecision: {fileID: 24579296237097063, guid: 24f77dbf76321c64482b121c5f46f5b2, type: 3}
+  _pathPreview: {fileID: 0}
