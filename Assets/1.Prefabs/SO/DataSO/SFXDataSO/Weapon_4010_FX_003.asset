@@ -15,4 +15,4 @@ MonoBehaviour:
   <sfxID>k__BackingField: Weapon_4010_FX_003
   <sfxObject>k__BackingField: "\uB871\uC18C\uB4DC"
   <sfxUse>k__BackingField: "\uB871\uC18C\uB4DC \uACF5\uACA93"
-  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: 57b2ac6da13dc31499e0af39cbfe6a2a, type: 3}
+  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: f79245dfb4d16af42a3f93e3aeed5723, type: 3}

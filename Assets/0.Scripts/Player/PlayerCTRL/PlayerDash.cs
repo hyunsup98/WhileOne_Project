@@ -71,6 +71,11 @@ public class PlayerDash : MonoBehaviour
             {
                 StartCoroutine(Dash());
             }
+            else
+            {
+                SoundManager.Instance.PlaySoundEffect("Player_CantDash_FX_001");
+
+            }
         }
     }
     IEnumerator Dash()
@@ -90,6 +95,7 @@ public class PlayerDash : MonoBehaviour
             float dashDelay = 0.2f;
             yield return new WaitForSeconds(dashDelay);
             //_damaged.tag = "Player";
+            SoundManager.Instance.PlaySoundEffect("Player_Dash_FX_001");
         }
         else
         {
