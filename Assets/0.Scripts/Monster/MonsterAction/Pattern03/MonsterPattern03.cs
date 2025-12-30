@@ -5,7 +5,7 @@ public class MonsterPattern03 : MonsterPattern
 {
 
     private int _teleportCount;
-    private int _currentCount;
+    private int _currentCount = 1;
     private Vector2 _returnPos;
 
     private Transform _myTransform;
@@ -30,11 +30,10 @@ public class MonsterPattern03 : MonsterPattern
         _myTransform.GetComponentInChildren<Collider2D>().enabled = false;
         _ani.OnPlayAni("Idle");
 
+        Debug.Log("<color=red>피격카운트</color>" + _currentCount);
         if (_currentCount < _teleportCount)
         {
-            Debug.Log("<color=red>피격카운트</color>" + _currentCount);
             IsAction = false;
-            _currentCount++;
             return;
         }
 
@@ -43,9 +42,11 @@ public class MonsterPattern03 : MonsterPattern
 
     public override void EndAction()
     {
-        if (_currentCount > _teleportCount)
-            _currentCount = 0;
         Init();
+        if (_currentCount > _teleportCount)
+            _currentCount = 1;
+
+        _currentCount++;
     }
 
     public override void OnAction()

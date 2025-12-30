@@ -16,7 +16,8 @@ public class Patrol : IState
     private int _patrolIndex;
     private float _pathFindCool;    // 쿨타임 하드코딩 중
 
-    Vector2 _patrolPoin;
+    private Vector2 _patrolPoin;
+    
 
     public Patrol(MonsterPresenter monster)
     {
@@ -29,6 +30,7 @@ public class Patrol : IState
         _ground = monster.Model.GroundTilemap;
         _mobAster = monster.Model.MobAstar;
         _patrolRange = monster.Model.PatrolRange;
+        
     }
 
 
@@ -49,7 +51,7 @@ public class Patrol : IState
     {
         if (_patrolPath == null || _patrolPath.Count <= 1)
         {
-            _monster.View.OnIdleAni();
+            _monster.View.OnPlayAni("Idle");
             if (Time.time < _pathFindCool)
                 return;
             _pathFindCool = Time.time + 1.5f;
@@ -63,7 +65,7 @@ public class Patrol : IState
 
             _patrolIndex = 0;
         }
-        _monster.View.OnDisIdleAni();
+        _monster.View.OnStopAni("Idle");
 
         Debug.DrawLine(_myTransform.position, _patrolPoin, Color.brown);
 
@@ -107,6 +109,7 @@ public class Patrol : IState
         }
         return _myTransform.position;
     }
+
 
 
 }

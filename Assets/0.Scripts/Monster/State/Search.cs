@@ -28,7 +28,7 @@ public class Search : IState
 
     public void Enter()
     {
-        _view.OnIdleAni();
+        _view.OnPlayAni("Idle");
 
         if(_searchImage != null)
             _searchImage.gameObject.SetActive(true);
@@ -37,7 +37,7 @@ public class Search : IState
     public void Exit()
     {
         _timer = 0f;
-        _view.OnDisIdleAni();
+        _view.OnPlayAni("Idle");
 
         if(_searchImage != null )
             _searchImage.gameObject.SetActive(false);

@@ -19,6 +19,7 @@ MonoBehaviour:
   _moveSpeed: 4
   _sight: 5
   _sightAngle: 90
+  _actionDistance: 5
   _searchTime: 3
   _patrolRange: 5
   _actionList:
