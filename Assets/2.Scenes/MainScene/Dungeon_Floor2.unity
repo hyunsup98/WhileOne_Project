@@ -7404,8 +7404,6 @@ MonoBehaviour:
   gridParent: {fileID: 955655093}
   minTileSpacing: 3
   playerObject: {fileID: 558735063}
-  digSpotTile: {fileID: 11400000, guid: 3e4b576dfebb84640b0c1a4c2844e40f, type: 2}
-  afterDigTile: {fileID: 11400000, guid: a9d3c164dbc37dc4295958fbb16f2572, type: 2}
   digSpotSpawnChance: 100
   treasureChestPrefab: {fileID: 228447053981868614, guid: 015eba3987a021a4ea06ededd42a7476, type: 3}
   showRoomTypeLabels: 1
@@ -10934,7 +10932,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbb38ce6bc6bb404fb134b3db42e1d0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DungeonManager
-  <DigSpotTile>k__BackingField: {fileID: 11400000, guid: 6030469b5d45faa4085da000fe36bca1, type: 2}
+  <DigSpotTile>k__BackingField: {fileID: 11400000, guid: 3e4b576dfebb84640b0c1a4c2844e40f, type: 2}
+  <AfterDigTile>k__BackingField: {fileID: 11400000, guid: a9d3c164dbc37dc4295958fbb16f2572, type: 2}
   <TreasureBarUI>k__BackingField: {fileID: 1675610904}
   _keepData: 1
   <WeaponUI>k__BackingField: {fileID: 336649232}
