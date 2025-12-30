@@ -64,7 +64,7 @@ public class MonsterView : MonoBehaviour, IStunable
                 break;
 
             case "Death":
-                _animator.SetBool("Death", true);
+                _animator.SetTrigger("Death");
                 break;
 
             case "Pattern01":
@@ -175,8 +175,10 @@ public class MonsterView : MonoBehaviour, IStunable
     public IEnumerator OnHitBlink()
     {
         Color original = _myRenderer.color;
+        SetCollider(false);
         for (int i = 0; i < 3; i++)
         {
+            
             _myRenderer.color = Color.gray;
 
             yield return CoroutineManager.waitForSeconds(0.05f);
@@ -185,8 +187,13 @@ public class MonsterView : MonoBehaviour, IStunable
 
             yield return CoroutineManager.waitForSeconds(0.05f);
         }
+
+        yield return CoroutineManager.waitForSeconds(0.3f);
+        SetCollider(true);
     }
 
+
+    public void SetCollider(bool isColldier) => GetComponent<Collider2D>().enabled = isColldier;
 
     public void OnStun()
     {

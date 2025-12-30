@@ -105,9 +105,8 @@ public class MonsterPresenter : IAnimationable, IDead
     {
         if (Model.CurrentState != Model.StateList[MonsterState.Action])
             View.OnPlayAni("Hurt");
-        else
-            StartCoroutine(View.OnHitBlink());
 
+        StartCoroutine(View.OnHitBlink());
         if (Model.ActionDict.TryGetValue(ActionID.three, out var action))
         {
             IsPattern03 = true;
@@ -115,18 +114,21 @@ public class MonsterPresenter : IAnimationable, IDead
             return;
         }
 
-        if (!_isHit)
-            _isHit = true;
 
         Model.TakeDamage(Damage);
 
         if (Model.Hp <= 0)
             View.StartCoroutine(OnDead());
+
+
+        if (!_isHit)
+            _isHit = true;
     }
 
     // 죽음 애니메이션 호출
     public IEnumerator OnDead()
     {
+        View.SetCollider(false);
         _isDeath = true;
         View.OnPlayAni("Death");
         while (View.GetPlayingAni().normalizedTime < 0.5f)
@@ -134,7 +136,7 @@ public class MonsterPresenter : IAnimationable, IDead
 
         yield return CoroutineManager.waitForSeconds(0.5f);
         float destroyTime = View.GetPlayingAni().length;
-
+        Debug.Log("파괴합니다.");
         View.RequestDestroy(destroyTime + 1f);
         OnDeath?.Invoke();
     }
@@ -147,4 +149,6 @@ public class MonsterPresenter : IAnimationable, IDead
 
     public void OnPlayAni(string animationName) => View.OnPlayAni(animationName);
     public void OnStopAni(string animationName) => View.OnStopAni(animationName);
+
+    
 }
