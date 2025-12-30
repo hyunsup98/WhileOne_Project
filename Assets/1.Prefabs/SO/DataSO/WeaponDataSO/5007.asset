@@ -10,18 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ada813e1c250430498a1dabe3b76679d, type: 3}
-  m_Name: 5002
+  m_Name: 5007
   m_EditorClassIdentifier: Assembly-CSharp::WeaponDataSO
-  <weaponID>k__BackingField: 5002
-  <weapon_Name>k__BackingField: "<color=#FFFFFF>\uD0DC\uC0B0</color>"
-  <weapon_Desc>k__BackingField: "<color=#FF7F00>\uB0B4 \uC2E0\uB150\uC740 \uB108
-    \uB530\uC704\uAC00 \uAEBE\uC744 \uC218 \uC5C6\uB2E4.\\n- \uAC80\uC0AC \uD53C\uB370\uC2A4
-    -</color>"
+  <weaponID>k__BackingField: 5007
+  <weapon_Name>k__BackingField: "<color=#5BB5FF>\uB098\uBB34 \uB9DD\uCE58</color>"
+  <weapon_Desc>k__BackingField: "\"<color=#FF7F00>\"\"\uB2EC\uB098\uB77C \uD1A0\uB07C\uB4E4\uC774
+    \uC774\uAC78\uB85C \uB5A1\uC744 \uB9CC\uB4E4\uC5C8\uB2E4\uC9C0?\"\"\\n\"\"\uB124\uAC00
+    \uB9D0\uD558\uB294 \uAC74 \uC808\uAD6C\uC57C. \uBC14\uBCF4\uC57C.\"\"\\n- \uBAA8\uD5D8\uAC00\uB4E4
+    \uC0AC\uC774\uC5D0\uC11C -</color>\""
   <weaponTier>k__BackingField: 2
   <weaponAttack1Damage>k__BackingField: 24
-  <weaponAttack1MinDamage>k__BackingField: 18
-  <weaponAttack1MaxDamage>k__BackingField: 30
-  <weaponAttack1Speed>k__BackingField: 1.7
+  <weaponAttack1MinDamage>k__BackingField: 24
+  <weaponAttack1MaxDamage>k__BackingField: 24
+  <weaponAttack1Speed>k__BackingField: 3
   <weaponMoveSpeed>k__BackingField: 0
   <weaponStaminaRecovery>k__BackingField: 0
   <weaponAttack1ModelPath_Sprite>k__BackingField: {fileID: 0}
@@ -32,6 +33,6 @@ MonoBehaviour:
   <weaponAttack2Cooldown>k__BackingField: 0
   <weaponAttack2Stamina>k__BackingField: 0
   <weaponAttack2ModelPath_Sprite>k__BackingField: {fileID: 0}
-  <weaponResourcePath_Sprite>k__BackingField: {fileID: 21300000, guid: c2f37aa6012af4c1096e5ba6a25d5bcb, type: 3}
-  <weaponDurability>k__BackingField: 26
+  <weaponResourcePath_Sprite>k__BackingField: {fileID: 21300000, guid: bc54460ac3fe5478f9cacb9b1cbdcc69, type: 3}
+  <weaponDurability>k__BackingField: 24
   <weaponDropRate>k__BackingField: 2

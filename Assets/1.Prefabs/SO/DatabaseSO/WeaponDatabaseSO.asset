@@ -14,8 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponDatabaseSO
   datas:
   - {fileID: 11400000, guid: 53eee941ace3b3d49874022e3caeeb4a, type: 2}
+  - {fileID: 11400000, guid: 602fae229daffe944a7f9ec839968fce, type: 2}
   - {fileID: 11400000, guid: 5fd297d1f71921b4b824a2e76992ed0f, type: 2}
+  - {fileID: 11400000, guid: ccacf2f230ed1df4092a760f7eff80c3, type: 2}
+  - {fileID: 11400000, guid: 3fed0acb2ba3b9c4e897ca0e43428ba8, type: 2}
   - {fileID: 11400000, guid: af9f2efc0472dd840a506095dc251aaf, type: 2}
+  - {fileID: 11400000, guid: 758ab5a90c06ea645b285fc023a91ef9, type: 2}
+  - {fileID: 11400000, guid: e308dfb0f33ea5d4da7af3ce75ab9537, type: 2}
+  - {fileID: 11400000, guid: fdfa3006dc158bc4ab0d40698d9d5890, type: 2}
   - {fileID: 11400000, guid: 0c76a84305055df41a701c300abc6cef, type: 2}
-  - {fileID: 11400000, guid: ed0e09abd84908146a8cd1aa53e684c3, type: 2}
+  - {fileID: 11400000, guid: 92eeb6b017008bf4b99b67909f50ffae, type: 2}
+  - {fileID: 11400000, guid: e7c3c5e6b352c824683d77836c47889a, type: 2}
+  - {fileID: 11400000, guid: 352fb0d4ec848404da69fde2f1874410, type: 2}
+  - {fileID: 11400000, guid: ac7f7b0a07ff3234dae4932910e89299, type: 2}
+  - {fileID: 11400000, guid: 22f4a9279621a7548bfa6af6b6373ba3, type: 2}
   - {fileID: 11400000, guid: 64554098c7f845b41a01cd37cb021bad, type: 2}
+  - {fileID: 11400000, guid: b4f9e99ac250bfa4d8726f272affe4cc, type: 2}
+  - {fileID: 11400000, guid: 024f33f7854eee741b720467bfa882cb, type: 2}
+  - {fileID: 11400000, guid: a66e25dcb7557164f8cc498680c7b22a, type: 2}
+  - {fileID: 11400000, guid: 729b27b9f6b11464092d4686bc16763a, type: 2}
