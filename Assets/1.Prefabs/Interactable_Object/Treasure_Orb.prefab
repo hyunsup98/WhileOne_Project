@@ -49,6 +49,7 @@ MonoBehaviour:
   _keyId: 9001
   _renderer: {fileID: 3558532051835795435}
   <YOffset>k__BackingField: 1
+  <InteractText>k__BackingField: "\uC90D\uAE30"
   _floatingYOffset: 0.1
   _floatingSpeed: 10
   _maskRenderer: {fileID: 0}
@@ -146,4 +147,4 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 1
+  m_Radius: 2.2

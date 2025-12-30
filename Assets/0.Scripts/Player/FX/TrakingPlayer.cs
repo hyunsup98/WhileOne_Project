@@ -15,6 +15,7 @@ public class TrakingPlayer : MonoBehaviour
     public AttackDamage AttackFxInstance { get; private set; }
     public bool Active { get{ return _isActive; } set{ value = _isActive; } }
     Vector3 _mousePosition;
+    Vector3 _current;
     private SpriteRenderer _rend;
 
     public AttackDamage AttackFX => _attackFX;
@@ -26,6 +27,9 @@ public class TrakingPlayer : MonoBehaviour
         attackAnim = _attackFX.GetComponent<Animator>();
 
         AttackFxInstance = AttackFX;
+
+        _current = atkParent.localEulerAngles;
+        
         //if (_attackFX != null)
         //{
         //   AttackFxInstance = Instantiate(_attackFX);
@@ -52,6 +56,14 @@ public class TrakingPlayer : MonoBehaviour
         atkParent.position = _test.position + dir * atkDistance;
         atkParent.transform.right = dir;
 
+        if(transform.root.localScale.x > 0)
+        {
+            atkParent.localScale = new Vector3(1, -1, 1);
+        }
+        else if(transform.root.localScale.x<0)
+        {
+            atkParent.localScale = new Vector3(1, 1, 1);
+        }
 
         //if (dir.x > 0)
         //{

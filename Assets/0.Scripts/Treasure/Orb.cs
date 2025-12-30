@@ -7,6 +7,7 @@ public sealed class Orb : Treasure, IInteractable
     public Vector3 Pos => transform.position;
 
     [field: SerializeField] public float YOffset { get; set; } = 1.5f;
+    [field: SerializeField] public string InteractText { get; set; } = "열기";
 
     [Header("공중에 떠있는 효과를 위한 변수")]
     [SerializeField] private float _floatingYOffset = 0.25f;

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class DataManager_Character : MonoBehaviour
 {
@@ -17,5 +18,18 @@ public class DataManager_Character : MonoBehaviour
         _treasureList.Add(treasure);
         _bonusAtk += treasure.TreasureData.damageBoost;
         Debug.Log($"현재 보너스 공격력: {_bonusAtk}");
+    }
+
+    // 데이터 초기화
+    public void InitPlayerData()
+    {
+        _playerHp = 100;
+        _playerStamina = 100;
+        _bonusAtk = 0;
+
+        _treasureList.Clear();
+        _subWeapon = null;
+
+        DataManager.Instance.TreasureData.InitTreasureList();
     }
 }

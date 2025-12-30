@@ -66,10 +66,18 @@ public class GameManager : Singleton<GameManager>
             {
                 // _interactObj에 값이 있으면 상호작용 ui 키고, 값이 없으면 (null이면) 끄기
                 if(_interactObj != null)
-                    CurrentDungeon.SetPosInteractImg(InteractObj.Pos + new Vector3(0f, InteractObj.YOffset, 0f));
+                    CurrentDungeon.SetPosInteractImg(InteractObj.Pos + new Vector3(0f, InteractObj.YOffset, 0f), _interactObj.InteractText);
                 else
                     CurrentDungeon.InteractImg.SetActive(false);
             }
+        }
+    }
+
+    private void Update()
+    {
+        if(Keyboard.current.yKey.wasPressedThisFrame)
+        {
+            SceneManager.LoadScene("BossScene");
         }
     }
 

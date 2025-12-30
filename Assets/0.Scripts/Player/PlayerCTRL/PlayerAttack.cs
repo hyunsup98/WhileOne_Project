@@ -100,7 +100,7 @@ public class PlayerAttack : MonoBehaviour
     }
     private void Update()
     {
-        _attSpeed = 10f / _player.AttackSpeed; //공격 속도 실시간 세팅
+        _attSpeed = 5f / _player.AttackSpeed; //공격 속도 실시간 세팅
     }
 
     private void OnDisable()

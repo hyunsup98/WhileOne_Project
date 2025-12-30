@@ -8,9 +8,9 @@ public class UI_Settings : MonoBehaviour
     private const string BgmSliderKey = "BGMSLIDER";
     private const string SfxSliderKey = "SFXSLIDER";
 
-    [SerializeField] private GameObject _settings;          //설정창 오브젝트
-    [SerializeField] private GameObject _warningWindow;     //경고 화면 창(게임 종료 버튼 클릭 시 확인창)
-    [SerializeField] private GameObject _manualPage;        //조작설명 창
+    [SerializeField] private GameObject _settings;          // 설정창 오브젝트
+    [SerializeField] private GameObject _warningWindow;     // 경고 화면 창(게임 종료 버튼 클릭 시 확인창)
+    [SerializeField] private GameObject _manualPage;        // 조작설명 창
 
     [SerializeField] private Slider _masterAudioSlider;
     [SerializeField] private Slider _bgmAudioSlider;
@@ -55,7 +55,9 @@ public class UI_Settings : MonoBehaviour
     //설정창 키기
     public void OnClick_EnableSettings()
     {
-        if(_settings != null && !_settings.activeSelf)
+        SoundManager.Instance.PlaySoundEffect("Mouse_Click_Possible_FX_001");
+
+        if (_settings != null && !_settings.activeSelf)
         {
             _settings.SetActive(true);
             GameManager.Instance.SetGameState(_settings.activeSelf ? GameState.Pause : GameState.Playing);
@@ -65,7 +67,9 @@ public class UI_Settings : MonoBehaviour
     //설정창 끄기
     public void OnClick_DisableSettings()
     {
-        if(_settings != null && _settings.activeSelf)
+        SoundManager.Instance.PlaySoundEffect("Mouse_Click_Possible_FX_001");
+
+        if (_settings != null && _settings.activeSelf)
         {
             _settings.SetActive(false);
             GameManager.Instance.SetGameState(_settings.activeSelf ? GameState.Pause : GameState.Playing);
@@ -75,6 +79,8 @@ public class UI_Settings : MonoBehaviour
     //조작설명 버튼 클릭
     public void OnClick_Manual()
     {
+        SoundManager.Instance.PlaySoundEffect("Mouse_Click_Possible_FX_001");
+
         //조작 설명 창 띄우기
         if (_manualPage != null && !_warningWindow.activeSelf && !_manualPage.activeSelf)
         {
@@ -85,7 +91,9 @@ public class UI_Settings : MonoBehaviour
     //설정창 닫기 버튼 클릭
     public void OnClick_Exit()
     {
-        if(_settings != null)
+        SoundManager.Instance.PlaySoundEffect("Mouse_Click_Possible_FX_001");
+
+        if (_settings != null)
         {
             _settings.SetActive(false);
 
@@ -95,10 +103,12 @@ public class UI_Settings : MonoBehaviour
     }
 
     //게임종료 버튼 클릭
-    public void OnClick_QuitGame()
+    public void OnClick_GoTitle()
     {
+        SoundManager.Instance.PlaySoundEffect("Mouse_Click_Possible_FX_001");
+
         //게임 종료 확인 패널 띄우기
-        if(_warningWindow != null && !_warningWindow.activeSelf && !_manualPage.activeSelf)
+        if (_warningWindow != null && !_warningWindow.activeSelf && !_manualPage.activeSelf)
         {
             _warningWindow.SetActive(true);
         }
