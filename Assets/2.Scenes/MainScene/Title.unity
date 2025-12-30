@@ -3914,7 +3914,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b6eda14ddfe2c94a8337794ef312190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_WarningWindow
-  _titleSceneName: Title
+  _sceneName: Title
 --- !u!114 &1093303637
 MonoBehaviour:
   m_ObjectHideFlags: 0

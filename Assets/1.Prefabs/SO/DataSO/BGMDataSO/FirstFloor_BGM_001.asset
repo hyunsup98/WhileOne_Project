@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BGMDataSO
   <bgmID>k__BackingField: FirstFloor_BGM_001
   <bgmUse>k__BackingField: "1\uCE35"
-  <bgmPath_AudioClip>k__BackingField: {fileID: 8300000, guid: 61c363fa4d6f6f04e8f84623e48bbf52, type: 3}
+  <bgmPath_AudioClip>k__BackingField: {fileID: 8300000, guid: 7aeff5dc3fd68b44d832c8c61b8e0363, type: 3}
