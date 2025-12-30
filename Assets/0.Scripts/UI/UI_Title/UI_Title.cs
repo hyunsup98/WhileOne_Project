@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 /// <summary>
@@ -7,8 +8,6 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class UI_Title : MonoBehaviour
 {
-    private const string HasSeenTutorial = "HASSEENTUTORIAL";
-
     [Header("게임시작 버튼 클릭 시 이동할 씬 이름")]
     [SerializeField] private string _gameSceneName = "Dungeon_Floor1";      // 던전 1층 씬 이름
     [SerializeField] private string _tutorialSceneName = "Tutorial";        // 튜토리얼 씬 이름
@@ -19,33 +18,30 @@ public class UI_Title : MonoBehaviour
     private void Awake()
     {
         if (_gameSceneName == null)
-            _gameSceneName = "SHS_InGame_FirstFloor";
+            _gameSceneName = "Dungeon_Floor1";
+    }
+
+    private void Start()
+    {
+        DataManager.Instance.CharacterData.InitPlayerData();
     }
 
     //게임 시작 버튼
     public void OnClick_GameStart()
     {
+        SoundManager.Instance.PlaySoundEffect("Mouse_Click_Possible_FX_001");
+
         if(_buttonClickClip != null)
             SoundManager.Instance.PlaySoundEffect(_buttonClickClip);
 
-        if (!PlayerPrefs.HasKey(HasSeenTutorial))
-        {
-            PlayerPrefs.SetString(HasSeenTutorial, "seen");
-            LoadingManager.nextSceneName = _tutorialSceneName;
-            SceneManager.LoadScene("Loading");
-            //SceneManager.LoadScene(_tutorialSceneName);
-        }
-        else
-        {
-            LoadingManager.nextSceneName = _gameSceneName;
-            SceneManager.LoadScene("Loading");
-            //SceneManager.LoadScene(_gameSceneName);
-        }
+        LoadingManager.nextSceneName = _tutorialSceneName;
+        SceneManager.LoadScene("Loading");
     }
 
     //게임 종료 버튼
     public void OnClick_GameExit()
     {
+        SoundManager.Instance.PlaySoundEffect("Mouse_Click_Possible_FX_001");
         Application.Quit();
     }
 }

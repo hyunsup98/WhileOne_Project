@@ -19,15 +19,22 @@ public class DataManager_Treasure : MonoBehaviour
 
     private void Start()
     {
-        if(TreasureDatabase != null)
+        InitTreasureList();
+    }
+
+    public void InitTreasureList()
+    {
+        if (TreasureDatabase != null)
         {
-            foreach(var data in TreasureDatabase.datas)
+            if (TreasureList.Count > 0)
+                TreasureList.Clear();
+
+            foreach (var data in TreasureDatabase.datas)
             {
                 TreasureList.Add(data);
             }
         }
     }
-
 
     public Treasure PickTreasure()
     {

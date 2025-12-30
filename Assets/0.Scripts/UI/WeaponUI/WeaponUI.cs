@@ -32,7 +32,7 @@ public class WeaponUI : MonoBehaviour
     /// </summary>
     public void OnClick_GetWeapon()
     {
-        // todo: 플레이어에 현재 weapon 장착, weapon.InitData();
+        SoundManager.Instance.PlaySoundEffect("Weapon_Get_FX_001");
         chest.ChestClose(ChestState.OpenedTaken);
         GameManager.Instance.player.Player_WeaponChange.ChangeWeapon(weapon);
         DisableUI();
@@ -45,6 +45,7 @@ public class WeaponUI : MonoBehaviour
     public void OnClick_LeaveWeapon()
     {
         // 상자에 무기를 둔 상태로 창 닫기
+        SoundManager.Instance.PlaySoundEffect("WeaponBox_Off_FX_001");
         WeaponPool.Instance.TakeObject(weapon);
         chest.ChestClose(ChestState.OpenedLeft);
         DisableUI();
@@ -91,6 +92,7 @@ public class WeaponUI : MonoBehaviour
 
     public void DisableUI(GameObject obj)
     {
+        SoundManager.Instance.PlaySoundEffect("WeaponBox_Off_FX_001");
         obj.SetActive(false);
         GameManager.Instance.SetGameState(GameState.Playing);
     }

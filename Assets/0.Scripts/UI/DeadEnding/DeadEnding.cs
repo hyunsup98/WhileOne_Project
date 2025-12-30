@@ -10,6 +10,7 @@ public class DeadEnding : MonoBehaviour
 
     public void OnClick_GoToTitle()
     {
+        SoundManager.Instance.PlaySoundEffect("Mouse_Click_Possible_FX_001");
         SceneManager.LoadScene(_titleSceneName);
     }
 }

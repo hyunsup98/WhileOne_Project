@@ -103,11 +103,16 @@ public class WeaponChange : MonoBehaviour
         _slotWeapon2 = weapon;
         _slotWeapon2.transform.SetParent(_weaponHands, false);
         _slotWeapon2.transform.localPosition = Vector3.zero;
+
+        if (!_slotWeapon2.gameObject.activeSelf)
+            _slotWeapon2.gameObject.SetActive(true);
+
         currentweapon.gameObject.SetActive(false);
         currentweapon = _slotWeapon2;
 
         GameManager.Instance.CurrentDungeon.EquipSlotController.ChangeSubWeapon(_slotWeapon2);
         GameManager.Instance.CurrentDungeon.EquipSlotController.ChangeSubWeaponDurability(_slotWeapon2.Durability, _slotWeapon2.WeaponData.weaponDurability);
+        GameManager.Instance.CurrentDungeon.EquipSlotController.EquipWeapon(2);
 
         //if(!weaponeList.Contains(대충 매개변수로 받아온 변수))
         //{

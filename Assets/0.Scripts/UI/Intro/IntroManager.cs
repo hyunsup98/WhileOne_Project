@@ -8,6 +8,7 @@ public class IntroManager : MonoBehaviour
     [SerializeField] private Image _introImage;
     [SerializeField] private Sprite[] _introSprites;
     [SerializeField] private string _nextSceneName;     //씬 이름
+    [SerializeField] private UI_IntroSkip _introSkip;
 
     [Header("이미지를 다 넘긴 뒤 바로 다음 씬으로 넘어갈건지")]
     [SerializeField] private bool isSkip;       // 이미지를 다 넘기면 바로 다음 씬으로 넘어갈건지
@@ -57,12 +58,15 @@ public class IntroManager : MonoBehaviour
             EndSecen();
         }
     }
-    private void EndSecen()
+    public void EndSecen()
     {
         _isIntroSeen = true;
         _introImage.gameObject.SetActive(false);
 
-        if(isSkip)
+        if(_introSkip != null)
+            _introSkip.gameObject.SetActive(false);
+
+        if (isSkip)
             SceneManager.LoadScene(_nextSceneName);
     }
     private void OnDisable()

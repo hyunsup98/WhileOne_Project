@@ -59,11 +59,27 @@ public class SoundManager : Singleton<SoundManager>
         _sfxAudioSource.PlayOneShot(clip);
     }
 
+    // 인자값으로 받은 효과음 출력
     public void PlaySoundEffect(string sfxId)
     {
         if (_sfxAudioSource == null || string.IsNullOrEmpty(sfxId)) return;
 
         AudioClip sfx = DataManager.Instance.SFXData.SFXDatabase[sfxId].sfxPath_AudioClip;
+
+        if (sfx != null)
+            _sfxAudioSource.clip = sfx;
+
+        _sfxAudioSource.PlayOneShot(sfx);
+    }
+
+    // 여러 효과음 중 하나 랜덤 출력
+    public void PlaySoundEffect(params string[] sfxIds)
+    {
+        if (_sfxAudioSource == null || sfxIds.Length == 0) return;
+
+        int rand = Random.Range(0, sfxIds.Length);
+
+        AudioClip sfx = DataManager.Instance.SFXData.SFXDatabase[sfxIds[rand]].sfxPath_AudioClip;
 
         if (sfx != null)
             _sfxAudioSource.clip = sfx;

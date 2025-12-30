@@ -55,6 +55,7 @@ public class Weapon : MonoBehaviour
         if (Durability <= 0)
         {
             // 내구도가 다 떨어지면 무기 제거
+            transform.SetParent(DataManager.Instance.WeaponData.transform, false);
             WeaponPool.Instance.TakeObject(this);
         }
     }
