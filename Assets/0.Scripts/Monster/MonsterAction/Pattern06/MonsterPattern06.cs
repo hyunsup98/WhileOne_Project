@@ -9,8 +9,9 @@ public class MonsterPattern06 : MonsterPattern
     private Tilemap _wallTilemap;
     private float _startFallingTime;
     private float _fallingCount;
-    private float _fallingCycle;
     private float _fallingFrequency;
+    private float _fallingCycle;
+    private float _fallingHitTiming;
     private float _fallingRange;
 
     private GameObject _fallingObjectPrefab;
@@ -36,6 +37,7 @@ public class MonsterPattern06 : MonsterPattern
         _fallingCount = actionData.FallingCount;
         _fallingFrequency = actionData.FallingFrequency;
         _fallingCycle = actionData.FallingCycle;
+        _fallingHitTiming = actionData.FallingHitTiming;
         _fallingRange = actionData.FallingRange;
         _fallingObjectPrefab = actionData.FallingObjectPrefab;
         _fallingObjects = new List<GameObject>();
@@ -122,12 +124,7 @@ public class MonsterPattern06 : MonsterPattern
                     continue;
                 }
 
-                GameObject obj = GameObject.Instantiate(
-                _fallingObjectPrefab,
-                new Vector2(createPos.x, createPos.y),
-                Quaternion.identity,
-                _myTransform
-                );
+                GameObject obj = Create(createPos);
 
                 _fallingObjects.Add(obj);
             }
@@ -143,5 +140,21 @@ public class MonsterPattern06 : MonsterPattern
 
         yield return CoroutineManager.waitForSeconds(_afterDelay);
         IsAction = false;
+    }
+
+    private GameObject Create(Vector2 createPos)
+    {
+        GameObject obj = GameObject.Instantiate
+                (
+                _fallingObjectPrefab,
+                createPos,
+                Quaternion.identity,
+                _myTransform.parent
+                );
+
+        if (obj.TryGetComponent<Collider2D>(out var collider))
+            _monster.StartCoroutine(OnDelay(() => collider.enabled = true, _fallingHitTiming));
+
+        return obj;
     }
 }

@@ -34,6 +34,6 @@ public class Pattern01SO : MonsterActionSO
     public float AfterDelay => _afterDelay;
     public Vector2 CreatePos => _createPos;
     public Vector2 HitBoxSize => _hitBoxSize;
-    public GameObject PathPreview => _pathPreview;
     public GameObject HitDecision => _hitDecision;
+    public GameObject PathPreview => _pathPreview;
 }

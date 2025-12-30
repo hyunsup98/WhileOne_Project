@@ -1639,6 +1639,7 @@ MonoBehaviour:
   <CharacterDatabase>k__BackingField: {fileID: 11400000, guid: 4baefc4491e5a0b40a3763950f83f78a, type: 2}
   _playerHp: 100
   _playerStamina: 100
+  _bonusAtk: 0
   _treasureList: []
   _subWeapon: {fileID: 0}
 --- !u!4 &413965037

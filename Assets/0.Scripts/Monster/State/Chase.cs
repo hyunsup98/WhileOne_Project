@@ -20,7 +20,7 @@ public class Chase : IState
         _sight = monster.Model.MoveSpeed;
 
         //리펙토링 진행해야 함
-        _ationTrigger = monster.ActionTrigger;
+        _ationTrigger = monster.Model.ActionDistance;
     }
 
     public void Enter() 

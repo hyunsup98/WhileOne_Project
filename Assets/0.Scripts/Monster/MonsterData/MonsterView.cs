@@ -118,16 +118,9 @@ public class MonsterView : MonoBehaviour, IStunable
     }
 
 
-    public void OnHurtAni() => _animator.SetTrigger("Hurt");
-    public void OnDeathAni() => _animator.SetBool("Death", true);
-    public void OnAttackAni() => _animator.SetTrigger("Pattern01");
-    public void OnIdleAni() => _animator.SetBool("Idle", true);
-    public void OnDisIdleAni() => _animator.SetBool("Idle", false);
-    #endregion
-
-
     // 현재 실행중인 애니메이션의 정보 반환
     public AnimatorStateInfo GetPlayingAni() => _animator.GetCurrentAnimatorStateInfo(0);
+    #endregion
 
 
     public void OnMove(Vector2 target, float speed)
