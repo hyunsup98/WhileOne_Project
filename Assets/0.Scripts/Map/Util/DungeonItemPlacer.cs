@@ -11,10 +11,11 @@ public static class DungeonItemPlacer
     /// </summary>
     public static void PlaceDigSpots(
         DungeonGrid dungeonGrid,
-        Tile digSpotTile,
         float digSpotSpawnChance,
         Grid unityGrid)
     {
+        Tile digSpotTile = GameManager.Instance.CurrentDungeon.DigSpotTile;
+
         if (digSpotTile == null)
         {
             Debug.LogWarning("[DungeonItemPlacer] digSpotTile이 지정되지 않아 Dig Spot을 생성할 수 없습니다.");

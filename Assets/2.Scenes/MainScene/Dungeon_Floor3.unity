@@ -8255,7 +8255,8 @@ MonoBehaviour:
   gridParent: {fileID: 1699050183}
   minTileSpacing: 3
   playerObject: {fileID: 558735063}
-  digSpotTile: {fileID: 11400000, guid: 6030469b5d45faa4085da000fe36bca1, type: 2}
+  digSpotTile: {fileID: 11400000, guid: 76cb4d33b4ab5f1438478c08fb3ed1fc, type: 2}
+  afterDigTile: {fileID: 11400000, guid: 1487760264f60b54b9c9716fa3efb1b9, type: 2}
   digSpotSpawnChance: 100
   treasureChestPrefab: {fileID: 228447053981868614, guid: 015eba3987a021a4ea06ededd42a7476, type: 3}
   showRoomTypeLabels: 1
@@ -8924,7 +8925,6 @@ MonoBehaviour:
   mazeHeight: 31
   trapPrefab: {fileID: 4652139313107373167, guid: 1fd9b4c6bd5aa1e4c8f0a467bc3d1cbd, type: 3}
   trapOffPrefab: {fileID: 5727424884913838383, guid: 3a0d0fb6410dede4fb5c17bbc79db5f1, type: 3}
-  trapAttackInterval: 2
   maxTrapRatio: 0.3
   safeZoneRadius: 2
   leverPrefab: {fileID: 7575494982384084485, guid: f53d75469215d50458095129adeb40f2, type: 3}

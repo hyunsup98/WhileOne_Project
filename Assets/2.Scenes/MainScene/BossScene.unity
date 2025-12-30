@@ -7959,7 +7959,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uBCF4\uC2A4"
+  m_text: ???
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1f6f8efa203011745baef8c9d47c9497, type: 2}
   m_sharedMaterial: {fileID: -4601990093620646442, guid: 1f6f8efa203011745baef8c9d47c9497, type: 2}
@@ -9317,6 +9317,7 @@ MonoBehaviour:
   minTileSpacing: 3
   playerObject: {fileID: 558735063}
   digSpotTile: {fileID: 11400000, guid: 98a4c128059161f40af94c8b0cadac43, type: 2}
+  afterDigTile: {fileID: 0}
   digSpotSpawnChance: 100
   treasureChestPrefab: {fileID: 228447053981868614, guid: 015eba3987a021a4ea06ededd42a7476, type: 3}
   showRoomTypeLabels: 1

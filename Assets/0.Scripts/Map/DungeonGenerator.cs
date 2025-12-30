@@ -81,13 +81,6 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField] [Tooltip("시작 방에 배치할 플레이어 오브젝트")]
     private GameObject playerObject; // 시작 방에 배치할 플레이어 오브젝트
 
-    [SerializeField] [Tooltip("Dig Spot 타일 (타일맵에 배치됨)")]
-    private Tile digSpotTile; // Dig Spot 타일 (타일맵에 배치)
-    /// <summary>
-    /// Dig Spot 타일을 반환합니다. (DiggingRoom 등에서 사용)
-    /// </summary>
-    public Tile DigSpotTile => digSpotTile;
-
     [SerializeField] [Range(0f, 100f)] [Tooltip("Dig Spot 생성 확률 (0 ~ 100%)")]
     private float digSpotSpawnChance = 10f; // Dig Spot 생성 확률 (%)
 
@@ -114,53 +107,6 @@ public class DungeonGenerator : MonoBehaviour
     {
         // UIText_Floor 캐시 초기화
         RefreshFloorInfo();
-        
-        // DungeonManager의 DigSpotTile을 DungeonGenerator의 것으로 동기화
-        SyncDungeonManagerDigSpotTile();
-    }
-    
-    /// <summary>
-    /// DungeonManager의 DigSpotTile을 DungeonGenerator의 DigSpotTile로 동기화합니다.
-    /// TileManager.CanDig()가 올바르게 작동하도록 합니다.
-    /// </summary>
-    private void SyncDungeonManagerDigSpotTile()
-    {
-        if (digSpotTile == null)
-        {
-            Debug.LogWarning("[DungeonGenerator] DigSpotTile이 설정되지 않았습니다.");
-            return;
-        }
-        
-        // DungeonManager 찾기
-        DungeonManager dungeonManager = FindFirstObjectByType<DungeonManager>();
-        if (dungeonManager == null)
-        {
-            Debug.LogWarning("[DungeonGenerator] DungeonManager를 찾을 수 없습니다.");
-            return;
-        }
-        
-        // 리플렉션을 사용하여 private setter를 통해 DigSpotTile 설정
-        var property = typeof(DungeonManager).GetProperty("DigSpotTile");
-        if (property != null && property.CanWrite)
-        {
-            property.SetValue(dungeonManager, digSpotTile);
-            Debug.Log($"[DungeonGenerator] DungeonManager의 DigSpotTile을 동기화했습니다: {digSpotTile.name}");
-        }
-        else
-        {
-            // 리플렉션으로 private field 직접 설정 시도
-            var field = typeof(DungeonManager).GetField("<DigSpotTile>k__BackingField", 
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (field != null)
-            {
-                field.SetValue(dungeonManager, digSpotTile);
-                Debug.Log($"[DungeonGenerator] DungeonManager의 DigSpotTile을 동기화했습니다 (field): {digSpotTile.name}");
-            }
-            else
-            {
-                Debug.LogWarning("[DungeonGenerator] DungeonManager의 DigSpotTile을 설정할 수 없습니다. 리플렉션 실패.");
-            }
-        }
     }
     
     /// <summary>
@@ -536,7 +482,7 @@ public class DungeonGenerator : MonoBehaviour
         PlacePlayerObject();
         
         // 10. 일반 전투 방에 Dig Spot 배치
-        DungeonItemPlacer.PlaceDigSpots(dungeonGrid, digSpotTile, digSpotSpawnChance, unityGrid);
+        DungeonItemPlacer.PlaceDigSpots(dungeonGrid, digSpotSpawnChance, unityGrid);
 
         // 11. 보물 방에 보물 상자 배치
         DungeonItemPlacer.PlaceTreasureChests(dungeonGrid, treasureChestPrefab, unityGrid);

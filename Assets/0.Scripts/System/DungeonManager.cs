@@ -6,6 +6,7 @@ public class DungeonManager : MonoBehaviour
 {
     #region 발굴 관련 변수
     [field: SerializeField] public Tile DigSpotTile { get; private set; }       // 발굴이 가능한 타일
+    [field: SerializeField] public Tile AfterDigTile { get; private set; }       // 발굴후 타일
     [field: SerializeField] public TreasureBar TreasureBarUI { get; private set; }
 
     private RoomController _currentRoom;                                        // 현재 플레이어가 존재하는 방
