@@ -81,13 +81,6 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField] [Tooltip("시작 방에 배치할 플레이어 오브젝트")]
     private GameObject playerObject; // 시작 방에 배치할 플레이어 오브젝트
 
-    [SerializeField] [Tooltip("Dig Spot 타일 (타일맵에 배치됨)")]
-    private Tile digSpotTile; // Dig Spot 타일 (타일맵에 배치)
-    /// <summary>
-    /// Dig Spot 타일을 반환합니다. (DiggingRoom 등에서 사용)
-    /// </summary>
-    public Tile DigSpotTile => digSpotTile;
-
     [SerializeField] [Range(0f, 100f)] [Tooltip("Dig Spot 생성 확률 (0 ~ 100%)")]
     private float digSpotSpawnChance = 10f; // Dig Spot 생성 확률 (%)
 
@@ -114,53 +107,6 @@ public class DungeonGenerator : MonoBehaviour
     {
         // UIText_Floor 캐시 초기화
         RefreshFloorInfo();
-        
-        // DungeonManager의 DigSpotTile을 DungeonGenerator의 것으로 동기화
-        SyncDungeonManagerDigSpotTile();
-    }
-    
-    /// <summary>
-    /// DungeonManager의 DigSpotTile을 DungeonGenerator의 DigSpotTile로 동기화합니다.
-    /// TileManager.CanDig()가 올바르게 작동하도록 합니다.
-    /// </summary>
-    private void SyncDungeonManagerDigSpotTile()
-    {
-        if (digSpotTile == null)
-        {
-            Debug.LogWarning("[DungeonGenerator] DigSpotTile이 설정되지 않았습니다.");
-            return;
-        }
-        
-        // DungeonManager 찾기
-        DungeonManager dungeonManager = FindFirstObjectByType<DungeonManager>();
-        if (dungeonManager == null)
-        {
-            Debug.LogWarning("[DungeonGenerator] DungeonManager를 찾을 수 없습니다.");
-            return;
-        }
-        
-        // 리플렉션을 사용하여 private setter를 통해 DigSpotTile 설정
-        var property = typeof(DungeonManager).GetProperty("DigSpotTile");
-        if (property != null && property.CanWrite)
-        {
-            property.SetValue(dungeonManager, digSpotTile);
-            Debug.Log($"[DungeonGenerator] DungeonManager의 DigSpotTile을 동기화했습니다: {digSpotTile.name}");
-        }
-        else
-        {
-            // 리플렉션으로 private field 직접 설정 시도
-            var field = typeof(DungeonManager).GetField("<DigSpotTile>k__BackingField", 
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (field != null)
-            {
-                field.SetValue(dungeonManager, digSpotTile);
-                Debug.Log($"[DungeonGenerator] DungeonManager의 DigSpotTile을 동기화했습니다 (field): {digSpotTile.name}");
-            }
-            else
-            {
-                Debug.LogWarning("[DungeonGenerator] DungeonManager의 DigSpotTile을 설정할 수 없습니다. 리플렉션 실패.");
-            }
-        }
     }
     
     /// <summary>
@@ -218,19 +164,6 @@ public class DungeonGenerator : MonoBehaviour
         unityGrid = DungeonGridHelper.SetupGridParent(gridParent, transform, out finalGridParent);
         gridParent = finalGridParent;
         
-        // Grid 셀 크기를 방 타일 크기와 동일하게 맞춤
-        //float resolvedCellSize = DungeonGridHelper.ResolveCellSize(normalRoomPrefab, unityGrid);
-        //if (unityGrid != null)
-        //{
-        //    unityGrid.cellSize = new Vector3(resolvedCellSize, resolvedCellSize, 1f);
-        //}
-        
-        // 방 간격 자동 계산 (칸 수로 계산 후 4의 배수로 반올림)
-        //if (normalRoomPrefab != null)
-        //{
-        //    roomSpacingInCells = DungeonGridHelper.CalculateRoomSpacingInCells(normalRoomPrefab, minTileSpacing, resolvedCellSize);
-        //}
-        
         // 4의 배수 검증 및 조정
         if (roomSpacingInCells % 4 != 0)
         {
@@ -254,18 +187,6 @@ public class DungeonGenerator : MonoBehaviour
         // 층별 프리팹 리스트를 우선 사용하고, 없으면 기본 프리팹을 fallback으로 사용
         Dictionary<RoomType, GameObject[]> roomPrefabs = new Dictionary<RoomType, GameObject[]>();
         Dictionary<EventRoomType, GameObject[]> eventRoomTypePrefabs = new Dictionary<EventRoomType, GameObject[]>();
-        
-        //// 기본 프리팹 딕셔너리 (fallback용, 단일 프리팹을 배열로 변환)
-        //Dictionary<RoomType, GameObject[]> defaultPrefabs = new Dictionary<RoomType, GameObject[]>
-        //{
-        //    { RoomType.Normal, normalRoomPrefab != null ? new[] { normalRoomPrefab } : null },
-        //    { RoomType.Start, startRoomPrefab != null ? new[] { startRoomPrefab } : null },
-        //    { RoomType.Exit, exitRoomPrefab != null ? new[] { exitRoomPrefab } : null },
-        //    { RoomType.Event, eventRoomPrefab != null ? new[] { eventRoomPrefab } : null },
-        //    { RoomType.Trap, trapRoomPrefab != null ? new[] { trapRoomPrefab } : null },
-        //    { RoomType.Treasure, treasureRoomPrefab != null ? new[] { treasureRoomPrefab } : null },
-        //    { RoomType.Boss, bossRoomPrefab != null ? new[] { bossRoomPrefab } : null }
-        //};
         
         // 층별 프리팹 리스트를 가져와서 사용 (없으면 기본 프리팹 사용)
         if (floorInfo != null && floorInfo.FloorRoomPrefabs != null)
@@ -536,10 +457,27 @@ public class DungeonGenerator : MonoBehaviour
         PlacePlayerObject();
         
         // 10. 일반 전투 방에 Dig Spot 배치
-        DungeonItemPlacer.PlaceDigSpots(dungeonGrid, digSpotTile, digSpotSpawnChance, unityGrid);
+        DungeonItemPlacer.PlaceDigSpots(dungeonGrid, RoomType.Normal, digSpotSpawnChance, unityGrid);
 
         // 11. 보물 방에 보물 상자 배치
         DungeonItemPlacer.PlaceTreasureChests(dungeonGrid, treasureChestPrefab, unityGrid);
+        
+        // 12. 보물 방에 Dig Spot 배치
+        foreach (var position in dungeonGrid.GetAllPositions())
+        {
+            Room room = dungeonGrid.GetRoom(position);
+            if (room == null || room.roomObject == null) continue;
+            
+            // 보물 방만 처리
+            if (room.roomType != RoomType.Treasure) continue;
+            
+            // TreasureRoom 컴포넌트 찾아서 Dig Spot 배치
+            TreasureRoom treasureRoom = room.roomObject.GetComponent<TreasureRoom>();
+            if (treasureRoom != null)
+            {
+                treasureRoom.PlaceDigSpots(unityGrid);
+            }
+        }
         }
         finally
         {
@@ -607,29 +545,6 @@ public class DungeonGenerator : MonoBehaviour
         }
 
         // 이벤트 방 지정
-        //// TODO: 테스트용 - 이벤트 방을 무조건 ChestRoom으로 지정 (나중에 제거)
-        //int eventRoomCount = floorInfo.GetRoomCountWithType(RoomType.Event);
-        //if (eventRoomCount > 0 && remaining.Count >= eventRoomCount)
-        //{
-        //    // 테스트: 이벤트 방을 모두 ChestRoom으로 지정
-        //    int actualEventRoomCount = Mathf.Min(eventRoomCount, 2);
-            
-        //    for (int i = 0; i < actualEventRoomCount; i++)
-        //    {
-        //        // 이벤트 방 위치 선택
-        //        var eventPos = remaining[Random.Range(0, remaining.Count)];
-        //        var eventRoom = dungeonGrid.GetRoom(eventPos);
-        //        if (eventRoom != null)
-        //        {
-        //            eventRoom.roomType = RoomType.Event;
-        //            eventRoom.eventRoomType = EventRoomType.ChestRoom; // 테스트용: 무조건 ChestRoom
-        //        }
-        //        remaining.Remove(eventPos);
-        //    }
-        //}
-        
-        // 기존 이벤트 방 지정 로직
-        
         int eventRoomCount = floorInfo.GetRoomCountWithType(RoomType.Event);
         if (eventRoomCount > 0 && remaining.Count >= eventRoomCount)
         {
@@ -806,11 +721,10 @@ public class DungeonGenerator : MonoBehaviour
             Transform child = parent.GetChild(i);
             if (child == null) continue;
             
-            // 복도 관련 오브젝트인지 확인 (이름에 "Corridor" 또는 "교차로" 포함)
+            // 복도 관련 오브젝트인지 확인 (이름에 "Corridor" 포함)
             string childName = child.name.ToLower();
-            if (childName.Contains("corridor") || childName.Contains("교차로") || 
-                childName.Contains("clone") && (childName.Contains("h") || childName.Contains("v") || 
-                childName.Contains("t") || childName.Contains("cross")))
+            if (childName.Contains("corridor") || 
+                (childName.Contains("clone") && (childName.Contains("h") || childName.Contains("v"))))
             {
                 corridorsToDestroy.Add(child.gameObject);
             }

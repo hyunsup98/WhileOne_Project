@@ -1,12 +1,14 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
 public class DungeonManager : MonoBehaviour
 {
     #region 발굴 관련 변수
     [field: SerializeField] public Tile DigSpotTile { get; private set; }       // 발굴이 가능한 타일
+    [field: SerializeField] public Tile AfterDigTile { get; private set; }       // 발굴후 타일
     [field: SerializeField] public TreasureBar TreasureBarUI { get; private set; }
 
     private RoomController _currentRoom;                                        // 현재 플레이어가 존재하는 방
@@ -53,7 +55,7 @@ public class DungeonManager : MonoBehaviour
     {
         _tileManager = new TileManager(this);
 
-        if(GameManager.Instance.player != null)
+        if (GameManager.Instance.player != null)
         {
             Player player = GameManager.Instance.player;
 
@@ -106,7 +108,7 @@ public class DungeonManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (!_keepData)
+        if(!_keepData)
             DataManager.Instance.CharacterData.InitPlayerData();
     }
 }

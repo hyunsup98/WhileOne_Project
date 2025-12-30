@@ -195,5 +195,33 @@ public class BaseRoom : MonoBehaviour
     {
         UpdateDoors();
     }
+
+    /// <summary>
+    /// 연결된 모든 문의 위치를 반환합니다.
+    /// </summary>
+    /// <returns>문의 위치 리스트 (월드 좌표)</returns>
+    public List<Vector3> GetConnectedDoorPositions()
+    {
+        List<Vector3> doorPositions = new List<Vector3>();
+        
+        if (roomData == null || doors == null) return doorPositions;
+        
+        Vector2Int[] directions = { Direction.Up, Direction.Down, Direction.Left, Direction.Right };
+        
+        foreach (var direction in directions)
+        {
+            // 연결된 문만 반환
+            if (roomData.IsDoorConnected(direction) && doors.ContainsKey(direction))
+            {
+                GameObject door = doors[direction];
+                if (door != null)
+                {
+                    doorPositions.Add(door.transform.position);
+                }
+            }
+        }
+        
+        return doorPositions;
+    }
 }
 

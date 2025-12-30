@@ -20,8 +20,8 @@ public class TrapRoomMazeGenerator : MonoBehaviour
     private GameObject trapPrefab; // 함정 ON 프리펩 (1x1)
     [SerializeField] [Tooltip("함정 OFF 상태에 사용할 프리펩 (선택, 비어 있으면 ON 프리펩의 활성/비활성으로 대체)")]
     private GameObject trapOffPrefab; // 함정 OFF 프리펩
-    [SerializeField] [Tooltip("함정이 공격하는 간격 (초 단위)")]
-    private float trapAttackInterval = 2f; // 함정 공격 간격 (초)
+    //[SerializeField] [Tooltip("함정이 공격하는 간격 (초 단위)")]
+    //private float trapAttackInterval = 2f; // 함정 공격 간격 (초)
     [SerializeField] [Tooltip("미로 내 함정의 최대 비율 (0.0 ~ 1.0). 예: 0.3 = 30%")]
     private float maxTrapRatio = 0.3f; // 함정 최대 비율 (30%)
     [SerializeField] [Tooltip("입구/출구 주변에 함정을 배치하지 않는 안전 구역의 반경 (칸 단위)")]

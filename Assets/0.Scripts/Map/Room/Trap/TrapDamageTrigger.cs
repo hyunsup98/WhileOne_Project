@@ -85,7 +85,7 @@ public class TrapDamageTrigger : MonoBehaviour
         }
         else
         {
-            Debug.Log($"[TrapDamageTrigger] 데미지 애니메이션: {damageAnimationName}, 구간: {damageStartTime}초 ~ {damageEndTime}초, 함정: {gameObject.name}");
+            //Debug.Log($"[TrapDamageTrigger] 데미지 애니메이션: {damageAnimationName}, 구간: {damageStartTime}초 ~ {damageEndTime}초, 함정: {gameObject.name}");
         }
     }
     
@@ -300,7 +300,7 @@ public class TrapDamageTrigger : MonoBehaviour
                 
                 isPlayerInTrigger = true;
                 currentPlayer = player;
-                Debug.Log($"[TrapDamageTrigger] 플레이어가 함정 범위에 진입 - 함정: {gameObject.name}, 플레이어: {player.name}");
+                //Debug.Log($"[TrapDamageTrigger] 플레이어가 함정 범위에 진입 - 함정: {gameObject.name}, 플레이어: {player.name}");
             }
             else
             {
@@ -340,7 +340,7 @@ public class TrapDamageTrigger : MonoBehaviour
                 // 플레이어가 나가면 상태 리셋
                 hasDamagedInCurrentAnimationCycle = false;
                 lastAnimationNormalizedTime = -1f;
-                Debug.Log($"[TrapDamageTrigger] 플레이어가 함정 범위에서 벗어남 - 함정: {gameObject.name}");
+                //Debug.Log($"[TrapDamageTrigger] 플레이어가 함정 범위에서 벗어남 - 함정: {gameObject.name}");
             }
         }
     }

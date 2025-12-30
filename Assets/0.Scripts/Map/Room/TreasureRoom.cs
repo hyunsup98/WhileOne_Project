@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
+using System.Collections.Generic;
 
 /// <summary>
 /// 보물 방 프리팹
@@ -6,7 +8,20 @@ using UnityEngine;
 /// </summary>
 public class TreasureRoom : BaseRoom
 {
-    // 보물 방은 BaseRoom의 기본 기능만 사용
-    // 추후 보물 방 특화 기능 추가 가능
+    /// <summary>
+    /// 보물 방에 Dig Spot을 배치합니다.
+    /// 1개는 100% 배치, 다른 1개는 20% 확률로 추가 배치
+    /// </summary>
+    public void PlaceDigSpots(Grid unityGrid)
+    {
+        // 첫 번째 Dig Spot 배치 (100%)
+        DungeonItemPlacer.PlaceDigSpotInRoom(gameObject, unityGrid);
+        
+        // 두 번째 Dig Spot 배치 (20% 확률)
+        if (Random.Range(0f, 100f) < 20f)
+        {
+            DungeonItemPlacer.PlaceDigSpotInRoom(gameObject, unityGrid);
+        }
+    }
 }
 

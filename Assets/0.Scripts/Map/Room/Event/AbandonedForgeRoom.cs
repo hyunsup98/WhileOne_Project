@@ -228,7 +228,7 @@ public class AnvilInteractable : Interactable, IInteractable
     [field: SerializeField] public float YOffset { get; set; } = 1.5f;
     
     public Vector3 Pos => transform.position;
-    [field: SerializeField] public string InteractText { get; set; } = "열기";
+    [field: SerializeField] public string InteractText { get; set; } = "수리";
 
     private void Awake()
     {
