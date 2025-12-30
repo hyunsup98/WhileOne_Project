@@ -31,8 +31,6 @@ public class Player : MonoBehaviour
 
     //코루틴 변수
     private WaitForSeconds _delay;
-    private float _finsihTime  = 0.7f;
-    private float _checkTime = 0;
     private float _restoreStamina = 5;
     Coroutine regen;
 

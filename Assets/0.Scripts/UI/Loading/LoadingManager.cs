@@ -42,6 +42,7 @@ public class LoadingManager : MonoBehaviour
         oper.allowSceneActivation = false;
         
         //페이크 로딩을 위한 현재 시간 계산
+
         float currentTime = 0f;
 
         while(!oper.isDone)

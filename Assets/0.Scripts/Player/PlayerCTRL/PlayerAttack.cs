@@ -24,7 +24,6 @@ public class PlayerAttack : MonoBehaviour
     bool _timer = false;
     float _attSpeed;
     private bool _isAttacking = false;
-    bool _isEffect1 = true; //그냥 토글용 변수
     private bool isUse;
 
     //public GameObject Effect1 => _effect1;
