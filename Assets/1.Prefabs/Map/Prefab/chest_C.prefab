@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2306034465690572020}
   - component: {fileID: 1418584541357847815}
   m_Layer: 0
-  m_Name: chest_C
+  m_Name: Chest_C
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84,7 +84,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.96875, y: 0.65625}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
