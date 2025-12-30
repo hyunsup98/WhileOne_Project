@@ -286,3 +286,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47822684a75d91644a7976ab3cae2f82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FallingEffect
+  _fallingPathPreview: {fileID: 3221664450569487772}

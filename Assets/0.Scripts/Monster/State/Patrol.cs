@@ -16,7 +16,8 @@ public class Patrol : IState
     private int _patrolIndex;
     private float _pathFindCool;    // 쿨타임 하드코딩 중
 
-    Vector2 _patrolPoin;
+    private Vector2 _patrolPoin;
+    
 
     public Patrol(MonsterPresenter monster)
     {
@@ -29,6 +30,7 @@ public class Patrol : IState
         _ground = monster.Model.GroundTilemap;
         _mobAster = monster.Model.MobAstar;
         _patrolRange = monster.Model.PatrolRange;
+        
     }
 
 
@@ -107,6 +109,7 @@ public class Patrol : IState
         }
         return _myTransform.position;
     }
+
 
 
 }

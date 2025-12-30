@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -6,18 +7,11 @@ public class MonsterView : MonoBehaviour, IStunable
 {
     [SerializeField] private MonsterData _monsterData;    // 몬스터 데이터 SO
     private Animator _animator;
+    private SpriteRenderer _myRenderer;
     
     public Transform MyTransform { get; private set; }
     public MonsterPresenter Presenter { get; private set; }
     public bool IsStun { get; private set; }
-
-
-    //
-    public void Hit()
-    {
-        Presenter.OnHit(1);
-    }
-    //
 
 
 
@@ -25,6 +19,7 @@ public class MonsterView : MonoBehaviour, IStunable
     private void Awake()
     {
         _animator = GetComponent<Animator>();
+        _myRenderer = GetComponent<SpriteRenderer>();
 
         // 특정 오브젝트의 중심값 보정을 위한 코드
         if (transform.parent.CompareTag("Monster"))
@@ -177,7 +172,21 @@ public class MonsterView : MonoBehaviour, IStunable
         return null;
     }
 
-    public void OnHit(float damage) => Presenter.OnHit(damage);
+    public IEnumerator OnHitBlink()
+    {
+        Color original = _myRenderer.color;
+        for (int i = 0; i < 3; i++)
+        {
+            _myRenderer.color = Color.gray;
+
+            yield return CoroutineManager.waitForSeconds(0.05f);
+
+            _myRenderer.color = original;
+
+            yield return CoroutineManager.waitForSeconds(0.05f);
+        }
+    }
+
 
     public void OnStun()
     {

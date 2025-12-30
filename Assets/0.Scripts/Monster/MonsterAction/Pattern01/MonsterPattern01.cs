@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class MonsterPattern01 : MonsterPattern
 {
-    private float _createdEffectTime;
     private float _rushSpeed;
     private float _rushDistance;
     private Vector2 _createPos;
@@ -24,7 +23,6 @@ public class MonsterPattern01 : MonsterPattern
         _hitDecision = actionData.HitDecision;
         _pathPreview = actionData.PathPreview;
 
-        _createdEffectTime = actionData.CreatedEffectTime;
         _rushSpeed = actionData.RushSpeed;
         _rushDistance = actionData.RushDistance;
         _createPos = actionData.CreatePos;
@@ -51,8 +49,6 @@ public class MonsterPattern01 : MonsterPattern
         createdPos += (Vector2)_myTransform.position;
 
         _monster.StartCoroutine(OnCreatedEffect(createdPos));
-
-        GameObject.Destroy(_actionEffect?.gameObject, _beforeDelay + 0.8f);
     }
 
     public override void OnAction()
@@ -66,6 +62,7 @@ public class MonsterPattern01 : MonsterPattern
         if (_timer >= (_rushDistance / _rushSpeed) + _beforeDelay)
         {
             _isDelay = true;
+            GameObject.Destroy(_actionEffect.gameObject);
             _monster.StartCoroutine(OnDelay(() => IsAction = false, _afterDelay));
             return;
         }
@@ -83,6 +80,7 @@ public class MonsterPattern01 : MonsterPattern
 
     public override void EndAction()
     {
+        
         Init();
         _monster.StartCoroutine(StartCool());
     }
@@ -93,7 +91,6 @@ public class MonsterPattern01 : MonsterPattern
     {
         _isDelay = true;
         _ani.OnPlayAni("Idle");
-        float createdTime = _beforeDelay + _createdEffectTime;
         GameObject pathPreview = CreatedPathPreview(
             _pathPreview,
             createdPos, 
@@ -113,9 +110,5 @@ public class MonsterPattern01 : MonsterPattern
         _ani.OnPlayAni("Pattern01");
         CreatedEffect(createdPos);
         _isDelay = false;
-
-        yield return CoroutineManager.waitForSeconds(createdTime);
-
-        _actionEffect?.gameObject.SetActive(true);
     }
 }

@@ -130,9 +130,6 @@ public class MonsterPattern06 : MonsterPattern
             }
 
             yield return CoroutineManager.waitForSeconds(_fallingFrequency);
-
-            foreach(var obj in _fallingObjects)
-                GameObject.Destroy(obj);
         }
 
         _ani.OnPlayAni("Pattern06End");
@@ -151,9 +148,6 @@ public class MonsterPattern06 : MonsterPattern
                 Quaternion.identity,
                 _myTransform.parent
                 );
-
-        if (obj.TryGetComponent<Collider2D>(out var collider))
-            _monster.StartCoroutine(OnDelay(() => collider.enabled = true, _fallingHitTiming));
 
         return obj;
     }

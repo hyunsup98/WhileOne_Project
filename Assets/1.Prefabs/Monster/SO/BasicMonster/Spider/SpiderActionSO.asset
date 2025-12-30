@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e6919f4b851f5040ad84266260e7f5e, type: 3}
   m_Name: SpiderActionSO
   m_EditorClassIdentifier: Assembly-CSharp::Pattern01SO
-  _monsterActionID: 1003
+  _monsterActionID: 1001
   _name: Spider
   _monsterID: 1003
   _actionClass: 1
@@ -28,8 +28,7 @@ MonoBehaviour:
   _afterDelay: 1
   _rushSpeed: 5
   _rushDistance: 5
-  _createdEffectTime: 0.3
   _createPos: {x: 0, y: 0}
   _hitBoxSize: {x: 3, y: 2}
   _hitDecision: {fileID: 7761410613069909045, guid: 23b1873913cc31c46a6a18d3b6ef4272, type: 3}
-  _pathPreview: {fileID: 0}
+  _pathPreview: {fileID: 3329018732716166738, guid: 9a067bd56bd6b3d4b88c4a8179b0594b, type: 3}

@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -104,8 +103,11 @@ public class MonsterPresenter : IAnimationable, IDead
 
     public void OnHit(float Damage)
     {
+        if (Model.CurrentState != Model.StateList[MonsterState.Action])
+            View.OnPlayAni("Hurt");
+        else
+            StartCoroutine(View.OnHitBlink());
 
-        View.OnPlayAni("Hurt");
         if (Model.ActionDict.TryGetValue(ActionID.three, out var action))
         {
             IsPattern03 = true;
@@ -113,10 +115,8 @@ public class MonsterPresenter : IAnimationable, IDead
             return;
         }
 
-
         if (!_isHit)
             _isHit = true;
-
 
         Model.TakeDamage(Damage);
 

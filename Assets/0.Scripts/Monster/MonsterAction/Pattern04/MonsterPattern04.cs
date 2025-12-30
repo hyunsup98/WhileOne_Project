@@ -50,9 +50,6 @@ public class MonsterPattern04 : MonsterPattern
         Vector2 createdPos = (Vector2)_myTransform.position;
         createdPos.x += (dir.x * _createdEffectDistance);
         _monster.StartCoroutine(OnCreateedEffect(createdPos));
-
-        float createdTime = _beforeDelay + _createdEffectTime;
-        GameObject.Destroy(_actionEffect?.gameObject, createdTime + 1f);
     }
 
     public override void OnAction()
@@ -62,8 +59,11 @@ public class MonsterPattern04 : MonsterPattern
         if (_isDelay)
             return;
         
-        if( _timer > 2.2f)
+        if( _timer > _beforeDelay + 1.5f)
         {
+            if(_actionEffect != null)
+                GameObject.Destroy(_actionEffect.gameObject);
+
             _isDelay = false;
             _monster.StartCoroutine(OnDelay(() => IsAction = false, _afterDelay));
             return;

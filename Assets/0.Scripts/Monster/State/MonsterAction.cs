@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public class MonsterAction : IState
 {
@@ -22,7 +23,8 @@ public class MonsterAction : IState
             return;
         }
 
-        // 행동01과 행동04 일 때(사용할 때), 행동 카운트가 증가
+        Debug.Log("액션 카운트" + _actionCount);
+        //행동01과 행동04 일 때(사용할 때), 행동 카운트가 증가
         if ((_action is MonsterPattern01) || (_action is MonsterPattern04))
             _actionCount++;
 
@@ -66,7 +68,7 @@ public class MonsterAction : IState
         }
 
 
-        else if (actionDict.TryGetValue(ActionID.five, out value) && _actionCount == 5)
+        else if (actionDict.TryGetValue(ActionID.five, out value) && _actionCount >= 5)
             return value;
 
         else if (actionDict.TryGetValue(ActionID.two, out value) && value.IsActionable)

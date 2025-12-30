@@ -13,13 +13,10 @@ public class MonsterPattern05 : MonsterPattern
     private float _fallingStartTime;
     private float _fallingFrequency;
     private int _fallingCycle;
-    private float _fallingHitTiming;
-    private float _fallingDestroyTime;
     private GameObject _fallingObject;
 
     private Transform _myTransform;
     private Transform _target;
-    private Queue<GameObject> _fallingObjQue;
 
     public string AniTrigger { get; private set; }
 
@@ -42,13 +39,10 @@ public class MonsterPattern05 : MonsterPattern
         _fallingStartTime = actionData.FallingStartTime;
         _fallingFrequency = actionData.FallingFrequency;
         _fallingCycle = actionData.FallingCycle;
-        _fallingHitTiming = actionData.FallingHitTiming;
-        _fallingDestroyTime = actionData.FallingDestroyTime;
         _fallingObject = actionData.FallingObject;
 
         
         _myTransform = monster.View.MyTransform;
-        _fallingObjQue = new Queue<GameObject>();
     }
 
     public override void StartAction()
@@ -73,11 +67,12 @@ public class MonsterPattern05 : MonsterPattern
         createdPos.x += (_myTransform.localScale.x * _createdEffectDistance);
         _monster.StartCoroutine(OnCreateedEffect(createdPos));
 
-        float createdTime = _beforeDelay + _createdEffectTime;
-        GameObject.Destroy(_actionEffect.gameObject, createdTime + 0.85f);
 
         // 開馬弘 持失
         _monster.StartCoroutine(CreateFallingObj());
+
+        //float createdTime = _beforeDelay + _createdEffectTime;
+        
     }
 
     public override void OnAction()
@@ -88,8 +83,11 @@ public class MonsterPattern05 : MonsterPattern
             return;
 
 
-        if (_timer > 2.2f)
+        if (_timer > _beforeDelay + 1.5f)
         {
+            if (_actionEffect != null)
+                GameObject.Destroy(_actionEffect.gameObject);
+
             _isDelay = false;
             _monster.StartCoroutine(OnDelay(() => IsAction = false, _afterDelay));
             return;
@@ -151,9 +149,6 @@ public class MonsterPattern05 : MonsterPattern
             yield return CoroutineManager.waitForSeconds(_fallingFrequency);
 
             GameObject obj = Create(target);
-
-            _fallingObjQue.Enqueue(obj);
-            GameObject.Destroy(_fallingObjQue.Dequeue(), _fallingDestroyTime);
         }
     }
 
@@ -166,9 +161,6 @@ public class MonsterPattern05 : MonsterPattern
                 Quaternion.identity,
                 _myTransform.parent
                 );
-
-        if (obj.TryGetComponent<Collider2D>(out var collider))
-            _monster.StartCoroutine(OnDelay(() => collider.enabled = true, _fallingHitTiming));
 
         return obj;
     }
