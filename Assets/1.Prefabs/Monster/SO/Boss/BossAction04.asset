@@ -23,7 +23,7 @@ MonoBehaviour:
   _attackBoost: 0
   _speedBoost: 0
   _actionResource: 
-  _actionSound: 
+  _actionSound: Boss_Attacktile_FX_001
   _beforeDelay: 1
   _afterDelay: 2
   _actionAngle: 60

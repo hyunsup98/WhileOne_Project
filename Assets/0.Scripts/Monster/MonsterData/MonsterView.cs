@@ -7,11 +7,12 @@ using UnityEngine.Tilemaps;
 public class MonsterView : MonoBehaviour, IStunable, IDead
 {
     [SerializeField] private MonsterData _monsterData;    // 몬스터 데이터 SO
-    private Animator _animator;
 
+    private Animator _animator;
     public event Action OnDeath;
 
     private SpriteRenderer _myRenderer;
+    private string _deathSound;
     
     public Transform MyTransform { get; private set; }
     public MonsterPresenter Presenter { get; private set; }
@@ -24,6 +25,7 @@ public class MonsterView : MonoBehaviour, IStunable, IDead
     {
         _animator = GetComponent<Animator>();
         _myRenderer = GetComponent<SpriteRenderer>();
+        _deathSound = _monsterData.DeathSound;
 
         // 특정 오브젝트의 중심값 보정을 위한 코드
         if (transform.parent.CompareTag("Monster"))
@@ -198,6 +200,8 @@ public class MonsterView : MonoBehaviour, IStunable, IDead
 
 
     public void SetCollider(bool isColldier) => GetComponent<Collider2D>().enabled = isColldier;
+
+    public void OnDeathSound() => SoundManager.Instance.PlaySoundEffect(_deathSound);
 
     public void OnDead() => OnDeath?.Invoke();
 

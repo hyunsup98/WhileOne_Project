@@ -12,6 +12,7 @@ public class MonsterData : ScriptableObject
     [SerializeField] private float _hp = 100f;
     [SerializeField] private float _moveSpeed = 4f;
     [SerializeField] private float _sight = 5f;
+    [SerializeField] private string _deathSound;
 
     [Header("프로그래밍 중 추가한 필드값")]
     [SerializeField] private float _sightAngle = 90f;
@@ -31,6 +32,7 @@ public class MonsterData : ScriptableObject
     public float Hp => _hp;
     public float MoveSpeed => _moveSpeed;
     public float Sight => _sight;
+    public string DeathSound => _deathSound;
     public float SightAngle => _sightAngle;
     public float ActionDistance => _actionDistance;
     public float SearchTime => _searchTime;

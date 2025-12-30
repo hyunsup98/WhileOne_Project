@@ -18,7 +18,9 @@ MonoBehaviour:
   _hp: 120
   _moveSpeed: 4
   _sight: 10
+  _deathSound: Spider_Death_FX_001
   _sightAngle: 90
+  _actionDistance: 5
   _searchTime: 3
   _patrolRange: 5
   _actionList:

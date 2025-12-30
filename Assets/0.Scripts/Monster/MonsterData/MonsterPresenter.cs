@@ -131,6 +131,7 @@ public class MonsterPresenter : IAnimationable
     // 죽음 애니메이션 호출
     public IEnumerator OnDead()
     {
+        View.OnDeathSound();
         View.SetCollider(false);
         _isDeath = true;
         View.OnPlayAni("Death");

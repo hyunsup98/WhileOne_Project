@@ -17,6 +17,7 @@ public class MonsterPattern03 : MonsterPattern
         _myTransform = monster.View.MyTransform;
         _damage = actionData.ActionDamage;
         _maxCoolTime = actionData.ActionCoolTime;
+        _sfxID = actionData.ActionSound;
 
         _beforeDelay = actionData.BeforeDelay;
         _afterDelay = actionData.AfterDelay;

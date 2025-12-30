@@ -8,6 +8,7 @@ public class MonsterPattern01 : MonsterPattern
     private Vector2 _createPos;
     private Vector2 _hitBoxSize;
 
+
     private Vector2 _target;
     private Transform _myTransform;
 
@@ -22,6 +23,7 @@ public class MonsterPattern01 : MonsterPattern
         _maxCoolTime = actionData.ActionCoolTime;
         _hitDecision = actionData.HitDecision;
         _pathPreview = actionData.PathPreview;
+        _sfxID = actionData.ActionSound;
 
         _rushSpeed = actionData.RushSpeed;
         _rushDistance = actionData.RushDistance;
@@ -105,10 +107,11 @@ public class MonsterPattern01 : MonsterPattern
 
         
         yield return CoroutineManager.waitForSeconds(_beforeDelay);
-        
 
         _ani.OnPlayAni("Pattern01");
         CreatedEffect(createdPos);
+
+        SoundManager.Instance.PlaySoundEffect(_sfxID);
         _isDelay = false;
     }
 }

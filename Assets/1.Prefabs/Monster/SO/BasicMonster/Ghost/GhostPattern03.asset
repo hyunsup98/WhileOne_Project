@@ -23,7 +23,7 @@ MonoBehaviour:
   _attackBoost: 0
   _speedBoost: 0
   _actionResource: 
-  _actionSound: 
+  _actionSound: Ghost_Skill3_FX_001
   _beforeDelay: 3
   _afterDelay: 2
   _teleportCount: 8

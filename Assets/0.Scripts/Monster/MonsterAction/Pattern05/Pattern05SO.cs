@@ -35,7 +35,7 @@ public class Pattern05SO : MonsterActionSO
     [SerializeField] private int _fallingCycle;
     [Tooltip("낙하물 프리펩")]
     [SerializeField] private GameObject _fallingObject;
-
+    [Tooltip("액션 효과음ID")]
 
 
 

@@ -18,6 +18,7 @@ MonoBehaviour:
   _hp: 100
   _moveSpeed: 4
   _sight: 5
+  _deathSound: Boss_Death_FX_001
   _sightAngle: 90
   _actionDistance: 6
   _searchTime: 3

@@ -30,6 +30,7 @@ public class MonsterPattern05 : MonsterPattern
         _maxCoolTime = actionData.ActionCoolTime;
         _hitDecision = actionData.HitDecision;
         _pathPreview = actionData.PathPreview;
+        _sfxID = actionData.ActionSound;
 
         _hitBoxRadius = actionData.HitBoxRadius;
         _actionAngle = Mathf.Deg2Rad * actionData.ActionAngle;

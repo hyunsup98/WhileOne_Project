@@ -21,6 +21,7 @@ public class MonsterPattern04 : MonsterPattern
 
         _hitDecision = actionData.HitDecision;
         _pathPreview = actionData.PathPreview;
+        _sfxID = actionData.ActionSound;
 
         _hitBoxRadius = actionData.HitBoxRadius;
         _actionAngle = Mathf.Deg2Rad * actionData.ActionAngle;

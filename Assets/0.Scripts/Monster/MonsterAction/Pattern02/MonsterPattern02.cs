@@ -23,7 +23,8 @@ public class MonsterPattern02 : MonsterPattern
         _beforeDelay = actionData.BeforeDelay;
         _afterDelay = actionData.AfterDelay;
         _hitDecision = actionData.ActionEffectPrefab;
-        
+        _sfxID = actionData.ActionSound;
+
         _startTime = actionData.StartTime;
         _duration = actionData.Duration;
         _attackBoost = actionData.AttackBoost;

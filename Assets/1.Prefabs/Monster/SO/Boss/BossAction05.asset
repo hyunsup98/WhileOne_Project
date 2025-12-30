@@ -23,7 +23,7 @@ MonoBehaviour:
   _attackBoost: 0
   _speedBoost: 0
   _actionResource: 
-  _actionSound: 
+  _actionSound: Boss_Attacktile_FX_001
   _beforeDelay: 1
   _afterDelay: 2
   _actionAngle: 60
@@ -35,5 +35,4 @@ MonoBehaviour:
   _fallingStartTime: 1
   _fallingFrequency: 0.3
   _fallingCycle: 5
-  _fallingDestroyTime: 2
   _fallingObject: {fileID: 4085769273580591424, guid: 64e5837f95763214aaf48327be836218, type: 3}

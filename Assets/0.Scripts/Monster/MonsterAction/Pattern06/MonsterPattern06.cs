@@ -32,6 +32,7 @@ public class MonsterPattern06 : MonsterPattern
 
         _wallTilemap = monster.Model.WallTilemap;
         _myTransform = _monster.View.MyTransform;
+        _sfxID = actionData.ActionSound;
 
         _startFallingTime = actionData.FallingStartTime;
         _fallingCount = actionData.FallingCount;

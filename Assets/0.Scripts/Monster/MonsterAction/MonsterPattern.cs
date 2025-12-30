@@ -12,6 +12,7 @@ public abstract class MonsterPattern
     protected float _maxCoolTime;
     protected GameObject _hitDecision;
     protected GameObject _pathPreview;
+    protected string _sfxID;
 
     //protected GameObject _createdHitDecition;
     protected ActionEffect _actionEffect;
