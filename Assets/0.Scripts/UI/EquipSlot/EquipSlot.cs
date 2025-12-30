@@ -6,7 +6,8 @@ public class EquipSlot : Slot
 {
     [Header("무기 장착 슬롯 변수")]
     [SerializeField] private Toggle _weaponToggle;      // 현재 무기가 장착되어 있는지 판단할 토글
-    [SerializeField] private Image _frameImg;           // 무기 아이콘 겉의 프레임 이미지
+    [SerializeField] private Image _frameImg;           // 슬롯 가장자리의 프레임 이미지
+    [SerializeField] private Image _slotImg;            // 무기 아이콘 슬롯 이미지
     [SerializeField] private Image _iconImg;            // 무기 아이콘이 표시될 이미지
 
     [Header("내구도 바 변수")]
@@ -31,13 +32,13 @@ public class EquipSlot : Slot
     {
         if (weapon == null) return;
 
-        _frameImg.color = _mouseEnterColor;
+        _slotImg.color = _mouseEnterColor;
         GameManager.Instance.CurrentDungeon.WeaponTooltip.ShowTooltip(weapon);
     }
 
     public override void OnPointerExit(PointerEventData eventData)
     {
-        _frameImg.color = _mouseExitColor;
+        _slotImg.color = _mouseExitColor;
         GameManager.Instance.CurrentDungeon.WeaponTooltip.HideTooltip();
     }
 

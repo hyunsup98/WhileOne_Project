@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public enum ChestState
@@ -17,13 +18,15 @@ public class Chest : MonoBehaviour, IInteractable
     [Range(0, 100)]
     [SerializeField] private int dropWeaponPer;
 
-    private Weapon weapon;
+    protected Weapon Weapon { get; private set; }
 
     private ChestState chestState;
 
     [field: SerializeField] public float YOffset { get; set; } = 1.5f;      //�������̽� �ʵ� �� ��ȣ�ۿ� Ű �̹��� ��ġ�� ���� ������
 
     public Vector3 Pos => transform.position;           // �������̽� �ʵ� �� ��ȣ�ۿ� �̹��� ��ġ ������ ���� ������Ʈ ��ġ ��ǥ
+
+    [field: SerializeField] public string InteractText { get; set; } = "열기";
 
     private void Awake()
     {
@@ -40,6 +43,7 @@ public class Chest : MonoBehaviour, IInteractable
     // ��ȣ �ۿ� �޼���
     public virtual void OnInteract()
     {
+        SoundManager.Instance.PlaySoundEffect("WeaponBox_On_FX_001");
         GameManager.Instance.InteractObj = null;
         _animator.SetBool("isOpen", true);
 
@@ -50,11 +54,11 @@ public class Chest : MonoBehaviour, IInteractable
         }
 
         // ���Ⱑ �������� ��ȯ������, �̹� ���ڿ� ���Ⱑ ���� ��
-        if (weapon != null)
+        if (Weapon != null)
         {
             // ���� ���⸦ ������� �ʾ����Ƿ� OpenedLeft ����
             chestState = ChestState.OpenedLeft;
-            GameManager.Instance.CurrentDungeon.WeaponUI.EnableGainUI(weapon, this);
+            GameManager.Instance.CurrentDungeon.WeaponUI.EnableGainUI(Weapon, this);
         }
         // ���� ���� ���Ⱑ �Ȼ������� or 
         else
@@ -78,7 +82,7 @@ public class Chest : MonoBehaviour, IInteractable
                 break;
 
             case ChestState.OpenedTaken:
-                weapon = null;
+                Weapon = null;
                 break;
         }
     }
@@ -91,9 +95,9 @@ public class Chest : MonoBehaviour, IInteractable
         int rand = Random.Range(0, 100);
 
         if (rand < dropWeaponPer)
-            weapon = DataManager.Instance.WeaponData.GetRandomWeapon();
+            Weapon = DataManager.Instance.WeaponData.GetRandomWeapon();
         else
-            weapon = null;
+            Weapon = null;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

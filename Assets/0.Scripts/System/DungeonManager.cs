@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
@@ -22,9 +23,14 @@ public class DungeonManager : MonoBehaviour
 
     #endregion
 
+    #region 데이터 관련 변수
+    [SerializeField] private bool _keepData;    // true면 다음 씬에 데이터를 가져감
+    #endregion
+
     #region 상자, 무기 관련 변수
     [field: SerializeField] public WeaponUI WeaponUI { get; private set; }              // 무기 획득 UI
     [field: SerializeField] public GameObject InteractImg { get; private set; }         // 상호작용 키 이미지
+    [field: SerializeField] public TMP_Text InteractTMPText { get; private set; }       // 상호작용 텍스트
     #endregion
 
     #region 툴팁 관련 변수
@@ -82,11 +88,25 @@ public class DungeonManager : MonoBehaviour
     public void SetPosInteractImg(Vector3 pos)
     {
         InteractImg.SetActive(true);
+        InteractTMPText.text = string.Empty;
+        InteractImg.transform.position = pos;
+    }
+
+    public void SetPosInteractImg(Vector3 pos, string text)
+    {
+        InteractImg.SetActive(true);
+        InteractTMPText.text = text;
         InteractImg.transform.position = pos;
     }
 
     private void OnDisable()
     {
         GameManager.Instance.CurrentDungeon = null;
+    }
+
+    private void OnDestroy()
+    {
+        if (!_keepData)
+            DataManager.Instance.CharacterData.InitPlayerData();
     }
 }
