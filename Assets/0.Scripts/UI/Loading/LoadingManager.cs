@@ -47,7 +47,7 @@ public class LoadingManager : MonoBehaviour
         while(!oper.isDone)
         {
             yield return null;
-            currentTime += Time.deltaTime;
+            currentTime += Time.unscaledDeltaTime;
             Debug.Log(oper.progress*100);
             if (oper.progress < 0.9f) //로딩하기 전에 해야할 것들
             {
@@ -61,7 +61,7 @@ public class LoadingManager : MonoBehaviour
             {
                 _loadingBar.fillAmount = 1f;
                 _loadingText.text = $"100%";
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSecondsRealtime(0.5f);
                 
                 //혹시 모를 코드 초기화
                 nextSceneIndex = -1; 
