@@ -15,4 +15,4 @@ MonoBehaviour:
   <sfxID>k__BackingField: Skeleton_Attack_FX_001
   <sfxObject>k__BackingField: "\uC2A4\uCF08\uB808\uD1A4"
   <sfxUse>k__BackingField: "\uC2A4\uCF08\uB808\uD1A4 \uACF5\uACA9"
-  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: df2128e75754eb746a90abeb5922e2f2, type: 3}
+  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: 3237717732648a947a7a6f432370048b, type: 3}
