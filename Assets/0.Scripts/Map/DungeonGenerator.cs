@@ -482,10 +482,27 @@ public class DungeonGenerator : MonoBehaviour
         PlacePlayerObject();
         
         // 10. 일반 전투 방에 Dig Spot 배치
-        DungeonItemPlacer.PlaceDigSpots(dungeonGrid, digSpotSpawnChance, unityGrid);
+        DungeonItemPlacer.PlaceDigSpots(dungeonGrid, RoomType.Normal, digSpotSpawnChance, unityGrid);
 
         // 11. 보물 방에 보물 상자 배치
         DungeonItemPlacer.PlaceTreasureChests(dungeonGrid, treasureChestPrefab, unityGrid);
+        
+        // 12. 보물 방에 Dig Spot 배치
+        foreach (var position in dungeonGrid.GetAllPositions())
+        {
+            Room room = dungeonGrid.GetRoom(position);
+            if (room == null || room.roomObject == null) continue;
+            
+            // 보물 방만 처리
+            if (room.roomType != RoomType.Treasure) continue;
+            
+            // TreasureRoom 컴포넌트 찾아서 Dig Spot 배치
+            TreasureRoom treasureRoom = room.roomObject.GetComponent<TreasureRoom>();
+            if (treasureRoom != null)
+            {
+                treasureRoom.PlaceDigSpots(unityGrid);
+            }
+        }
         }
         finally
         {
