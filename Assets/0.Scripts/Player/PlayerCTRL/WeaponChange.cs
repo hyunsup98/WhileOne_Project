@@ -187,9 +187,8 @@ public class WeaponChange : MonoBehaviour
 
         if (_slotWeapon2 != null)
         {
-            DataManager.Instance.CharacterData._subWeapon = _slotWeapon2;
             _slotWeapon2.transform.SetParent(DataManager.Instance.CharacterData.transform, false);
+            DataManager.Instance.CharacterData._subWeapon = _slotWeapon2;
         }
-
     }
 }

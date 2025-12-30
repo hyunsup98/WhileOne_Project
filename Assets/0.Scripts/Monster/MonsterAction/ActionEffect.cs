@@ -17,6 +17,4 @@ public class ActionEffect : MonoBehaviour
     }
 
     public void SetDamage(float damage) => _damage = damage;
-
-
 }

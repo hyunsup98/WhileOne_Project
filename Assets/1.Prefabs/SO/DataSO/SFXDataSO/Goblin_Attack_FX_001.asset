@@ -15,4 +15,4 @@ MonoBehaviour:
   <sfxID>k__BackingField: Goblin_Attack_FX_001
   <sfxObject>k__BackingField: "\uACE0\uBE14\uB9B0"
   <sfxUse>k__BackingField: "\uACE0\uBE14\uB9B0 \uACF5\uACA9"
-  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: 5c54d15177da974459235e11f57fd507, type: 3}
+  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: 5eb47e07b8432fc48ab7ad7686806453, type: 3}

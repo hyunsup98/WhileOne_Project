@@ -4,7 +4,7 @@ int,string,string,string,float,float,float,float,float,float,string,float,float,
 4001,Common_Weapon_Name_Text_001,Common_Weapon_Desc_Text_001,1,10,8,12,1,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/1_Axe/Axe_2,99999,
 4002,Common_Weapon_Name_Text_002,Common_Weapon_Desc_Text_002,1,20,15,25,4,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/0_Sword/Sword_3,24,2
 4003,Common_Weapon_Name_Text_003,Common_Weapon_Desc_Text_003,1,16,14,18,1.4,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/2_Axe/AxeLong1,20,2
-4004,Common_Weapon_Name_Text_004,Common_Weapon_Desc_Text_004,1,14,12,16,1.2,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/4_Spear_Spear_1,18,2
+4004,Common_Weapon_Name_Text_004,Common_Weapon_Desc_Text_004,1,14,12,16,1.2,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/4_Spear/Spear_1,18,2
 4005,Common_Weapon_Name_Text_005,Common_Weapon_Desc_Text_005,1,8,8,8,0.8,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/7_Shield/WoodShield4,17,2
 4006,Common_Weapon_Name_Text_006,Common_Weapon_Desc_Text_006,1,15,13,17,1.6,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/Ver300/0_Unit/0_Sprite/8_Weapons/8_Mace/New_Weapon_07,18,2
 4007,Common_Weapon_Name_Text_007,Common_Weapon_Desc_Text_007,1,6,5,7,0.4,,,,,,,,,,,Assets/9.GitIgnore/SPUM/Resources/Addons/RetroHeroes/0_Unit/0_Sprite/6_Weapons/7_Dagger/Weapon_Rogue_2,20,2

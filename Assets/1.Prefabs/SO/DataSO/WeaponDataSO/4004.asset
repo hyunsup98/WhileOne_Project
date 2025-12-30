@@ -13,10 +13,8 @@ MonoBehaviour:
   m_Name: 4004
   m_EditorClassIdentifier: Assembly-CSharp::WeaponDataSO
   <weaponID>k__BackingField: 4004
-  <weapon_Name>k__BackingField: "<color=#FFFFFF>\uC0BC\uC9C0\uCC3D</color>"
-  <weapon_Desc>k__BackingField: "<color=#FF7F00>\uD3EC\uD06C \uD615\uD0DC\uC758 \uCC3D\uC774\uC796\uC544?
-    \uADF8\uB7FC \uB09C \uD3EC\uD06C\uCC3D\uC774\uB77C \uBD80\uB974\uACA0\uC5B4.\\n-
-    \uC5B4\uB290 \uB2E8\uC21C\uD55C \uBAA8\uD5D8\uAC00 -</color>"
+  <weapon_Name>k__BackingField: Common_Weapon_Name_Text_004
+  <weapon_Desc>k__BackingField: Common_Weapon_Desc_Text_004
   <weaponTier>k__BackingField: 1
   <weaponAttack1Damage>k__BackingField: 14
   <weaponAttack1MinDamage>k__BackingField: 12
@@ -32,6 +30,6 @@ MonoBehaviour:
   <weaponAttack2Cooldown>k__BackingField: 0
   <weaponAttack2Stamina>k__BackingField: 0
   <weaponAttack2ModelPath_Sprite>k__BackingField: {fileID: 0}
-  <weaponResourcePath_Sprite>k__BackingField: {fileID: 0}
+  <weaponResourcePath_Sprite>k__BackingField: {fileID: 21300000, guid: e4c07de1d80de4718b58db6470c48501, type: 3}
   <weaponDurability>k__BackingField: 18
   <weaponDropRate>k__BackingField: 2

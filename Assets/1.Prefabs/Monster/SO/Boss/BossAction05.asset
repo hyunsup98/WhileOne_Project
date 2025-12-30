@@ -23,17 +23,16 @@ MonoBehaviour:
   _attackBoost: 0
   _speedBoost: 0
   _actionResource: 
-  _actionSound: 
-  _hitBoxRadius: 2
-  _actionAngle: 60
+  _actionSound: Boss_Attacktile_FX_001
   _beforeDelay: 1
   _afterDelay: 2
-  _createdEffectDistance: 4
+  _actionAngle: 60
   _createdEffectTime: 0.75
+  _createdEffectDistance: 4
+  _hitBoxRadius: 2
+  _hitDecision: {fileID: 6950578856257754361, guid: 8815caeb84d97394d8360c81924e06b4, type: 3}
+  _pathPreview: {fileID: 7463523560827915451, guid: 3df469732dddf914ebe481049b643a44, type: 3}
   _fallingStartTime: 1
   _fallingFrequency: 0.3
   _fallingCycle: 5
-  _fallingDestroyTime: 2
   _fallingObject: {fileID: 4085769273580591424, guid: 64e5837f95763214aaf48327be836218, type: 3}
-  _pathPreview: {fileID: 0}
-  _hitDecision: {fileID: 6950578856257754361, guid: 8815caeb84d97394d8360c81924e06b4, type: 3}

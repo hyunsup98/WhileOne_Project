@@ -151,7 +151,7 @@ public class Player : MonoBehaviour
 
                 if(_hp <= Mathf.Epsilon)
                 {
-                    GameManager.Instance._CurrentGameState = GameState.Dead;
+                    GameManager.Instance.CurrentGameState = GameState.Dead;
                 }
             }
         }

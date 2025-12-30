@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -6,21 +7,16 @@ using UnityEngine.Tilemaps;
 public class MonsterView : MonoBehaviour, IStunable, IDead
 {
     [SerializeField] private MonsterData _monsterData;    // 몬스터 데이터 SO
-    private Animator _animator;
 
+    private Animator _animator;
     public event Action OnDeath;
 
+    private SpriteRenderer _myRenderer;
+    private string _deathSound;
+    
     public Transform MyTransform { get; private set; }
     public MonsterPresenter Presenter { get; private set; }
     public bool IsStun { get; private set; }
-
-
-    //
-    public void Hit()
-    {
-        Presenter.OnHit(1);
-    }
-    //
 
 
 
@@ -28,6 +24,8 @@ public class MonsterView : MonoBehaviour, IStunable, IDead
     private void Awake()
     {
         _animator = GetComponent<Animator>();
+        _myRenderer = GetComponent<SpriteRenderer>();
+        _deathSound = _monsterData.DeathSound;
 
         // 특정 오브젝트의 중심값 보정을 위한 코드
         if (transform.parent.CompareTag("Monster"))
@@ -72,7 +70,7 @@ public class MonsterView : MonoBehaviour, IStunable, IDead
                 break;
 
             case "Death":
-                _animator.SetBool("Death", true);
+                _animator.SetTrigger("Death");
                 break;
 
             case "Pattern01":
@@ -121,16 +119,9 @@ public class MonsterView : MonoBehaviour, IStunable, IDead
     }
 
 
-    public void OnHurtAni() => _animator.SetTrigger("Hurt");
-    public void OnDeathAni() => _animator.SetBool("Death", true);
-    public void OnAttackAni() => _animator.SetTrigger("Pattern01");
-    public void OnIdleAni() => _animator.SetBool("Idle", true);
-    public void OnDisIdleAni() => _animator.SetBool("Idle", false);
-    #endregion
-
-
     // 현재 실행중인 애니메이션의 정보 반환
     public AnimatorStateInfo GetPlayingAni() => _animator.GetCurrentAnimatorStateInfo(0);
+    #endregion
 
 
     public void OnMove(Vector2 target, float speed)
@@ -187,7 +178,30 @@ public class MonsterView : MonoBehaviour, IStunable, IDead
         return null;
     }
 
-    public void OnHit(float damage) => Presenter.OnHit(damage);
+    public IEnumerator OnHitBlink()
+    {
+        Color original = _myRenderer.color;
+        SetCollider(false);
+        for (int i = 0; i < 3; i++)
+        {
+            
+            _myRenderer.color = Color.gray;
+
+            yield return CoroutineManager.waitForSeconds(0.05f);
+
+            _myRenderer.color = original;
+
+            yield return CoroutineManager.waitForSeconds(0.05f);
+        }
+
+        yield return CoroutineManager.waitForSeconds(0.3f);
+        SetCollider(true);
+    }
+
+
+    public void SetCollider(bool isColldier) => GetComponent<Collider2D>().enabled = isColldier;
+
+    public void OnDeathSound() => SoundManager.Instance.PlaySoundEffect(_deathSound);
 
     public void OnDead() => OnDeath?.Invoke();
 

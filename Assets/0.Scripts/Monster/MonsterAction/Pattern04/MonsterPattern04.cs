@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class MonsterPattern04 : MonsterPattern
@@ -19,6 +20,8 @@ public class MonsterPattern04 : MonsterPattern
         _afterDelay = actionData.AfterDelay;
 
         _hitDecision = actionData.HitDecision;
+        _pathPreview = actionData.PathPreview;
+        _sfxID = actionData.ActionSound;
 
         _hitBoxRadius = actionData.HitBoxRadius;
         _actionAngle = Mathf.Deg2Rad * actionData.ActionAngle;
@@ -47,10 +50,7 @@ public class MonsterPattern04 : MonsterPattern
         // 시전 준비 후 이펙트 생성
         Vector2 createdPos = (Vector2)_myTransform.position;
         createdPos.x += (dir.x * _createdEffectDistance);
-        OnCreateedEffect(createdPos);
-
-        float createdTime = _beforeDelay + _createdEffectTime;
-        _monster.StartCoroutine(OnDelay(() => GameObject.Destroy(_actionEffect?.gameObject), createdTime + 1f));
+        _monster.StartCoroutine(OnCreateedEffect(createdPos));
     }
 
     public override void OnAction()
@@ -60,8 +60,11 @@ public class MonsterPattern04 : MonsterPattern
         if (_isDelay)
             return;
         
-        if( _timer > 2.2f)
+        if( _timer > _beforeDelay + 1.5f)
         {
+            if(_actionEffect != null)
+                GameObject.Destroy(_actionEffect.gameObject);
+
             _isDelay = false;
             _monster.StartCoroutine(OnDelay(() => IsAction = false, _afterDelay));
             return;
@@ -76,15 +79,29 @@ public class MonsterPattern04 : MonsterPattern
 
 
     // 시전시간 이후 이펙트 생성
-    private void OnCreateedEffect(Vector2 createdPos)
+    private IEnumerator OnCreateedEffect(Vector2 createdPos)
     {
         _isDelay = true;
-        float createdTime = _beforeDelay + _createdEffectTime;
-
         _ani.OnPlayAni("Idle");
-        _monster.StartCoroutine(OnDelay(() => _ani.OnPlayAni("Pattern04"), _beforeDelay));
-        _monster.StartCoroutine(OnDelay(() => _isDelay = false, createdTime));
-        _monster.StartCoroutine(OnDelay(() => CreatedEffect(createdPos), createdTime));
+
+        GameObject pathPreview = CreatedPathPreview(
+            _pathPreview,
+            createdPos, 
+            Vector2.zero, 
+            _beforeDelay
+            );
+        float radius = _hitBoxRadius * 2;
+        if(pathPreview != null)
+            pathPreview.transform.localScale = new Vector2(radius, radius);
+
+        yield return CoroutineManager.waitForSeconds(_beforeDelay);
+
+        _ani.OnPlayAni("Pattern04");
+
+        yield return CoroutineManager.waitForSeconds(_createdEffectTime);
+
+        CreatedEffect(createdPos);
+        _isDelay = false;
     }
 
     // 내적을 통한 몬스터 공격 모션 실행 여부
@@ -97,5 +114,4 @@ public class MonsterPattern04 : MonsterPattern
 
         return true;
     }
-
 }

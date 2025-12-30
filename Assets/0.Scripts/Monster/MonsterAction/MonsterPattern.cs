@@ -12,6 +12,7 @@ public abstract class MonsterPattern
     protected float _maxCoolTime;
     protected GameObject _hitDecision;
     protected GameObject _pathPreview;
+    protected string _sfxID;
 
     //protected GameObject _createdHitDecition;
     protected ActionEffect _actionEffect;
@@ -65,6 +66,35 @@ public abstract class MonsterPattern
         _actionEffect.SetDamage(damage > 1f? damage : 1f);
     }
 
+    // 이펙트 경로 이펙트 생성
+    protected GameObject CreatedPathPreview(GameObject obj, Vector2 createPos, Vector2 dir, float destroyTime)
+    {
+        if (_pathPreview == null)
+        {
+            Debug.LogWarning("패스경로 프리펩이 없습니다.");
+            return null;
+        }
+
+        float angle;
+        if(dir == Vector2.zero)
+            angle = 0f;
+        else if (dir.x > 0)
+            angle = Vector2.SignedAngle(Vector2.right, dir);
+        else
+            angle = Vector2.SignedAngle(Vector2.left, dir);
+
+        GameObject pathPreview = GameObject.Instantiate(
+            obj,
+            createPos,
+            Quaternion.Euler(0, 0, angle),
+            _monster.View.MyTransform
+            );
+
+        GameObject.Destroy(pathPreview, destroyTime);
+
+        return pathPreview;
+    }
+
     // 메서드 호출을 지연
     protected IEnumerator OnDelay(Action action, float delayTime)
     {
@@ -86,6 +116,7 @@ public abstract class MonsterPattern
         _coolTime = 0;
         IsActionable = true;
     }
+
 
     protected virtual void Init()
     {

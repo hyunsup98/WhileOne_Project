@@ -23,11 +23,11 @@ MonoBehaviour:
   _attackBoost: 10
   _speedBoost: 10
   _actionResource: 
-  _actionSound: 
+  _actionSound: Ghost_Skill2_FX_001
   _beforeDelay: 0.5
   _afterDelay: 0.5
   _startTime: 1
-  _duration: 2
+  _duration: 5
   _attackBoost: 10
   _speedBoost: 10
   _createPos: {x: 0, y: 0}

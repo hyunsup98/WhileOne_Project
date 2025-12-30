@@ -1,12 +1,13 @@
+using System.Collections;
 using UnityEngine;
 
 public class MonsterPattern01 : MonsterPattern
 {
-    private float _createdEffectTime;
     private float _rushSpeed;
     private float _rushDistance;
     private Vector2 _createPos;
     private Vector2 _hitBoxSize;
+
 
     private Vector2 _target;
     private Transform _myTransform;
@@ -22,8 +23,8 @@ public class MonsterPattern01 : MonsterPattern
         _maxCoolTime = actionData.ActionCoolTime;
         _hitDecision = actionData.HitDecision;
         _pathPreview = actionData.PathPreview;
+        _sfxID = actionData.ActionSound;
 
-        _createdEffectTime = actionData.CreatedEffectTime;
         _rushSpeed = actionData.RushSpeed;
         _rushDistance = actionData.RushDistance;
         _createPos = actionData.CreatePos;
@@ -49,10 +50,7 @@ public class MonsterPattern01 : MonsterPattern
         Vector2 createdPos = new Vector2(_createPos.x * _myTransform.localScale.x, _createPos.y);
         createdPos += (Vector2)_myTransform.position;
 
-        OnCreatedEffect(createdPos);
-
-        float createdTime = _beforeDelay;
-        _monster.StartCoroutine(OnDelay(() => GameObject.Destroy(_actionEffect?.gameObject), _beforeDelay + 0.8f));
+        _monster.StartCoroutine(OnCreatedEffect(createdPos));
     }
 
     public override void OnAction()
@@ -66,6 +64,7 @@ public class MonsterPattern01 : MonsterPattern
         if (_timer >= (_rushDistance / _rushSpeed) + _beforeDelay)
         {
             _isDelay = true;
+            GameObject.Destroy(_actionEffect.gameObject);
             _monster.StartCoroutine(OnDelay(() => IsAction = false, _afterDelay));
             return;
         }
@@ -83,21 +82,36 @@ public class MonsterPattern01 : MonsterPattern
 
     public override void EndAction()
     {
+        
         Init();
-         _monster.StartCoroutine(StartCool());
+        _monster.StartCoroutine(StartCool());
     }
 
 
     // 시전시간 이후 이펙트 생성
-    private void OnCreatedEffect(Vector2 createdPos)
+    private IEnumerator OnCreatedEffect(Vector2 createdPos)
     {
         _isDelay = true;
-        float createdTime = _beforeDelay + _createdEffectTime;
-
         _ani.OnPlayAni("Idle");
-        _monster.StartCoroutine(OnDelay(() => _ani.OnPlayAni("Pattern01"), _beforeDelay));
-        _monster.StartCoroutine(OnDelay(() => _isDelay = false, _beforeDelay));
-        _monster.StartCoroutine(OnDelay(() => CreatedEffect(createdPos), _beforeDelay));
-        _monster.StartCoroutine(OnDelay(() => _actionEffect?.gameObject.SetActive(true), createdTime));
+        GameObject pathPreview = CreatedPathPreview(
+            _pathPreview,
+            createdPos, 
+            _target, 
+            _beforeDelay
+            );
+
+        float x = _rushDistance;
+        float y = _hitBoxSize.y;
+        if(pathPreview != null)
+            pathPreview.transform.localScale = new Vector2(x, y);
+
+        
+        yield return CoroutineManager.waitForSeconds(_beforeDelay);
+
+        _ani.OnPlayAni("Pattern01");
+        CreatedEffect(createdPos);
+
+        SoundManager.Instance.PlaySoundEffect(_sfxID);
+        _isDelay = false;
     }
 }

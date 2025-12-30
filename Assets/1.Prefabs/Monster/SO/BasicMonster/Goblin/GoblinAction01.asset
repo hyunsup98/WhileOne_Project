@@ -23,12 +23,12 @@ MonoBehaviour:
   _attackBoost: 0
   _speedBoost: 0
   _actionResource: 
-  _actionSound: 
-  _rushSpeed: 5
-  _rushDistance: 4
+  _actionSound: Goblin_Attack_FX_001
   _beforeDelay: 1
   _afterDelay: 0.5
+  _rushSpeed: 5
+  _rushDistance: 4
   _createPos: {x: 0, y: 0}
   _hitBoxSize: {x: 1.5, y: 1.5}
-  _pathPreview: {fileID: 0}
   _hitDecision: {fileID: 3913412838696352892, guid: e2e661ebf21a15d4e8b50513701a79ab, type: 3}
+  _pathPreview: {fileID: 3329018732716166738, guid: 9a067bd56bd6b3d4b88c4a8179b0594b, type: 3}
