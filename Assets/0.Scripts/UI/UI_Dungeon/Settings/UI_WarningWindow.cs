@@ -9,6 +9,7 @@ public class UI_WarningWindow : MonoBehaviour
     public void OnClick_Ok()
     {
         SoundManager.Instance.PlaySoundEffect("Mouse_Click_Possible_FX_001");
+        GameManager.Instance.SetGameState(GameState.Playing);
         LoadingManager.nextSceneName = _sceneName;
         SceneManager.LoadScene("Loading");
     }
