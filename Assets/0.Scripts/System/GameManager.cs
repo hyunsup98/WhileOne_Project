@@ -79,6 +79,21 @@ public class GameManager : Singleton<GameManager>
         {
             SceneManager.LoadScene("BossScene");
         }
+
+        if (Keyboard.current.f1Key.wasPressedThisFrame)
+        {
+            SceneManager.LoadScene("Dungeon_Floor1");
+        }
+
+        if (Keyboard.current.f2Key.wasPressedThisFrame)
+        {
+            SceneManager.LoadScene("Dungeon_Floor2");
+        }
+
+        if (Keyboard.current.f3Key.wasPressedThisFrame)
+        {
+            SceneManager.LoadScene("Dungeon_Floor3");
+        }
     }
 
     public void InitToSceneChanged(Scene scene, LoadSceneMode mode) => InteractObj = null;

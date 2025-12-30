@@ -25,10 +25,6 @@ public class DungeonManager : MonoBehaviour
 
     #endregion
 
-    #region 데이터 관련 변수
-    [SerializeField] private bool _keepData;    // true면 다음 씬에 데이터를 가져감
-    #endregion
-
     #region 상자, 무기 관련 변수
     [field: SerializeField] public WeaponUI WeaponUI { get; private set; }              // 무기 획득 UI
     [field: SerializeField] public GameObject InteractImg { get; private set; }         // 상호작용 키 이미지
@@ -55,22 +51,26 @@ public class DungeonManager : MonoBehaviour
     {
         _tileManager = new TileManager(this);
 
-        if (GameManager.Instance.player != null)
+        if(SceneManager.GetActiveScene().name == "Dungeon_Floor1")
+        {
+            DataManager.Instance.CharacterData.InitPlayerData();
+        }
+        else if(GameManager.Instance.player != null)
         {
             Player player = GameManager.Instance.player;
 
             player.ChangedHealth = DataManager.Instance.CharacterData._playerHp;
             player.ChangedStamina = DataManager.Instance.CharacterData._playerStamina;
 
-            if(DataManager.Instance.CharacterData._treasureList.Count > 0)
+            if (DataManager.Instance.CharacterData._treasureList.Count > 0)
             {
-                foreach(var treasure in DataManager.Instance.CharacterData._treasureList)
+                foreach (var treasure in DataManager.Instance.CharacterData._treasureList)
                 {
                     TreasureBarUI.AddTreasure(treasure);
                 }
             }
 
-            if(DataManager.Instance.CharacterData._subWeapon != null)
+            if (DataManager.Instance.CharacterData._subWeapon != null)
             {
                 player.Player_WeaponChange.ChangeWeapon(DataManager.Instance.CharacterData._subWeapon);
             }
@@ -104,11 +104,5 @@ public class DungeonManager : MonoBehaviour
     private void OnDisable()
     {
         GameManager.Instance.CurrentDungeon = null;
-    }
-
-    private void OnDestroy()
-    {
-        if(!_keepData)
-            DataManager.Instance.CharacterData.InitPlayerData();
     }
 }
