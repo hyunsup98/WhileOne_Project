@@ -45,7 +45,7 @@ public static class DungeonRoomGenerator
             }
             
             // 분기 확률에 따라 여러 방향으로 분기
-            int branchesToCreate = 1; // 최소 1개는 생성
+            int branchesToCreateㅋㅋ = 1; // 최소 1개는 생성
             if (availableDirections.Count > 0 && Random.Range(0f, 100f) < branchProbability)
             {
                 // 여러 방향으로 분기 (최대 maxBranchCount개)
