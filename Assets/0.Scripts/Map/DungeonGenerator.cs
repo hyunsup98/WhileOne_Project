@@ -164,19 +164,6 @@ public class DungeonGenerator : MonoBehaviour
         unityGrid = DungeonGridHelper.SetupGridParent(gridParent, transform, out finalGridParent);
         gridParent = finalGridParent;
         
-        // Grid 셀 크기를 방 타일 크기와 동일하게 맞춤
-        //float resolvedCellSize = DungeonGridHelper.ResolveCellSize(normalRoomPrefab, unityGrid);
-        //if (unityGrid != null)
-        //{
-        //    unityGrid.cellSize = new Vector3(resolvedCellSize, resolvedCellSize, 1f);
-        //}
-        
-        // 방 간격 자동 계산 (칸 수로 계산 후 4의 배수로 반올림)
-        //if (normalRoomPrefab != null)
-        //{
-        //    roomSpacingInCells = DungeonGridHelper.CalculateRoomSpacingInCells(normalRoomPrefab, minTileSpacing, resolvedCellSize);
-        //}
-        
         // 4의 배수 검증 및 조정
         if (roomSpacingInCells % 4 != 0)
         {
@@ -200,18 +187,6 @@ public class DungeonGenerator : MonoBehaviour
         // 층별 프리팹 리스트를 우선 사용하고, 없으면 기본 프리팹을 fallback으로 사용
         Dictionary<RoomType, GameObject[]> roomPrefabs = new Dictionary<RoomType, GameObject[]>();
         Dictionary<EventRoomType, GameObject[]> eventRoomTypePrefabs = new Dictionary<EventRoomType, GameObject[]>();
-        
-        //// 기본 프리팹 딕셔너리 (fallback용, 단일 프리팹을 배열로 변환)
-        //Dictionary<RoomType, GameObject[]> defaultPrefabs = new Dictionary<RoomType, GameObject[]>
-        //{
-        //    { RoomType.Normal, normalRoomPrefab != null ? new[] { normalRoomPrefab } : null },
-        //    { RoomType.Start, startRoomPrefab != null ? new[] { startRoomPrefab } : null },
-        //    { RoomType.Exit, exitRoomPrefab != null ? new[] { exitRoomPrefab } : null },
-        //    { RoomType.Event, eventRoomPrefab != null ? new[] { eventRoomPrefab } : null },
-        //    { RoomType.Trap, trapRoomPrefab != null ? new[] { trapRoomPrefab } : null },
-        //    { RoomType.Treasure, treasureRoomPrefab != null ? new[] { treasureRoomPrefab } : null },
-        //    { RoomType.Boss, bossRoomPrefab != null ? new[] { bossRoomPrefab } : null }
-        //};
         
         // 층별 프리팹 리스트를 가져와서 사용 (없으면 기본 프리팹 사용)
         if (floorInfo != null && floorInfo.FloorRoomPrefabs != null)
@@ -570,29 +545,6 @@ public class DungeonGenerator : MonoBehaviour
         }
 
         // 이벤트 방 지정
-        //// TODO: 테스트용 - 이벤트 방을 무조건 ChestRoom으로 지정 (나중에 제거)
-        //int eventRoomCount = floorInfo.GetRoomCountWithType(RoomType.Event);
-        //if (eventRoomCount > 0 && remaining.Count >= eventRoomCount)
-        //{
-        //    // 테스트: 이벤트 방을 모두 ChestRoom으로 지정
-        //    int actualEventRoomCount = Mathf.Min(eventRoomCount, 2);
-            
-        //    for (int i = 0; i < actualEventRoomCount; i++)
-        //    {
-        //        // 이벤트 방 위치 선택
-        //        var eventPos = remaining[Random.Range(0, remaining.Count)];
-        //        var eventRoom = dungeonGrid.GetRoom(eventPos);
-        //        if (eventRoom != null)
-        //        {
-        //            eventRoom.roomType = RoomType.Event;
-        //            eventRoom.eventRoomType = EventRoomType.ChestRoom; // 테스트용: 무조건 ChestRoom
-        //        }
-        //        remaining.Remove(eventPos);
-        //    }
-        //}
-        
-        // 기존 이벤트 방 지정 로직
-        
         int eventRoomCount = floorInfo.GetRoomCountWithType(RoomType.Event);
         if (eventRoomCount > 0 && remaining.Count >= eventRoomCount)
         {
@@ -769,11 +721,10 @@ public class DungeonGenerator : MonoBehaviour
             Transform child = parent.GetChild(i);
             if (child == null) continue;
             
-            // 복도 관련 오브젝트인지 확인 (이름에 "Corridor" 또는 "교차로" 포함)
+            // 복도 관련 오브젝트인지 확인 (이름에 "Corridor" 포함)
             string childName = child.name.ToLower();
-            if (childName.Contains("corridor") || childName.Contains("교차로") || 
-                childName.Contains("clone") && (childName.Contains("h") || childName.Contains("v") || 
-                childName.Contains("t") || childName.Contains("cross")))
+            if (childName.Contains("corridor") || 
+                (childName.Contains("clone") && (childName.Contains("h") || childName.Contains("v"))))
             {
                 corridorsToDestroy.Add(child.gameObject);
             }
