@@ -37,7 +37,6 @@ public class MonsterPattern06 : MonsterPattern
         _fallingCount = actionData.FallingCount;
         _fallingFrequency = actionData.FallingFrequency;
         _fallingCycle = actionData.FallingCycle;
-        _fallingHitTiming = actionData.FallingHitTiming;
         _fallingRange = actionData.FallingRange;
         _fallingObjectPrefab = actionData.FallingObjectPrefab;
         _fallingObjects = new List<GameObject>();
@@ -113,10 +112,11 @@ public class MonsterPattern06 : MonsterPattern
                     break;
                 }
 
-                float x = _mapCenterPos.x + UnityEngine.Random.Range(-_fallingRange, _fallingRange + 1);
-                float y = _mapCenterPos.y + UnityEngine.Random.Range(-_fallingRange, _fallingRange + 1);
+                //float x = _mapCenterPos.x + UnityEngine.Random.Range(-_fallingRange, _fallingRange + 1);
+                //float y = _mapCenterPos.y + UnityEngine.Random.Range(-_fallingRange, _fallingRange + 1);
 
-                Vector2 createPos = new Vector2(x, y);
+                //Vector2 createPos = new Vector2(x, y);
+                Vector2 createPos = _mapCenterPos + RandomVector(j);
                 if (_wallTilemap.HasTile(_wallTilemap.WorldToCell(createPos)))
                 {
                     safeCount++;
@@ -137,6 +137,16 @@ public class MonsterPattern06 : MonsterPattern
 
         yield return CoroutineManager.waitForSeconds(_afterDelay);
         IsAction = false;
+    }
+
+
+    private Vector2 RandomVector(int num)
+    {
+        float angle = UnityEngine.Random.Range(0, 45f) + (45 * num);
+        float length = UnityEngine.Random.Range(1.5f, _fallingRange);
+
+        Vector2 newVector = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * length;
+        return newVector;
     }
 
     private GameObject Create(Vector2 createPos)
