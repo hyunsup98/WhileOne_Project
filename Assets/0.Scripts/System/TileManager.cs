@@ -70,7 +70,9 @@ public class TileManager
                 return;
             }
 
-            _dungeonManager.TreasureBarUI.AddTreasure(DataManager.Instance.TreasureData.PickTreasure());
+            Treasure treasure = DataManager.Instance.TreasureData.PickTreasure();
+            _dungeonManager.TreasureBarUI.AddTreasure(treasure);
+            DataManager.Instance.CharacterData.AddTreasureData(treasure);
         }
         // 땅을 팔 수 없을 때
         else

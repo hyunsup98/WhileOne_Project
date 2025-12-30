@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
 public class DungeonManager : MonoBehaviour
@@ -54,7 +55,7 @@ public class DungeonManager : MonoBehaviour
     {
         _tileManager = new TileManager(this);
 
-        if(GameManager.Instance.player != null)
+        if (GameManager.Instance.player != null)
         {
             Player player = GameManager.Instance.player;
 
@@ -107,7 +108,7 @@ public class DungeonManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (!_keepData)
+        if(!_keepData)
             DataManager.Instance.CharacterData.InitPlayerData();
     }
 }
