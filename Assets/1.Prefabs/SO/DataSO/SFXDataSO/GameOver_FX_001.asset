@@ -15,4 +15,4 @@ MonoBehaviour:
   <sfxID>k__BackingField: GameOver_FX_001
   <sfxObject>k__BackingField: "\uD50C\uB808\uC774\uC5B4"
   <sfxUse>k__BackingField: "\uAC8C\uC784 \uC624\uBC84"
-  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: 968b5b2c5a8a5074aa6cea1b3a724b0a, type: 3}
+  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: 34996e6926e26d4419d27d076c4b0722, type: 3}

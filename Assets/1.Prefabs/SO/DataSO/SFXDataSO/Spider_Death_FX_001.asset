@@ -15,4 +15,4 @@ MonoBehaviour:
   <sfxID>k__BackingField: Spider_Death_FX_001
   <sfxObject>k__BackingField: "\uAC70\uBBF8"
   <sfxUse>k__BackingField: "\uAC70\uBBF8 \uC0AC\uB9DD"
-  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: ec2ad96db42b34141bab10f0d10eaa0c, type: 3}
+  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: 31c507153dce40444861e3436f4ddfb8, type: 3}

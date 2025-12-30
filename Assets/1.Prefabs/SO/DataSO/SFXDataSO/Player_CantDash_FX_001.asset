@@ -15,4 +15,4 @@ MonoBehaviour:
   <sfxID>k__BackingField: Player_CantDash_FX_001
   <sfxObject>k__BackingField: "\uD50C\uB808\uC774\uC5B4"
   <sfxUse>k__BackingField: "\uB300\uC26C \uBD88\uAC00"
-  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: b7e6a8f84d5232f48833d3821270bae6, type: 3}
+  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: 511fd258b83daf34cb70beb0b4c3c90d, type: 3}

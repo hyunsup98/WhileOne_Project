@@ -15,4 +15,4 @@ MonoBehaviour:
   <sfxID>k__BackingField: Boss_StartVoice_FX_001
   <sfxObject>k__BackingField: "\uBCF4\uC2A4"
   <sfxUse>k__BackingField: "\uBCF4\uC2A4 \uC2DC\uC791\uC74C\uC131"
-  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: 0f8a55c2f7ef2304f84a6e826edf0698, type: 3}
+  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: 88c648c3428edc64bbb09d69069a8e1e, type: 3}
