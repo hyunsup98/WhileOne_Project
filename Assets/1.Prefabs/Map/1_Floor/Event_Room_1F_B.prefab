@@ -687,7 +687,6 @@ MonoBehaviour:
   roomWidth: 15
   roomHeight: 15
   warningSign: {fileID: 788882376062105036}
-  digSpotTile: {fileID: 11400000, guid: cd14f05608220364e9c5183f6e3d0ec3, type: 2}
   realDigSpotCount: 2
   fakeDigSpotCount: 3
   fakeDigDamageRatio: 0.1
@@ -706,7 +705,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomController
   floorTileMap: {fileID: 6052733454294142852}
   digSpotTileMap: {fileID: 8431079681925531888}
-  afterDigTile: {fileID: 0}
+  afterDigTile: {fileID: 11400000, guid: 3e4b576dfebb84640b0c1a4c2844e40f, type: 2}
 --- !u!1 &4649929659397084723
 GameObject:
   m_ObjectHideFlags: 0

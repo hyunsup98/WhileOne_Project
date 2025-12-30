@@ -7,10 +7,6 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class ExitRoom : BaseRoom
 {
-    [Header("Exit Room Settings")]
-    [SerializeField] [Tooltip("출구 영역 감지 반경 (Unity unit, 0이면 자동 계산)")]
-    private float exitZoneRadius = 0f;
-    
     private GameObject exitZoneObject; // 출구 영역 오브젝트 (ExitZone 태그 또는 이름으로 찾음)
     private Vector3 exitCenterPosition; // 출구 중앙 위치
     
