@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
     [Header("플레이어 수치 조절 컴포넌트")]
     [SerializeField] private float _maxHp = 100;
     [SerializeField] private float _maxStamina = 100;
-    [SerializeField] private int _moveSpeed = 3;
+    [SerializeField] private float _moveSpeed = 5;
     [SerializeField] private int _attack = 5;
     [SerializeField] private int _attackSpeed = 4;
 
@@ -50,7 +50,7 @@ public class Player : MonoBehaviour
     public float Hp { get { return _hp; } set { _hp = value; } }
     public float MaxHp => _maxHp;
     public float Stamina { get { return _stamina; } set { _stamina = value; } }
-    public int MoveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }
+    public float MoveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }
     public int Attack => _attack;
     public int AttackSpeed => _attackSpeed;
     

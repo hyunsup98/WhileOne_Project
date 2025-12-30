@@ -7,7 +7,7 @@ public class DigState : IState
     PlayerDig _dig;
     Animator _animator;
 
-    int _move;
+    float _move;
     float _running;
     float _waitTime = 1.4f;
 
@@ -26,13 +26,13 @@ public class DigState : IState
     public void Enter() //이 상태면 이속 절반
     {
         _running = 0;
-        _player.MoveSpeed /= 2;
+        _player.MoveSpeed /= 2f;
         _move = _player.MoveSpeed;
     }
 
     public void Exit() //상태 나가면 이속 원래대로
     {
-        _player.MoveSpeed *= 2;
+        _player.MoveSpeed *= 2f;
     }
 
     public void Update()
