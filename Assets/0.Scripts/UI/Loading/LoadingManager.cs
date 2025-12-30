@@ -26,7 +26,6 @@ public class LoadingManager : MonoBehaviour
         {
             StartCoroutine(LoadingSecen(nextSceneName));
         }
-       
         else
         {
             Debug.LogError("다음 씬이 정해지지 않았습니다.");
@@ -48,7 +47,7 @@ public class LoadingManager : MonoBehaviour
         {
             yield return null;
             currentTime += Time.deltaTime;
-            Debug.Log(oper.progress*100);
+            // Debug.Log(oper.progress*100);
             if (oper.progress < 0.9f) //로딩하기 전에 해야할 것들
             {
                 //근데 여기서 뭐해야함?
@@ -85,7 +84,7 @@ public class LoadingManager : MonoBehaviour
         {
             yield return null;
             currentTime += Time.deltaTime;
-            Debug.Log(oper.progress*100);
+            // Debug.Log(oper.progress*100);
             if (oper.progress < 0.9f) //로딩하기 전에 해야할 것들
             {
                 //근데 여기서 뭐해야함?
