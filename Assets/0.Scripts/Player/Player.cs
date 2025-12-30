@@ -31,6 +31,7 @@ public class Player : MonoBehaviour
 
     //코루틴 변수
     private WaitForSeconds _delay;
+    private WaitForSeconds _restoreTime;
     private float _finsihTime  = 0.7f;
     private float _checkTime = 0;
     private float _restoreStamina = 5;
@@ -128,6 +129,7 @@ public class Player : MonoBehaviour
         MoveState(new IdleState(this));
         ActionState(new ActionIdleState(this));
 
+        _restoreTime = new WaitForSeconds(0.2f);
         _delay = new WaitForSeconds(5f);
 
         _hp = DataManager.Instance.CharacterData._playerHp;
@@ -217,7 +219,7 @@ public class Player : MonoBehaviour
     {
        while(_stamina < _maxStamina)
         {
-            yield return new WaitForSeconds(0.2f);
+            yield return _restoreTime;
 
             ChangedStamina += _restoreStamina;
         }

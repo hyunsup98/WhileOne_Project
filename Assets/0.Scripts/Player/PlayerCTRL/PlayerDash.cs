@@ -23,6 +23,10 @@ public class PlayerDash : MonoBehaviour
 
     bool _isDash;
     float _size = 10;
+    float dashtime = 0.2f;
+
+    WaitForSeconds DashDelay;
+    WaitForSeconds DashTime;
 
     Blink blink;
 
@@ -35,6 +39,9 @@ public class PlayerDash : MonoBehaviour
         _player = GetComponent<Player>();
         _rd2D = GetComponent<Rigidbody2D>();
         _trail.enabled = false;
+
+        DashDelay = new WaitForSeconds(dashtime);
+        DashTime = new WaitForSeconds(_dashTime);
         //for (float i = 1; i <= _size; i++)
         //{
         //    blink = AfterimagePool.Instance.GetObject(_test, AfterimagePool.Instance.transform);
@@ -88,12 +95,12 @@ public class PlayerDash : MonoBehaviour
             _rd2D.linearVelocity = _playerMovement.Move.normalized * _dashForce;
             //AfterimagePool.Instance.GetObject(_test, AfterimagePool.Instance.transform);
             //blink.transform.position = transform.position;
-            yield return new WaitForSeconds(_dashTime);
+            yield return DashTime;
             //AfterimagePool.Instance.TakeObject(blink);
             _rd2D.linearVelocity = Vector2.zero;
             _isDash = false;
-            float dashDelay = 0.2f;
-            yield return new WaitForSeconds(dashDelay);
+
+            yield return DashDelay;
             //_damaged.tag = "Player";
             SoundManager.Instance.PlaySoundEffect("Player_Dash_FX_001");
         }

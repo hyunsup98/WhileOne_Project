@@ -21,10 +21,14 @@ public class PlayerAttack : MonoBehaviour
     // 이벤트 관련 변수
     public event Action<int> OnSubWeaponAttack;        // 서브 무기로 쳤을 때 내구도 넘겨주기
 
+    WaitForSeconds attackSpeed;
+    WaitForSeconds delayTime;
+
     bool _timer = false;
     float _attSpeed;
+    float _delayTime = 0.3f;
     private bool _isAttacking = false;
-    bool _isEffect1 = true; //그냥 토글용 변수
+    private bool _isEffect1 = true; //그냥 토글용 변수
     private bool isUse;
 
     //public GameObject Effect1 => _effect1;
@@ -46,6 +50,8 @@ public class PlayerAttack : MonoBehaviour
     }
     void Start()
     {
+        attackSpeed = new WaitForSeconds(_attSpeed);
+        delayTime = new WaitForSeconds(_delayTime);
         _attSpeed = 10f / _player.AttackSpeed; //공격 속도 세팅 (공격속도는 10/n값) 필요하다면 조절가능
 
         _actionMap = _input.actions.FindActionMap("Player");
@@ -95,7 +101,7 @@ public class PlayerAttack : MonoBehaviour
 
     IEnumerator AttackSpeed() //공격 속도 딜레이 코루틴
     {
-        yield return new WaitForSeconds(_attSpeed);
+        yield return attackSpeed;
         _timer = false;
     }
     private void Update()
@@ -110,7 +116,7 @@ public class PlayerAttack : MonoBehaviour
     }
     IEnumerator Delay()
     {
-        yield return new WaitForSeconds(0.3f);
+        yield return delayTime;
         _isAttacking = false;
     }
 }

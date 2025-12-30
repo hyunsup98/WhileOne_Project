@@ -11,9 +11,14 @@ public class LoadingManager : MonoBehaviour
     [SerializeField] private Image _loadingBar;
     [SerializeField] private TMP_Text _loadingText;
 
+    WaitForSecondsRealtime delayScene;
+
     private float _loadingTime = 2f; //최소 시간동안은 로딩 안됨
 
-
+    private void Awake()
+    {
+        delayScene =  new WaitForSecondsRealtime(0.5f);
+    }
     private void Start()
     {
         _loadingBar.fillAmount = 0;
@@ -61,8 +66,8 @@ public class LoadingManager : MonoBehaviour
             {
                 _loadingBar.fillAmount = 1f;
                 _loadingText.text = $"100%";
-                yield return new WaitForSecondsRealtime(0.5f);
-                
+                yield return delayScene;
+
                 //혹시 모를 코드 초기화
                 nextSceneIndex = -1; 
                 nextSceneName = "";
