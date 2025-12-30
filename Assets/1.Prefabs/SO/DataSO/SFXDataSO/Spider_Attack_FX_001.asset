@@ -15,4 +15,4 @@ MonoBehaviour:
   <sfxID>k__BackingField: Spider_Attack_FX_001
   <sfxObject>k__BackingField: "\uAC70\uBBF8"
   <sfxUse>k__BackingField: "\uAC70\uBBF8 \uACF5\uACA9"
-  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: c753ebd9286e281439a0c6802b7fbcb2, type: 3}
+  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: 5162f0c1d849c0a44bfb10c72328f5d7, type: 3}

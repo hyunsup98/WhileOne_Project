@@ -19,8 +19,6 @@ public class Pattern06SO : MonsterActionSO
     [SerializeField] private float _fallingFrequency;
     [Tooltip("³«ÇÏ¹° »ý¼º È½¼ö")]
     [SerializeField] private int _fallingCycle;
-    [Tooltip("³«ÇÏ¹° µ¥¹ÌÁö Å¸ÀÌ¹Ö")]
-    [SerializeField] private int _fallingHitTiming;
     [Tooltip("³«ÇÏ¹° »ý¼º °¹¼ö")]
     [SerializeField] private float _fallingCount;
     [Tooltip("³«ÇÏ¹° »ý¼º ¹üÀ§")]
@@ -35,7 +33,6 @@ public class Pattern06SO : MonsterActionSO
     public float FallingCount => _fallingCount;
     public float FallingFrequency => _fallingFrequency;
     public float FallingCycle => _fallingCycle;
-    public float FallingHitTiming => _fallingHitTiming;
     public float FallingRange => _fallingRange;
     public GameObject FallingObjectPrefab => _fallingObjectPrefab;
 }
