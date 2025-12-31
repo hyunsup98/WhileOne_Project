@@ -50,6 +50,7 @@ public class ObjectPool<T> : Singleton<ObjectPool<T>> where T : MonoBehaviour
     {
         if (data == null) return;
 
+        data.transform.SetParent(transform, false);
         data.gameObject.SetActive(false);
         pool.Enqueue(data);
     }

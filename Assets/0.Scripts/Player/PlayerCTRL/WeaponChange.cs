@@ -59,6 +59,14 @@ public class WeaponChange : MonoBehaviour
         GameManager.Instance.CurrentDungeon.MainWeaponSlot.ChangeIcon(_slotWeapon1);
     }
 
+    private void Update()
+    {
+        if(Keyboard.current.bKey.wasPressedThisFrame)
+        {
+            HitAble(gameObject);
+        }
+    }
+
     private void WeaponSwitch1(InputAction.CallbackContext ctx)
     {
         SwitchSlot(1);
@@ -137,9 +145,6 @@ public class WeaponChange : MonoBehaviour
             {
                 _slotWeapon2.ReduceDurability(1);
                 GameManager.Instance.CurrentDungeon.EquipSlotController.ChangeSubWeaponDurability(_slotWeapon2.Durability, _slotWeapon2.WeaponData.weaponDurability);
-
-                if (_slotWeapon2.Durability <= 0)
-                    _slotWeapon2 = currentweapon = null;
 
                 _isAlreadyHit = true;
                 if (_slotWeapon2.Durability <= 0)
