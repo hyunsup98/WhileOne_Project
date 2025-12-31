@@ -23,7 +23,7 @@ public class TrapRoomMazeGenerator : MonoBehaviour
     //[SerializeField] [Tooltip("함정이 공격하는 간격 (초 단위)")]
     //private float trapAttackInterval = 2f; // 함정 공격 간격 (초)
     [SerializeField] [Tooltip("미로 내 함정의 최대 비율 (0.0 ~ 1.0). 예: 0.3 = 30%")]
-    private float maxTrapRatio = 0.3f; // 함정 최대 비율 (30%)
+    private float maxTrapRatio = 0.2f; // 함정 최대 비율 (20%)
     [SerializeField] [Tooltip("입구/출구 주변에 함정을 배치하지 않는 안전 구역의 반경 (칸 단위)")]
     private int safeZoneRadius = 2; // 입구/출구 주변 안전 구역 (칸)
     
@@ -1039,6 +1039,51 @@ public class TrapRoomMazeGenerator : MonoBehaviour
             Debug.Log($"[TrapRoomMazeGenerator] 벽 생성: Grid/Tilemap 없음, 월드 기준 배치 (roomCenter={roomCenter}, mazeSize={mazeWidth}x{mazeHeight})");
         }
         
+        // 벽 생성 후 각 벽의 BoxCollider2D 활성화 (플레이어가 지나가지 못하도록)
+        SetupWallColliders(wallContainer);
+    }
+    
+    /// <summary>
+    /// 각 벽 오브젝트의 BoxCollider2D를 활성화하여 플레이어가 지나가지 못하도록 설정합니다.
+    /// </summary>
+    private void SetupWallColliders(Transform wallContainer)
+    {
+        if (wallContainer == null)
+        {
+            Debug.LogWarning("[TrapRoomMazeGenerator] wallContainer가 null입니다. 콜라이더를 설정할 수 없습니다.");
+            return;
+        }
+        
+        // 벽이 하나도 없으면 설정하지 않음
+        if (wallContainer.childCount == 0)
+        {
+            Debug.LogWarning("[TrapRoomMazeGenerator] 벽이 없어 콜라이더를 설정할 수 없습니다.");
+            return;
+        }
+        
+        int colliderCount = 0;
+        foreach (Transform wallChild in wallContainer)
+        {
+            // BoxCollider2D 찾기 또는 추가
+            BoxCollider2D boxCollider = wallChild.GetComponent<BoxCollider2D>();
+            if (boxCollider != null)
+            {
+                // BoxCollider2D 활성화 (usedByComposite는 false로 유지)
+                boxCollider.enabled = true;
+                boxCollider.usedByComposite = false; // 개별 콜라이더로 사용
+                colliderCount++;
+            }
+            else
+            {
+                // BoxCollider2D가 없으면 추가
+                boxCollider = wallChild.gameObject.AddComponent<BoxCollider2D>();
+                boxCollider.enabled = true;
+                boxCollider.usedByComposite = false;
+                colliderCount++;
+            }
+        }
+        
+        Debug.Log($"[TrapRoomMazeGenerator] 벽 콜라이더 설정 완료: {colliderCount}개의 벽에 BoxCollider2D 활성화");
     }
     
     /// <summary>
