@@ -1835,7 +1835,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1131667903, guid: 9128dce891a126b46a645a198de193c2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9128dce891a126b46a645a198de193c2, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4494,10 +4494,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbb38ce6bc6bb404fb134b3db42e1d0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DungeonManager
-  <DigSpotTile>k__BackingField: {fileID: 11400000, guid: 6030469b5d45faa4085da000fe36bca1, type: 2}
-  <AfterDigTile>k__BackingField: {fileID: 0}
+  <DigSpotTile>k__BackingField: {fileID: 11400000, guid: 3e4b576dfebb84640b0c1a4c2844e40f, type: 2}
+  <AfterDigTile>k__BackingField: {fileID: 11400000, guid: a9d3c164dbc37dc4295958fbb16f2572, type: 2}
   <TreasureBarUI>k__BackingField: {fileID: 333020999}
-  _keepData: 0
   <WeaponUI>k__BackingField: {fileID: 1317768039}
   <InteractImg>k__BackingField: {fileID: 876869979}
   <InteractTMPText>k__BackingField: {fileID: 1306660559}
@@ -12401,7 +12400,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1131667903, guid: 9128dce891a126b46a645a198de193c2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9128dce891a126b46a645a198de193c2, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
