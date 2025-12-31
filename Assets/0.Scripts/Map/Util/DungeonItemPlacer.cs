@@ -118,7 +118,7 @@ public static class DungeonItemPlacer
             return;
         }
 
-        // DigSpot_Point 태그가 붙은 오브젝트 찾아서 그 중 랜덤하게 하나 선택
+        // DigSpotPoint 태그가 붙은 오브젝트 찾아서 그 중 랜덤하게 하나 선택
         Transform[] digSpotPoints = FindDigSpotPoints(roomObject);
         if (digSpotPoints != null && digSpotPoints.Length > 0)
         {
@@ -131,7 +131,7 @@ public static class DungeonItemPlacer
         }
         else
         {
-            Debug.LogWarning($"[DungeonItemPlacer] 방({roomObject.name})에 DigSpot_Point 태그가 붙은 오브젝트를 찾을 수 없습니다.");
+            Debug.LogWarning($"[DungeonItemPlacer] 방({roomObject.name})에 DigSpotPoint 태그가 붙은 오브젝트를 찾을 수 없습니다.");
         }
     }
     
@@ -178,7 +178,7 @@ public static class DungeonItemPlacer
             return;
         }
 
-        // DigSpot_Point 태그가 붙은 오브젝트 찾아서 그 중 랜덤하게 하나 선택
+        // DigSpotPoint 태그가 붙은 오브젝트 찾아서 그 중 랜덤하게 하나 선택
         Transform[] digSpotPoints = FindDigSpotPoints(room.roomObject);
         if (digSpotPoints != null && digSpotPoints.Length > 0)
         {
@@ -189,7 +189,7 @@ public static class DungeonItemPlacer
             // digSpotTilemap에 Dig Spot 타일 배치
             digSpotTilemap.SetTile(digSpotCell, digSpotTile);
         }
-        else Debug.LogWarning($"[DungeonItemPlacer] 방({room.roomObject.name})에 DigSpot_Point 태그가 붙은 오브젝트를 찾을 수 없습니다.");
+        else Debug.LogWarning($"[DungeonItemPlacer] 방({room.roomObject.name})에 DigSpotPoint 태그가 붙은 오브젝트를 찾을 수 없습니다.");
     }
     
     /// <summary>
@@ -261,9 +261,9 @@ public static class DungeonItemPlacer
         // Treasure Chest 프리팹 생성 (Interactive의 자식으로)
         Object.Instantiate(treasureChestPrefab, treasureChestWorldPos, Quaternion.identity, interactiveParent);
     }
-    
+
     /// <summary>
-    /// 방 오브젝트 하위에서 DigSpot_Point 태그를 가진 모든 Transform을 찾습니다.
+    /// 방 오브젝트 하위에서 DigSpotPoint 태그를 가진 모든 Transform을 찾습니다.
     /// </summary>
     public static Transform[] FindDigSpotPoints(GameObject roomObj)
     {
@@ -274,7 +274,7 @@ public static class DungeonItemPlacer
         
         foreach (var t in children)
         {
-            if (t.CompareTag("DigSpot_Point"))
+            if (t.CompareTag("DigSpotPoint"))
             {
                 digSpotPoints.Add(t);
             }
