@@ -120,7 +120,6 @@ public class PlayerAttack : MonoBehaviour
     IEnumerator AttackSpeed() //공격 속도 딜레이 코루틴
     {
         yield return new WaitForSeconds(_attSpeed); //얘는 계속해서 변해야 하기 때문에 Start에서 캐싱 불가능
-        //yield return attackSpeed;
        _timer = false;
     }
     private void NotDuplication(InputAction.CallbackContext ctx)
@@ -135,8 +134,8 @@ public class PlayerAttack : MonoBehaviour
 
     private void OnDisable()
     {
-        _attackAtion.started -= Attaking;
-        _attackAtion.started -= NotDuplication;
+        _attackAtion.performed -= Attaking;
+        _attackAtion.performed -= NotDuplication;
         _weapon.Weaponchanged -= WpChanged;
     }
 }

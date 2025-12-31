@@ -27,6 +27,7 @@ public class IntroManager : MonoBehaviour
     }
     void Start()
     {
+        InputSystem.actions.FindActionMap("Player").Disable();
         if (_introSprites.Length > 0)
         {
             _introImage.sprite = _introSprites[currentNum];
@@ -53,6 +54,7 @@ public class IntroManager : MonoBehaviour
     }
     public void EndSecen()
     {
+        InputSystem.actions.FindActionMap("Player").Enable();
         _introImage.gameObject.SetActive(false);
 
         if(_introSkip != null)
