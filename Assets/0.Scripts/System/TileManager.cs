@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -71,6 +72,7 @@ public class TileManager
             }
 
             Treasure treasure = DataManager.Instance.TreasureData.PickTreasure();
+            _dungeonManager.PlayDigSound("Shovel_PossibleTile_FX_001");
             _dungeonManager.TreasureBarUI.AddTreasure(treasure);
             DataManager.Instance.CharacterData.AddTreasureData(treasure);
         }
@@ -79,12 +81,11 @@ public class TileManager
         {
             if(_dungeonManager.CurrentRoom.FloorTileMap.GetTile(cellPos) == afterDigTile)
             {
-                SoundManager.Instance.PlaySoundEffect("Shovel_PossibleTile_FX_001");
+                _dungeonManager.PlayDigSound("Shovel_PossibleTile_FX_001");
             }
             else
             {
-                string[] ids = {"Shovel_ImpossibleTile_FX_001", "Shovel_ImpossibleTile_FX_002", "Shovel_ImpossibleTile_FX_003" };
-                SoundManager.Instance.PlaySoundEffect(ids);
+                _dungeonManager.PlayDigSound("Shovel_ImpossibleTile_FX_001", "Shovel_ImpossibleTile_FX_002", "Shovel_ImpossibleTile_FX_003");
             }
         }
     }

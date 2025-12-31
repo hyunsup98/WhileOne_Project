@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -22,6 +23,8 @@ public class DungeonManager : MonoBehaviour
     }
 
     public TileManager _tileManager { get; private set; }
+
+    private Coroutine _digCoroutine;
 
     #endregion
 
@@ -101,8 +104,26 @@ public class DungeonManager : MonoBehaviour
         InteractImg.transform.position = pos;
     }
 
+    public void PlayDigSound(params string[] sfx)
+    {
+        if (_digCoroutine != null)
+            _digCoroutine = null;
+
+        _digCoroutine = StartCoroutine(DigSound(sfx));
+    }
+
+    private IEnumerator DigSound(params string[] sfx)
+    {
+        yield return CoroutineManager.waitForSeconds(0.45f);
+
+        SoundManager.Instance.PlaySoundEffect(sfx);
+    }
+
     private void OnDisable()
     {
         GameManager.Instance.CurrentDungeon = null;
+
+        if(_digCoroutine != null)
+            StopCoroutine( _digCoroutine);
     }
 }
