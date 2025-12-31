@@ -14695,7 +14695,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomController
   floorTileMap: {fileID: 3335734862700129908}
-  digSpotTileMap: {fileID: 0}
+  digSpotTileMap: {fileID: 563177515068834812}
 --- !u!1 &6827451120721014073
 GameObject:
   m_ObjectHideFlags: 0
