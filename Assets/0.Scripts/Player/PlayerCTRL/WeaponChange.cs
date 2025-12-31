@@ -32,6 +32,8 @@ public class WeaponChange : MonoBehaviour
     InputAction _switchWeapon2;
     Player _player;
 
+    public event Action<float> Weaponchanged;
+
     private void Awake()
     {
         _slotWeapon1 = shovel;
@@ -73,22 +75,23 @@ public class WeaponChange : MonoBehaviour
 
     private void SwitchSlot(int slotNum)
     {
-        switch(slotNum)
+        switch (slotNum)
         {
             case 1:
                 currentweapon = _slotWeapon1;
                 _slotWeapon1.gameObject.SetActive(true);
                 if (_slotWeapon2 != null)
                     _slotWeapon2.gameObject.SetActive(false);
+                Weaponchanged?.Invoke(currentweapon.WeaponData.weaponAttack1Speed);
                 break;
 
             case 2:
                 currentweapon = _slotWeapon2;
                 _slotWeapon2.gameObject.SetActive(true);
                 _slotWeapon1.gameObject.SetActive(false);
+                Weaponchanged?.Invoke(currentweapon.WeaponData.weaponAttack1Speed);
                 break;
         }
-
         GameManager.Instance.CurrentDungeon.EquipSlotController.EquipWeapon(slotNum);
     }
 
@@ -97,7 +100,7 @@ public class WeaponChange : MonoBehaviour
         //if(_currentWeaponData == 대충 매개변수로 받아온 변수) //스크립터블과 비교하는 곳
         //return;
 
-        if(_slotWeapon2 != null)
+        if (_slotWeapon2 != null)
             WeaponPool.Instance.TakeObject(_slotWeapon2);
 
         _slotWeapon2 = weapon;
@@ -113,34 +116,10 @@ public class WeaponChange : MonoBehaviour
         GameManager.Instance.CurrentDungeon.EquipSlotController.ChangeSubWeapon(_slotWeapon2);
         GameManager.Instance.CurrentDungeon.EquipSlotController.ChangeSubWeaponDurability(_slotWeapon2.Durability, _slotWeapon2.WeaponData.weaponDurability);
         GameManager.Instance.CurrentDungeon.EquipSlotController.EquipWeapon(2);
-
-        //if(!weaponeList.Contains(대충 매개변수로 받아온 변수))
-        //{
-        //    GameObject newWp = Instantiate(매개변수.weapon, _weaponHands);
-        //    weaponList.Add(매개변수, newWp);
-        //}
-
-        //_currentWeapon = _weaponList[매개변수];
-        //_currentWeapon.SetActive(true);
-        //_currentWeaponData = 매개변수;
-
-        //_currentWeapon.GetComponent<Weapon>
+        Weaponchanged?.Invoke(currentweapon.WeaponData.weaponAttack1Speed);
     }
 
-    //void EquipWeapon(SO data)
-    //{
-    //    if(_currentWeapon != null)
-    //    {
-    //        _currentWeapon.SetActive(false);
-    //    }
-    //    if (!weaponList.ContainsKey(data))
-    //    {
-    //        GameObject newWp = Instantiate(data.weapon, _weaponHands);
-    //        weaponList.Add(data, newWp);
-    //    }
-    //    _currentWeapon = weaponList[data];
-    //    _currentWeapon.SetActive(true);
-    //}
+
     public void ResetAttack()
     {
         _isAlreadyHit = false;
@@ -173,7 +152,6 @@ public class WeaponChange : MonoBehaviour
     }
     public void WeaponBreak()
     {
-        //무기 뿌사짐
         WeaponPool.Instance.TakeObject(currentweapon);
         _slotWeapon2 = null;
         GameManager.Instance.CurrentDungeon.EquipSlotController.ChangeSubWeapon(_slotWeapon2);

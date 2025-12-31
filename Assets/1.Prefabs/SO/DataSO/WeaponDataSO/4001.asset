@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: 4001
   m_EditorClassIdentifier: Assembly-CSharp::WeaponDataSO
   <weaponID>k__BackingField: 4001
-  <weapon_Name>k__BackingField: "<color=#FFFFFF>\uC0BD</color>"
-  <weapon_Desc>k__BackingField: "<color=#FF7F00>\uD3C9\uBC94\uD55C \uC0BD\uC774\uB2E4.\\n
-    \uC790\uC138\uD55C \uC124\uBA85\uC740 \uC0DD\uB7B5\uD55C\uB2E4.</color>"
+  <weapon_Name>k__BackingField: Common_Weapon_Name_Text_001
+  <weapon_Desc>k__BackingField: Common_Weapon_Desc_Text_001
   <weaponTier>k__BackingField: 1
   <weaponAttack1Damage>k__BackingField: 10
   <weaponAttack1MinDamage>k__BackingField: 8

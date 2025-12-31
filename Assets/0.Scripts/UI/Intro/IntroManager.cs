@@ -18,8 +18,6 @@ public class IntroManager : MonoBehaviour
 
     private int currentNum = 0;
 
-    private static bool _isIntroSeen = false;
-
     private void Awake()
     {
         //_input = GetComponent<PlayerInput>();
@@ -29,11 +27,7 @@ public class IntroManager : MonoBehaviour
     }
     void Start()
     {
-        if (_isIntroSeen)
-        {
-            SceneManager.LoadScene(_nextSceneName);
-            return;
-        }
+        InputSystem.actions.FindActionMap("Player").Disable();
         if (_introSprites.Length > 0)
         {
             _introImage.sprite = _introSprites[currentNum];
@@ -60,7 +54,7 @@ public class IntroManager : MonoBehaviour
     }
     public void EndSecen()
     {
-        _isIntroSeen = true;
+        InputSystem.actions.FindActionMap("Player").Enable();
         _introImage.gameObject.SetActive(false);
 
         if(_introSkip != null)
