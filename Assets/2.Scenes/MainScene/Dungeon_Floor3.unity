@@ -11362,7 +11362,6 @@ MonoBehaviour:
   <DigSpotTile>k__BackingField: {fileID: 11400000, guid: 76cb4d33b4ab5f1438478c08fb3ed1fc, type: 2}
   <AfterDigTile>k__BackingField: {fileID: 11400000, guid: 1487760264f60b54b9c9716fa3efb1b9, type: 2}
   <TreasureBarUI>k__BackingField: {fileID: 1675610904}
-  _keepData: 1
   <WeaponUI>k__BackingField: {fileID: 336649232}
   <InteractImg>k__BackingField: {fileID: 1485507163}
   <InteractTMPText>k__BackingField: {fileID: 250049638}
@@ -13058,6 +13057,18 @@ PrefabInstance:
       propertyPath: _durabilityBar
       value: 
       objectReference: {fileID: 1318072470}
+    - target: {fileID: 3465060171251498268, guid: b15227f94e6f6154b8ad821d997a03bc, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3465060171251498268, guid: b15227f94e6f6154b8ad821d997a03bc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+    - target: {fileID: 3465060171251498268, guid: b15227f94e6f6154b8ad821d997a03bc, type: 3}
+      propertyPath: m_PreserveAspect
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4458057170989132082, guid: b15227f94e6f6154b8ad821d997a03bc, type: 3}
       propertyPath: m_Group
       value: 

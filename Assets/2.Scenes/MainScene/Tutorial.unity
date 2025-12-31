@@ -4345,6 +4345,18 @@ PrefabInstance:
       propertyPath: _durabilityBar
       value: 
       objectReference: {fileID: 487460830}
+    - target: {fileID: 3465060171251498268, guid: b15227f94e6f6154b8ad821d997a03bc, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3465060171251498268, guid: b15227f94e6f6154b8ad821d997a03bc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+    - target: {fileID: 3465060171251498268, guid: b15227f94e6f6154b8ad821d997a03bc, type: 3}
+      propertyPath: m_PreserveAspect
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4458057170989132082, guid: b15227f94e6f6154b8ad821d997a03bc, type: 3}
       propertyPath: m_Group
       value: 
