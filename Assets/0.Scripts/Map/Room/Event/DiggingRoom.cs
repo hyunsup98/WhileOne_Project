@@ -272,6 +272,7 @@ public class DiggingRoom : BaseEventRoom
             if (treasure != null)
             {
                 GameManager.Instance.CurrentDungeon.TreasureBarUI.AddTreasure(treasure);
+                DataManager.Instance.CharacterData.AddTreasureData(treasure);
             }
         }
     }
