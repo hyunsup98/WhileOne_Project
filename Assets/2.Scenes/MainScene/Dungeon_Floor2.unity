@@ -11116,7 +11116,7 @@ MonoBehaviour:
   mazeHeight: 31
   trapPrefab: {fileID: 4652139313107373167, guid: 1fd9b4c6bd5aa1e4c8f0a467bc3d1cbd, type: 3}
   trapOffPrefab: {fileID: 5727424884913838383, guid: 3a0d0fb6410dede4fb5c17bbc79db5f1, type: 3}
-  maxTrapRatio: 0.3
+  maxTrapRatio: 0.2
   safeZoneRadius: 2
   leverPrefab: {fileID: 7575494982384084485, guid: f53d75469215d50458095129adeb40f2, type: 3}
   treasureChestPrefab: {fileID: 228447053981868614, guid: 015eba3987a021a4ea06ededd42a7476, type: 3}

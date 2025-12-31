@@ -127,7 +127,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e2ec0f65635222438ff3fb54c377ad2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrapDamageTrigger
-  damage: 10
   damageCooldown: 0.5
   damageAnimationName: spike trap 3
   damageStartTime: 0.6
@@ -179,5 +178,5 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.32, y: 0.32}
+  m_Size: {x: 0.3, y: 0.3}
   m_EdgeRadius: 0
