@@ -23,6 +23,8 @@ public class TrapRoomLever : Interactable, IInteractable
     private void Awake()
     {
         InitializePlayerLayer();
+        // 상호작용 범위를 1f로 설정 (옆 통로에서 상호작용 안되도록)
+        this.interactionRange = 1f;
     }
 
     private void Start()
