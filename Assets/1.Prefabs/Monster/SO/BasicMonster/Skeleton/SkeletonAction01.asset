@@ -24,7 +24,7 @@ MonoBehaviour:
   _speedBoost: 0
   _actionResource: 
   _actionSound: Skeleton_Attack_FX_001
-  _beforeDelay: 0.3
+  _beforeDelay: 1.2
   _afterDelay: 1
   _rushSpeed: 4
   _rushDistance: 4

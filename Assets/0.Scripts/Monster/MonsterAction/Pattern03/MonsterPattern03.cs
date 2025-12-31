@@ -27,7 +27,6 @@ public class MonsterPattern03 : MonsterPattern
     public override void StartAction()
     {
         IsAction = true;
-        _myTransform.GetComponentInChildren<Collider2D>().enabled = false;
         _ani.OnPlayAni("Idle");
 
         Debug.Log("<color=red>피격카운트</color>" + _currentCount);
@@ -46,6 +45,7 @@ public class MonsterPattern03 : MonsterPattern
         if (_currentCount > _teleportCount)
             _currentCount = 1;
 
+        _monster.View.SetCollider(true);
         _currentCount++;
     }
 
@@ -56,9 +56,11 @@ public class MonsterPattern03 : MonsterPattern
 
     private IEnumerator OnTelepor()
     {
+        _monster.View.SetCollider(false);
         _ani.OnPlayAni("Pattern03");
         yield return CoroutineManager.waitForSeconds(_beforeDelay);
 
+        _monster.View.SetCollider(false);
         _myTransform.position = _returnPos;
         
         yield return CoroutineManager.waitForSeconds(_afterDelay);

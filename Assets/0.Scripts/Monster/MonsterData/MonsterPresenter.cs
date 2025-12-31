@@ -108,6 +108,14 @@ public class MonsterPresenter : IAnimationable
 
     public void OnHit(float Damage)
     {
+        if (Model.ActionDict.TryGetValue(ActionID.three, out var action))
+        {
+            View.OnPlayAni("Hurt");
+            IsPattern03 = true;
+            Model.SetState(MonsterState.Action);
+            return;
+        }
+
         if (Model.CurrentState == Model.StateList[MonsterState.Stun])
         {
             StartCoroutine(View.OnHitBlink(IsDeath));
@@ -115,16 +123,11 @@ public class MonsterPresenter : IAnimationable
             return;
         }
 
+        
+        StartCoroutine(View.OnHitBlink(IsDeath));
         if (Model.CurrentState != Model.StateList[MonsterState.Action])
             View.OnPlayAni("Hurt");
 
-        StartCoroutine(View.OnHitBlink(IsDeath));
-        if (Model.ActionDict.TryGetValue(ActionID.three, out var action))
-        {
-            IsPattern03 = true;
-            Model.SetState(MonsterState.Action);
-            return;
-        }
 
         Model.TakeDamage(Damage);
 

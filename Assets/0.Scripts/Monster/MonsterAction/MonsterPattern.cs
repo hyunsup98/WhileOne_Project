@@ -63,7 +63,7 @@ public abstract class MonsterPattern
         }
 
         float damage = _damage + _monster.Model.AttackBoost;
-        _actionEffect.SetDamage(damage > 1f? damage : 1f);
+        _actionEffect.SetDamage(damage);
     }
 
     // 이펙트 경로 이펙트 생성

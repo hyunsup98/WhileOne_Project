@@ -15,11 +15,11 @@ MonoBehaviour:
   _monsterID: 0
   _name: "\uBCF4\uC2A4"
   _tier: 0
-  _hp: 100
-  _moveSpeed: 4
-  _sight: 5
+  _hp: 750
+  _moveSpeed: 7
+  _sight: 10
   _deathSound: Boss_Death_FX_001
-  _sightAngle: 90
+  _sightAngle: 120
   _actionDistance: 6
   _searchTime: 3
   _patrolRange: 3

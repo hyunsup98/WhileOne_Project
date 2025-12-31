@@ -24,7 +24,7 @@ MonoBehaviour:
   _speedBoost: 0
   _actionResource: 
   _actionSound: Ghost_Skill3_FX_001
-  _beforeDelay: 3
+  _beforeDelay: 2.5
   _afterDelay: 2
   _teleportCount: 8
   _teleportPoint: {fileID: 4238306751931922466, guid: d06bfc6f24dcd514ca94c27630351069, type: 3}

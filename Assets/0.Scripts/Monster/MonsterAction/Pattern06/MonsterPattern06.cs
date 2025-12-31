@@ -47,6 +47,7 @@ public class MonsterPattern06 : MonsterPattern
     public override void StartAction()
     {
         IsAction = true;
+        _monster.View.SetCollider(false);
         _ani.OnPlayAni("Idle");
         _mapCenterPos = GetMapCenter().position;
         _myTransform.GetComponentInChildren<Collider2D>().enabled = false;
@@ -61,6 +62,8 @@ public class MonsterPattern06 : MonsterPattern
 
     public override void OnAction()
     {
+
+        
     }
 
 
@@ -95,6 +98,7 @@ public class MonsterPattern06 : MonsterPattern
     // 중앙으로 텔레포트 이동하는 메서드
     private void OnTeleport()
     {
+        _monster.View.SetCollider(false);
         _myTransform.position = _mapCenterPos;
         _ani.OnPlayAni("Pattern06Start");
     }
@@ -103,6 +107,7 @@ public class MonsterPattern06 : MonsterPattern
     // 랜덤 위치에 낙하물 생성 메서드
     private IEnumerator CreateFallingObject()
     {
+        _monster.View.SetCollider(false);
         for (int i = 0; i < _fallingCycle; i++)
         {
             int safeCount = 0;
