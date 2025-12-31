@@ -99,19 +99,8 @@ public static class DungeonCorridorGenerator
                     continue;
                 }
                 
-                // 두 문이 같은 축에 있는지 확인 (직선 복도만 지원)
-                bool sameAxis = (Mathf.Abs(room1DoorPos.x - room2DoorPos.x) < 0.01f) || 
-                                (Mathf.Abs(room1DoorPos.y - room2DoorPos.y) < 0.01f);
-                
-                if (!sameAxis)
-                {
-                    // 문이 같은 축에 있지 않으면 직선 복도를 생성할 수 없습니다.
-                    Debug.LogWarning($"[DungeonCorridorGenerator] 두 문의 축이 일치하지 않아 직선 복도를 생성할 수 없습니다. " +
-                                     $"Room1: {position}, Room2: {nextPos}, Door1: {room1DoorPos}, Door2: {room2DoorPos}");
-                    continue;
-                }
-                
-                // 같은 축: 직선 복도 생성
+                // DoorCenterMarker가 있으면 축 확인 없이 직접 연결
+                // DoorCenterMarker를 기준으로 복도 생성
                 CreateStraightCorridor(
                     room.roomObject, nextRoom.roomObject, direction,
                     corridorPrefabHorizontal, corridorPrefabVertical, parent, unityGrid, position, nextPos);
@@ -121,8 +110,8 @@ public static class DungeonCorridorGenerator
     
     /// <summary>
     /// 두 방 사이에 직선 복도를 생성합니다.
-    /// 두 방의 문이 같은 축에 있을 때 사용됩니다.
-    /// 복도 길이 = |방 A 문 위치 - 방 B 문 위치|
+    /// DoorCenterMarker 위치를 직접 사용하여 복도를 연결합니다.
+    /// 복도 길이 = |방 A DoorCenterMarker 위치 - 방 B DoorCenterMarker 위치|
     /// </summary>
     private static List<GameObject> CreateStraightCorridor(
         GameObject room1, 
@@ -156,10 +145,6 @@ public static class DungeonCorridorGenerator
         float cellSize = DungeonGridHelper.ResolveCellSize(null, unityGrid);
         
         // DoorCenterMarker에서 복도가 뻗어나가는 방향으로 +1칸 이동한 위치 계산
-        Vector3 corridorStartPos = room1DoorPos;
-        Vector3 corridorEndPos = room2DoorPos;
-        
-        // 방향 벡터 계산 (정규화)
         Vector3 directionOffset = Vector3.zero;
         if (direction == Direction.Up)
             directionOffset = Vector3.up * cellSize;
@@ -171,9 +156,9 @@ public static class DungeonCorridorGenerator
             directionOffset = Vector3.right * cellSize;
         
         // 복도 시작 위치: DoorCenterMarker에서 +1칸 이동
-        corridorStartPos = room1DoorPos + directionOffset;
+        Vector3 corridorStartPos = room1DoorPos + directionOffset;
         // 복도 끝 위치: 반대 방향 DoorCenterMarker에서 반대 방향으로 +1칸 이동
-        corridorEndPos = room2DoorPos - directionOffset;
+        Vector3 corridorEndPos = room2DoorPos - directionOffset;
         
         // 수평/수직 판단 (십자 규격 정렬로 항상 수평 또는 수직만 가능)
         bool isHorizontal = (direction == Direction.Left || direction == Direction.Right);
@@ -187,10 +172,6 @@ public static class DungeonCorridorGenerator
         
         // 복도 길이 계산: |복도 시작 위치 - 복도 끝 위치|
         float targetDistance = Vector3.Distance(corridorStartPos, corridorEndPos);
-        
-        // 방향 벡터 계산
-        Vector3 directionVector = room2DoorPos - room1DoorPos;
-        Vector3 directionNormalized = directionVector.normalized;
         
         // 복도 프리팹 생성하여 실제 길이 측정
         // 임시 복도를 생성 위치에 배치하여 측정 (로컬 위치 기준으로 측정해야 함)
@@ -273,6 +254,17 @@ public static class DungeonCorridorGenerator
                 Vector3 currentStartPos = corridorStartMarker.position;
                 Vector3 offset = prevEndPos - currentStartPos;
                 corridor.transform.position += offset;
+                
+                // 연결 확인: 이전 복도의 끝과 현재 복도의 시작이 정확히 일치하는지 확인
+                Vector3 newStartPos = corridorStartMarker.position;
+                float connectionGap = Vector3.Distance(prevEndPos, newStartPos);
+                if (connectionGap > 0.01f)
+                {
+                    Debug.LogWarning($"[DungeonCorridorGenerator] 복도 연결 간격이 큽니다: {connectionGap:F4}. 재조정합니다.");
+                    // 추가 조정
+                    Vector3 additionalOffset = prevEndPos - newStartPos;
+                    corridor.transform.position += additionalOffset;
+                }
             }
             else
             {
