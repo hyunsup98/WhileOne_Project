@@ -24,7 +24,7 @@ public class Chase : IState
 
         //리펙토링 진행해야 함
         _ationTrigger = monster.Model.ActionDistance;
-        _centerPos = GetMapCenter().position;
+        //_centerPos = GetMapCenter().position;
     }
 
     public void Enter() 
@@ -39,12 +39,12 @@ public class Chase : IState
 
     public void Update()
     {
-        float distance = Vector2.SqrMagnitude(_myTransform.position - _centerPos);
-        if (distance > 400f)
-        {
-            _monster.Model.SetState(MonsterState.Patrol);
-            return;
-        }
+        //float distance = Vector2.SqrMagnitude(_myTransform.position - _centerPos);
+        //if (distance > 400f)
+        //{
+        //    _monster.Model.SetState(MonsterState.Patrol);
+        //    return;
+        //}
 
         _monster.View.OnTurn(_target.position);
 
@@ -86,20 +86,20 @@ public class Chase : IState
     }
 
 
-    // 맵 중앙을 찾는 메서드
-    private Transform GetMapCenter()
-    {
-        Transform parent = _myTransform.parent;
-        if (parent.CompareTag("Monster"))
-            parent = parent.parent;
+    //// 맵 중앙을 찾는 메서드
+    //private Transform GetMapCenter()
+    //{
+    //    Transform parent = _myTransform.parent;
+    //    if (parent.CompareTag("Monster"))
+    //        parent = parent.parent;
 
-        foreach (Transform child in parent)
-        {
-            if (child.CompareTag("RoomCenterMarker"))
-                return child;
-        }
+    //    foreach (Transform child in parent)
+    //    {
+    //        if (child.CompareTag("RoomCenterMarker"))
+    //            return child;
+    //    }
 
-        Debug.LogError("맵 중앙을 찾지 못했습니다.");
-        return null;
-    }
+    //    Debug.LogError("맵 중앙을 찾지 못했습니다.");
+    //    return null;
+    //}
 }
