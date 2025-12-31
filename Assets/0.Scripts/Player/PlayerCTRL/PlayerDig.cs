@@ -57,9 +57,13 @@ public class PlayerDig : MonoBehaviour
 
     private void EndDig(InputAction.CallbackContext ctx)
     {
-        tileCursor.gameObject.SetActive(false);
-        _isDigging = false;
-        GameManager.Instance.CurrentDungeon._tileManager.Dig(cursorPos);
+        if (_player.Player_WeaponChange.currentweapon.WeaponData.weaponID == 4001)
+        {
+            tileCursor.gameObject.SetActive(false);
+            _isDigging = false;
+            GameManager.Instance.CurrentDungeon._tileManager.Dig(cursorPos);
+
+        }
     }
 
     private void Update()

@@ -50,7 +50,7 @@ public class TileManager
         {
             // DigSpotTileMap에서 타일 제거
             _dungeonManager.CurrentRoom.DigSpotTileMap.SetTile(cellPos, null);
-            
+            SoundManager.Instance.PlaySoundEffect("Shovel_PossibleTile_FX_001");
             if (afterDigTile != null)
             {
                 // DigSpotTileMap에 AfterDigTile 설정
