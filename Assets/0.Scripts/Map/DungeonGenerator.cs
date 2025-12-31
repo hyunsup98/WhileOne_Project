@@ -225,6 +225,9 @@ public class DungeonGenerator : MonoBehaviour
         
         Transform parent = gridParent != null ? gridParent : transform;
         
+        // 5-0. 모든 방 프리팹의 최대 크기를 계산하여 방 간격 자동 설정
+        CalculateAndSetRoomSpacing(roomPrefabs, eventRoomTypePrefabs);
+        
         // 5-1. 방 배치 및 복도 최소 길이 검증 (반복 조정)
         int maxAdjustmentAttempts = 10; // 최대 조정 시도 횟수
         int adjustmentAttempt = 0;
@@ -740,6 +743,87 @@ public class DungeonGenerator : MonoBehaviour
         }
         
         Debug.Log($"[DungeonGenerator] 복도 {corridorsToDestroy.Count}개 제거 완료");
+    }
+    
+    /// <summary>
+    /// 모든 방 프리팹의 최대 크기를 계산하여 방 간격을 자동으로 설정합니다.
+    /// </summary>
+    private void CalculateAndSetRoomSpacing(
+        Dictionary<RoomType, GameObject[]> roomPrefabs,
+        Dictionary<EventRoomType, GameObject[]> eventRoomTypePrefabs)
+    {
+        float maxRoomWidth = 0f;
+        float maxRoomHeight = 0f;
+        
+        // 모든 RoomType 프리팹 확인
+        foreach (var kvp in roomPrefabs)
+        {
+            if (kvp.Value == null) continue;
+            
+            foreach (GameObject prefab in kvp.Value)
+            {
+                if (prefab == null) continue;
+                
+                BaseRoom baseRoom = prefab.GetComponent<BaseRoom>();
+                if (baseRoom != null)
+                {
+                    float width = baseRoom.RoomWidth;
+                    float height = baseRoom.RoomHeight;
+                    
+                    if (width > maxRoomWidth) maxRoomWidth = width;
+                    if (height > maxRoomHeight) maxRoomHeight = height;
+                }
+            }
+        }
+        
+        // 모든 EventRoomType 프리팹 확인
+        if (eventRoomTypePrefabs != null)
+        {
+            foreach (var kvp in eventRoomTypePrefabs)
+            {
+                if (kvp.Value == null) continue;
+                
+                foreach (GameObject prefab in kvp.Value)
+                {
+                    if (prefab == null) continue;
+                    
+                    BaseRoom baseRoom = prefab.GetComponent<BaseRoom>();
+                    if (baseRoom != null)
+                    {
+                        float width = baseRoom.RoomWidth;
+                        float height = baseRoom.RoomHeight;
+                        
+                        if (width > maxRoomWidth) maxRoomWidth = width;
+                        if (height > maxRoomHeight) maxRoomHeight = height;
+                    }
+                }
+            }
+        }
+        
+        // 최대 크기를 기반으로 방 간격 계산
+        // 최대 width와 height 중 큰 값을 사용하고, 여유 공간을 추가
+        float maxRoomSize = Mathf.Max(maxRoomWidth, maxRoomHeight);
+        
+        if (maxRoomSize > 0f)
+        {
+            // 최대 방 크기 + 복도 최소 길이를 고려하여 간격 계산
+            // 4의 배수로 올림
+            float calculatedSpacing = maxRoomSize + minCorridorLengthInCells;
+            int newSpacing = Mathf.CeilToInt(calculatedSpacing / 4f) * 4; // 4의 배수로 올림
+            
+            // 최소값 보장 (기본값 이상)
+            if (newSpacing < 12) newSpacing = 12;
+            
+            int oldSpacing = roomSpacingInCells;
+            roomSpacingInCells = newSpacing;
+            
+            Debug.Log($"[DungeonGenerator] 방 간격 자동 계산 완료 - 최대 방 크기: {maxRoomSize:F2} (Width: {maxRoomWidth:F2}, Height: {maxRoomHeight:F2}), " +
+                     $"계산된 간격: {calculatedSpacing:F2}, 설정된 간격: {roomSpacingInCells}칸 (이전: {oldSpacing}칸)");
+        }
+        else
+        {
+            Debug.LogWarning($"[DungeonGenerator] 방 프리팹에서 크기 정보를 찾을 수 없어 기본 간격({roomSpacingInCells}칸)을 사용합니다.");
+        }
     }
 }
 
