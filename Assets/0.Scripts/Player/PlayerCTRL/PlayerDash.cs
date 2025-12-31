@@ -95,6 +95,7 @@ public class PlayerDash : MonoBehaviour
             _rd2D.linearVelocity = _playerMovement.Move.normalized * _dashForce;
             //AfterimagePool.Instance.GetObject(_test, AfterimagePool.Instance.transform);
             //blink.transform.position = transform.position;
+            SoundManager.Instance.PlaySoundEffect("Player_Dash_FX_001");
             yield return DashTime;
             //AfterimagePool.Instance.TakeObject(blink);
             _rd2D.linearVelocity = Vector2.zero;
@@ -102,7 +103,6 @@ public class PlayerDash : MonoBehaviour
 
             yield return DashDelay;
             //_damaged.tag = "Player";
-            SoundManager.Instance.PlaySoundEffect("Player_Dash_FX_001");
         }
         else
         {
