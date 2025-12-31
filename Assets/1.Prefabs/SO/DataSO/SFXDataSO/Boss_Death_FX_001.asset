@@ -15,4 +15,4 @@ MonoBehaviour:
   <sfxID>k__BackingField: Boss_Death_FX_001
   <sfxObject>k__BackingField: "\uBCF4\uC2A4"
   <sfxUse>k__BackingField: "\uBCF4\uC2A4 \uC0AC\uB9DD"
-  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: c3f52d8f8db0a4b44b51751ec659c276, type: 3}
+  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: df537405f91067a46a388b1aebe6459c, type: 3}
