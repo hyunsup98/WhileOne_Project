@@ -3404,7 +3404,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: f5a97b0e69a4173489bbeb5ae8abdef3, type: 3}
-  m_Type: 0
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
@@ -4497,7 +4497,6 @@ MonoBehaviour:
   <DigSpotTile>k__BackingField: {fileID: 11400000, guid: 6030469b5d45faa4085da000fe36bca1, type: 2}
   <AfterDigTile>k__BackingField: {fileID: 0}
   <TreasureBarUI>k__BackingField: {fileID: 333020999}
-  _keepData: 0
   <WeaponUI>k__BackingField: {fileID: 1317768039}
   <InteractImg>k__BackingField: {fileID: 876869979}
   <InteractTMPText>k__BackingField: {fileID: 1306660559}
