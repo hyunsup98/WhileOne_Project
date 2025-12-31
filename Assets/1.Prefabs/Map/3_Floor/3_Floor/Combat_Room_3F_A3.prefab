@@ -15213,7 +15213,7 @@ GameObject:
   - component: {fileID: 4776385804353990242}
   m_Layer: 0
   m_Name: Ground1
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25624,6 +25624,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2998734679808056692}
   - component: {fileID: 6739393138616830023}
+  - component: {fileID: 6334551675300890090}
+  - component: {fileID: 4974023232096497912}
   m_Layer: 0
   m_Name: Combat_Room_3F_A3
   m_TagString: Untagged
@@ -25680,6 +25682,34 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
+--- !u!114 &6334551675300890090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3715045633591972553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a49ee2a50119ee4db4498ee5d12a24a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NormalRoom
+  roomWidth: 15
+  roomHeight: 15
+--- !u!114 &4974023232096497912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3715045633591972553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 098f00216fa940042a63b43de2baba97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomController
+  floorTileMap: {fileID: 5456332764518409423}
+  digSpotTileMap: {fileID: 0}
 --- !u!1 &3809803314870263532
 GameObject:
   m_ObjectHideFlags: 0
@@ -33682,9 +33712,9 @@ GameObject:
   - component: {fileID: 7448805991955090856}
   - component: {fileID: 1216889528808591809}
   - component: {fileID: 1400532155908791880}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Wall_Collider
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

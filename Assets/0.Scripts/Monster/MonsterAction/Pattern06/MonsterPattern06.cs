@@ -114,10 +114,7 @@ public class MonsterPattern06 : MonsterPattern
                     break;
                 }
 
-                float x = _mapCenterPos.x + UnityEngine.Random.Range(-_fallingRange, _fallingRange + 1);
-                float y = _mapCenterPos.y + UnityEngine.Random.Range(-_fallingRange, _fallingRange + 1);
-
-                Vector2 createPos = new Vector2(x, y);
+                Vector2 createPos = RandomVector(j);
                 if (_wallTilemap.HasTile(_wallTilemap.WorldToCell(createPos)))
                 {
                     safeCount++;
@@ -139,6 +136,23 @@ public class MonsterPattern06 : MonsterPattern
         yield return CoroutineManager.waitForSeconds(_afterDelay);
         IsAction = false;
     }
+
+    private Vector2 RandomVector(int num)
+    {
+        float angle = UnityEngine.Random.Range(0, 45f) + (45 * num);
+        float length = UnityEngine.Random.Range(1.5f, _fallingRange);
+
+        float x = Mathf.Cos(angle * Mathf.Deg2Rad);
+        float y = Mathf.Sin(angle * Mathf.Deg2Rad);
+        Vector2 newVector;
+        if (y > 0.71f)
+            newVector = new Vector2(x, -y) * length;
+        else
+            newVector = new Vector2(x, y) * length;
+
+        return newVector;
+    }
+
 
     private GameObject Create(Vector2 createPos)
     {
