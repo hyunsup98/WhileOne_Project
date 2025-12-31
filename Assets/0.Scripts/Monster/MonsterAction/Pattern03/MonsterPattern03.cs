@@ -42,8 +42,8 @@ public class MonsterPattern03 : MonsterPattern
     public override void EndAction()
     {
         Init();
-        if (_currentCount > _teleportCount)
-            _currentCount = 1;
+        if (_currentCount >= _teleportCount)
+            _currentCount = 0;
 
         _monster.View.SetCollider(true);
         _currentCount++;
