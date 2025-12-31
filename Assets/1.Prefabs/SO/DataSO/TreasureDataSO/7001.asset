@@ -13,11 +13,8 @@ MonoBehaviour:
   m_Name: 7001
   m_EditorClassIdentifier: Assembly-CSharp::TreasureDataSO
   <treasureID>k__BackingField: 7001
-  <treasure_Name>k__BackingField: "<color=#5BB5FF>\uB9C8\uBC95\uC758 \uC78E\uC0C8</color>"
-  <treasure_Desc>k__BackingField: "\"<color=#FF7F00>\uC0DD\uBA85\uB825\uC774 \uB290\uAEF4\uC9C0\uB294
-    \uC78E\uC774\uB2E4.\\n \uC5B4\uC9F8\uC11C \uC2DC\uB4E4\uC9C0 \uC54A\uB294\uC9C0
-    \uBAA8\uB974\uACA0\uC9C0\uB9CC,\\n \uC18C\uC9C0\uD558\uACE0 \uC788\uC73C\uBA74
-    \uAE30\uC6B4\uC774 \uC0DD\uAE30\uB294 \uAC83 \uAC19\uB2E4.</color>\""
+  <treasure_Name>k__BackingField: Common_Treasure_Name_Text_016
+  <treasure_Desc>k__BackingField: Common_Treasure_Desc_Text_016
   <treasureTier>k__BackingField: 2
   <isPowerUp>k__BackingField: 1
   <damageBoost>k__BackingField: 2
