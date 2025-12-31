@@ -25,15 +25,13 @@ public class Stun : IState
     public void Enter()
     {
         _monster.OnPlayAni("Stun");
-        _collider.enabled = false;
-        Debug.Log("<color=yellow>스턴상태 돌입</color>");
+        //_collider.enabled = false;
     }
 
     public void Exit()
     {
         _monster.OnPlayAni("Teleport");
 
-        Debug.Log("<color=blue>스턴상태 해제</color>");
         _timer = 0;
         _monster.SetIsUlt(true);
         _stun.SetStun(false);
@@ -43,13 +41,10 @@ public class Stun : IState
     {
         _timer += Time.deltaTime;
 
-        if (!_collider.enabled && _timer > 1f)
-            _collider.enabled = true;
+        //if (!_collider.enabled && _timer > 1f)
+        //    _collider.enabled = true;
 
         if (_timer > _stunTime + 0.5f)
-        {
-            Debug.Log("타이머" + _timer);
             _monster.Model.SetState(MonsterState.Action);
-        }
     }
 }

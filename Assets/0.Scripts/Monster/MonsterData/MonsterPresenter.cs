@@ -12,9 +12,9 @@ public class MonsterPresenter : IAnimationable
 
     public bool IsPattern03 { get; private set; }
     public bool IsUlt { get; private set; }        // 궁극기(행동06)를 실행하는 메서드
+    public bool IsDeath { get; private set; }
 
     private bool _isHit;
-    private bool _isDeath;
 
     public event Action OnDeath;
 
@@ -67,8 +67,10 @@ public class MonsterPresenter : IAnimationable
     {
         _isHit = View.GetPlayingAni().IsName("Hurt");
 
+        if (IsDeath)
+            View.SetCollider(false);
 
-        if (!_isHit && !_isDeath)
+        if (!_isHit && !IsDeath)
             Model.CurrentState.Update();
     }
 
@@ -108,7 +110,7 @@ public class MonsterPresenter : IAnimationable
     {
         if (Model.CurrentState == Model.StateList[MonsterState.Stun])
         {
-            StartCoroutine(View.OnHitBlink(_isDeath));
+            StartCoroutine(View.OnHitBlink(IsDeath));
             Model.TakeDamage(Damage);
             return;
         }
@@ -116,7 +118,7 @@ public class MonsterPresenter : IAnimationable
         if (Model.CurrentState != Model.StateList[MonsterState.Action])
             View.OnPlayAni("Hurt");
 
-        StartCoroutine(View.OnHitBlink(_isDeath));
+        StartCoroutine(View.OnHitBlink(IsDeath));
         if (Model.ActionDict.TryGetValue(ActionID.three, out var action))
         {
             IsPattern03 = true;
@@ -137,9 +139,8 @@ public class MonsterPresenter : IAnimationable
     // 죽음 애니메이션 호출
     public IEnumerator OnDead()
     {
-        _isDeath = true;
+        IsDeath = true;
         View.OnDeathSound();
-        View.SetCollider(false);
         View.OnPlayAni("Death");
         while (View.GetPlayingAni().normalizedTime < 0.5f)
             yield return null;

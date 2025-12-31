@@ -44,7 +44,7 @@ public abstract class MonsterPattern
             return;
         }
 
-        if (!IsAction)
+        if (!IsAction || _monster.IsDeath)
             return;
 
         // 스킬 이펙트 오브젝트 생성

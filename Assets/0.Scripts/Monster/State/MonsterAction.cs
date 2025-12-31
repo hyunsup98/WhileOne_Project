@@ -16,6 +16,9 @@ public class MonsterAction : IState
 
     public void Enter()
     {
+        if (_monster.IsDeath)
+            return;
+
         _action = SetAction();
         if(_action == null)
         {
@@ -36,11 +39,17 @@ public class MonsterAction : IState
 
     public void Exit()
     {
+        if (_monster.IsDeath)
+            return;
+
         _action?.EndAction();
     }
 
     public void Update()
     {
+        if (_monster.IsDeath)
+            return;
+
         _action?.OnAction();
 
         if (_action != null && !_action.IsAction)

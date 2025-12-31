@@ -194,7 +194,7 @@ public class MonsterView : MonoBehaviour, IStunable, IDead
             yield return CoroutineManager.waitForSeconds(0.05f);
         }
 
-        yield return CoroutineManager.waitForSeconds(0.3f);
+        yield return CoroutineManager.waitForSeconds(0.5f);
 
         if(!isDeath)
             SetCollider(true);
@@ -210,7 +210,7 @@ public class MonsterView : MonoBehaviour, IStunable, IDead
     public void OnStun()
     {
         IsStun = true;
-        transform.GetComponent<Collider2D>().enabled = false;
+        //transform.GetComponent<Collider2D>().enabled = false;
         Presenter.OnStun();
     }
 
