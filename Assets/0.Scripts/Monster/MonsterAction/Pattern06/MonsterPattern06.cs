@@ -142,8 +142,8 @@ public class MonsterPattern06 : MonsterPattern
         float angle = UnityEngine.Random.Range(0, 45f) + (45 * num);
         float length = UnityEngine.Random.Range(1.5f, _fallingRange);
 
-        float x = Mathf.Cos(angle * Mathf.Deg2Rad);
-        float y = Mathf.Sin(angle * Mathf.Deg2Rad);
+        float x = Mathf.Cos(angle * Mathf.Deg2Rad) + _myTransform.position.x;
+        float y = Mathf.Sin(angle * Mathf.Deg2Rad) + _myTransform.position.y;
         Vector2 newVector;
         if (y > 0.71f)
             newVector = new Vector2(x, -y) * length;

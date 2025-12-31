@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BGMDataSO
   <bgmID>k__BackingField: GameOver_good_BGM_001
   <bgmUse>k__BackingField: "\uAD7F \uC5D4\uB529"
-  <bgmPath_AudioClip>k__BackingField: {fileID: 8300000, guid: a16027db6e8d1f4498a8a82b72f38886, type: 3}
+  <bgmPath_AudioClip>k__BackingField: {fileID: 8300000, guid: 0006705aff87e0b4aa00e57b48d380de, type: 3}

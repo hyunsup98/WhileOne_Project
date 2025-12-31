@@ -15,4 +15,4 @@ MonoBehaviour:
   <sfxID>k__BackingField: Player_Recovery_FX_001
   <sfxObject>k__BackingField: "\uD50C\uB808\uC774\uC5B4"
   <sfxUse>k__BackingField: "\uD50C\uB808\uC774\uC5B4 \uD68C\uBCF5"
-  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: a7dac66a117fe7f4e8d28a797435474a, type: 3}
+  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: 96aa34d2353875d4986efec501707dfd, type: 3}

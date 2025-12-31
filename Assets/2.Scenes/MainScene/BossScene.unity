@@ -8163,7 +8163,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1185327993}
-  - component: {fileID: 1185327996}
   - component: {fileID: 1185327995}
   - component: {fileID: 1185327994}
   m_Layer: 5
@@ -8291,20 +8290,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1185327992}
   m_CullTransparentMesh: 1
---- !u!114 &1185327996
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1185327992}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfe23af5cb5423846863edf69d8c234a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIText_Floor
-  _textId: Floor_Text
-  floor: 1
 --- !u!1 &1222497402
 GameObject:
   m_ObjectHideFlags: 0
@@ -10741,7 +10726,6 @@ MonoBehaviour:
   <DigSpotTile>k__BackingField: {fileID: 11400000, guid: 6030469b5d45faa4085da000fe36bca1, type: 2}
   <AfterDigTile>k__BackingField: {fileID: 0}
   <TreasureBarUI>k__BackingField: {fileID: 1675610904}
-  _keepData: 0
   <WeaponUI>k__BackingField: {fileID: 336649232}
   <InteractImg>k__BackingField: {fileID: 752464647}
   <InteractTMPText>k__BackingField: {fileID: 1320750229}

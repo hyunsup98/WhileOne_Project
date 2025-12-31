@@ -15,4 +15,4 @@ MonoBehaviour:
   <sfxID>k__BackingField: Shovel_TreasureGet_FX_001
   <sfxObject>k__BackingField: "\uC0C1\uC790"
   <sfxUse>k__BackingField: "\uBCF4\uBB3C \uBC1C\uACAC \uC2DC"
-  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: ebe920cad009fc34b945e1c052d1ed8c, type: 3}
+  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: fae88c74daedf524ba14def8616269b9, type: 3}

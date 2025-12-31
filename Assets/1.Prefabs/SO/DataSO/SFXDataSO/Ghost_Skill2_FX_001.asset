@@ -15,4 +15,4 @@ MonoBehaviour:
   <sfxID>k__BackingField: Ghost_Skill2_FX_001
   <sfxObject>k__BackingField: "\uC720\uB839"
   <sfxUse>k__BackingField: "\uC720\uB839 \uAD11\uD3ED\uD654"
-  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: 51e16b7b295e00748ba6c3698a772a76, type: 3}
+  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: 4628f093cb8eeba47bc9231563317395, type: 3}

@@ -15,4 +15,4 @@ MonoBehaviour:
   <sfxID>k__BackingField: Goblin_Dead_FX_001
   <sfxObject>k__BackingField: "\uACE0\uBE14\uB9B0"
   <sfxUse>k__BackingField: "\uACE0\uBE14\uB9B0 \uC0AC\uB9DD"
-  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: 6dee6e738f0b29a46887922e6a74c901, type: 3}
+  <sfxPath_AudioClip>k__BackingField: {fileID: 8300000, guid: 4e1ee953ebd57ed4ebbf910ab57d4136, type: 3}

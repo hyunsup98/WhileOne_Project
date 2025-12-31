@@ -187,7 +187,6 @@ public class FloorRoomSetManager : MonoBehaviour
                     RoomType.Event,
                     RoomType.Treasure,
                     RoomType.Trap,
-                    RoomType.Trap,
                     RoomType.Exit
                 }
             },
@@ -202,7 +201,6 @@ public class FloorRoomSetManager : MonoBehaviour
                     RoomType.Normal,
                     RoomType.Event,
                     RoomType.Event,
-                    RoomType.Trap,
                     RoomType.Trap,
                     RoomType.Portal
                 }

@@ -106,6 +106,13 @@ public class MonsterPresenter : IAnimationable
 
     public void OnHit(float Damage)
     {
+        if (Model.CurrentState == Model.StateList[MonsterState.Stun])
+        {
+            StartCoroutine(View.OnHitBlink(_isDeath));
+            Model.TakeDamage(Damage);
+            return;
+        }
+
         if (Model.CurrentState != Model.StateList[MonsterState.Action])
             View.OnPlayAni("Hurt");
 
@@ -116,7 +123,6 @@ public class MonsterPresenter : IAnimationable
             Model.SetState(MonsterState.Action);
             return;
         }
-
 
         Model.TakeDamage(Damage);
 
@@ -154,5 +160,5 @@ public class MonsterPresenter : IAnimationable
     public void OnPlayAni(string animationName) => View.OnPlayAni(animationName);
     public void OnStopAni(string animationName) => View.OnStopAni(animationName);
 
-    
+
 }
