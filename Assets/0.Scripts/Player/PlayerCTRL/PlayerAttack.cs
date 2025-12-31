@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using System.Threading;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class PlayerAttack : MonoBehaviour
@@ -22,7 +24,7 @@ public class PlayerAttack : MonoBehaviour
     WaitForSeconds delayTime;
 
     bool _timer = false;
-    float _attSpeed;
+    float _attSpeed = 0;
     float _delayTime = 0.3f;
     private bool _isAttacking = false;
     private bool _isEffect1 = true; //그냥 토글용 변수
@@ -50,9 +52,9 @@ public class PlayerAttack : MonoBehaviour
     }
     void Start()
     {
-        attackSpeed = new WaitForSeconds(_attSpeed);
+        _attSpeed = _weapon.currentweapon.WeaponData.weaponAttack1Speed;
+        //attackSpeed = new WaitForSeconds(_attSpeed);
         delayTime = new WaitForSeconds(_delayTime);
-        _attSpeed = 10f / _player.AttackSpeed; //공격 속도 세팅 (공격속도는 10/n값) 필요하다면 조절가능
 
         _actionMap = _input.actions.FindActionMap("Player");
 
@@ -71,9 +73,24 @@ public class PlayerAttack : MonoBehaviour
 
 
     }
+    private void OnEnable()
+    {
+        _weapon.Weaponchanged += WpChanged;
+    }
+    private void WpChanged(float newSpeed)
+    {
+        _attSpeed = newSpeed;
+        Debug.Log("무기 바뀜");
+        StopCoroutine(AttackSpeed());
+        Debug.Log(_attSpeed);
+    }
     private void Attaking(InputAction.CallbackContext ctx)
     {
         if (!ctx.performed)
+        {
+            return;
+        }
+        if (EventSystem.current.IsPointerOverGameObject())
         {
             return;
         }
@@ -86,17 +103,15 @@ public class PlayerAttack : MonoBehaviour
 
             if (_timer) //딜레이 중이면 리턴
             {
-                Debug.Log("딜레이중");
                 return;
             }
-            Debug.Log("공격");
+            Debug.Log(_attSpeed);
             _timer = true;
             _isAttacking = true; //공격 트리거용 변수
 
             StartCoroutine(AttackSpeed()); //공격속도 딜레이
-
-
-            SoundManager.Instance.PlaySoundEffect(DataManager.Instance.SFXData.FindWeaponSound(_weapon.currentweapon.WeaponData.weaponID.ToString()));
+            string wpSFX = _weapon.currentweapon.WeaponData.weaponID.ToString();
+            SoundManager.Instance.PlaySoundEffect(DataManager.Instance.SFXData.FindWeaponSound(wpSFX));
 
             _traking.PlayEffect();
         }
@@ -104,17 +119,13 @@ public class PlayerAttack : MonoBehaviour
     }
     IEnumerator AttackSpeed() //공격 속도 딜레이 코루틴
     {
-        yield return new WaitForSeconds(_attSpeed);
+        yield return new WaitForSeconds(_attSpeed); //얘는 계속해서 변해야 하기 때문에 Start에서 캐싱 불가능
         //yield return attackSpeed;
        _timer = false;
     }
     private void NotDuplication(InputAction.CallbackContext ctx)
     {
         StartCoroutine(Delay());
-    }
-    private void Update()
-    {
-        _attSpeed = 10f / _player.AttackSpeed; //공격 속도 실시간 세팅
     }
     IEnumerator Delay()
     {
@@ -126,5 +137,6 @@ public class PlayerAttack : MonoBehaviour
     {
         _attackAtion.started -= Attaking;
         _attackAtion.started -= NotDuplication;
+        _weapon.Weaponchanged -= WpChanged;
     }
 }
