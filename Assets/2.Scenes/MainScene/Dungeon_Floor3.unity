@@ -8344,8 +8344,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DungeonGenerator
   gridSize: 20
-  corridorPrefabHorizontal: {fileID: 4474050308984926237, guid: b734ba1dbdbe92a4390eca47755692b1, type: 3}
-  corridorPrefabVertical: {fileID: 4474050308984926237, guid: b9f4e3586b4c1714d87d78ecdc378ad7, type: 3}
+  corridorPrefabHorizontal: {fileID: 4474050308984926237, guid: 0d122d172a22ab24f9cb3a75540205fa, type: 3}
+  corridorPrefabVertical: {fileID: 4474050308984926237, guid: bd7822b42b2d0324d8ae2466cce52867, type: 3}
   branchProbability: 40
   maxBranchCount: 3
   roomSpacingInCells: 44
@@ -8357,7 +8357,7 @@ MonoBehaviour:
   playerObject: {fileID: 558735063}
   digSpotSpawnChance: 100
   treasureChestPrefab: {fileID: 228447053981868614, guid: 015eba3987a021a4ea06ededd42a7476, type: 3}
-  showRoomTypeLabels: 1
+  showRoomTypeLabels: 0
   roomLabelOffsetX: -10
   roomLabelOffsetY: 5
 --- !u!1 &1150733850
@@ -11799,44 +11799,41 @@ MonoBehaviour:
       - {fileID: 4474050308984926237, guid: 05df2b23f71b05548acf904290874d02, type: 3}
   floor3Prefabs:
     startRoomPrefabs:
-    - {fileID: 4474050308984926237, guid: 1e6f31b242c865246b19a2fc4a8a80f2, type: 3}
+    - {fileID: 4474050308984926237, guid: 7c0e8382e3e1ed44ca0ada79467d5366, type: 3}
     normalRoomPrefabs:
-    - {fileID: 4474050308984926237, guid: 455047b7d12f15241b41c37d6d4c897b, type: 3}
-    - {fileID: 4474050308984926237, guid: fcb80f439471d30479df03a9cf1ca5ac, type: 3}
-    - {fileID: 4474050308984926237, guid: 3d7fc53854988f345a6ec2c7a230cc6c, type: 3}
-    - {fileID: 6231960166251419762, guid: 96d7b030aa1df5145924a2898efb6306, type: 3}
-    - {fileID: 6231960166251419762, guid: e39eb2d59ee3cee4ab33786721fa9e55, type: 3}
-    - {fileID: 6231960166251419762, guid: 534f0c63a829def448a0080e5ca1cab0, type: 3}
-    - {fileID: 6231960166251419762, guid: e8fc3f6e60aaf1e498c44353f29e34e2, type: 3}
-    - {fileID: 6231960166251419762, guid: 8f72529833683ec449cc41cc0296e318, type: 3}
-    - {fileID: 6231960166251419762, guid: 5e15ddb95ae6bf9469c5a737abf6b03f, type: 3}
-    - {fileID: 6231960166251419762, guid: 06482db5c47bd9248b269621d9a9a35c, type: 3}
-    - {fileID: 4474050308984926237, guid: 11289224f0774bd4c93d9c923baba44b, type: 3}
-    - {fileID: 4474050308984926237, guid: 5d3744676d064ee45bdc40ec31a95ec2, type: 3}
-    - {fileID: 4474050308984926237, guid: 550d02612e7d47c4d8508adfe816c085, type: 3}
-    - {fileID: 4474050308984926237, guid: b8b26da3fabc35749859d06f207ac36e, type: 3}
-    - {fileID: 4474050308984926237, guid: 5ebf384f970393943bf0c2b790c33340, type: 3}
+    - {fileID: 3715045633591972553, guid: 53d1b5b5bf86d3d4580655d859f115b0, type: 3}
+    - {fileID: 3715045633591972553, guid: 3948797913472ae42ba18f8a49bb75a8, type: 3}
+    - {fileID: 3715045633591972553, guid: 0e63263393eac1248a4854df409a3cb5, type: 3}
+    - {fileID: 3715045633591972553, guid: f774357e560201d4592a2c78a8262627, type: 3}
+    - {fileID: 6231960166251419762, guid: ed9329f58ce3d1142b630462ddd39535, type: 3}
+    - {fileID: 6231960166251419762, guid: 19fbb922f1ac1974babf70b0825f34ae, type: 3}
+    - {fileID: 4474050308984926237, guid: 9ab1cefaacb0ab14a90141f71ecdb87e, type: 3}
+    - {fileID: 4474050308984926237, guid: caf916a03c935bc499f173ef1297d617, type: 3}
+    - {fileID: 4474050308984926237, guid: df762a2bb4b02d244abab6e1c286c15d, type: 3}
+    - {fileID: 4474050308984926237, guid: 4325b83480038e44bbfeb919760218d8, type: 3}
     exitRoomPrefabs:
     - {fileID: 4474050308984926237, guid: d8f2b899e5705de49ba4ca16276c797b, type: 3}
     trapRoomPrefabs:
     - {fileID: 4474050308984926237, guid: 99b8963901be3e147bbc947a0b56a58e, type: 3}
     treasureRoomPrefabs:
-    - {fileID: 4474050308984926237, guid: b19713a99ee861f45aa0d0d9e58a975b, type: 3}
-    bossRoomPrefabs: []
-    portalRoomPrefabs: []
+    - {fileID: 4474050308984926237, guid: 728d433dc2f578242b13ccb4b69d7648, type: 3}
+    bossRoomPrefabs:
+    - {fileID: 8089628219031904606, guid: fdc3d69dd7d46c94bba6c6d103ee6df0, type: 3}
+    portalRoomPrefabs:
+    - {fileID: 3715045633591972553, guid: ef6aaf001cd139944b60b19b6c2c5bac, type: 3}
     eventRoomPrefabs:
     - {fileID: 4474050308984926237, guid: 7154686066db2c544a90d0be579f1c96, type: 3}
     eventRoomTypePrefabs:
       diggingRoomPrefabs:
-      - {fileID: 4474050308984926237, guid: c7b311616b2190340a99f153379cd870, type: 3}
+      - {fileID: 4474050308984926237, guid: f4a99423712bd2644a0f22a853857a38, type: 3}
       abandonedForgeRoomPrefabs:
-      - {fileID: 4474050308984926237, guid: c55e76121b63cde4ca63e412a9e2b8eb, type: 3}
+      - {fileID: 4474050308984926237, guid: cb5091ef7375cfa4faa52c6bf02a7104, type: 3}
       gamblingWellRoomPrefabs:
-      - {fileID: 4474050308984926237, guid: e276d48c15c66ac478539cce3290d893, type: 3}
+      - {fileID: 4474050308984926237, guid: fcc416622525a6445a7738420670a83c, type: 3}
       chestRoomPrefabs:
-      - {fileID: 4474050308984926237, guid: 52b3293dd4280c541abc3d1b0940c037, type: 3}
+      - {fileID: 4474050308984926237, guid: b53d39ef7cdf4a541b8f4a91280bc1ae, type: 3}
       healingRoomPrefabs:
-      - {fileID: 4474050308984926237, guid: 127978b721b6e5a4c8abb213fbf17bdd, type: 3}
+      - {fileID: 4474050308984926237, guid: dc038637ac7ebb2479f9d80c5e0eabc0, type: 3}
 --- !u!1 &1699050181
 GameObject:
   m_ObjectHideFlags: 0
