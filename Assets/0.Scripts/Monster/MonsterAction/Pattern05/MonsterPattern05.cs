@@ -13,7 +13,7 @@ public class MonsterPattern05 : MonsterPattern
     private float _fallingStartTime;
     private float _fallingFrequency;
     private int _fallingCycle;
-    private GameObject _fallingObject;
+    private GameObject _fallingObjectPrefab;
 
     private Transform _myTransform;
     private Transform _target;
@@ -40,7 +40,7 @@ public class MonsterPattern05 : MonsterPattern
         _fallingStartTime = actionData.FallingStartTime;
         _fallingFrequency = actionData.FallingFrequency;
         _fallingCycle = actionData.FallingCycle;
-        _fallingObject = actionData.FallingObject;
+        _fallingObjectPrefab = actionData.FallingObject;
 
         
         _myTransform = monster.View.MyTransform;
@@ -153,16 +153,22 @@ public class MonsterPattern05 : MonsterPattern
         }
     }
 
-    private GameObject Create(Vector2 target)
+    private GameObject Create(Vector2 createPos)
     {
+        if(_monster.IsDeath)
+            return null;
+
         GameObject obj = GameObject.Instantiate
                 (
-                _fallingObject,
-                target,
+                _fallingObjectPrefab,
+                createPos,
                 Quaternion.identity,
                 _myTransform.parent
                 );
 
+        float damage = _damage + _monster.Model.AttackBoost;
+        ActionEffect effect = obj.GetComponent<ActionEffect>();
+        effect.SetDamage(damage);
         return obj;
     }
 }

@@ -136,9 +136,7 @@ public class MonsterPattern06 : MonsterPattern
         }
 
         _ani.OnPlayAni("Pattern06End");
-        yield return CoroutineManager.waitForSeconds(1f);
-
-        yield return CoroutineManager.waitForSeconds(_afterDelay);
+        yield return CoroutineManager.waitForSeconds(_afterDelay + 1f);
         IsAction = false;
     }
 
@@ -162,6 +160,9 @@ public class MonsterPattern06 : MonsterPattern
 
     private GameObject Create(Vector2 createPos)
     {
+        if(_monster.IsDeath)
+            return null;
+
         GameObject obj = GameObject.Instantiate
                 (
                 _fallingObjectPrefab,
@@ -170,6 +171,9 @@ public class MonsterPattern06 : MonsterPattern
                 _myTransform.parent
                 );
 
+        float damage = _damage + _monster.Model.AttackBoost;
+        ActionEffect effect = obj.GetComponent<ActionEffect>();
+        effect.SetDamage(damage);
         return obj;
     }
 }
