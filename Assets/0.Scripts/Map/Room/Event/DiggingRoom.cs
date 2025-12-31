@@ -68,16 +68,16 @@ public class DiggingRoom : BaseEventRoom
         // AfterDigTile 추적용 딕셔너리 초기화
         lastKnownAfterDigTiles = new Dictionary<Vector3Int, bool>();
         
-        if (warningSign != null)
-        {
-            // 경고 표지판에 상호작용 컴포넌트 추가
-            WarningSignInteractable signInteractable = warningSign.GetComponent<WarningSignInteractable>();
-            if (signInteractable == null)
-            {
-                signInteractable = warningSign.AddComponent<WarningSignInteractable>();
-            }
-            signInteractable.Initialize(this);
-        }
+        //if (warningSign != null)
+        //{
+        //    // 경고 표지판에 상호작용 컴포넌트 추가
+        //    WarningSignInteractable signInteractable = warningSign.GetComponent<WarningSignInteractable>();
+        //    if (signInteractable == null)
+        //    {
+        //        signInteractable = warningSign.AddComponent<WarningSignInteractable>();
+        //    }
+        //    signInteractable.Initialize(this);
+        //}
         
         // Dig Spot 배치
         PlaceDigSpots();

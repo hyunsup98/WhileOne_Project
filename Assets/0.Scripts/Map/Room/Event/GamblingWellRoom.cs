@@ -30,21 +30,21 @@ public class GamblingWellRoom : BaseEventRoom
             wellInteractable.Initialize(this);
         }
         
-        // 시체 배치 (샘 옆)
-        if (skeleton != null)
-        {
-            Vector3 skeletonPos = center + Vector3.right * 2f;
-            skeleton.transform.position = skeletonPos;
-            skeleton.SetActive(true);
+        //// 시체 배치 (샘 옆)
+        //if (skeleton != null)
+        //{
+        //    Vector3 skeletonPos = center + Vector3.right * 2f;
+        //    skeleton.transform.position = skeletonPos;
+        //    skeleton.SetActive(true);
             
-            // 시체에 상호작용 컴포넌트 추가 (규칙 확인용)
-            SkeletonInteractable skeletonInteractable = skeleton.GetComponent<SkeletonInteractable>();
-            if (skeletonInteractable == null)
-            {
-                skeletonInteractable = skeleton.AddComponent<SkeletonInteractable>();
-            }
-            skeletonInteractable.Initialize(this);
-        }
+        //    // 시체에 상호작용 컴포넌트 추가 (규칙 확인용)
+        //    SkeletonInteractable skeletonInteractable = skeleton.GetComponent<SkeletonInteractable>();
+        //    if (skeletonInteractable == null)
+        //    {
+        //        skeletonInteractable = skeleton.AddComponent<SkeletonInteractable>();
+        //    }
+        //    skeletonInteractable.Initialize(this);
+        //}
     }
     
     /// <summary>
