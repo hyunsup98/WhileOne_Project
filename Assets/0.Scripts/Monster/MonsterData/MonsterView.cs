@@ -178,7 +178,7 @@ public class MonsterView : MonoBehaviour, IStunable, IDead
         return null;
     }
 
-    public IEnumerator OnHitBlink()
+    public IEnumerator OnHitBlink(bool isDeath)
     {
         Color original = _myRenderer.color;
         SetCollider(false);
@@ -195,7 +195,9 @@ public class MonsterView : MonoBehaviour, IStunable, IDead
         }
 
         yield return CoroutineManager.waitForSeconds(0.3f);
-        SetCollider(true);
+
+        if(!isDeath)
+            SetCollider(true);
     }
 
 
