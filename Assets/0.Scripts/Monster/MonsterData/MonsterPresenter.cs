@@ -109,7 +109,7 @@ public class MonsterPresenter : IAnimationable
         if (Model.CurrentState != Model.StateList[MonsterState.Action])
             View.OnPlayAni("Hurt");
 
-        StartCoroutine(View.OnHitBlink());
+        StartCoroutine(View.OnHitBlink(_isDeath));
         if (Model.ActionDict.TryGetValue(ActionID.three, out var action))
         {
             IsPattern03 = true;
@@ -131,9 +131,9 @@ public class MonsterPresenter : IAnimationable
     // 죽음 애니메이션 호출
     public IEnumerator OnDead()
     {
+        _isDeath = true;
         View.OnDeathSound();
         View.SetCollider(false);
-        _isDeath = true;
         View.OnPlayAni("Death");
         while (View.GetPlayingAni().normalizedTime < 0.5f)
             yield return null;
