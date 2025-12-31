@@ -52,7 +52,7 @@ public class PlayerAttack : MonoBehaviour
     }
     void Start()
     {
-        _attSpeed = _weapon.currentweapon.WeaponData.weaponAttack1Speed;
+        _attSpeed = _weapon.currentweapon.WeaponData.weaponAttack1Speed/1.1f;
         //attackSpeed = new WaitForSeconds(_attSpeed);
         delayTime = new WaitForSeconds(_delayTime);
 
@@ -79,7 +79,7 @@ public class PlayerAttack : MonoBehaviour
     }
     private void WpChanged(float newSpeed)
     {
-        _attSpeed = newSpeed;
+        _attSpeed = newSpeed/1.1f;
         Debug.Log("¹«±â ¹Ù²ñ");
         StopCoroutine(AttackSpeed());
         Debug.Log(_attSpeed);

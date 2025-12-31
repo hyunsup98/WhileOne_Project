@@ -79,13 +79,12 @@ public class TileManager
         {
             if(_dungeonManager.CurrentRoom.FloorTileMap.GetTile(cellPos) == afterDigTile)
             {
-                // 이미 발굴이 완료된 타일일 때
-                // todo: 흙 사운드 랜덤 재생
+                SoundManager.Instance.PlaySoundEffect("Shovel_PossibleTile_FX_001");
             }
             else
             {
-                // 원래부터 땅을 팔 수 없는 타일일 때
-                // todo: 깡! 소리가 나는 사운드 랜덤 재생
+                string[] ids = {"Shovel_ImpossibleTile_FX_001", "Shovel_ImpossibleTile_FX_002", "Shovel_ImpossibleTile_FX_003" };
+                SoundManager.Instance.PlaySoundEffect(ids);
             }
         }
     }

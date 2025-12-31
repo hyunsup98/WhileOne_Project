@@ -51,9 +51,10 @@ public class Weapon : MonoBehaviour
     public void ReduceDurability(int amount)
     {
         Durability -= amount;
-
+        Debug.Log(Durability);
         if (Durability <= 0)
         {
+            Debug.Log("남은 내구도: " + Durability);
             // 내구도가 다 떨어지면 무기 제거
             transform.SetParent(DataManager.Instance.WeaponData.transform, false);
             WeaponPool.Instance.TakeObject(this);

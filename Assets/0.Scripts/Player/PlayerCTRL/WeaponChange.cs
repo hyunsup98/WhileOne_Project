@@ -20,7 +20,6 @@ public class WeaponChange : MonoBehaviour
 
     private Weapon _slotWeapon1;        // 메인 무기 → 삽(변경될 일 없음)
     public Weapon _slotWeapon2;         // 서브 무기 → 다양한 무기(변경됨)
-    private float _durability;
     private float _weaponDamage;
     private bool _isAlreadyHit;
 
@@ -133,7 +132,7 @@ public class WeaponChange : MonoBehaviour
         }
 
         if (!_isAlreadyHit)
-        {
+       {
             if (currentweapon == _slotWeapon2)
             {
                 _slotWeapon2.ReduceDurability(1);
@@ -143,7 +142,7 @@ public class WeaponChange : MonoBehaviour
                     _slotWeapon2 = currentweapon = null;
 
                 _isAlreadyHit = true;
-                if (_durability <= 0)
+                if (_slotWeapon2.Durability <= 0)
                 {
                     WeaponBreak();
                 }
