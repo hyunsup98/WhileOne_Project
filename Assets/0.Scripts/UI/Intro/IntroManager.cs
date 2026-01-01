@@ -16,14 +16,16 @@ public class IntroManager : MonoBehaviour
     private PlayerInput _input;
     private InputAction _clickAction;
 
+    public InputAction ClickAction { get { return _clickAction; } set { value = _clickAction; } }
+
     private int currentNum = 0;
 
     private void Awake()
     {
         //_input = GetComponent<PlayerInput>();
 
-        //_clickAction = _input.actions.FindAction("Click");
-        
+        _clickAction = InputSystem.actions.FindAction("Click");
+
     }
     void Start()
     {
@@ -35,15 +37,15 @@ public class IntroManager : MonoBehaviour
     }
     private void OnEnable()
     {
-        InputSystem.actions["Click"].started += NextImage;
+        //InputSystem.actions["Click"].started += NextImage;
 
-        //_clickAction.performed += NextImage;
+        _clickAction.started += NextImage;
     }
 
     private void NextImage(InputAction.CallbackContext ctx)
     {
         currentNum++;
-        if(currentNum < _introSprites.Length)
+        if (currentNum < _introSprites.Length)
         {
             _introImage.sprite = _introSprites[currentNum];
         }
@@ -57,7 +59,7 @@ public class IntroManager : MonoBehaviour
         InputSystem.actions.FindActionMap("Player").Enable();
         _introImage.gameObject.SetActive(false);
 
-        if(_introSkip != null)
+        if (_introSkip != null)
             _introSkip.gameObject.SetActive(false);
 
         if (isSkip)
@@ -65,7 +67,7 @@ public class IntroManager : MonoBehaviour
     }
     private void OnDisable()
     {
-        InputSystem.actions["Click"].started -= NextImage;
-        //_clickAction.performed -= NextImage;
+        //InputSystem.actions["Click"].started -= NextImage;
+        _clickAction.started -= NextImage;
     }
 }

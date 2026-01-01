@@ -57,6 +57,7 @@ public class WeaponUI : MonoBehaviour
     /// <param name="weapon"></param>
     public void EnableGainUI(Weapon weapon, Chest chest)
     {
+        GameManager.Instance.player.ActionMap.Disable();
         SetWeaponInit(weapon);
         this.chest = chest;
 
@@ -66,6 +67,7 @@ public class WeaponUI : MonoBehaviour
 
     public void EnableFailUI()
     {
+        GameManager.Instance.player.ActionMap.Disable();
         panel_FailWeaponUI.SetActive(true);
         GameManager.Instance.SetGameState(GameState.Pause);
     }
@@ -87,6 +89,7 @@ public class WeaponUI : MonoBehaviour
         text_WeaponDesc1.text = string.Empty;
         text_WeaponDesc2.text = string.Empty;
 
+        GameManager.Instance.player.ActionMap.Enable();
         GameManager.Instance.SetGameState(GameState.Playing);
     }
 
@@ -94,6 +97,8 @@ public class WeaponUI : MonoBehaviour
     {
         SoundManager.Instance.PlaySoundEffect("WeaponBox_Off_FX_001");
         obj.SetActive(false);
+
+        GameManager.Instance.player.ActionMap.Enable();
         GameManager.Instance.SetGameState(GameState.Playing);
     }
 }

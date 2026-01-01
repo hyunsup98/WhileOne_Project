@@ -29,8 +29,8 @@ public class UI_IntroSkip : MonoBehaviour
 
     public void OnClick_ShowPanel()
     {
+        _introManager.ClickAction.Disable();
         SoundManager.Instance.PlaySoundEffect("Mouse_Click_Possible_FX_001");
-
         if (_skipPanel == null) return;
 
         _skipPanel.SetActive(true);
@@ -39,9 +39,9 @@ public class UI_IntroSkip : MonoBehaviour
     public void OnClick_HidePanel()
     {
         SoundManager.Instance.PlaySoundEffect("Mouse_Click_Possible_FX_001");
-
         if (_skipPanel == null) return;
 
+        _introManager.ClickAction.Enable();
         _skipPanel.SetActive(false);
     }
 }
