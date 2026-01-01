@@ -9,8 +9,6 @@ public class MonsterView : MonoBehaviour, IStunable, IDead
     [SerializeField] private MonsterData _monsterData;    // 몬스터 데이터 SO
 
     private Animator _animator;
-    public event Action OnDeath;
-
     private SpriteRenderer _myRenderer;
     private string _deathSound;
     
@@ -18,6 +16,8 @@ public class MonsterView : MonoBehaviour, IStunable, IDead
     public MonsterPresenter Presenter { get; private set; }
     public bool IsStun { get; private set; }
 
+    public event Action OnDeath;
+    public event Action<RoomController> UpdateTilemap;
 
 
     [ContextMenu("세팅값 갱신")]
@@ -48,6 +48,12 @@ public class MonsterView : MonoBehaviour, IStunable, IDead
     private void Update()
     {
         Presenter.Tick();
+    }
+
+    private void OnDisable()
+    {
+        OnDeath = null;
+        UpdateTilemap = null;
     }
 
     #region 애니메이션 출력
@@ -205,12 +211,13 @@ public class MonsterView : MonoBehaviour, IStunable, IDead
 
     public void OnDeathSound() => SoundManager.Instance.PlaySoundEffect(_deathSound);
 
+    public void OnUpdateTilemap(RoomController room) => UpdateTilemap?.Invoke(room);
+
     public void OnDead() => OnDeath?.Invoke();
 
     public void OnStun()
     {
         IsStun = true;
-        //transform.GetComponent<Collider2D>().enabled = false;
         Presenter.OnStun();
     }
 

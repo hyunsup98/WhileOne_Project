@@ -19,7 +19,7 @@ MonoBehaviour:
   _actionCondition: 0
   _actionType: 1
   _actionDamage: 25
-  _actionCoolTime: 10
+  _actionCoolTime: 5
   _attackBoost: 0
   _speedBoost: 0
   _actionResource: 
@@ -28,7 +28,7 @@ MonoBehaviour:
   _afterDelay: 2
   _actionAngle: 60
   _createdEffectTime: 0.75
-  _createdEffectDistance: 4
-  _hitBoxRadius: 2
+  _createdEffectDistance: 2.8
+  _hitBoxRadius: 1.2
   _hitDecision: {fileID: 669278342059712028, guid: 6e79750f314cf9a40b7c2fe93cae106d, type: 3}
   _pathPreview: {fileID: 7463523560827915451, guid: 3df469732dddf914ebe481049b643a44, type: 3}

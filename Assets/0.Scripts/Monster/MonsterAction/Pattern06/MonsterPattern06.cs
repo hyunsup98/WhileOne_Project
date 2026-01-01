@@ -6,13 +6,13 @@ using UnityEngine.Tilemaps;
 
 public class MonsterPattern06 : MonsterPattern
 {
-    private Tilemap _wallTilemap;
+    private Tilemap _groundTilemap;
     private float _startFallingTime;
     private float _fallingCount;
     private float _fallingFrequency;
     private float _fallingCycle;
-    private float _fallingHitTiming;
     private float _fallingRange;
+    private float _fallingRangeAngle;
 
     private GameObject _fallingObjectPrefab;
 
@@ -30,7 +30,7 @@ public class MonsterPattern06 : MonsterPattern
         _afterDelay = actionData.AfterDelay;
         _maxCoolTime = actionData.ActionCoolTime;
 
-        _wallTilemap = monster.Model.WallTilemap;
+        _groundTilemap = monster.Model.GroundTilemap;
         _myTransform = _monster.View.MyTransform;
         _sfxID = actionData.ActionSound;
 
@@ -38,7 +38,7 @@ public class MonsterPattern06 : MonsterPattern
         _fallingCount = actionData.FallingCount;
         _fallingFrequency = actionData.FallingFrequency;
         _fallingCycle = actionData.FallingCycle;
-        _fallingHitTiming = actionData.FallingHitTiming;
+        _fallingRangeAngle = Mathf.Cos(actionData.FallingRangeAngle * Mathf.Deg2Rad);
         _fallingRange = actionData.FallingRange;
         _fallingObjectPrefab = actionData.FallingObjectPrefab;
         _fallingObjects = new List<GameObject>();
@@ -60,12 +60,7 @@ public class MonsterPattern06 : MonsterPattern
         OnDelayAndStart(() => _monster.StartCoroutine(CreateFallingObject()), timer);
     }
 
-    public override void OnAction()
-    {
-
-        
-    }
-
+    public override void OnAction() { }
 
     public override void EndAction()
     {
@@ -120,7 +115,7 @@ public class MonsterPattern06 : MonsterPattern
                 }
 
                 Vector2 createPos = RandomVector(j);
-                if (_wallTilemap.HasTile(_wallTilemap.WorldToCell(createPos)))
+                if (!_groundTilemap.HasTile(_groundTilemap.WorldToCell(createPos)))
                 {
                     safeCount++;
                     j--;
@@ -148,11 +143,7 @@ public class MonsterPattern06 : MonsterPattern
         float x = Mathf.Cos(angle * Mathf.Deg2Rad) * length;
         float y = Mathf.Sin(angle * Mathf.Deg2Rad) * length;
         Vector2 myPos = (Vector2)_myTransform.position;
-        Vector2 newVector;
-        if (y > 0.71f)
-            newVector = new Vector2(x, -y) + myPos;
-        else
-            newVector = new Vector2(x, y) + myPos;
+        Vector2 newVector = new Vector2(x, y) + myPos;
 
         return newVector;
     }

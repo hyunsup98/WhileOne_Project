@@ -19,7 +19,7 @@ MonoBehaviour:
   _moveSpeed: 2.5
   _sight: 3
   _deathSound: Goblin_Dead_FX_001
-  _sightAngle: 90
+  _sightAngle: 120
   _actionDistance: 5
   _searchTime: 3
   _patrolRange: 10
