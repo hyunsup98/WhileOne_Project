@@ -41,7 +41,7 @@ public class MonsterPattern06 : MonsterPattern
         _fallingRangeAngle = Mathf.Cos(actionData.FallingRangeAngle * Mathf.Deg2Rad);
         _fallingRange = actionData.FallingRange;
         _fallingObjectPrefab = actionData.FallingObjectPrefab;
-        _fallingObjects = new List<GameObject>();
+        //_fallingObjects = new List<GameObject>();
     }
 
     public override void StartAction()
@@ -124,8 +124,10 @@ public class MonsterPattern06 : MonsterPattern
 
                 GameObject obj = Create(createPos);
 
-                _fallingObjects.Add(obj);
+                //_fallingObjects.Add(obj);
             }
+
+            GameObject playerPosObj = Create(_monster.Model.ChaseTarget.position);
 
             yield return CoroutineManager.waitForSeconds(_fallingFrequency);
         }

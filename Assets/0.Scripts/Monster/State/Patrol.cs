@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -36,8 +37,8 @@ public class Patrol : IState
 
     public void Enter() 
     {
-        //_patrolPoin = SetPatrolPoint(_patrolRange);
-        //_patrolPath = _mobAster.Pathfinder(_myTransform.position, _patrolPoin);
+        _patrolPoin = SetPatrolPoint(_patrolRange);
+        _patrolPath = _mobAster.Pathfinder(_myTransform.position, _patrolPoin);
         _patrolIndex = 0;
     }
 
@@ -99,14 +100,16 @@ public class Patrol : IState
     // 나중에 리펙토링 해보자
     private Vector3 SetPatrolPoint(float patrolRange)
     {
-        Debug.Log($"<color=yellow>{_ground}</color>" + _ground.transform.parent);
-        Debug.Log($"<color=yellow>{_wall}</color>" + _wall.transform.parent);
+        _ground = _monster.Model.GroundTilemap;
+        _wall = _monster.Model.WallTilemap;
         for (int i = 0; i < 10; i++)
         {
             int range = (int)patrolRange;
             int x = (int)_myTransform.position.x + Random.Range(-range, range + 1);
             int y = (int)_myTransform.position.y + Random.Range(-range, range + 1);
             Vector3 pos = new Vector3(x + 0.5f, y + 0.5f);
+
+            Debug.DrawLine(_myTransform.position, pos);
 
             if (_ground.HasTile(_ground.WorldToCell(pos)) && !_wall.HasTile(_wall.WorldToCell(pos)))
                 return (Vector3)pos;

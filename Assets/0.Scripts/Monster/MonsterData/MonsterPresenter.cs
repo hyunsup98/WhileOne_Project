@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -51,7 +52,7 @@ public class MonsterPresenter : IAnimationable
         }
 
 
-        //View.UpdateTilemap += SetTilemap;
+        View.UpdateTilemap += SetTilemap;
 
         // 상태 패턴 세팅
         Model.SetState(this);
