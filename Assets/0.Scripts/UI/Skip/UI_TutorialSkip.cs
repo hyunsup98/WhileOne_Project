@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class UI_Skip : MonoBehaviour
+public class UI_TutorialSkip : MonoBehaviour
 {
     private const string HasSeenTutorial = "HASSEENTUTORIAL";
 

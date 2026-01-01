@@ -24,6 +24,7 @@ public class UI_IntroSkip : MonoBehaviour
     {
         if (_introManager == null) return;
 
+        _introManager.ClickAction.Enable();
         _introManager.EndSecen();
     }
 
