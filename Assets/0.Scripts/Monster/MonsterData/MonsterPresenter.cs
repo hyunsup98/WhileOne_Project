@@ -51,7 +51,7 @@ public class MonsterPresenter : IAnimationable
         }
 
 
-        View.UpdateTilemap += SetTilemap;
+        //View.UpdateTilemap += SetTilemap;
 
         // 상태 패턴 세팅
         Model.SetState(this);
@@ -162,11 +162,7 @@ public class MonsterPresenter : IAnimationable
         foreach (Transform child in room.transform)
         {
             if (child.TryGetComponent<Tilemap>(out Tilemap tilemap))
-            {
                 Model.SetTilemap(tilemap);
-                Debug.Log("<color=yellow>현재 그라운드</color>" + child.transform.parent);
-                Debug.Log("<color=yellow>현재 월</color>" + child.transform.parent);
-            }
         }
     }
 
