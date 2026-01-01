@@ -160,6 +160,7 @@ public class WeaponChange : MonoBehaviour
         _slotWeapon2 = null;
         GameManager.Instance.CurrentDungeon.EquipSlotController.ChangeSubWeapon(_slotWeapon2);
         currentweapon = _slotWeapon1;
+        Weaponchanged?.Invoke(currentweapon.WeaponData.weaponAttack1Speed);
         _slotWeapon1.gameObject.SetActive(true);
     }
     private void OnDisable()
