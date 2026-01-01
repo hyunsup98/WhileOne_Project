@@ -16,11 +16,11 @@ MonoBehaviour:
   _name: Spider
   _tier: 1
   _hp: 120
-  _moveSpeed: 4
+  _moveSpeed: 5
   _sight: 10
   _deathSound: Spider_Death_FX_001
-  _sightAngle: 90
-  _actionDistance: 5
+  _sightAngle: 130
+  _actionDistance: 10
   _searchTime: 3
   _patrolRange: 5
   _actionList:

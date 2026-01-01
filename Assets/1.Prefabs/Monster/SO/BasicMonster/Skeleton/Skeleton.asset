@@ -19,7 +19,7 @@ MonoBehaviour:
   _moveSpeed: 1.5
   _sight: 4
   _deathSound: Skeleton_Death_FX_001
-  _sightAngle: 90
+  _sightAngle: 120
   _actionDistance: 5
   _searchTime: 3
   _patrolRange: 5
