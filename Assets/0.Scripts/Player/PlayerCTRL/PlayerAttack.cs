@@ -80,7 +80,6 @@ public class PlayerAttack : MonoBehaviour
     private void WpChanged(float newSpeed)
     {
         _attSpeed = newSpeed/1.1f;
-        Debug.Log("무기 바뀜");
         StopCoroutine(AttackSpeed());
         Debug.Log(_attSpeed);
     }
@@ -105,7 +104,6 @@ public class PlayerAttack : MonoBehaviour
             {
                 return;
             }
-            Debug.Log(_attSpeed);
             _timer = true;
             _isAttacking = true; //공격 트리거용 변수
 

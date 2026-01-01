@@ -21,7 +21,7 @@ public class TrakingPlayer : MonoBehaviour
     public AttackDamage AttackFX => _attackFX;
     private void Awake()
     {
-        atkParent = Instantiate(parentTrans);
+        atkParent = Instantiate(parentTrans,new Vector3(100,100,0),transform.rotation);
 
         _attackFX = atkParent.GetComponentInChildren<AttackDamage>();
         attackAnim = _attackFX.GetComponent<Animator>();
