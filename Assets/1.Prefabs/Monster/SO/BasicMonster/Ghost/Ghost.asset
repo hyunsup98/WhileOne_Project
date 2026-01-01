@@ -18,7 +18,8 @@ MonoBehaviour:
   _hp: 100
   _moveSpeed: 4
   _sight: 5
-  _sightAngle: 90
+  _deathSound: 
+  _sightAngle: 120
   _actionDistance: 5
   _searchTime: 3
   _patrolRange: 5
