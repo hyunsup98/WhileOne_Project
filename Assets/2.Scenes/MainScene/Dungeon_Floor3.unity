@@ -12303,7 +12303,7 @@ MonoBehaviour:
     exitRoomPrefabs:
     - {fileID: 4474050308984926237, guid: d8f2b899e5705de49ba4ca16276c797b, type: 3}
     trapRoomPrefabs:
-    - {fileID: 4474050308984926237, guid: 99b8963901be3e147bbc947a0b56a58e, type: 3}
+    - {fileID: 4474050308984926237, guid: 04ef039274bc47a4285a1ff9cac5a19a, type: 3}
     treasureRoomPrefabs:
     - {fileID: 4474050308984926237, guid: 728d433dc2f578242b13ccb4b69d7648, type: 3}
     bossRoomPrefabs:
