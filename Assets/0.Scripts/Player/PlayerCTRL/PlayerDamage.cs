@@ -41,14 +41,6 @@ public class PlayerDamage : MonoBehaviour
         _group = transform.GetChild(0).GetComponent<SortingGroup>();
     }
 
-    private void Update()
-    {
-        if(Keyboard.current.qKey.wasPressedThisFrame)
-        {
-            TakenDamage(10f, Vector2.zero);
-        }
-    }
-
     public void TakenDamage(float damage, Vector2 target)
     {
 

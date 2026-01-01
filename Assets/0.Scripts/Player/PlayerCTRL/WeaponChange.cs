@@ -59,14 +59,6 @@ public class WeaponChange : MonoBehaviour
         GameManager.Instance.CurrentDungeon.MainWeaponSlot.ChangeIcon(_slotWeapon1);
     }
 
-    private void Update()
-    {
-        if(Keyboard.current.bKey.wasPressedThisFrame)
-        {
-            HitAble(gameObject);
-        }
-    }
-
     private void WeaponSwitch1(InputAction.CallbackContext ctx)
     {
         SwitchSlot(1);

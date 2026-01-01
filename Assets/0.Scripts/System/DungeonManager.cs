@@ -80,16 +80,6 @@ public class DungeonManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if(Keyboard.current.gKey.wasPressedThisFrame)
-        {
-            Treasure treasure = DataManager.Instance.TreasureData.PickTreasure();
-            TreasureBarUI.AddTreasure(treasure);
-            DataManager.Instance.CharacterData.AddTreasureData(treasure);
-        }
-    }
-
     public void SetPosInteractImg(Vector3 pos)
     {
         InteractImg.SetActive(true);
