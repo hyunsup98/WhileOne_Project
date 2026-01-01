@@ -820,7 +820,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomController
   floorTileMap: {fileID: 6052733454294142852}
-  digSpotTileMap: {fileID: 0}
+  digSpotTileMap: {fileID: 8431079681925531888}
 --- !u!114 &5503420979352992938
 MonoBehaviour:
   m_ObjectHideFlags: 0
