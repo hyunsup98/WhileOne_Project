@@ -13060,7 +13060,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 195e5e438d50533458aa88c71a07cc5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneController
-  _bgmID: FirstFloor_BGM_001
+  _bgmID: BossStage_BGM_001
 --- !u!4 &1889560766
 Transform:
   m_ObjectHideFlags: 0
