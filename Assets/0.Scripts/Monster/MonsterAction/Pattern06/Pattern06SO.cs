@@ -23,8 +23,6 @@ public class Pattern06SO : MonsterActionSO
     [SerializeField] private float _fallingCount;
     [Tooltip("낙하물 생성 범위")]
     [SerializeField] private float _fallingRange;
-    [Tooltip("낙하물 생성 범위 각도")]
-    [SerializeField] private float _fallingRangeAngle;
     [Tooltip("낙하물 프리펩")]
     [SerializeField] private GameObject _fallingObjectPrefab;
 
@@ -35,7 +33,6 @@ public class Pattern06SO : MonsterActionSO
     public float FallingCount => _fallingCount;
     public float FallingFrequency => _fallingFrequency;
     public float FallingCycle => _fallingCycle;
-    public float FallingRangeAngle => _fallingRangeAngle;
     public float FallingRange => _fallingRange;
     public GameObject FallingObjectPrefab => _fallingObjectPrefab;
 }
