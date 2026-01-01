@@ -84,6 +84,16 @@ public class MonsterModel
     }
 
     public void SetAstar(Tilemap tilemap) => MobAstar = new Astar(tilemap);
+
+    public void SetTilemap(Tilemap tilemap)
+    {
+        if(tilemap.transform.CompareTag("Wall"))
+            WallTilemap = tilemap;
+
+        else if(tilemap.transform.CompareTag("Ground"))
+            GroundTilemap = tilemap;
+    }
+
     public void SetPatrolPath(Transform myTransform) => 
         PatrolPath = MobAstar.Pathfinder(
             myTransform.position,

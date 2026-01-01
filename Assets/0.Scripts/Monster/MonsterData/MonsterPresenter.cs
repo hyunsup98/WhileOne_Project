@@ -26,12 +26,14 @@ public class MonsterPresenter : IAnimationable
         (
         MonsterData monsterData,
         MonsterView monsterView,
-        Tilemap GroundTilmap,
+        Tilemap groundTilmap,
         Tilemap wallTilmap
         )
     {
         View = monsterView;
-        Model = new MonsterModel(monsterData, View.MyTransform, GroundTilmap, wallTilmap);
+        View.UpdateTilemap += SetTilemap;
+
+        Model = new MonsterModel(monsterData, View.MyTransform, groundTilmap, wallTilmap);
 
 
         // 경로 탐색으로 순찰 포인트 초기화
@@ -159,10 +161,19 @@ public class MonsterPresenter : IAnimationable
 
     public void OnStun() => Model.SetState(MonsterState.Stun);
     public void SetIsUlt(bool isUlt) => IsUlt = isUlt;
+
+    public void SetTilemap(RoomController room)
+    {
+        foreach (Transform child in room.transform)
+            Model.SetTilemap(child.GetComponent<Tilemap>());
+
+        Debug.Log("<color=yellow>현재 그라운드" + Model.GroundTilemap);
+        Debug.Log("<color=yellow>현재 월" + Model.WallTilemap);
+    }
+
     public void setIsPattern03(bool isPattern03) => IsPattern03 = isPattern03;
 
     public void OnPlayAni(string animationName) => View.OnPlayAni(animationName);
     public void OnStopAni(string animationName) => View.OnStopAni(animationName);
-
 
 }
