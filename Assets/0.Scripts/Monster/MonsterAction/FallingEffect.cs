@@ -18,6 +18,8 @@ public class FallingEffect : ActionEffect
         _timer += Time.deltaTime;
         if(_timer >= 0.9f)
             GetComponent<Collider2D>().enabled = true;
+        if(_timer >= 1.2f)
+            GetComponent<Collider2D>().enabled = false;
     }
 
     public override void DealDamage(Collider2D collision)
