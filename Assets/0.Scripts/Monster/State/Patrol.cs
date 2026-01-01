@@ -36,6 +36,8 @@ public class Patrol : IState
 
     public void Enter() 
     {
+        _patrolPoin = SetPatrolPoint(_patrolRange);
+        _patrolPath = _mobAster.Pathfinder(_myTransform.position, _patrolPoin);
         _patrolIndex = 0;
     }
 

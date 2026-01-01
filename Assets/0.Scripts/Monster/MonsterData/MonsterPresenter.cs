@@ -31,9 +31,8 @@ public class MonsterPresenter : IAnimationable
         )
     {
         View = monsterView;
-        View.UpdateTilemap += SetTilemap;
-
         Model = new MonsterModel(monsterData, View.MyTransform, groundTilmap, wallTilmap);
+
 
 
         // 경로 탐색으로 순찰 포인트 초기화
@@ -51,6 +50,8 @@ public class MonsterPresenter : IAnimationable
             Debug.LogWarning(Model.Name + $"<color=brown>{action.name}</color>");
         }
 
+
+        View.UpdateTilemap += SetTilemap;
 
         // 상태 패턴 세팅
         Model.SetState(this);
@@ -156,22 +157,26 @@ public class MonsterPresenter : IAnimationable
         View.RequestDestroy(destroyTime + 1f);
         View.OnDead();
     }
+    public void SetTilemap(RoomController room)
+    {
+        foreach (Transform child in room.transform)
+        {
+            if (child.TryGetComponent<Tilemap>(out Tilemap tilemap))
+            {
+                Model.SetTilemap(tilemap);
+                Debug.Log("<color=yellow>현재 그라운드</color>" + child.transform.parent);
+                Debug.Log("<color=yellow>현재 월</color>" + child.transform.parent);
+            }
+        }
+    }
 
     public void StartCoroutine(IEnumerator coroutine) => View.StartCoroutine(coroutine);
 
     public void OnStun() => Model.SetState(MonsterState.Stun);
     public void SetIsUlt(bool isUlt) => IsUlt = isUlt;
 
-    public void SetTilemap(RoomController room)
-    {
-        foreach (Transform child in room.transform)
-            Model.SetTilemap(child.GetComponent<Tilemap>());
 
-        Debug.Log("<color=yellow>현재 그라운드" + Model.GroundTilemap);
-        Debug.Log("<color=yellow>현재 월" + Model.WallTilemap);
-    }
-
-    public void setIsPattern03(bool isPattern03) => IsPattern03 = isPattern03;
+    public void SetIsPattern03(bool isPattern03) => IsPattern03 = isPattern03;
 
     public void OnPlayAni(string animationName) => View.OnPlayAni(animationName);
     public void OnStopAni(string animationName) => View.OnStopAni(animationName);
