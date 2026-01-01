@@ -36,6 +36,8 @@ public class Patrol : IState
 
     public void Enter() 
     {
+        //_patrolPoin = SetPatrolPoint(_patrolRange);
+        //_patrolPath = _mobAster.Pathfinder(_myTransform.position, _patrolPoin);
         _patrolIndex = 0;
     }
 
@@ -97,6 +99,8 @@ public class Patrol : IState
     // 나중에 리펙토링 해보자
     private Vector3 SetPatrolPoint(float patrolRange)
     {
+        Debug.Log($"<color=yellow>{_ground}</color>" + _ground.transform.parent);
+        Debug.Log($"<color=yellow>{_wall}</color>" + _wall.transform.parent);
         for (int i = 0; i < 10; i++)
         {
             int range = (int)patrolRange;

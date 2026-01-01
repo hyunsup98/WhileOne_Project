@@ -186,11 +186,6 @@ public class Player : MonoBehaviour
         PlayerDir();
         moveCurrentState?.Update();
         actionCurrentState?.Update();
-
-        if (Keyboard.current.fKey.wasPressedThisFrame)
-        {
-            ChangedHealth -= 10f;
-        }
     }
     
     void PlayerDir()

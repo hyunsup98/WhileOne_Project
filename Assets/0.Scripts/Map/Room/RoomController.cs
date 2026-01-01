@@ -77,10 +77,13 @@ public class RoomController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         // 플레이어만 처리
-        if(other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
             GameManager.Instance.CurrentDungeon.CurrentRoom = this;
         }
+
+        else if (other.TryGetComponent<MonsterView>(out var monster))
+            monster.OnUpdateTilemap(this);
     }
 
     /// <summary>

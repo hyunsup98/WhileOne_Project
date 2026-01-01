@@ -66,7 +66,7 @@ public class MonsterAction : IState
 
         if (actionDict.TryGetValue(ActionID.three, out var value) && _monster.IsPattern03)
         {
-            _monster.setIsPattern03(false);
+            _monster.SetIsPattern03(false);
             return value;
         }
 
