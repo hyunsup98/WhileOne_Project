@@ -12,13 +12,11 @@ public class MonsterPattern06 : MonsterPattern
     private float _fallingFrequency;
     private float _fallingCycle;
     private float _fallingRange;
-    private float _fallingRangeAngle;
 
     private GameObject _fallingObjectPrefab;
 
     private Vector2 _mapCenterPos;
     private Transform _myTransform;
-    private List<GameObject> _fallingObjects;
 
 
     public MonsterPattern06(Pattern06SO actionData, MonsterPresenter monster)
@@ -38,10 +36,8 @@ public class MonsterPattern06 : MonsterPattern
         _fallingCount = actionData.FallingCount;
         _fallingFrequency = actionData.FallingFrequency;
         _fallingCycle = actionData.FallingCycle;
-        _fallingRangeAngle = Mathf.Cos(actionData.FallingRangeAngle * Mathf.Deg2Rad);
         _fallingRange = actionData.FallingRange;
         _fallingObjectPrefab = actionData.FallingObjectPrefab;
-        //_fallingObjects = new List<GameObject>();
     }
 
     public override void StartAction()
